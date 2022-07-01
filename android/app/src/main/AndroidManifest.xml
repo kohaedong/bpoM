@@ -1,5 +1,30 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.kolon.medsalesportal">
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- Kolon SSO Just Add!-->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+    <queries>
+    <!-- If your app opens https URLs -->
+    <intent>
+      <action android:name="android.intent.action.VIEW" />
+      <data android:scheme="https" />
+    </intent>
+    <!-- If your app makes calls -->
+    <intent>
+      <action android:name="android.intent.action.DIAL" />
+      <data android:scheme="tel" />
+    </intent>
+    <!-- If your app emails -->
+    <intent>
+      <action android:name="android.intent.action.SEND" />
+      <data android:mimeType="*/*" />
+    </intent>
+    </queries>
    <application
         android:label="medsalesportal"
         android:name="${applicationName}"
