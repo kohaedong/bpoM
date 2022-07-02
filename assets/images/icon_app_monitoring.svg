@@ -1,0 +1,30 @@
+<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient x1="22.44%" y1="12.162%" x2="92.697%" y2="85.559%" id="a">
+            <stop stop-color="#055CDE" offset="0%"/>
+            <stop stop-color="#3E8AFA" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="3.719%" y1="67.562%" x2="73.142%" y2="84.796%" id="b">
+            <stop stop-color="#055CDE" offset="0%"/>
+            <stop stop-color="#3E8AFA" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="22.44%" y1="9.42%" x2="72.767%" y2="99.062%" id="c">
+            <stop stop-color="#3E8AFA" offset="0%"/>
+            <stop stop-color="#055CDE" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="45.351%" y1="8.644%" x2="53.841%" y2="100%" id="d">
+            <stop stop-color="#055CDE" offset="0%"/>
+            <stop stop-color="#3E8AFA" offset="100%"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <rect fill="#F2F4F7" fill-rule="nonzero" width="60" height="60" rx="14"/>
+        <g transform="rotate(20 -14.882 58.957)">
+            <path d="M11.536 3.363v7.478h4.896V3.363h8.416v22h-23v-22h9.688zm10.312 3h-2.417v7.478H8.537V6.362H4.848v16h17v-16z" fill="url(#a)" fill-rule="nonzero"/>
+            <path d="M32.093.213a1.5 1.5 0 0 1 1.662 2.494l-.12.08-3.653 2.185.03 25.42H1.5a1.5 1.5 0 0 1-.144-2.993l.144-.007h25.508L26.98 3.274 32.093.213z" fill="url(#b)" fill-rule="nonzero"/>
+            <ellipse fill="#F2F4F7" cx="27.945" cy="27.611" rx="5.464" ry="5.413"/>
+            <path d="M27.945 23.401c2.347 0 4.25 1.885 4.25 4.21s-1.903 4.21-4.25 4.21c-2.348 0-4.25-1.885-4.25-4.21s1.902-4.21 4.25-4.21zm0 2.406a1.813 1.813 0 0 0-1.822 1.804c0 .996.816 1.804 1.822 1.804a1.813 1.813 0 0 0 1.821-1.804c0-.996-.815-1.804-1.821-1.804z" fill="url(#c)" fill-rule="nonzero"/>
+            <path d="m2.429 0 2.428 3.831H3.428v6.995a1 1 0 0 1-1.993.116l-.006-.116-.001-6.995H0L2.429 0z" transform="matrix(0 1 1 0 7.354 15.56)" fill="url(#d)" fill-rule="nonzero"/>
+        </g>
+    </g>
+</svg>

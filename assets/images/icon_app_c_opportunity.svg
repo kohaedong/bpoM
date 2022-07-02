@@ -1,0 +1,35 @@
+<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient x1="7.906%" y1="50%" x2="94.769%" y2="50%" id="a">
+            <stop stop-color="#055CDE" offset="0%"/>
+            <stop stop-color="#3E8AFA" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="44.938%" y1="8.644%" x2="54.182%" y2="100%" id="b">
+            <stop stop-color="#055CDE" offset="0%"/>
+            <stop stop-color="#3E8AFA" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="-8.398%" y1="32.789%" x2="118.771%" y2="197.66%" id="c">
+            <stop stop-color="#055CDE" offset="0%"/>
+            <stop stop-color="#055CDE" offset="0%"/>
+            <stop stop-color="#3E8AFA" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="-8.398%" y1="46.063%" x2="118.771%" y2="83.775%" id="d">
+            <stop stop-color="#055CDE" offset="0%"/>
+            <stop stop-color="#3E8AFA" offset="100%"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <rect fill="#F2F4F7" fill-rule="nonzero" width="60" height="60" rx="14"/>
+        <g transform="translate(10 13)">
+            <path d="M26.273 2a4 4 0 0 1 4 4v19a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V6a4 4 0 0 1 4-4h22.273zM3 12.261V25a1 1 0 0 0 .883.993L4 26h22.273a1 1 0 0 0 .993-.883l.007-.117-.001-12.704L3 12.261zM26.273 5H4a1 1 0 0 0-.993.883L3 6v3.261l24.272.035V6a1 1 0 0 0-.883-.993L26.273 5z" fill="url(#a)" fill-rule="nonzero"/>
+            <rect fill="url(#b)" x="7.273" width="3" height="7" rx="1.5"/>
+            <rect fill="url(#b)" x="20.273" width="3" height="7" rx="1.5"/>
+        </g>
+        <g transform="translate(27 26)">
+            <circle fill="#F2F4F7" cx="12.5" cy="6.5" r="6.5"/>
+            <path d="M3.8 25C1.705 25 0 23.024 0 20.595 0 15.855 3.325 12 7.414 12h10.174C21.675 12 25 15.856 25 20.595 25 23.025 23.295 25 21.2 25H3.8z" fill="#F2F4F7"/>
+            <path d="M12.5 1a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11zm0 3a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z" fill="url(#c)" fill-rule="nonzero"/>
+            <path d="M17.18 13c3.76 0 6.82 3.263 6.82 7.273C24 22.328 22.431 24 20.504 24H4.496C2.57 24 1 22.328 1 20.273 1 16.263 4.06 13 7.82 13h9.36zm0 3H7.82C5.76 16 4 17.878 4 20.273c0 .4.223.673.434.72l.062.007h16.008c.226 0 .496-.288.496-.727 0-2.323-1.656-4.159-3.633-4.268L17.181 16z" fill="url(#d)" fill-rule="nonzero"/>
+        </g>
+    </g>
+</svg>

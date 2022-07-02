@@ -1,0 +1,23 @@
+<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient x1="4.432%" y1="21.558%" x2="100%" y2="88.927%" id="a">
+            <stop stop-color="#055CDE" offset="0%"/>
+            <stop stop-color="#3E8AFA" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="15.448%" y1="16.601%" x2="86.556%" y2="86.783%" id="b">
+            <stop stop-color="#055CDE" offset="0%"/>
+            <stop stop-color="#3E8AFA" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="-40.195%" y1="33.331%" x2="117.223%" y2="89.471%" id="c">
+            <stop stop-color="#055CDE" offset="0%"/>
+            <stop stop-color="#3E8AFA" offset="100%"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <rect fill="#F2F4F7" fill-rule="nonzero" width="60" height="60" rx="14"/>
+        <path d="M34 26a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V9a4 4 0 0 1 4-4h5V4a4 4 0 0 1 4-4h9a4 4 0 0 1 4 4v1h4a4 4 0 0 1 4 4v17zm-3-12h-9.507c.004.052.007.105.007.158v.684c0 .916-.742 1.658-1.658 1.658h-4.684a1.658 1.658 0 0 1-1.658-1.658v-.684c0-.053.003-.106.007-.158H3v12a1 1 0 0 0 .883.993L4 27h26a1 1 0 0 0 .993-.883L31 26V14zm-10.52 0h-5.96a.66.66 0 0 0-.02.158v.684c0 .363.295.658.658.658h4.684a.658.658 0 0 0 .658-.658v-.684a.66.66 0 0 0-.02-.158zM30 8H4a1 1 0 0 0-.993.883L3 9v2h28V9a1 1 0 0 0-.883-.993L30 8zm-8-5h-9a1 1 0 0 0-.993.883L12 4v1h11V4a1 1 0 0 0-.883-.993L22 3z" transform="translate(9 17)" fill="url(#a)" fill-rule="nonzero"/>
+        <path d="M44.5 10C50.851 10 56 15.149 56 21.5S50.851 33 44.5 33c-1.823 0-3.547-.424-5.078-1.18L33.432 34l2.041-5.374A11.451 11.451 0 0 1 33 21.5C33 15.149 38.149 10 44.5 10z" fill="#F2F4F7"/>
+        <path d="M11.5 1C17.299 1 22 5.701 22 11.5S17.299 22 11.5 22c-1.979 0-3.83-.547-5.41-1.5l-3.68 1.598 1.384-3.466A10.463 10.463 0 0 1 1 11.5C1 5.701 5.701 1 11.5 1zm0 3a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15z" fill="url(#b)" transform="translate(33 10)"/>
+        <path d="M15.237 7.507a1 1 0 0 1 .116 1.993l-.116.007h-7a1 1 0 0 1-.117-1.993l.117-.007h7zM15.237 10.507a1 1 0 0 1 .116 1.993l-.116.007h-7a1 1 0 0 1-.117-1.993l.117-.007h7zM15.237 13.507a1 1 0 0 1 .116 1.993l-.116.007h-7a1 1 0 0 1-.117-1.993l.117-.007h7z" fill="url(#c)" fill-rule="nonzero" transform="translate(33 10)"/>
+    </g>
+</svg>

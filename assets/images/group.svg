@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+    <defs>
+        <linearGradient id="pmgie3lema" x1="50%" x2="50%" y1="26.545%" y2="53.465%">
+            <stop offset="0%" stop-color="#0058DB"/>
+            <stop offset="100%" stop-color="#0048B3"/>
+        </linearGradient>
+        <linearGradient id="xxjen74udb" x1="50%" x2="50%" y1="21.213%" y2="40.206%">
+            <stop offset="0%" stop-color="#0044C5"/>
+            <stop offset="100%" stop-color="#0058DB"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <path d="M0 0H128V128H0z" transform="translate(-116.000000, -156.000000) translate(116.000000, 156.000000)"/>
+                <g transform="translate(-116.000000, -156.000000) translate(116.000000, 156.000000) translate(34.000000, 36.000000)">
+                    <rect width="7.543" height="5.967" x="46.957" y="7.025" fill="#0058DB" fill-rule="nonzero" rx="2.286"/>
+                    <rect width="7.543" height="5.967" x="5.471" y="7.025" fill="#0058DB" fill-rule="nonzero" rx="2.286"/>
+                    <path stroke="url(#pmgie3lema)" stroke-width="4.571" d="M38.418 2.286c.63 0 1.2.257 1.613.671.416.418.673.996.673 1.633h0v11.777l-21.037.378-.385-12.185c.008-.625.263-1.191.673-1.603.413-.414.983-.671 1.613-.671h0z"/>
+                    <rect width="60" height="45.902" y="10.098" fill="url(#xxjen74udb)" fill-rule="nonzero" rx="5.714"/>
+                    <path fill="#2376F1" fill-rule="nonzero" d="M5.714 10.152h48.572c3.156 0 5.714 2.569 5.714 5.738v4.59H0v-4.59c0-3.169 2.558-5.738 5.714-5.738z"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

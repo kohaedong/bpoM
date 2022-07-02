@@ -26,11 +26,10 @@
     </intent>
     </queries>
    <application
-        android:label="${app_name}"
-        android:usesCleartextTraffic="true"
+        android:label="Medical Sales Portal"
+        android:name="${applicationName}"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:icon="@mipmap/ic_launcher"
-        >
+        android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -52,7 +51,7 @@
         <!-- 업데이트 file provider    페키지명 수정필요.  -->
         <provider
         android:name="androidx.core.content.FileProvider"
-        android:authorities="${bundle_id}.fileProvider" 
+        android:authorities="com.kolon.medsalesportal.fileProvider" 
         android:exported="false"
         android:grantUriPermissions="true"
         tools:replace="android:authorities">

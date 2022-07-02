@@ -55,14 +55,12 @@ android {
         applicationId "com.kolon.medsalesportal"
         // 개발 및 운영 환경
         //applicationId "com.kolon.medsalesportaldev"
-        minSdkVersion 19
+        minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
         versionCode 90000000
         versionName "01.05.02"
-        manifestPlaceholders = [bundle_id: "com.kolon.medsalesportal",
-                                app_name: "Medical Sales Portal"]
-        // manifestPlaceholders = [bundle_id: "com.kolon.medsalesportal",
-        // app_name: "(개발)Medical Sales Portal"]
+        multiDexEnabled true
+       
     }
     signingConfigs {
             debug {
