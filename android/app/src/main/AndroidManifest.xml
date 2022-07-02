@@ -48,8 +48,20 @@
             </intent-filter>
         </activity>
        
-        <!-- 업데이트 file provider    페키지명 수정필요.  -->
+        <!--  빌드옵션 개발 -->
         <provider
+        android:name="androidx.core.content.FileProvider"
+        android:authorities="com.kolon.medsalesportaldev.fileProvider" 
+        android:exported="false"
+        android:grantUriPermissions="true"
+        tools:replace="android:authorities">
+        <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"
+                tools:replace="android:resource" />
+        </provider>
+        <!-- 빌드옵션 운영 -->
+        <!-- <provider
         android:name="androidx.core.content.FileProvider"
         android:authorities="com.kolon.medsalesportal.fileProvider" 
         android:exported="false"
@@ -59,7 +71,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths"
                 tools:replace="android:resource" />
-        </provider>
+        </provider> -->
+
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />

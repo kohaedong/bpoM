@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/api_service.dart
  * Created Date: 2021-08-22 21:53:15
- * Last Modified: 2022-07-02 15:34:44
+ * Last Modified: 2022-07-02 16:30:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -95,7 +95,7 @@ class ApiService {
       'deviceSerialNo': deviceInfo.deviceId,
       'deviceModelNo': deviceInfo.deviceModel,
       //! 빌드옵션 하드코딩 앱 ID
-      'appId': Platform.isIOS ? '79' : '78',
+      'appId': Platform.isIOS ? '80' : '79',
     };
     final anotherHeader = await requestType!.anotherHeader;
     options.headers.addAll(header);

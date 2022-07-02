@@ -361,7 +361,8 @@ class SigninProvider extends ChangeNotifier {
       "methodName": RequestType.REQUEST_ES_LOGIN.serverMethod,
       "methodParamMap": {
         "IV_LOGID": userAccount.toUpperCase(),
-        "appName": 'salesportal',
+        // 빌드옵션 appName
+        "appName": 'medsalesportal',
         "functionName": RequestType.REQUEST_ES_LOGIN.serverMethod,
         "resultTables": RequestType.REQUEST_ES_LOGIN.resultTable,
       }
