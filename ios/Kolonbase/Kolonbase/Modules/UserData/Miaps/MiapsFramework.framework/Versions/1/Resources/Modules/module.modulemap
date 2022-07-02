@@ -1,0 +1,6 @@
+framework module MiapsFramework {
+  umbrella header "MiapsFramework.h"
+
+  export *
+  module * { export * }
+}

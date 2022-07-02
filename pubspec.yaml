@@ -30,7 +30,7 @@ dependencies:
   flutter_screenutil: ^5.5.3+2 # 유지보수 양호
   flutter_svg: ^1.1.1 # 유지보수 양호 
   fluttertoast: ^8.0.9 # 유지보수 양호
-  open_file: ^2.1.1 #### 폐기의심,현재 까지 사용가능.####
+  open_file: ^2.1.1 #### 폐기의심,현재 까지 사용가능.####  .apk 파일 open 용
 
 
 dev_dependencies:

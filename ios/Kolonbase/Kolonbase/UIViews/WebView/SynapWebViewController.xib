@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SynapWebViewController" customModule="Kolonbase" customModuleProvider="target">
+            <connections>
+                <outlet property="titleLabel" destination="Fvf-d3-sP7" id="GJy-tP-ezJ"/>
+                <outlet property="view" destination="B7Q-VI-sbs" id="H4k-t5-oo1"/>
+                <outlet property="webView" destination="IjB-eT-Tuk" id="nA3-iC-qgc"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="B7Q-VI-sbs">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M67-Py-ARl">
+                    <rect key="frame" x="0.0" y="44" width="414" height="56"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vye-gl-EH5">
+                            <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="56" id="3Ph-Wm-st7"/>
+                                <constraint firstAttribute="height" constant="56" id="c1F-ZD-AbJ"/>
+                            </constraints>
+                            <state key="normal" image="icon-outlined-24-px-left"/>
+                            <connections>
+                                <action selector="closeButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="jvj-pI-6P2"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Fvf-d3-sP7">
+                            <rect key="frame" x="56" y="28" width="302" height="0.0"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
+                            <color key="textColor" name="Text P2"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="Fvf-d3-sP7" firstAttribute="leading" secondItem="vye-gl-EH5" secondAttribute="trailing" id="SQs-uy-O7g"/>
+                        <constraint firstAttribute="trailing" secondItem="Fvf-d3-sP7" secondAttribute="trailing" constant="56" id="V4Y-2s-5Fg"/>
+                        <constraint firstItem="vye-gl-EH5" firstAttribute="leading" secondItem="M67-Py-ARl" secondAttribute="leading" id="dRw-vh-U5L"/>
+                        <constraint firstAttribute="bottom" secondItem="vye-gl-EH5" secondAttribute="bottom" id="esC-Ax-BuC"/>
+                        <constraint firstItem="Fvf-d3-sP7" firstAttribute="centerY" secondItem="M67-Py-ARl" secondAttribute="centerY" id="jSZ-Mk-gHM"/>
+                        <constraint firstItem="vye-gl-EH5" firstAttribute="top" secondItem="M67-Py-ARl" secondAttribute="top" id="mt4-6V-CcH"/>
+                    </constraints>
+                </view>
+                <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IjB-eT-Tuk">
+                    <rect key="frame" x="0.0" y="100" width="414" height="762"/>
+                    <color key="backgroundColor" red="0.94117647059999998" green="0.94117647059999998" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <wkWebViewConfiguration key="configuration">
+                        <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                        <wkPreferences key="preferences"/>
+                    </wkWebViewConfiguration>
+                </wkWebView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="c1S-KD-epn"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="IjB-eT-Tuk" firstAttribute="top" secondItem="M67-Py-ARl" secondAttribute="bottom" id="DyK-h7-z7i"/>
+                <constraint firstItem="IjB-eT-Tuk" firstAttribute="bottom" secondItem="c1S-KD-epn" secondAttribute="bottom" id="Emd-8N-RRk"/>
+                <constraint firstItem="IjB-eT-Tuk" firstAttribute="leading" secondItem="c1S-KD-epn" secondAttribute="leading" id="Vz0-u2-dJW"/>
+                <constraint firstItem="IjB-eT-Tuk" firstAttribute="trailing" secondItem="c1S-KD-epn" secondAttribute="trailing" id="cVH-Tb-NdF"/>
+                <constraint firstItem="M67-Py-ARl" firstAttribute="top" secondItem="c1S-KD-epn" secondAttribute="top" id="e30-w2-emd"/>
+                <constraint firstItem="M67-Py-ARl" firstAttribute="leading" secondItem="c1S-KD-epn" secondAttribute="leading" id="gph-hq-PAk"/>
+                <constraint firstItem="M67-Py-ARl" firstAttribute="trailing" secondItem="c1S-KD-epn" secondAttribute="trailing" id="pcr-jC-8Tr"/>
+            </constraints>
+            <point key="canvasLocation" x="-804.34782608695662" y="140.625"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="icon-outlined-24-px-left" width="24" height="24"/>
+        <namedColor name="Text P2">
+            <color red="0.078431372549019607" green="0.086274509803921567" blue="0.094117647058823528" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

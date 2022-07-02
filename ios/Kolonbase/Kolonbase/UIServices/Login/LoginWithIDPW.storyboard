@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vd8-Aj-A5n">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Login WithIDPW View Controller-->
+        <scene sceneID="GfL-jV-krG">
+            <objects>
+                <viewController storyboardIdentifier="LoginWithIDPWViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="vd8-Aj-A5n" customClass="LoginWithIDPWViewController" customModule="Kolonbase" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="7Bm-I7-a5N">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mvd-WV-rzJ">
+                                <rect key="frame" x="0.0" y="44" width="414" height="852"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iken-logo" translatesAutoresizingMaskIntoConstraints="NO" id="9eT-GP-KZq">
+                                        <rect key="frame" x="155.5" y="393.5" width="103" height="31"/>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="kolon-logo" translatesAutoresizingMaskIntoConstraints="NO" id="r1Y-PH-1TR">
+                                        <rect key="frame" x="182" y="810" width="50" height="10"/>
+                                    </imageView>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="WmM-Sa-Cyb">
+                                        <rect key="frame" x="197" y="696" width="20" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="r1Y-PH-1TR" secondAttribute="bottom" constant="32" id="ivA-Zu-th7"/>
+                                    <constraint firstItem="r1Y-PH-1TR" firstAttribute="centerX" secondItem="Mvd-WV-rzJ" secondAttribute="centerX" id="xmO-FW-omB"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qOS-eL-5Fx">
+                                <rect key="frame" x="0.0" y="123" width="414" height="367"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="iken-logo" translatesAutoresizingMaskIntoConstraints="NO" id="ZYu-9M-URe">
+                                        <rect key="frame" x="160" y="0.0" width="103" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="아이디" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dCJ-0P-jsz">
+                                        <rect key="frame" x="20" y="95" width="370" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <color key="textColor" name="Text P2"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="username"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" name="Gray P4 0.8"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="padding">
+                                                <real key="value" value="12"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="textFieldEditingChanged:" destination="vd8-Aj-A5n" eventType="editingChanged" id="ae4-1n-IuV"/>
+                                            <outlet property="delegate" destination="vd8-Aj-A5n" id="ZlV-LN-0PE"/>
+                                        </connections>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="비밀번호" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ex9-yO-GX6">
+                                        <rect key="frame" x="20" y="157" width="370" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <color key="textColor" name="Text P2"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="password"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" name="Gray P4 0.8"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="padding">
+                                                <real key="value" value="12"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="textFieldEditingChanged:" destination="vd8-Aj-A5n" eventType="editingChanged" id="QAM-Hl-eoz"/>
+                                            <outlet property="delegate" destination="vd8-Aj-A5n" id="hmJ-un-JoU"/>
+                                        </connections>
+                                    </textField>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="etO-bN-F2G">
+                                        <rect key="frame" x="358" y="170" width="24" height="24"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="icon-filled-24-lg-3-misuse"/>
+                                        <connections>
+                                            <action selector="pwClearButtonTouchUpInside:" destination="vd8-Aj-A5n" eventType="touchUpInside" id="cE0-Gl-fMt"/>
+                                        </connections>
+                                    </button>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ghi-gp-ISQ">
+                                        <rect key="frame" x="358" y="108" width="24" height="24"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="icon-filled-24-lg-3-misuse"/>
+                                        <connections>
+                                            <action selector="idClearButtonTouchUpInside:" destination="vd8-Aj-A5n" eventType="touchUpInside" id="msW-bV-lu3"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="256" fixedFrame="YES" text="아이디 또는 비밀번호를 확인해 주세요." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bwv-MS-wMz">
+                                        <rect key="frame" x="20" y="219" width="370" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" red="0.89019607840000003" green="0.1215686275" blue="0.1333333333" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3mk-Ag-Rtp">
+                                        <rect key="frame" x="20" y="252" width="118" height="22"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" systemColor="labelColor"/>
+                                        <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <state key="normal" title="아이디 저장" image="checkbox-normal">
+                                            <color key="titleColor" systemColor="labelColor"/>
+                                        </state>
+                                        <state key="selected" image="checkbox-checked"/>
+                                        <connections>
+                                            <action selector="userIdStoreButtonTouchUpInside:" destination="vd8-Aj-A5n" eventType="touchUpInside" id="mXo-MZ-fmP"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="43I-UA-AeT">
+                                        <rect key="frame" x="280" y="252" width="114" height="22"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" systemColor="labelColor"/>
+                                        <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <state key="normal" title="자동 로그인" image="checkbox-normal">
+                                            <color key="titleColor" systemColor="labelColor"/>
+                                        </state>
+                                        <state key="selected" image="checkbox-checked"/>
+                                        <connections>
+                                            <action selector="userAutoLoginButtonTouchUpInside:" destination="vd8-Aj-A5n" eventType="touchUpInside" id="huf-iL-gBI"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="baP-Hz-OYT">
+                                        <rect key="frame" x="20" y="317" width="374" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="로그인" backgroundImage="Dodger Bule P3">
+                                            <color key="titleColor" name="White P1"/>
+                                        </state>
+                                        <state key="disabled" backgroundImage="Gray P5">
+                                            <color key="titleColor" name="Text P4"/>
+                                        </state>
+                                        <state key="selected" backgroundImage="Dodger Bule P3">
+                                            <color key="titleColor" name="White P1"/>
+                                        </state>
+                                        <state key="highlighted" backgroundImage="Dodger Bule P3"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="loginButtonTouchUpInside:" destination="vd8-Aj-A5n" eventType="touchUpInside" id="gES-Kj-YsC"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="3TJ-mA-Ge1"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Mvd-WV-rzJ" firstAttribute="trailing" secondItem="3TJ-mA-Ge1" secondAttribute="trailing" id="8sM-Tc-RPe"/>
+                            <constraint firstItem="Mvd-WV-rzJ" firstAttribute="top" secondItem="3TJ-mA-Ge1" secondAttribute="top" id="Kve-e4-vAr"/>
+                            <constraint firstAttribute="bottom" secondItem="Mvd-WV-rzJ" secondAttribute="bottom" id="Kxf-T7-O0Q"/>
+                            <constraint firstItem="9eT-GP-KZq" firstAttribute="centerX" secondItem="3TJ-mA-Ge1" secondAttribute="centerX" id="RU4-Ht-MWd"/>
+                            <constraint firstItem="Mvd-WV-rzJ" firstAttribute="leading" secondItem="3TJ-mA-Ge1" secondAttribute="leading" id="efn-sa-4sW"/>
+                            <constraint firstItem="9eT-GP-KZq" firstAttribute="centerY" secondItem="3TJ-mA-Ge1" secondAttribute="centerY" id="vOG-O8-DEM"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="activityIndicator" destination="WmM-Sa-Cyb" id="KAi-AT-ylm"/>
+                        <outlet property="idClearButton" destination="ghi-gp-ISQ" id="s0E-l1-Xet"/>
+                        <outlet property="idTextField" destination="dCJ-0P-jsz" id="1on-8z-L4Z"/>
+                        <outlet property="ikenLogoImageView" destination="9eT-GP-KZq" id="WQF-vx-jRB"/>
+                        <outlet property="kolonLogoImageView" destination="r1Y-PH-1TR" id="bQW-E9-iZV"/>
+                        <outlet property="loadingView" destination="Mvd-WV-rzJ" id="Tus-Vj-5QH"/>
+                        <outlet property="loginButton" destination="baP-Hz-OYT" id="wRP-dW-OJX"/>
+                        <outlet property="loginView" destination="qOS-eL-5Fx" id="RMY-Dl-pVc"/>
+                        <outlet property="logoImageView" destination="ZYu-9M-URe" id="5Yz-3y-2fH"/>
+                        <outlet property="messageLabel" destination="bwv-MS-wMz" id="fe5-uT-jce"/>
+                        <outlet property="pwClearButton" destination="etO-bN-F2G" id="fau-jU-RDD"/>
+                        <outlet property="pwTextField" destination="ex9-yO-GX6" id="BVc-uR-Sa7"/>
+                        <outlet property="userAutoLoginButton" destination="43I-UA-AeT" id="ole-mV-K8B"/>
+                        <outlet property="userIdStoreButton" destination="3mk-Ag-Rtp" id="Cok-qX-NiI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nLi-Ke-ogP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="260.86956521739131" y="103.79464285714285"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Dodger Bule P3" width="60" height="60"/>
+        <image name="Gray P5" width="60" height="60"/>
+        <image name="checkbox-checked" width="20" height="20"/>
+        <image name="checkbox-normal" width="20" height="20"/>
+        <image name="icon-filled-24-lg-3-misuse" width="24" height="24"/>
+        <image name="iken-logo" width="103" height="31"/>
+        <image name="kolon-logo" width="50" height="10"/>
+        <namedColor name="Gray P4 0.8">
+            <color red="0.80000001192092896" green="0.80000001192092896" blue="0.80000001192092896" alpha="0.80000001192092896" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Text P2">
+            <color red="0.078000001609325409" green="0.086000002920627594" blue="0.093999996781349182" alpha="0.87000000476837158" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Text P4">
+            <color red="0.078000001609325409" green="0.086000002920627594" blue="0.093999996781349182" alpha="0.30000001192092896" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="White P1">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

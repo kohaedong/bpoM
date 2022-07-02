@@ -1,0 +1,22 @@
+{
+  "images" : [
+    {
+      "filename" : "zs 2020-12-03 at 2.54.58 PM.pdf",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "zs 2020-12-22 at 3.21.10 PM.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

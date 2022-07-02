@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "icon-app-pharm.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

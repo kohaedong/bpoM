@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "icon-filled-24-px-talk.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SNSWebViewController" customModule="Kolonbase" customModuleProvider="target">
+            <connections>
+                <outlet property="goBackButton" destination="EUp-77-8sl" id="wUX-Sj-C5f"/>
+                <outlet property="goForwardButton" destination="gdC-51-4mX" id="tyv-Xd-NX2"/>
+                <outlet property="reloadButton" destination="Fx1-xv-3wr" id="cJJ-3n-BYR"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="webView" destination="AV9-PO-Ful" id="0tC-NU-HFW"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FzN-yM-bJF">
+                    <rect key="frame" x="0.0" y="44" width="414" height="56"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rQh-f2-ae8">
+                            <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="56" id="BvD-PT-3NS"/>
+                            </constraints>
+                            <state key="normal" image="icon-outlined-24-px-close"/>
+                            <connections>
+                                <action selector="closeButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="5T2-r1-e55"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="56" id="6eb-aR-2uE"/>
+                        <constraint firstAttribute="bottom" secondItem="rQh-f2-ae8" secondAttribute="bottom" id="IZK-bX-iaB"/>
+                        <constraint firstItem="rQh-f2-ae8" firstAttribute="top" secondItem="FzN-yM-bJF" secondAttribute="top" id="Otj-Gn-lpe"/>
+                        <constraint firstItem="rQh-f2-ae8" firstAttribute="leading" secondItem="FzN-yM-bJF" secondAttribute="leading" id="Wc8-EB-eBI"/>
+                    </constraints>
+                </view>
+                <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AV9-PO-Ful">
+                    <rect key="frame" x="0.0" y="100" width="414" height="706"/>
+                    <color key="backgroundColor" red="0.94117647058823528" green="0.94117647058823528" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                    <wkWebViewConfiguration key="configuration">
+                        <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                        <wkPreferences key="preferences"/>
+                    </wkWebViewConfiguration>
+                </wkWebView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="07F-2j-V68">
+                    <rect key="frame" x="0.0" y="806" width="414" height="56"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gdC-51-4mX">
+                            <rect key="frame" x="195" y="16" width="24" height="24"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" image="icon-outlined-24-lg-1-right"/>
+                            <connections>
+                                <action selector="goForwardButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="KgI-lB-UuK"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fx1-xv-3wr">
+                            <rect key="frame" x="315" y="16" width="24" height="24"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" image="icon-outlined-24-lg-1-restart"/>
+                            <connections>
+                                <action selector="reloadButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="M2w-uo-wQy"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EUp-77-8sl">
+                            <rect key="frame" x="75" y="16" width="24" height="24"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" image="icon-outlined-24-lg-1-left"/>
+                            <connections>
+                                <action selector="goBackButtonTouchUpInside:" destination="-1" eventType="touchUpInside" id="PcP-9K-wcc"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="56" id="DGg-g0-bhz"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="07F-2j-V68" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="1XD-EZ-aCH"/>
+                <constraint firstItem="AV9-PO-Ful" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="6i1-78-YfV"/>
+                <constraint firstItem="AV9-PO-Ful" firstAttribute="top" secondItem="FzN-yM-bJF" secondAttribute="bottom" id="FUU-Ec-Hxp"/>
+                <constraint firstItem="07F-2j-V68" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="Hko-tY-aW7"/>
+                <constraint firstItem="AV9-PO-Ful" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="OGP-9s-GoH"/>
+                <constraint firstItem="07F-2j-V68" firstAttribute="top" secondItem="AV9-PO-Ful" secondAttribute="bottom" id="ShU-eD-ova"/>
+                <constraint firstItem="07F-2j-V68" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Urm-hd-rfa"/>
+                <constraint firstItem="FzN-yM-bJF" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="W6U-Cj-CVn"/>
+                <constraint firstItem="FzN-yM-bJF" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="ren-I4-maC"/>
+                <constraint firstItem="FzN-yM-bJF" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="sbo-vl-z6P"/>
+            </constraints>
+            <point key="canvasLocation" x="56.521739130434788" y="130.58035714285714"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="icon-outlined-24-lg-1-left" width="24" height="24"/>
+        <image name="icon-outlined-24-lg-1-restart" width="24" height="24"/>
+        <image name="icon-outlined-24-lg-1-right" width="24" height="24"/>
+        <image name="icon-outlined-24-px-close" width="24" height="25"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

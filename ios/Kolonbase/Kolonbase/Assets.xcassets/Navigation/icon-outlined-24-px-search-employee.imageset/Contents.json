@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "icon-outlined-24-px-search-employee.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
