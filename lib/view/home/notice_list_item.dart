@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_list_item.dart
  * Created Date: 2022-01-04 00:52:36
- * Last Modified: 2022-07-03 14:52:58
+ * Last Modified: 2022-07-03 15:12:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -17,8 +17,8 @@ import 'package:medsalesportal/model/rfc/t_alarm_model.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/view/common/base_tag_button.dart';
-import 'package:medsalesportal/view/common/last_page_text.dart';
+import 'package:medsalesportal/view/common/widget_of_tag_button.dart';
+import 'package:medsalesportal/view/common/widget_of_last_page_text.dart';
 import 'package:medsalesportal/view/home/provider/alarm_provider.dart';
 import 'package:provider/provider.dart';
 

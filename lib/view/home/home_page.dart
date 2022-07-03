@@ -13,7 +13,7 @@ import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
-import 'package:medsalesportal/view/common/base_null_data_widget.dart';
+import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/commonLogin/update_and_notice_dialog.dart';
 import 'package:medsalesportal/view/home/notice_all_page.dart';
 import 'package:medsalesportal/view/home/notice_list_item.dart';

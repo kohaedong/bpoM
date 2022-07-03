@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/flutter_source_code_calinda_datePicker.dart
  * Created Date: 2021-10-02 03:22:06
- * Last Modified: 2022-07-02 15:18:58
+ * Last Modified: 2022-07-03 15:12:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -25,7 +25,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/styles/app_size.dart';
-import './flutter_source_code_calendar_datePicker.dart' as date_picker;
+import 'widget_of_flutter_source_code_calendar_datePicker.dart' as date_picker;
 
 const Size _calendarPortraitDialogSize = Size(330.0, 518.0);
 const Size _calendarLandscapeDialogSize = Size(496.0, 346.0);
