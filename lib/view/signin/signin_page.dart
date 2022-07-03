@@ -9,7 +9,7 @@ import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_style.dart';
 import 'package:medsalesportal/styles/app_text_style.dart';
 import 'package:medsalesportal/util/hiden_keybord.dart';
-import 'package:medsalesportal/view/common/app_dialog.dart';
+import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_loading_view_on_stack_widget.dart';
@@ -30,10 +30,17 @@ class _SigninPageState extends State<SigninPage> {
   TextEditingController? _idController;
   TextEditingController? _passwordController;
   late ScrollController _scrollController;
-
+  String? id;
+  String? pw;
+  String? message;
+  bool isShowPopup = false;
+  FocusNode? idFocus;
+  FocusNode? pwFocus;
   @override
   void initState() {
     super.initState();
+    idFocus = FocusNode();
+    pwFocus = FocusNode();
     _idController = TextEditingController();
     _passwordController = TextEditingController();
     _scrollController = ScrollController();
@@ -41,6 +48,8 @@ class _SigninPageState extends State<SigninPage> {
 
   @override
   void dispose() {
+    idFocus?.dispose();
+    pwFocus?.dispose();
     _idController!.dispose();
     _passwordController!.dispose();
     _scrollController.dispose();
@@ -57,11 +66,9 @@ class _SigninPageState extends State<SigninPage> {
             builder: (context, account, _) {
               return BaseInputWidget(
                   onTap: () {
-                    Future.delayed(Duration(milliseconds: 400), () {
-                      _scrollController
-                          .jumpTo(_scrollController.position.maxScrollExtent);
-                    });
+                    p.setIsIdFocused(true);
                   },
+                  focusNode: idFocus,
                   textEditingController: _idController,
                   keybordType: TextInputType.multiline,
                   context: context,
@@ -92,11 +99,9 @@ class _SigninPageState extends State<SigninPage> {
                 return BaseInputWidget(
                     textEditingController: _passwordController,
                     onTap: () {
-                      Future.delayed(Duration(milliseconds: 400), () {
-                        _scrollController
-                            .jumpTo(_scrollController.position.maxScrollExtent);
-                      });
+                      p.setIsPwFocused(true);
                     },
+                    focusNode: pwFocus,
                     context: context,
                     iconType: password != null ? InputIconType.DELETE : null,
                     hintText: password != null ? null : '${tr('password')}',
@@ -211,6 +216,8 @@ class _SigninPageState extends State<SigninPage> {
                       Platform.isAndroid
                           ? hideKeyboardForAndroid(context)
                           : hideKeyboard(context);
+                      p.setIsIdFocused(false);
+                      p.setIsPwFocused(false);
                       final result = await p.signIn();
                       if (result.isSuccessful) {
                         Navigator.popAndPushNamed(context, HomePage.routeName);
@@ -273,12 +280,6 @@ class _SigninPageState extends State<SigninPage> {
         builder: (context, _) {
           final p = context.read<SigninProvider>();
           final arguments = ModalRoute.of(context)!.settings.arguments;
-          String? id;
-          String? pw;
-          // ignore: unused_local_variable
-          String? message;
-          // ignore: unused_local_variable
-          bool isShowPopup = false;
           if (arguments != null) {
             arguments as Map<String, dynamic>;
             id = arguments['id'];
@@ -286,63 +287,93 @@ class _SigninPageState extends State<SigninPage> {
             message = arguments['message'];
             isShowPopup = arguments['isShowPopup'] ?? false;
           }
-
-          return FutureBuilder<Map<String, dynamic>?>(
-            future: p.setDefaultData(id: id, pw: pw),
-            builder: (context, snapshot) {
-              if (snapshot.hasData &&
-                  snapshot.connectionState == ConnectionState.done) {
-                return Builder(builder: (context) {
-                  if (snapshot.data!['id'] != null) {
-                    p.userAccount = snapshot.data!['id'];
-                    _idController!.text = snapshot.data!['id'];
-                  }
-                  if (snapshot.data!['pw'] != null) {
-                    p.password = snapshot.data!['pw'];
-                    _passwordController!.text = snapshot.data!['pw'];
-                  }
-                  return Stack(
-                    children: [
-                      ListView(
-                        controller: _scrollController,
-                        children: [
-                          Padding(
-                              padding: AppSize.signinLogoPadding,
-                              child: Center(
-                                  child: AppImage.getImage(
-                                      ImageType.SPLASH_ICON))),
-                          buildTextFormForId(context),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  top: AppSize.defaultListItemSpacing)),
-                          buildTextFormForPassword(context),
-                          Padding(
-                              padding: AppSize.defaultSidePadding,
-                              child: buildErrorMessage(context)),
-                          buildCheckBoxRow(context),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  top: AppSize.homeSubmmitButtonPadding)),
-                          Padding(
-                              padding: AppSize.defaultSidePadding,
-                              child: buildSubmmitButton(context))
-                        ],
-                      ),
-                      Selector<SigninProvider, bool>(
-                        selector: (context, provider) => provider.isLoadData,
-                        builder: (context, isLoadData, _) {
-                          return isLoadData
-                              ? BaseLoadingViewOnStackWidget.build(
-                                  context, isLoadData)
-                              : Container();
-                        },
-                      ),
-                    ],
-                  );
-                });
-              }
-              return Container();
+          return GestureDetector(
+            onTap: () {
+              idFocus!.unfocus();
+              pwFocus!.unfocus();
+              final p = context.read<SigninProvider>();
+              p.setIsIdFocused(false);
+              p.setIsPwFocused(false);
             },
+            child: FutureBuilder<Map<String, dynamic>?>(
+              future: p.setDefaultData(id: id, pw: pw),
+              builder: (context, snapshot) {
+                if (snapshot.hasData &&
+                    snapshot.connectionState == ConnectionState.done) {
+                  return Builder(builder: (context) {
+                    if (snapshot.data!['id'] != null) {
+                      p.userAccount = snapshot.data!['id'];
+                      _idController!.text = snapshot.data!['id'];
+                    }
+                    if (snapshot.data!['pw'] != null) {
+                      p.password = snapshot.data!['pw'];
+                      _passwordController!.text = snapshot.data!['pw'];
+                    }
+                    return Stack(
+                      children: [
+                        ListView(
+                          controller: _scrollController,
+                          children: [
+                            Padding(
+                                padding: AppSize.signinLogoPadding,
+                                child: Center(
+                                    child: AppImage.getImage(
+                                        ImageType.SPLASH_ICON))),
+                            buildTextFormForId(context),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    top: AppSize.defaultListItemSpacing)),
+                            buildTextFormForPassword(context),
+                            Padding(
+                                padding: AppSize.defaultSidePadding,
+                                child: buildErrorMessage(context)),
+                            buildCheckBoxRow(context),
+                            Selector<SigninProvider, Tuple2<bool?, bool?>>(
+                              selector: (context, provider) => Tuple2(
+                                  provider.isIdFocused, provider.isPwFocused),
+                              builder: (context, tuple, _) {
+                                return Padding(
+                                    padding:
+                                        (tuple.item1 != null && tuple.item1!) ||
+                                                (tuple.item2 != null &&
+                                                    tuple.item2!)
+                                            ? EdgeInsets.only(top: 100)
+                                            : EdgeInsets.zero);
+                              },
+                            )
+                          ],
+                        ),
+                        Selector<SigninProvider, Tuple2<bool?, bool?>>(
+                          selector: (context, provider) => Tuple2(
+                              provider.isIdFocused, provider.isPwFocused),
+                          builder: (context, tuple, _) {
+                            return Positioned(
+                                left: 0,
+                                bottom: (tuple.item1 != null && tuple.item1!) ||
+                                        (tuple.item2 != null && tuple.item2!)
+                                    ? 0
+                                    : AppSize.realHeight * .2,
+                                child: Padding(
+                                    padding: AppSize.defaultSidePadding,
+                                    child: buildSubmmitButton(context)));
+                          },
+                        ),
+                        Selector<SigninProvider, bool>(
+                          selector: (context, provider) => provider.isLoadData,
+                          builder: (context, isLoadData, _) {
+                            return isLoadData
+                                ? BaseLoadingViewOnStackWidget.build(
+                                    context, isLoadData)
+                                : Container();
+                          },
+                        ),
+                      ],
+                    );
+                  });
+                }
+                return Container();
+              },
+            ),
           );
         },
       ),

@@ -5,7 +5,7 @@ import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_style.dart';
 import 'package:medsalesportal/styles/app_text_style.dart';
-import 'package:medsalesportal/view/common/app_bar.dart';
+import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
 import 'package:medsalesportal/view/settings/provider/settings_provider.dart';

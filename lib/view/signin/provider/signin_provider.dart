@@ -26,6 +26,8 @@ class SigninProvider extends ChangeNotifier {
   String errorMessage = '';
   String? userAccount;
   String? password;
+  bool? isIdFocused;
+  bool? isPwFocused;
   bool isCheckedSaveIdBox = false;
   bool isCheckedAutoSigninBox = false;
   User? user;
@@ -41,6 +43,16 @@ class SigninProvider extends ChangeNotifier {
 
   void setIdCheckBox() {
     this.isCheckedSaveIdBox = !isCheckedSaveIdBox;
+    notifyListeners();
+  }
+
+  void setIsIdFocused(bool val) {
+    isIdFocused = val;
+    notifyListeners();
+  }
+
+  void setIsPwFocused(bool val) {
+    isPwFocused = val;
     notifyListeners();
   }
 

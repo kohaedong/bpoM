@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-07-02 14:19:17
+ * Last Modified: 2022-07-03 13:26:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -76,6 +76,7 @@ class BaseInputWidget extends StatefulWidget {
   final double width;
   final Function? onTap;
   final bool enable;
+  final FocusNode? focusNode;
   final IsSelectedStrCallBack? isSelectedStrCallBack;
   final IsSelectedCellCallBack? isSelectedCellCallBack;
   final double? height;
@@ -124,6 +125,7 @@ class BaseInputWidget extends StatefulWidget {
       this.maxLine,
       this.arguments,
       this.bodyMap,
+      this.focusNode,
       this.selectedCity,
       this.checkBoxDefaultValue,
       this.checkBoxType,
@@ -222,6 +224,7 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                 return;
               }
             },
+            focusNode: widget.focusNode,
             inputFormatters: [LengthLimitingTextInputFormatter(200)],
             keyboardType: widget.keybordType,
             obscureText: widget.keybordType != null &&
