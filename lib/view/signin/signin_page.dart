@@ -13,6 +13,7 @@ import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_loading_view_on_stack_widget.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/home/home_page.dart';
 import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +57,7 @@ class _SigninPageState extends State<SigninPage> {
     super.dispose();
   }
 
-  Widget buildTextFormForId(BuildContext context) {
+  Widget _buildTextFormForId(BuildContext context) {
     final p = context.read<SigninProvider>();
 
     return Padding(
@@ -87,7 +88,7 @@ class _SigninPageState extends State<SigninPage> {
             }));
   }
 
-  Widget buildTextFormForPassword(BuildContext context) {
+  Widget _buildTextFormForPassword(BuildContext context) {
     final p = context.read<SigninProvider>();
 
     return Padding(
@@ -119,7 +120,7 @@ class _SigninPageState extends State<SigninPage> {
             }));
   }
 
-  Widget buildIdSaveCheckBox(BuildContext context) {
+  Widget _buildIdSaveCheckBox(BuildContext context) {
     final p = context.read<SigninProvider>();
     return InkWell(
       onTap: () {
@@ -151,7 +152,7 @@ class _SigninPageState extends State<SigninPage> {
     );
   }
 
-  Widget buildAutoSigninCheckBox(BuildContext context) {
+  Widget _buildAutoSigninCheckBox(BuildContext context) {
     final p = context.read<SigninProvider>();
     return InkWell(
       onTap: () {
@@ -184,87 +185,144 @@ class _SigninPageState extends State<SigninPage> {
     );
   }
 
-  Widget buildCheckBoxRow(BuildContext context) {
+  Widget _buildCheckBoxRow(BuildContext context) {
     return Padding(
         padding: AppSize.defaultSidePadding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            buildIdSaveCheckBox(context),
-            buildAutoSigninCheckBox(context)
+            _buildIdSaveCheckBox(context),
+            _buildAutoSigninCheckBox(context)
           ],
         ));
   }
 
-  Widget buildSubmmitButton(BuildContext context) {
+  Widget _buildSubmmitButton(BuildContext context) {
     final p = context.read<SigninProvider>();
-    return Selector<SigninProvider, Tuple3<bool, bool, bool>>(
-        selector: (context, provider) => Tuple3(provider.isCheckedAutoSigninBox,
-            provider.isCheckedSaveIdBox, provider.isValueNotNull),
-        builder: (context, tuple, _) {
-          return AppStyles.buildButton(
-              context,
-              '${tr('signin')}',
-              AppSize.defaultContentsWidth,
-              tuple.item3 ? AppColors.primary : AppColors.unReadyButton,
-              AppTextStyle.color_18(
-                  tuple.item3 ? AppColors.whiteText : AppColors.unReadyText),
-              AppSize.radius8,
-              tuple.item3
-                  ? () async {
-                      p.startErrorMessage('');
-                      Platform.isAndroid
-                          ? hideKeyboardForAndroid(context)
-                          : hideKeyboard(context);
-                      p.setIsIdFocused(false);
-                      p.setIsPwFocused(false);
-                      final result = await p.signIn();
-                      if (result.isSuccessful) {
-                        Navigator.popAndPushNamed(context, HomePage.routeName);
-                      } else {
-                        if (result.isShowPopup != null && result.isShowPopup!) {
-                          switch (result.message) {
-                            case 'serverError':
-                              AppDialog.showServerErrorDialog(context);
-                              break;
-                            case 'networkError':
-                              AppDialog.showNetworkErrorDialog(context);
-                              break;
-                            default:
-                              AppDialog.showDangermessage(
-                                  context, '${result.message}');
-                          }
-                        } else {
-                          p.startErrorMessage(result.message);
-                        }
-                      }
-                    }
-                  : () {});
-        });
+    return Selector<SigninProvider, Tuple2<bool?, bool?>>(
+      selector: (context, provider) =>
+          Tuple2(provider.isIdFocused, provider.isPwFocused),
+      builder: (context, tuple, _) {
+        return Positioned(
+            left: 0,
+            bottom: (tuple.item1 != null && tuple.item1!) ||
+                    (tuple.item2 != null && tuple.item2!)
+                ? 0
+                : AppSize.realHeight * .2,
+            child: Padding(
+                padding: AppSize.defaultSidePadding,
+                child: Selector<SigninProvider, Tuple3<bool, bool, bool>>(
+                    selector: (context, provider) => Tuple3(
+                        provider.isCheckedAutoSigninBox,
+                        provider.isCheckedSaveIdBox,
+                        provider.isValueNotNull),
+                    builder: (context, tuple, _) {
+                      return AppStyles.buildButton(
+                          context,
+                          '${tr('signin')}',
+                          AppSize.defaultContentsWidth,
+                          tuple.item3
+                              ? AppColors.primary
+                              : AppColors.unReadyButton,
+                          AppTextStyle.color_18(tuple.item3
+                              ? AppColors.whiteText
+                              : AppColors.unReadyText),
+                          AppSize.radius8,
+                          tuple.item3
+                              ? () async {
+                                  p.startErrorMessage('');
+                                  Platform.isAndroid
+                                      ? hideKeyboardForAndroid(context)
+                                      : hideKeyboard(context);
+                                  p.setIsIdFocused(false);
+                                  p.setIsPwFocused(false);
+                                  final result = await p.signIn();
+                                  if (result.isSuccessful) {
+                                    Navigator.popAndPushNamed(
+                                        context, HomePage.routeName);
+                                  } else {
+                                    if (result.isShowPopup != null &&
+                                        result.isShowPopup!) {
+                                      switch (result.message) {
+                                        case 'serverError':
+                                          AppDialog.showServerErrorDialog(
+                                              context);
+                                          break;
+                                        case 'networkError':
+                                          AppDialog.showNetworkErrorDialog(
+                                              context);
+                                          break;
+                                        default:
+                                          AppDialog.showDangermessage(
+                                              context, '${result.message}');
+                                      }
+                                    } else {
+                                      p.startErrorMessage(result.message);
+                                    }
+                                  }
+                                }
+                              : () {});
+                    })));
+      },
+    );
   }
 
-  Widget buildErrorMessage(BuildContext context) {
-    return Selector<SigninProvider, String>(
-      selector: (context, provider) => provider.errorMessage,
-      builder: (context, errorMessage, _) {
-        return Column(
-          children: [
-            errorMessage.isNotEmpty
-                ? Padding(
-                    padding:
-                        EdgeInsets.only(top: AppSize.defaultListItemSpacing))
-                : Container(),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: AppStyles.text('$errorMessage', AppTextStyle.danger_14),
-            ),
-            errorMessage.isNotEmpty
-                ? Padding(
-                    padding:
-                        EdgeInsets.only(top: AppSize.defaultListItemSpacing))
-                : Container(),
-          ],
-        );
+  Widget _buildErrorMessage(BuildContext context) {
+    return Padding(
+        padding: AppSize.defaultSidePadding,
+        child: Selector<SigninProvider, String>(
+          selector: (context, provider) => provider.errorMessage,
+          builder: (context, errorMessage, _) {
+            return Column(
+              children: [
+                errorMessage.isNotEmpty
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                            top: AppSize.defaultListItemSpacing))
+                    : Container(),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child:
+                      AppStyles.text('$errorMessage', AppTextStyle.danger_14),
+                ),
+                errorMessage.isNotEmpty
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                            top: AppSize.defaultListItemSpacing))
+                    : Container(),
+              ],
+            );
+          },
+        ));
+  }
+
+  Widget _buildAutoSpacing(BuildContext context) {
+    return Selector<SigninProvider, Tuple2<bool?, bool?>>(
+      selector: (context, provider) =>
+          Tuple2(provider.isIdFocused, provider.isPwFocused),
+      builder: (context, tuple, _) {
+        return Padding(
+            padding: (tuple.item1 != null && tuple.item1!) ||
+                    (tuple.item2 != null && tuple.item2!)
+                ? EdgeInsets.only(top: 100)
+                : EdgeInsets.zero);
+      },
+    );
+  }
+
+  Widget _buildLogo() {
+    return Padding(
+        padding: AppSize.signinLogoPadding,
+        child: Center(child: AppImage.getImage(ImageType.SPLASH_ICON)));
+  }
+
+  _buildLoadingWidget(BuildContext context) {
+    return Selector<SigninProvider, bool>(
+      selector: (context, provider) => provider.isLoadData,
+      builder: (context, isLoadData, _) {
+        return isLoadData
+            ? BaseLoadingViewOnStackWidget.build(context, isLoadData)
+            : Container();
       },
     );
   }
@@ -314,59 +372,17 @@ class _SigninPageState extends State<SigninPage> {
                         ListView(
                           controller: _scrollController,
                           children: [
-                            Padding(
-                                padding: AppSize.signinLogoPadding,
-                                child: Center(
-                                    child: AppImage.getImage(
-                                        ImageType.SPLASH_ICON))),
-                            buildTextFormForId(context),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                    top: AppSize.defaultListItemSpacing)),
-                            buildTextFormForPassword(context),
-                            Padding(
-                                padding: AppSize.defaultSidePadding,
-                                child: buildErrorMessage(context)),
-                            buildCheckBoxRow(context),
-                            Selector<SigninProvider, Tuple2<bool?, bool?>>(
-                              selector: (context, provider) => Tuple2(
-                                  provider.isIdFocused, provider.isPwFocused),
-                              builder: (context, tuple, _) {
-                                return Padding(
-                                    padding:
-                                        (tuple.item1 != null && tuple.item1!) ||
-                                                (tuple.item2 != null &&
-                                                    tuple.item2!)
-                                            ? EdgeInsets.only(top: 100)
-                                            : EdgeInsets.zero);
-                              },
-                            )
+                            _buildLogo(),
+                            _buildTextFormForId(context),
+                            defaultSpacing(),
+                            _buildTextFormForPassword(context),
+                            _buildErrorMessage(context),
+                            _buildCheckBoxRow(context),
+                            _buildAutoSpacing(context)
                           ],
                         ),
-                        Selector<SigninProvider, Tuple2<bool?, bool?>>(
-                          selector: (context, provider) => Tuple2(
-                              provider.isIdFocused, provider.isPwFocused),
-                          builder: (context, tuple, _) {
-                            return Positioned(
-                                left: 0,
-                                bottom: (tuple.item1 != null && tuple.item1!) ||
-                                        (tuple.item2 != null && tuple.item2!)
-                                    ? 0
-                                    : AppSize.realHeight * .2,
-                                child: Padding(
-                                    padding: AppSize.defaultSidePadding,
-                                    child: buildSubmmitButton(context)));
-                          },
-                        ),
-                        Selector<SigninProvider, bool>(
-                          selector: (context, provider) => provider.isLoadData,
-                          builder: (context, isLoadData, _) {
-                            return isLoadData
-                                ? BaseLoadingViewOnStackWidget.build(
-                                    context, isLoadData)
-                                : Container();
-                          },
-                        ),
+                        _buildSubmmitButton(context),
+                        _buildLoadingWidget(context)
                       ],
                     );
                   });
