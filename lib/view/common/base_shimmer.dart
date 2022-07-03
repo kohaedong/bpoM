@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_shimmer.dart
  * Created Date: 2021-09-18 18:29:48
- * Last Modified: 2022-07-02 14:09:00
+ * Last Modified: 2022-07-03 15:00:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,9 +12,9 @@
  */
 
 import 'dart:async';
+import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:shimmer/shimmer.dart';
 
 class BaseShimmer extends StatefulWidget {
   BaseShimmer({Key? key, this.child}) : super(key: key);

@@ -8,13 +8,10 @@
  */
 
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/service/navigator_service.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/styles/app_style.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
-import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/styles/export_common.dart';
+import 'package:medsalesportal/service/navigator_service.dart';
+import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
 
 // title 과 input 묶음으로 보여주는 widget.
 // 예:

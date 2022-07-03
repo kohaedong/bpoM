@@ -1,23 +1,19 @@
 import 'dart:io';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/enums/input_icon_type.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_image.dart';
-import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/styles/app_style.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
 import 'package:medsalesportal/util/hiden_keybord.dart';
+import 'package:medsalesportal/view/home/home_page.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/enums/input_icon_type.dart';
+import 'package:medsalesportal/styles/export_common.dart';
+import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
-import 'package:medsalesportal/view/common/base_layout.dart';
-import 'package:medsalesportal/view/common/base_loading_view_on_stack_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
-import 'package:medsalesportal/view/home/home_page.dart';
 import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
+import 'package:medsalesportal/view/common/base_loading_view_on_stack_widget.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({Key? key}) : super(key: key);
@@ -59,7 +55,6 @@ class _SigninPageState extends State<SigninPage> {
 
   Widget _buildTextFormForId(BuildContext context) {
     final p = context.read<SigninProvider>();
-
     return Padding(
         padding: AppSize.defaultSidePadding,
         child: Selector<SigninProvider, String?>(

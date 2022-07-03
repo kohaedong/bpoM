@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/view/common/base_loading_view_on_stack_widget.dart';
 import 'package:medsalesportal/view/commonLogin/splash_page.dart';
+import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/view/commonLogin/update_and_notice_dialog.dart';
+import 'package:medsalesportal/view/common/base_loading_view_on_stack_widget.dart';
 
 class CommonLoginPage extends StatefulWidget {
   CommonLoginPage({Key? key}) : super(key: key);

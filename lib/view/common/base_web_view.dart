@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_web_view.dart
  * Created Date: 2021-10-01 16:35:01
- * Last Modified: 2022-07-02 15:16:59
+ * Last Modified: 2022-07-03 15:00:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,8 +18,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_size.dart';
+import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_loading_view_on_stack_widget.dart';
 
 class BaseWebView extends StatefulWidget {

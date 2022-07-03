@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_info_row_by_key_and_value.dart
  * Created Date: 2021-10-03 02:10:59
- * Last Modified: 2022-07-02 14:09:00
+ * Last Modified: 2022-07-03 15:05:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,9 +14,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:medsalesportal/enums/string_fomate_type.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/view/common/text_row_model_by_key_value.dart';
+import 'package:medsalesportal/styles/export_common.dart';
+import 'package:medsalesportal/view/common/widget_of_text_row_model_by_key_value.dart';
 
 /// [TextRowModelByKeyValue]  참조.
 // 한줄의 text가 key 와 value로 구성 되 있을 경우 사용.

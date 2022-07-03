@@ -2,10 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/styles/app_style.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
+import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
@@ -24,63 +21,68 @@ class SettingsPage extends StatelessWidget {
   static const String routeName = '/settings';
 
   Widget _buildNameRow(BuildContext context, SettingsResult data) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Padding(
+        padding: AppSize.settingPageTopWidgetPadding,
+        child: Column(
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AppStyles.text('${data.esLogin!.ename}', AppTextStyle.w500_16),
-                Padding(padding: EdgeInsets.only(top: AppSize.listFontSpacing)),
-                AppStyles.text('${data.esLogin!.logid!.toLowerCase()}',
-                    AppTextStyle.default_16)
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppStyles.text(
+                        '${data.esLogin!.ename}', AppTextStyle.w500_16),
+                    Padding(
+                        padding: EdgeInsets.only(top: AppSize.listFontSpacing)),
+                    AppStyles.text('${data.esLogin!.logid!.toLowerCase()}',
+                        AppTextStyle.default_16)
+                  ],
+                ),
+                Container(
+                  width: AppSize.secondButtonWidth,
+                  child: TextButton(
+                      onPressed: () async {
+                        var result = await AppDialog.showPopup(
+                            context,
+                            buildTowButtonDialogContents(
+                                context,
+                                AppSize.singlePopupHeight,
+                                Container(
+                                    height: AppSize.singlePopupHeight -
+                                        AppSize.buttonHeight,
+                                    alignment: Alignment.center,
+                                    child: AppStyles.text(
+                                        //!빌드옵션 하드코딩! 앱 이름.
+                                        'SalesPortal ${tr('is_ready_to_logout')}',
+                                        AppTextStyle.default_16)),
+                                successButtonText: '${tr('ok')}',
+                                successTextColor: AppColors.primary,
+                                faildButtonText: '${tr('cancel')}'));
+                        if (result != null) {
+                          CacheService.deleteUserInfoWhenSignOut();
+                          final p = context.read<SettingsProvider>();
+                          await p.signOut();
+                          Navigator.pushNamedAndRemoveUntil(context,
+                              CommonLoginPage.routeName, (route) => false);
+                        }
+                      },
+                      style: AppStyles.getButtonStyle(
+                          AppColors.primary,
+                          AppColors.whiteText,
+                          AppTextStyle.default_14,
+                          AppSize.radius4),
+                      child: Text(
+                        '${tr('signout')}',
+                      )),
+                )
               ],
             ),
-            Container(
-              width: AppSize.secondButtonWidth,
-              child: TextButton(
-                  onPressed: () async {
-                    var result = await AppDialog.showPopup(
-                        context,
-                        buildTowButtonDialogContents(
-                            context,
-                            AppSize.singlePopupHeight,
-                            Container(
-                                height: AppSize.singlePopupHeight -
-                                    AppSize.buttonHeight,
-                                alignment: Alignment.center,
-                                child: AppStyles.text(
-                                    //!빌드옵션 하드코딩! 앱 이름.
-                                    'SalesPortal ${tr('is_ready_to_logout')}',
-                                    AppTextStyle.default_16)),
-                            successButtonText: '${tr('ok')}',
-                            successTextColor: AppColors.primary,
-                            faildButtonText: '${tr('cancel')}'));
-                    if (result != null) {
-                      CacheService.deleteUserInfoWhenSignOut();
-                      final p = context.read<SettingsProvider>();
-                      await p.signOut();
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, CommonLoginPage.routeName, (route) => false);
-                    }
-                  },
-                  style: AppStyles.getButtonStyle(
-                      AppColors.primary,
-                      AppColors.whiteText,
-                      AppTextStyle.default_14,
-                      AppSize.radius4),
-                  child: Text(
-                    '${tr('signout')}',
-                  )),
-            )
+            Padding(
+                padding: EdgeInsets.only(top: AppSize.defaultListItemSpacing))
           ],
-        ),
-        Padding(padding: EdgeInsets.only(top: AppSize.defaultListItemSpacing))
-      ],
-    );
+        ));
   }
 
   Widget _buildItemRow(BuildContext context, String text) {
@@ -119,6 +121,10 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
+  Widget _buildDividerLine() {
+    return Divider(color: AppColors.textGrey, height: AppSize.dividerHeight);
+  }
+
   @override
   Widget build(BuildContext context) {
     final p = context.read<SettingsProvider>();
@@ -135,12 +141,8 @@ class SettingsPage extends StatelessWidget {
                   snapshot.data!.isSuccessful) {
                 return Column(
                   children: [
-                    Padding(
-                        padding: AppSize.settingPageTopWidgetPadding,
-                        child: _buildNameRow(context, snapshot.data!)),
-                    Divider(
-                        color: AppColors.textGrey,
-                        height: AppSize.dividerHeight),
+                    _buildNameRow(context, snapshot.data!),
+                    _buildDividerLine(),
                     InkWell(
                         onTap: () => Navigator.pushNamed(
                             context, NoticeSettingPage.routeName),

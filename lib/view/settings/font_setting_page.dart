@@ -1,10 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/app_theme_type.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/styles/app_style.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
+import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';

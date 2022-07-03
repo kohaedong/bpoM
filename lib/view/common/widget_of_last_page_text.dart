@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/common/last_page_text.dart
  * Created Date: 2022-01-24 23:57:34
- * Last Modified: 2022-07-02 14:09:00
+ * Last Modified: 2022-07-03 15:01:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,10 +11,10 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_style.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/app_text_style.dart';
 
 Widget lastPageText() {

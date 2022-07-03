@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_loading_view_on_stack_widget.dart
  * Created Date: 2021-10-20 22:21:27
- * Last Modified: 2022-07-03 13:24:25
+ * Last Modified: 2022-07-03 14:59:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,8 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_size.dart';
+import 'package:medsalesportal/styles/export_common.dart';
 
 class BaseLoadingViewOnStackWidget {
   static build(BuildContext context, bool isLoadData,

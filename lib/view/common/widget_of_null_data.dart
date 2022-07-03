@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_null_data_widget.dart
  * Created Date: 2021-09-18 18:25:35
- * Last Modified: 2022-07-02 14:09:00
+ * Last Modified: 2022-07-03 14:59:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,10 +11,9 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/styles/app_style.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/styles/export_common.dart';
 
 class BaseNullDataWidget {
   static Widget build({String? message}) {

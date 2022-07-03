@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-07-02 14:09:00
+ * Last Modified: 2022-07-03 14:57:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,18 +11,14 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_image.dart';
-import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/styles/app_style.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
-import 'package:medsalesportal/view/common/base_error_dialog_contents.dart';
-import 'package:medsalesportal/view/common/dialog_contents.dart';
-import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/enums/image_type.dart';
+import 'package:medsalesportal/styles/export_common.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
+import 'package:medsalesportal/view/common/base_error_dialog_contents.dart';
+import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
 
 class AppDialog {
   static dynamic showPopup(BuildContext context, Widget widget,
