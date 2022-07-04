@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/screen_capture_util.dart
  * Created Date: 2021-12-14 00:55:19
- * Last Modified: 2022-07-03 13:33:43
+ * Last Modified: 2022-07-04 17:33:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,7 +18,7 @@ import 'package:flutter/rendering.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/service/navigator_service.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
@@ -55,7 +55,7 @@ class ScreenCaptrueUtil {
     Uint8List? unit8List;
     ui.Image? image;
     return await Future.delayed(Duration.zero, () async {
-      var renderObject = NavigationService.screenKey.currentContext!
+      var renderObject = KeyService.baseAppKey.currentContext!
           .findRenderObject() as RenderRepaintBoundary;
       image = await renderObject.toImage();
       var byte = await image!.toByteData(format: ui.ImageByteFormat.png);
@@ -76,7 +76,7 @@ class ScreenCaptrueUtil {
             lock = true;
             Future.delayed(Duration(seconds: 1), () async {
               final dialogResult = await AppDialog.showDangermessage(
-                  NavigationService.kolonAppKey.currentContext!,
+                  KeyService.baseAppKey.currentContext!,
                   '${tr('scrren_info')}');
               if (dialogResult != null) {
                 Future.delayed(Duration(seconds: 2), () {

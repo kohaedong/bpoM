@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/image_type.dart
  * Created Date: 2021-08-20 14:37:40
- * Last Modified: 2022-07-02 16:57:09
+ * Last Modified: 2022-07-04 16:12:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -42,7 +42,7 @@ extension RequestTypeExtension on ImageType {
   String get path {
     switch (this) {
       case ImageType.SPLASH_ICON:
-        return 'assets/images/icon_app_sales.svg';
+        return 'assets/images/icon_app_material.svg';
       case ImageType.TEXT_LOGO:
         return 'assets/images/kolon_logo.svg';
       case ImageType.APP_AGENCY:

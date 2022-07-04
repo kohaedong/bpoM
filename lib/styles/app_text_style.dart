@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/service/navigator_service.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
 import 'app_colors.dart';
 import 'app_size.dart';
@@ -7,11 +7,10 @@ import 'package:provider/provider.dart';
 
 // 각종 text 스타일 사전 정의.
 class AppTextStyle {
-  static TextTheme get currentTheme =>
-      NavigationService.kolonAppKey.currentContext!
-          .read<AppThemeProvider>()
-          .themeData
-          .textTheme;
+  static TextTheme get currentTheme => KeyService.baseAppKey.currentContext!
+      .watch<AppThemeProvider>()
+      .themeData
+      .textTheme;
   static TextStyle get h1 => currentTheme.headline1!;
   static TextStyle get h2 => currentTheme.headline2!;
   static TextStyle get h3 => currentTheme.headline3!;

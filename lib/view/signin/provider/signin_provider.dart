@@ -15,7 +15,7 @@ import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/deviceInfo_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
-import 'package:medsalesportal/service/navigator_service.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
 import 'package:medsalesportal/view/common/provider/water_marke_provider.dart';
@@ -209,8 +209,8 @@ class SigninProvider extends ChangeNotifier {
       print('isShowWatermarkUser:: $isShowWatermarkUser');
       print('isAllowScreenshotUser $isAllowScreenshotUser');
       if (isShowWatermarkUser) {
-        final p = NavigationService.kolonAppKey.currentContext!
-            .read<WaterMarkeProvider>();
+        final p =
+            KeyService.baseAppKey.currentContext!.read<WaterMarkeProvider>();
         p.setShowWaterMarke(true);
       }
     }
@@ -356,17 +356,18 @@ class SigninProvider extends ChangeNotifier {
         notifyListeners();
         return SigninResult(false, "token faild");
       }
+      if (isWithAutoLogin == null) {
+        setAutoLogin(isCheckedAutoSigninBox);
+        setIsSaveId(isCheckedSaveIdBox);
+      }
+      saveUserIdAndPasswordToSSO(userAccount!, password!);
       return await sapLogin(userAccount!.toUpperCase()).then((sapResult) async {
         if (sapResult.isSuccessful) {
           pr('ok successful');
           CacheService.saveEsLogin(sapLoginInfoResponseModel!.data!.esLogin!);
           CacheService.saveIsLogin(sapLoginInfoResponseModel!.data!.isLogin!);
           CacheService.saveUser(user!);
-          if (isWithAutoLogin == null) {
-            setAutoLogin(isCheckedAutoSigninBox);
-            setIsSaveId(isCheckedSaveIdBox);
-          }
-          saveUserIdAndPasswordToSSO(userAccount!, password!);
+
           await saveTcode();
           final deviceInfoResult =
               await getDeviceInfo(signBody!['userAccount']);
@@ -379,7 +380,7 @@ class SigninProvider extends ChangeNotifier {
                   await saveUserEven(envnResult, signBody['userAccount']);
               if (isSaveSuccessful) {
                 var type = getThemeType(envnResult.textScale!);
-                NavigationService.kolonAppKey.currentContext!
+                KeyService.baseAppKey.currentContext!
                     .read<AppThemeProvider>()
                     .setThemeType(type);
                 setIsWaterMarkeUser();

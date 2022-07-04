@@ -5,20 +5,22 @@ import 'package:medsalesportal/enums/notice_type.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/enums/update_type.dart';
 import 'package:medsalesportal/model/notice/notice_model.dart';
+import 'package:medsalesportal/router.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_style.dart';
 import 'package:medsalesportal/styles/app_text_style.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_web_view.dart';
+import 'package:medsalesportal/view/commonLogin/common_login_page.dart';
 import 'package:medsalesportal/view/commonLogin/provider/notice_index_provider.dart';
 import 'package:medsalesportal/view/commonLogin/provider/update_and_notice_provider.dart';
 import 'package:medsalesportal/view/home/home_page.dart';
 import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
 import 'package:medsalesportal/view/signin/signin_page.dart';
 import 'package:provider/provider.dart';
-import 'common_login_page.dart';
 
 class CheckUpdateAndNoticeService {
   factory CheckUpdateAndNoticeService() => _sharedInstance();
@@ -383,39 +385,38 @@ class CheckUpdateAndNoticeService {
   }
 
   static void routeTo(BuildContext context) async {
-    var routeName = ModalRoute.of(context)!.settings.name;
-    print(routeName);
-    if (routeName == '/' || routeName == CommonLoginPage.routeName) {
+    final isFirstScreen =
+        !Navigator.of(KeyService.baseAppKey.currentContext!).canPop();
+    print(isFirstScreen);
+    if (isFirstScreen) {
       var signProvider = SigninProvider();
       final isAutoLogin = await signProvider.isAutoLogin();
 
       print('isAutoLogin From updateRoute  ::: $isAutoLogin');
       if (isAutoLogin) {
         print('with autoLogin');
-        var loginResult = await signProvider.signIn(isWithAutoLogin: true);
-        if (loginResult.isSuccessful) {
+        await signProvider.signIn(isWithAutoLogin: true).then((loginResult) {
           signProvider.dispose();
-          Navigator.pushNamedAndRemoveUntil(
-              context, HomePage.routeName, (route) => false);
-        } else {
-          signProvider.dispose();
-          Navigator.pushNamedAndRemoveUntil(
-              context, SigninPage.routeName, (route) => false,
-              arguments: {
-                'id': loginResult.id,
-                'pw': loginResult.pw,
-                'isShowPopup': loginResult.isShowPopup,
-                'message': loginResult.message
-              });
-        }
+          if (loginResult.isSuccessful) {
+            signProvider.dispose();
+            Navigator.pushReplacementNamed(
+                KeyService.baseAppKey.currentContext!, HomePage.routeName);
+          } else {
+            Navigator.pushReplacementNamed(
+                KeyService.baseAppKey.currentContext!, SigninPage.routeName,
+                arguments: {
+                  'id': loginResult.id,
+                  'pw': loginResult.pw,
+                  'isShowPopup': loginResult.isShowPopup,
+                  'message': loginResult.message
+                });
+          }
+        });
       } else {
         print('FDSFDSFSDF&&*^&*^(*&^(&^*(');
-        print(routeName);
         signProvider.dispose();
-        Future.delayed(Duration(seconds: 1), () {
-          Navigator.pushNamedAndRemoveUntil(
-              context, SigninPage.routeName, (route) => false);
-        });
+        Navigator.pushReplacementNamed(
+            KeyService.baseAppKey.currentContext!, SigninPage.routeName);
       }
     }
   }
@@ -447,7 +448,7 @@ class CheckUpdateAndNoticeService {
     }
   }
 
-  static void showNotice(BuildContext context, bool isHome) async {
+  static Future<void> showNotice(BuildContext context, bool isHome) async {
     var updateAndNoticeProvider = UpdateAndNoticeProvider();
     final noticeResult = await updateAndNoticeProvider.checkNotice(isHome);
     if (noticeResult.isSuccessful) {
@@ -502,6 +503,7 @@ class CheckUpdateAndNoticeService {
   }
 
   static void updateAndNotice(BuildContext context, bool isHome) async {
+    await showNotice(context, isHome);
     final updateResult = await UpdateAndNoticeProvider().checkUpdate();
     if (updateResult.isSuccessful &&
         updateResult.updateData!.model!.result != 'NG') {
@@ -520,9 +522,6 @@ class CheckUpdateAndNoticeService {
           if (updateResult.updateData!.type != UpdateType.LOCAL_CHOOSE &&
               updateResult.updateData!.type != UpdateType.WEB_CHOOSE) {
             exit(0);
-          } else {
-            print('shownotice!!');
-            showNotice(context, isHome);
           }
         }
       }

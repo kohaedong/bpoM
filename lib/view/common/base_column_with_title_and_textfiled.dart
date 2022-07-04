@@ -8,10 +8,10 @@
  */
 
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/service/navigator_service.dart';
 import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
+import 'package:provider/provider.dart';
 
 // title 과 input 묶음으로 보여주는 widget.
 // 예:
@@ -30,12 +30,12 @@ class BaseColumWithTitleAndTextFiled {
         AppStyles.text(
             '$text',
             isTextSize14 != null
-                ? NavigationService.kolonAppKey.currentContext!
+                ? KeyService.baseAppKey.currentContext!
                     .read<AppThemeProvider>()
                     .themeData
                     .textTheme
                     .headline6!
-                : NavigationService.kolonAppKey.currentContext!
+                : KeyService.baseAppKey.currentContext!
                     .read<AppThemeProvider>()
                     .themeData
                     .textTheme

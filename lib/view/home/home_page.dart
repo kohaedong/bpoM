@@ -8,9 +8,8 @@ import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/model/rfc/et_alarm_count_response_model.dart';
 import 'package:medsalesportal/model/rfc/t_alarm_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/service/navigator_service.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
@@ -94,7 +93,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         await Future.delayed(
             Duration.zero,
             () => CheckUpdateAndNoticeService.check(
-                NavigationService.kolonAppKey.currentContext!,
+                KeyService.baseAppKey.currentContext!,
                 CheckType.UPDATE_ONLY,
                 true)).then((value) {
           _isPaused = false;
@@ -187,8 +186,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             padding: EdgeInsets.only(left: AppSize.padding),
             child: Align(
               alignment: Alignment.centerLeft,
-              child:
-                  AppStyles.text('${tr('sales_potal')}', AppTextStyle.blod30),
+              child: AppStyles.text(
+                  '${tr('med_sales_portal')}', AppTextStyle.blod30),
             ),
           ),
           InkWell(

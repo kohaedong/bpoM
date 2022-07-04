@@ -13,6 +13,7 @@ import 'package:medsalesportal/view/settings/font_setting_page.dart';
 import 'package:medsalesportal/view/settings/notice_setting_page.dart';
 import 'package:medsalesportal/view/settings/provider/settings_provider.dart';
 import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
+import 'package:medsalesportal/view/signin/signin_page.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/model/update/check_update_model.dart';
 
@@ -55,7 +56,7 @@ class SettingsPage extends StatelessWidget {
                                     alignment: Alignment.center,
                                     child: AppStyles.text(
                                         //!빌드옵션 하드코딩! 앱 이름.
-                                        'SalesPortal ${tr('is_ready_to_logout')}',
+                                        '(개발)제약 영업포탈 ${tr('is_ready_to_logout')}',
                                         AppTextStyle.default_16)),
                                 successButtonText: '${tr('ok')}',
                                 successTextColor: AppColors.primary,

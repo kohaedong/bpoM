@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/splash/commonLogin/provider/common_login_provider.dart
  * Created Date: 2021-10-06 03:26:46
- * Last Modified: 2022-07-02 15:30:43
+ * Last Modified: 2022-07-04 16:35:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -110,7 +110,7 @@ class UpdateAndNoticeProvider extends ChangeNotifier {
       return UpdateType.WEB_CHOOSE;
     }
     if (isChoose && !isWeb) {
-      return UpdateType.LOCAL_CHOOSE;
+      return UpdateType.NOT_WEB_ENFORCE;
     }
     if (!isChoose && isWeb) {
       return UpdateType.WEB_ENFORCE;

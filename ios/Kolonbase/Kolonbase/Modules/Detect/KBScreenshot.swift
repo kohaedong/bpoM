@@ -79,7 +79,7 @@ extension KBDetect {
                         
                         // 스크린샷 로그 API 전달
                         #warning("앱별 기본 화면 id 변경 필요!!!")
-                        self.sendScreenshotLog(image: snapImage, screenId: "MAIL_1000")
+                        self.sendScreenshotLog(image: snapImage, screenId: "MEDSALESPORTAL_1000")
                     }
                 }
                 

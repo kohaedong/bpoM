@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/kolonApp.dart
  * Created Date: 2022-07-02 14:46:59
- * Last Modified: 2022-07-03 15:18:31
+ * Last Modified: 2022-07-04 17:30:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -16,12 +16,13 @@ import 'package:provider/provider.dart';
 import 'package:medsalesportal/router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:medsalesportal/service/navigator_service.dart';
 import 'package:medsalesportal/view/commonLogin/common_login_page.dart';
 import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
 import 'package:medsalesportal/view/settings/provider/settings_provider.dart';
 import 'package:medsalesportal/view/common/provider/water_marke_provider.dart';
 import 'package:medsalesportal/view/commonLogin/provider/notice_index_provider.dart';
+
+import 'service/key_service.dart';
 
 class KolonApp extends StatefulWidget {
   const KolonApp({Key? key}) : super(key: key);
@@ -53,11 +54,11 @@ class KolonAppState extends State<KolonApp> {
               designSize: const Size(360, 690),
               minTextAdapt: true,
               builder: (context, _) => RepaintBoundary(
-                    key: NavigationService.screenKey,
+                    key: KeyService.screenKey,
                     child: MaterialApp(
                         //FirebaseAnalytics 연동.
                         // navigatorObservers: [FirebaseService.observer!],
-                        navigatorKey: NavigationService.kolonAppKey,
+                        navigatorKey: KeyService.baseAppKey,
                         localizationsDelegates: context.localizationDelegates,
                         supportedLocales: context.supportedLocales,
                         locale: context.locale,

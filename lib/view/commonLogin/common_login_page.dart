@@ -8,7 +8,7 @@ import 'package:medsalesportal/view/commonLogin/update_and_notice_dialog.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 
 class CommonLoginPage extends StatefulWidget {
-  CommonLoginPage({Key? key}) : super(key: key);
+  const CommonLoginPage({Key? key}) : super(key: key);
   static const String routeName = '/commonLoginPage';
 
   @override

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/splash/splash_page_contents.dart
  * Created Date: 2021-08-20 14:37:40
- * Last Modified: 2022-07-03 14:54:08
+ * Last Modified: 2022-07-04 17:48:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,7 +15,6 @@ import 'package:flutter/widgets.dart';
 import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -34,10 +33,8 @@ class SplashPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                      padding: EdgeInsets.only(top: 168.h),
-                      child: SizedBox(
-                          height: AppSize.splashIconHeight,
-                          width: AppSize.splashIconWidth,
+                      padding: AppSize.signinLogoPadding,
+                      child: Center(
                           child: AppImage.getImage(ImageType.SPLASH_ICON))),
                   Padding(
                       padding: EdgeInsets.only(

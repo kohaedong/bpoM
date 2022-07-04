@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/key_service.dart
  * Created Date: 2022-07-02 14:53:52
- * Last Modified: 2022-07-02 14:54:00
+ * Last Modified: 2022-07-04 17:28:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -23,4 +23,5 @@ class KeyService {
   }
 
   static GlobalKey<NavigatorState> baseAppKey = GlobalKey<NavigatorState>();
+  static GlobalKey screenKey = GlobalKey();
 }
