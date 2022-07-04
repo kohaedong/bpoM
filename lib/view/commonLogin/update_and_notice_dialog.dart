@@ -388,7 +388,6 @@ class CheckUpdateAndNoticeService {
     if (routeName == '/' || routeName == CommonLoginPage.routeName) {
       var signProvider = SigninProvider();
       final isAutoLogin = await signProvider.isAutoLogin();
-
       print('isAutoLogin From updateRoute  ::: $isAutoLogin');
       if (isAutoLogin) {
         print('with autoLogin');
