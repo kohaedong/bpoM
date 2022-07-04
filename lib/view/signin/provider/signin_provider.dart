@@ -360,7 +360,7 @@ class SigninProvider extends ChangeNotifier {
         setAutoLogin(isCheckedAutoSigninBox);
         setIsSaveId(isCheckedSaveIdBox);
       }
-      saveUserIdAndPasswordToSSO(userAccount!, password!);
+      await saveUserIdAndPasswordToSSO(userAccount!, password!);
       return await sapLogin(userAccount!.toUpperCase()).then((sapResult) async {
         if (sapResult.isSuccessful) {
           pr('ok successful');

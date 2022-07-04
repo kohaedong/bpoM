@@ -384,14 +384,13 @@ class CheckUpdateAndNoticeService {
             ))));
   }
 
-  static void routeTo(BuildContext context) async {
+  static void routeTo() async {
     final isFirstScreen =
-        !Navigator.of(KeyService.baseAppKey.currentContext!).canPop();
-    print(isFirstScreen);
+        Navigator.of(KeyService.baseAppKey.currentContext!).canPop() == false;
     if (isFirstScreen) {
+      print('in');
       var signProvider = SigninProvider();
       final isAutoLogin = await signProvider.isAutoLogin();
-
       print('isAutoLogin From updateRoute  ::: $isAutoLogin');
       if (isAutoLogin) {
         print('with autoLogin');
@@ -493,17 +492,17 @@ class CheckUpdateAndNoticeService {
         updateAndNoticeProvider.dispose();
         context.read<NoticeIndexProvider>().resetAll();
         CacheService.saveIsUpdateAndNoticeCheckDone(true);
-        routeTo(context);
+        routeTo();
       });
     } else {
+      print('enen?');
       updateAndNoticeProvider.dispose();
       CacheService.saveIsUpdateAndNoticeCheckDone(true);
-      routeTo(context);
+      routeTo();
     }
   }
 
   static void updateAndNotice(BuildContext context, bool isHome) async {
-    await showNotice(context, isHome);
     final updateResult = await UpdateAndNoticeProvider().checkUpdate();
     if (updateResult.isSuccessful &&
         updateResult.updateData!.model!.result != 'NG') {
@@ -526,7 +525,7 @@ class CheckUpdateAndNoticeService {
         }
       }
     } else {
-      showNotice(context, isHome);
+      await showNotice(context, isHome);
     }
   }
 
