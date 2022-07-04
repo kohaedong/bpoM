@@ -135,6 +135,7 @@ class SigninProvider extends ChangeNotifier {
       final idResult = await iosPlatform.invokeMethod('setUserId', userAccount);
       final passwordResult =
           await iosPlatform.invokeMethod('setUserPw', password);
+      pr('passwordResult::$passwordResult');
       return idResult == 'success' && passwordResult == 'success';
     } else {
       final saveResult = await androidPlatform.invokeMethod(
@@ -143,6 +144,7 @@ class SigninProvider extends ChangeNotifier {
         'password': '$password',
         'type': buildType
       });
+      pr('passwordResult::${saveResult == 'success'}');
       return saveResult == 'success';
     }
   }
@@ -185,6 +187,7 @@ class SigninProvider extends ChangeNotifier {
   }
 
   Future<bool> setAutoLogin(bool value) async {
+    pr('autoLogin value???:::$value');
     if (Platform.isIOS) {
       final idResult =
           await iosPlatform.invokeMethod('saveAutoLogin', {"value": value});
@@ -193,7 +196,7 @@ class SigninProvider extends ChangeNotifier {
     if (Platform.isAndroid) {
       final saveResult = await androidPlatform.invokeMethod('saveAutoLogin',
           {'isAutoLogin': value ? 'Y' : 'N', 'type': buildType});
-
+      pr('setAutoLogin ${saveResult == 'success'} ');
       return saveResult == 'success';
     }
     return false;
@@ -360,8 +363,10 @@ class SigninProvider extends ChangeNotifier {
         setAutoLogin(isCheckedAutoSigninBox);
         setIsSaveId(isCheckedSaveIdBox);
       }
-      await saveUserIdAndPasswordToSSO(userAccount!, password!);
-      return await sapLogin(userAccount!.toUpperCase()).then((sapResult) async {
+      await saveUserIdAndPasswordToSSO(
+          signBody['userAccount'], signBody['passwd']);
+      return await sapLogin(signBody['userAccount'].toUpperCase())
+          .then((sapResult) async {
         if (sapResult.isSuccessful) {
           pr('ok successful');
           CacheService.saveEsLogin(sapLoginInfoResponseModel!.data!.esLogin!);
@@ -397,7 +402,9 @@ class SigninProvider extends ChangeNotifier {
         } else {
           isWithAutoLogin = null;
           return SigninResult(false, '${sapResult.message}',
-              id: userAccount, pw: password, isShowPopup: true);
+              id: userAccount,
+              pw: password,
+              isShowPopup: sapResult.message.isNotEmpty ? true : false);
         }
       });
     }

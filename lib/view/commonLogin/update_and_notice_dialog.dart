@@ -5,9 +5,7 @@ import 'package:medsalesportal/enums/notice_type.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/enums/update_type.dart';
 import 'package:medsalesportal/model/notice/notice_model.dart';
-import 'package:medsalesportal/router.dart';
 import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_style.dart';
@@ -384,38 +382,40 @@ class CheckUpdateAndNoticeService {
             ))));
   }
 
-  static void routeTo() async {
-    final isFirstScreen =
-        Navigator.of(KeyService.baseAppKey.currentContext!).canPop() == false;
-    if (isFirstScreen) {
-      print('in');
+  static void routeTo(BuildContext context) async {
+    var routeName = ModalRoute.of(context)!.settings.name;
+    print(routeName);
+    if (routeName == '/' || routeName == CommonLoginPage.routeName) {
       var signProvider = SigninProvider();
       final isAutoLogin = await signProvider.isAutoLogin();
+
       print('isAutoLogin From updateRoute  ::: $isAutoLogin');
       if (isAutoLogin) {
         print('with autoLogin');
-        await signProvider.signIn(isWithAutoLogin: true).then((loginResult) {
+        var loginResult = await signProvider.signIn(isWithAutoLogin: true);
+        if (loginResult.isSuccessful) {
           signProvider.dispose();
-          if (loginResult.isSuccessful) {
-            signProvider.dispose();
-            Navigator.pushReplacementNamed(
-                KeyService.baseAppKey.currentContext!, HomePage.routeName);
-          } else {
-            Navigator.pushReplacementNamed(
-                KeyService.baseAppKey.currentContext!, SigninPage.routeName,
-                arguments: {
-                  'id': loginResult.id,
-                  'pw': loginResult.pw,
-                  'isShowPopup': loginResult.isShowPopup,
-                  'message': loginResult.message
-                });
-          }
-        });
+          Navigator.pushNamedAndRemoveUntil(
+              context, HomePage.routeName, (route) => false);
+        } else {
+          signProvider.dispose();
+          Navigator.pushNamedAndRemoveUntil(
+              context, SigninPage.routeName, (route) => false,
+              arguments: {
+                'id': loginResult.id,
+                'pw': loginResult.pw,
+                'isShowPopup': loginResult.isShowPopup,
+                'message': loginResult.message
+              });
+        }
       } else {
         print('FDSFDSFSDF&&*^&*^(*&^(&^*(');
+        print(routeName);
         signProvider.dispose();
-        Navigator.pushReplacementNamed(
-            KeyService.baseAppKey.currentContext!, SigninPage.routeName);
+        Future.delayed(Duration(seconds: 1), () {
+          Navigator.pushNamedAndRemoveUntil(
+              context, SigninPage.routeName, (route) => false);
+        });
       }
     }
   }
@@ -492,17 +492,18 @@ class CheckUpdateAndNoticeService {
         updateAndNoticeProvider.dispose();
         context.read<NoticeIndexProvider>().resetAll();
         CacheService.saveIsUpdateAndNoticeCheckDone(true);
-        routeTo();
+        routeTo(context);
       });
     } else {
-      print('enen?');
       updateAndNoticeProvider.dispose();
       CacheService.saveIsUpdateAndNoticeCheckDone(true);
-      routeTo();
+      routeTo(context);
     }
   }
 
   static void updateAndNotice(BuildContext context, bool isHome) async {
+    /// Andy.KO 2022.03.16 공지, 업데이트 순서 변경
+    //await showNotice(context, isHome);
     final updateResult = await UpdateAndNoticeProvider().checkUpdate();
     if (updateResult.isSuccessful &&
         updateResult.updateData!.model!.result != 'NG') {
@@ -521,11 +522,14 @@ class CheckUpdateAndNoticeService {
           if (updateResult.updateData!.type != UpdateType.LOCAL_CHOOSE &&
               updateResult.updateData!.type != UpdateType.WEB_CHOOSE) {
             exit(0);
+          } else {
+            print('shownotice!!');
+            showNotice(context, isHome);
           }
         }
       }
     } else {
-      await showNotice(context, isHome);
+      showNotice(context, isHome);
     }
   }
 
