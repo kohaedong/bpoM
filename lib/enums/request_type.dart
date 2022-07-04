@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-07-02 15:30:28
+ * Last Modified: 2022-07-04 15:32:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -20,6 +20,7 @@ enum RequestType {
   RFC_COMMON_CODE,
   CHECK_NOTICE,
   CHECK_UPDATE,
+  SAP_SIGNIN_INFO,
   SIGNIN,
   REQEUST_TOKEN,
   REFRESHE_TOKEN,
@@ -27,7 +28,6 @@ enum RequestType {
   GET_ENV,
   SAVE_DEVICE_INFO,
   SEND_SUGGETION,
-  REQUEST_ES_LOGIN,
   NOTICE_ALARM,
   NOTICE_ALARM_COUNT,
   NOTICE_ALARM_CONFIRM,
@@ -89,16 +89,11 @@ enum RequestType {
 
 // [KolonBuildConfig] 빌드 옵션에 따라 url가 변한다.
 extension RequestTypeExtension on RequestType {
-  bool get isDev => KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev';
   String get baseURL => KolonBuildConfig.KOLON_APP_BASE_URL;
-  String get prodSalesURL => 'https://apps2.kolon.com';
   String get v2URL => '$baseURL/common/v2/api';
   String get signURL => '$baseURL/common/v2/api/basiclogin/auth';
-  String get rfcURL =>
-      isDev ? '$baseURL/sales-group/rfc' : '$prodSalesURL/sales-group/rfc';
-  String get salesportal => isDev
-      ? '$baseURL/sales-group/salesportal'
-      : '$prodSalesURL/sales-group/salesportal';
+  String get rfcURL => '$baseURL/sales-group/rfc';
+  String get medical => '$baseURL/sales-group/med';
 
   // api 에 header 추가 필요시 사전 등록.
   Future<Map<String, String>> get anotherHeader async {
@@ -138,6 +133,8 @@ extension RequestTypeExtension on RequestType {
         return '$baseURL/common//oauth/token';
       case RequestType.SIGNIN:
         return '$signURL';
+      case RequestType.SAP_SIGNIN_INFO:
+        return '$rfcURL/login';
       case RequestType.CHECK_NOTICE:
         return '$v2URL/rest';
       case RequestType.NOTICE_DONT_SHOW_AGAIN:
@@ -155,21 +152,19 @@ extension RequestTypeExtension on RequestType {
       case RequestType.SEND_SUGGETION:
         return '$v2URL/rest';
       case RequestType.RFC_COMMON_CODE:
-        return '$salesportal/commoncode';
+        return '$medical/commoncode';
       case RequestType.CUSTOMER_GENERAL_INFO:
-        return '$salesportal/customerprofile';
+        return '$medical/customerprofile';
       case RequestType.CUSTOMER_REPORT_SEARCH_DETAIL:
-        return '$salesportal/counselingdetail';
+        return '$medical/counselingdetail';
       case RequestType.ADDRESS_CITY_AND_AREA:
-        return '$salesportal/sidoguncode';
+        return '$medical/sidoguncode';
       case RequestType.ADDRESS_BY_ROAD_NAME:
-        return '$salesportal/dolomyoungcode';
+        return '$medical/dolomyoungcode';
       case RequestType.ADDRESS_BY_GIBUN_NUMBER:
-        return '$salesportal/gibuncode';
-      case RequestType.REQUEST_ES_LOGIN:
-        return '$rfcURL/login';
+        return '$medical/gibuncode';
       case RequestType.NOTICE_ALARM:
-        return '$salesportal/alarmlist';
+        return '$medical/alarmlist';
       case RequestType.NOTICE_ALARM_COUNT:
         return '$rfcURL/common';
       case RequestType.NOTICE_ALARM_CONFIRM:
@@ -284,8 +279,8 @@ extension RequestTypeExtension on RequestType {
 //resultTable 사전 등록.
   String get resultTable {
     switch (this) {
-      case RequestType.REQUEST_ES_LOGIN:
-        return 'ES_RETURN,ES_LOGIN,T_CODE';
+      case RequestType.SAP_SIGNIN_INFO:
+        return 'ES_RETURN,ET_ORGHK,T_CODE,ET_VKGRP,IS_LOGIN,ES_LOGIN';
       case RequestType.NOTICE_ALARM:
         return 'ES_RETURN,T_ALARM';
       case RequestType.NOTICE_ALARM_CONFIRM:
@@ -401,6 +396,7 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.CHECK_NOTICE:
         return "noticeAll";
+
       case RequestType.SEND_IMAGE_TO_SERVER:
         return 'screenCapture';
       case RequestType.NOTICE_DONT_SHOW_AGAIN:
@@ -415,8 +411,8 @@ extension RequestTypeExtension on RequestType {
         return 'saveDeviceInfoByAnonymous';
       case RequestType.SEND_SUGGETION:
         return 'saveOfAppOpinionByAnonymous';
-      case RequestType.REQUEST_ES_LOGIN:
-        return 'Z_LTS_IFS0001';
+      case RequestType.SAP_SIGNIN_INFO:
+        return "Z_LTS_IFS0001";
       case RequestType.NOTICE_ALARM:
         return 'Z_LTS_IFR0068';
       case RequestType.NOTICE_ALARM_COUNT:

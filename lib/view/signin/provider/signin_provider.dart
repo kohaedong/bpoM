@@ -7,10 +7,8 @@ import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
 import 'package:medsalesportal/enums/app_theme_type.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/model/commonCode/common_code_response_model.dart';
 import 'package:medsalesportal/model/http/token_model.dart';
-import 'package:medsalesportal/model/rfc/es_login_model.dart';
-import 'package:medsalesportal/model/rfc/es_return_model.dart';
+import 'package:medsalesportal/model/rfc/sap_login_info_response_model.dart';
 import 'package:medsalesportal/model/user/user.dart';
 import 'package:medsalesportal/model/user/user_settings.dart';
 import 'package:medsalesportal/service/api_service.dart';
@@ -18,6 +16,7 @@ import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/deviceInfo_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/service/navigator_service.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
 import 'package:medsalesportal/view/common/provider/water_marke_provider.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +33,7 @@ class SigninProvider extends ChangeNotifier {
   bool? isFindKolonApps;
   bool isLoadData = false;
   UserSettings? userSettings;
+  SapLoginInfoResponseModel? sapLoginInfoResponseModel;
   var _api = ApiService();
   static const MethodChannel iosPlatform = MethodChannel('kolonbase/keychain');
   static const MethodChannel androidPlatform =
@@ -283,6 +283,46 @@ class SigninProvider extends ChangeNotifier {
 
   bool get isValueNotNull => this.userAccount != null && this.password != null;
 
+  Future<SigninResult> sapLogin(String id) async {
+    Map<String, dynamic>? sapBody = {
+      "methodName": RequestType.SAP_SIGNIN_INFO.serverMethod,
+      "methodParamMap": {
+        "functionName": RequestType.SAP_SIGNIN_INFO.serverMethod,
+        "IV_LOGID": id.toUpperCase(),
+        "resultTables": RequestType.SAP_SIGNIN_INFO.resultTable,
+        "appName": "medsalesportal"
+      }
+    };
+    _api.init(RequestType.SAP_SIGNIN_INFO);
+    final sapResult = await _api.request(body: sapBody);
+    if (sapResult != null && sapResult.statusCode != 200) {
+      return SigninResult(false, sapResult.message);
+    }
+    if (sapResult != null && sapResult.statusCode == 200) {
+      sapLoginInfoResponseModel =
+          SapLoginInfoResponseModel.fromJson(sapResult.body);
+      pr('????${sapLoginInfoResponseModel?.data?.isLogin}');
+      return SigninResult(true, 'login successful', isShowPopup: false);
+    }
+    return SigninResult(false, '');
+  }
+
+  Future<void> saveTcode() async {
+    final commonTCODE = sapLoginInfoResponseModel!.data!.tCode!;
+    var isNeedDownLoad = await HiveService.isNeedDownLoad();
+    // var isTvalueDownLoadDone = CacheService.isTValueDownLoadDone();
+    if (isNeedDownLoad) {
+      commonTCODE.forEach((tcode) {
+        tcode.timestamp = DateTime.now();
+      });
+      await HiveService.init(HiveBoxType.T_CODE);
+      await HiveService.deleteBox();
+      await HiveService.getBox();
+      await HiveService.save(commonTCODE);
+      print('new CommonCode downLoaded!');
+    }
+  }
+
   Future<SigninResult> signIn({bool? isWithAutoLogin}) async {
     isLoadData = true;
     notifyListeners();
@@ -304,10 +344,8 @@ class SigninProvider extends ChangeNotifier {
       notifyListeners();
       return SigninResult(false, "${tr('check_account')}");
     }
-
     if (signResult.statusCode == 200 && signResult.body['data'] != null) {
       user = User.fromJson(signResult.body['data']);
-
       final tokenResult =
           await requestToken(signBody['userAccount'], signBody['passwd']);
 
@@ -318,131 +356,54 @@ class SigninProvider extends ChangeNotifier {
         notifyListeners();
         return SigninResult(false, "token faild");
       }
-
-      // -------- 3.  RFC  es Login   ------------
-
-      final esLoginResult = await getEsLogin(
-          signBody['userAccount'], signBody['passwd'],
-          isWithAutoLogin: isWithAutoLogin);
-      if (esLoginResult.isSuccessful) {
-        final isCommonSourceDownloaded = await getCommonSource();
-        if (isCommonSourceDownloaded) {
-          // -------- 4.  save divice info    ------------
-          final result = await getDeviceInfo(signBody['userAccount']);
-          if (result.isSuccessful) {
+      return await sapLogin(userAccount!.toUpperCase()).then((sapResult) async {
+        if (sapResult.isSuccessful) {
+          pr('ok successful');
+          CacheService.saveEsLogin(sapLoginInfoResponseModel!.data!.esLogin!);
+          CacheService.saveIsLogin(sapLoginInfoResponseModel!.data!.isLogin!);
+          CacheService.saveUser(user!);
+          if (isWithAutoLogin == null) {
+            setAutoLogin(isCheckedAutoSigninBox);
+            setIsSaveId(isCheckedSaveIdBox);
+          }
+          saveUserIdAndPasswordToSSO(userAccount!, password!);
+          await saveTcode();
+          final deviceInfoResult =
+              await getDeviceInfo(signBody!['userAccount']);
+          if (deviceInfoResult.isSuccessful) {
             // ------------ save  Environments ---------
             final envnResult =
                 await checkUserEnvironment(signBody['userAccount']);
             if (envnResult != null) {
-              var saveEvenResult =
+              var isSaveSuccessful =
                   await saveUserEven(envnResult, signBody['userAccount']);
-              if (saveEvenResult) {
+              if (isSaveSuccessful) {
                 var type = getThemeType(envnResult.textScale!);
-
                 NavigationService.kolonAppKey.currentContext!
                     .read<AppThemeProvider>()
                     .setThemeType(type);
                 setIsWaterMarkeUser();
-
                 isLoadData = false;
                 notifyListeners();
                 return SigninResult(true, 'ok');
               }
             }
+          } else {
+            return SigninResult(false, '${deviceInfoResult.message}',
+                id: userAccount, pw: password, isShowPopup: true);
           }
+          return SigninResult(true, '');
+        } else {
+          isWithAutoLogin = null;
+          return SigninResult(false, '${sapResult.message}',
+              id: userAccount, pw: password, isShowPopup: true);
         }
-      } else {
-        isLoadData = false;
-        notifyListeners();
-        print('${esLoginResult.message}');
-        return SigninResult(false, esLoginResult.message,
-            id: esLoginResult.id,
-            pw: esLoginResult.pw,
-            isShowPopup: esLoginResult.message != '' ? true : false);
-      }
+      });
     }
     isLoadData = false;
     notifyListeners();
     return SigninResult(false, '${signResult.errorMessage}',
         id: userAccount, pw: password, isShowPopup: true);
-  }
-
-  Future<SigninResult> getEsLogin(String userAccount, String password,
-      {bool? isWithAutoLogin}) async {
-    Map<String, dynamic> esLoginBody = {
-      "methodName": RequestType.REQUEST_ES_LOGIN.serverMethod,
-      "methodParamMap": {
-        "IV_LOGID": userAccount.toUpperCase(),
-        // 빌드옵션 appName
-        "appName": 'medsalesportal',
-        "functionName": RequestType.REQUEST_ES_LOGIN.serverMethod,
-        "resultTables": RequestType.REQUEST_ES_LOGIN.resultTable,
-      }
-    };
-    _api.init(RequestType.REQUEST_ES_LOGIN);
-    final esLoginResult = await _api.request(body: esLoginBody);
-
-    if (esLoginResult!.statusCode == -1) {
-      print(-1);
-      return SigninResult(false, esLoginResult.errorMessage!,
-          id: userAccount, pw: password);
-    }
-    if (esLoginResult.statusCode == 0) {
-      print(0);
-
-      return SigninResult(false, esLoginResult.errorMessage!,
-          id: userAccount, pw: password);
-    }
-    if (esLoginResult.statusCode == 200 && esLoginResult.body['data'] != null) {
-      final esReturn =
-          EsReturnModel.fromJson(esLoginResult.body['data']['ES_RETURN']);
-      final eslogin =
-          EsLoginModel.fromJson(esLoginResult.body['data']['ES_LOGIN']);
-      print(eslogin.toJson());
-      if (esReturn.mtype != 'S') {
-        isWithAutoLogin = null;
-        return SigninResult(false, '${esReturn.message}',
-            id: userAccount, pw: password, isShowPopup: true);
-      }
-      if (esLoginResult.body['data']['IS_LOGIN'] == null ||
-          esLoginResult.body['data']['IS_LOGIN'] == '') {
-        return SigninResult(false, '${esReturn.message}');
-      }
-      var isLogin = esLoginResult.body['data']['IS_LOGIN'];
-
-      CacheService.saveEsLogin(eslogin);
-      CacheService.saveIsLogin(isLogin);
-      CacheService.saveUser(user!);
-      print(user!.toJson());
-      // id저장 checkBox 선택했을때
-      if (isWithAutoLogin == null) {
-        setAutoLogin(isCheckedAutoSigninBox);
-        setIsSaveId(isCheckedSaveIdBox);
-      }
-      saveUserIdAndPasswordToSSO(userAccount, password);
-      // Tcode는 esLogin에서 가져오기
-      // Tvalue는 따로 api 통해서 가져오기.
-      final commonTCODE =
-          CommonCodeResponseModel.fromJson(esLoginResult.body['data']);
-      var isNeedDownLoad = await HiveService.isNeedDownLoad();
-      var isTvalueDownLoadDone = CacheService.isTValueDownLoadDone();
-      if (isNeedDownLoad || !isTvalueDownLoadDone) {
-        commonTCODE.tCodeModel!.forEach((tcode) {
-          tcode.timestamp = DateTime.now();
-        });
-        await HiveService.init(HiveBoxType.T_CODE);
-        await HiveService.deleteBox();
-        await HiveService.getBox();
-        await HiveService.save(commonTCODE.tCodeModel);
-        print('new CommonCode downLoaded!');
-        return SigninResult(true, '');
-      } else {
-        return SigninResult(true, '');
-      }
-      // 공통코드 다운로드.
-
-    }
-    return SigninResult(false, 'get Eslogin faild');
   }
 
   Future<UserSettings?> checkUserEnvironment(String userAccount) async {
@@ -519,47 +480,6 @@ class SigninProvider extends ChangeNotifier {
       return SigninResult(true, 'Device register successful');
     }
     return SigninResult(false, 'Device not register');
-  }
-
-  /// 공통코드를 다운받는 함수.
-  Future<bool> getCommonSource() async {
-    var isNeedDownLoad = await HiveService.isNeedDownLoad();
-    var isTvalueDownLoadDone = CacheService.isTValueDownLoadDone();
-    if (isNeedDownLoad || !isTvalueDownLoadDone) {
-      final isLogin = CacheService.getIsLogin();
-      Map<String, dynamic> body = {
-        "methodName": RequestType.RFC_COMMON_CODE.serverMethod,
-        "functionName": RequestType.RFC_COMMON_CODE.serverMethod,
-        "resultTables": 'ES_RETURN,T_CODE',
-        "isLogin": "$isLogin",
-        "commonValues": RequestType.RFC_COMMON_CODE.resultTable
-      };
-      final _api = ApiService();
-      _api.init(RequestType.RFC_COMMON_CODE);
-      final result = await _api.request(body: body);
-
-      if (result == null || result.statusCode != 200) {
-        return false;
-      }
-      if (result.statusCode == 200 && result.body['data'] != null) {
-        final esReturn =
-            EsReturnModel.fromJson(result.body['data']['ES_RETURN']);
-        if (esReturn.message!.contains('성공적으로')) {
-          final commonModel =
-              CommonCodeResponseModel.fromJson(result.body['data']);
-          await HiveService.init(HiveBoxType.T_VALUE);
-          await HiveService.deleteBox();
-          await HiveService.getBox();
-          await HiveService.save(commonModel.tValuesModel);
-          CacheService.saveIsTValueDownLoadDone(true);
-          return true;
-        }
-      }
-
-      return false;
-    } else {
-      return true;
-    }
   }
 }
 

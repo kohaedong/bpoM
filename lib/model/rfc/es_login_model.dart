@@ -1,3 +1,16 @@
+/*
+ * Project Name:  [mKolon3.0] - MedicalSalesPortal
+ * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/es_login_model.dart
+ * Created Date: 2022-07-04 14:36:26
+ * Last Modified: 2022-07-04 14:36:32
+ * Author: bakbeom
+ * Modified By: bakbeom
+ * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
+ * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
+ * 												Discription													
+ * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
+ */
+
 import 'package:json_annotation/json_annotation.dart';
 part 'es_login_model.g.dart';
 

@@ -127,13 +127,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   if (map.value == ImageType.EMPTY) {
                     DoNothingAction();
                   } else if (map.value == ImageType.APP_SALES_ORDER) {
-                    final esLogin = CacheService.getEsLogin();
-                    if (esLogin!.vkorg == '1130' || esLogin.vkorg == '1140') {
-                      await AppDialog.showDangermessage(context,
-                          '${tr('not_authorized_to_use_create_order')}');
-                    } else {
-                      Navigator.pushNamed(context, map.value.routeName);
-                    }
                   } else {
                     Navigator.pushNamed(context, map.value.routeName);
                   }

@@ -1,3 +1,5 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'et_dd07v_customer_category_model.dart';
 
 // **************************************************************************
