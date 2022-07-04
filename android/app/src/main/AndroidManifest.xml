@@ -26,7 +26,7 @@
     </intent>
     </queries>
    <application
-        android:label="Medical Sales Portal"
+        android:label="${app_name}"  
         android:name="${applicationName}"
         android:networkSecurityConfig="@xml/network_security_config"
         android:icon="@mipmap/ic_launcher">
@@ -47,11 +47,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-       
-        <!--  빌드옵션 개발 -->
+     
         <provider
         android:name="androidx.core.content.FileProvider"
-        android:authorities="com.kolon.medsalesportaldev.fileProvider" 
+        android:authorities="${applicationId}.fileProvider" 
         android:exported="false"
         android:grantUriPermissions="true"
         tools:replace="android:authorities">
@@ -60,18 +59,6 @@
                 android:resource="@xml/filepaths"
                 tools:replace="android:resource" />
         </provider>
-        <!-- 빌드옵션 운영 -->
-        <!-- <provider
-        android:name="androidx.core.content.FileProvider"
-        android:authorities="com.kolon.medsalesportal.fileProvider" 
-        android:exported="false"
-        android:grantUriPermissions="true"
-        tools:replace="android:authorities">
-        <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths"
-                tools:replace="android:resource" />
-        </provider> -->
 
         <meta-data
             android:name="flutterEmbedding"

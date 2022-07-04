@@ -4,8 +4,9 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<!-- 빌드옵션  -->
 	<key>CFBundleDisplayName</key>
-	<string>Medsalesportal</string>
+	<string>(개발)제약영업포탈</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +16,7 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<!-- 빌드옵션 하드코딩 -->
-	<string>MedicalSalsePortal</string>
+	<string>CFBundleName</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -67,6 +68,11 @@
 		<string>https</string>
 		<string>http</string>
 		<string>kolon</string>
+		<!-- 빌드옵션 개발 -->
+		<string>medsalesportaldev</string>
+		<!-- 빌드옵션 운영 -->
+		<!-- <string>medsalesportal</string> -->
+		
 	</array>
 	<!-- Permission options for the `location` group -->
 	<key>NSLocationWhenInUseUsageDescription</key>
