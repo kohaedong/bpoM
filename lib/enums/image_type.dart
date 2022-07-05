@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/image_type.dart
  * Created Date: 2021-08-20 14:37:40
- * Last Modified: 2022-07-04 16:12:56
+ * Last Modified: 2022-07-05 10:06:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,20 +12,24 @@
  */
 
 //* 이미지 url 사전 등록후 사용.
+import 'package:medsalesportal/view/activityManager/activity_manager_page.dart';
+import 'package:medsalesportal/view/activitySearch/activity_search_page.dart';
+import 'package:medsalesportal/view/bulkOrderSearch/bulk_order_search_page.dart';
+import 'package:medsalesportal/view/detailBook/detail_book_page.dart';
+import 'package:medsalesportal/view/orderManager/order_manager_page.dart';
+import 'package:medsalesportal/view/orderSearch/order_search_page.dart';
+import 'package:medsalesportal/view/salseReport/salse_report_page.dart';
+
 enum ImageType {
   SPLASH_ICON,
   TEXT_LOGO,
-  APP_SALES_ORDER,
-  APP_SALES_OPPORTUNITY,
-  APP_SALES_APPROVAL,
-  APP_ORDER_DO,
-  APP_MONITORING,
-  APP_INVENTORY,
-  APP_CONSULTING,
-  APP_PROFILE,
-  APP_OPPORTUNITY,
-  APP_CUSTOMER_MANAGER,
-  APP_AGENCY,
+  APP_ACTIVITY_MANEGER,
+  APP_ACTIVITY_SEARCH,
+  APP_ORDER_MANEGER,
+  APP_ORDER_SEARCH,
+  APP_SALSE_REPORT,
+  APP_BULK_ORDER_SEARCH,
+  APP_DETAIL_BOOK,
   SETTINGS_ICON,
   EMPTY,
   SEARCH,
@@ -45,28 +49,20 @@ extension RequestTypeExtension on ImageType {
         return 'assets/images/icon_app_material.svg';
       case ImageType.TEXT_LOGO:
         return 'assets/images/kolon_logo.svg';
-      case ImageType.APP_AGENCY:
-        return 'assets/images/icon_app_agency.svg';
-      case ImageType.APP_CUSTOMER_MANAGER:
-        return 'assets/images/icon_app_c_manager.svg';
-      case ImageType.APP_OPPORTUNITY:
-        return 'assets/images/icon_app_c_opportunity.svg';
-      case ImageType.APP_PROFILE:
-        return 'assets/images/icon_app_c_profile.svg';
-      case ImageType.APP_CONSULTING:
-        return 'assets/images/icon_app_consulting.svg';
-      case ImageType.APP_INVENTORY:
-        return 'assets/images/icon_app_inventory.svg';
-      case ImageType.APP_MONITORING:
-        return 'assets/images/icon_app_monitoring.svg';
-      case ImageType.APP_ORDER_DO:
-        return 'assets/images/icon_app_order_do.svg';
-      case ImageType.APP_SALES_APPROVAL:
-        return 'assets/images/icon_app_sales_approval.svg';
-      case ImageType.APP_SALES_OPPORTUNITY:
-        return 'assets/images/icon_app_sales_opportunity.svg';
-      case ImageType.APP_SALES_ORDER:
-        return 'assets/images/icon_app_sales_order.svg';
+      case ImageType.APP_ACTIVITY_MANEGER:
+        return 'assets/images/icon_app_sales_activity_manager.svg';
+      case ImageType.APP_ACTIVITY_SEARCH:
+        return 'assets/images/icon_app_sales_activity_search.svg';
+      case ImageType.APP_BULK_ORDER_SEARCH:
+        return 'assets/images/icon_app_bulk_order_search.svg';
+      case ImageType.APP_DETAIL_BOOK:
+        return 'assets/images/icon_app_sales_detailbook.svg';
+      case ImageType.APP_ORDER_MANEGER:
+        return 'assets/images/icon_app_sales_order_manager.svg';
+      case ImageType.APP_ORDER_SEARCH:
+        return 'assets/images/icon_app_sales_order_search.svg';
+      case ImageType.APP_SALSE_REPORT:
+        return 'assets/images/icon_app_sales_report.svg';
       case ImageType.EMPTY:
         return 'assets/images/empty.svg';
       case ImageType.SETTINGS_ICON:
@@ -96,28 +92,20 @@ extension RequestTypeExtension on ImageType {
 // 홈화면에 icon을 텝 했을 때 route 하는 경로 사전 등록.
   String get routeName {
     switch (this) {
-      // case ImageType.APP_AGENCY:
-      //   return AgencyManagementPage.routeName;
-      // case ImageType.APP_CUSTOMER_MANAGER:
-      //   return CustomerManagerPage.routeName;
-      // case ImageType.APP_OPPORTUNITY:
-      //   return PotentialCustomersPage.routeName;
-      // case ImageType.APP_PROFILE:
-      //   return CustomerProfilePage.routeName;
-      // case ImageType.APP_CONSULTING:
-      //   return ConsultationReportPage.routeName;
-      // case ImageType.APP_INVENTORY:
-      //   return InventoryManagementPage.routeName;
-      // case ImageType.APP_MONITORING:
-      //   return DeliveryMonitoringPage.routeName;
-      // case ImageType.APP_ORDER_DO:
-      //   return OrderMonitoringSearchPage.routeName;
-      // case ImageType.APP_SALES_APPROVAL:
-      //   return ApprovalManagementPage.routeName;
-      // case ImageType.APP_SALES_OPPORTUNITY:
-      //   return BusinessOpportunityPage.routeName;
-      // case ImageType.APP_SALES_ORDER:
-      //   return SalesOrderCreatePage.routeName;
+      case ImageType.APP_ACTIVITY_MANEGER:
+        return ActivityManagerPage.routeName;
+      case ImageType.APP_ACTIVITY_SEARCH:
+        return ActivitySearchPage.routeName;
+      case ImageType.APP_ORDER_MANEGER:
+        return OrderManagerPage.routeName;
+      case ImageType.APP_ORDER_SEARCH:
+        return OrderSearchPage.routeName;
+      case ImageType.APP_BULK_ORDER_SEARCH:
+        return BulkOrderSearchPage.routeName;
+      case ImageType.APP_SALSE_REPORT:
+        return SalseReportPage.routeName;
+      case ImageType.APP_DETAIL_BOOK:
+        return DetailBookPage.routeName;
       default:
         return '';
     }

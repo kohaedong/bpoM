@@ -125,7 +125,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   }
                   if (map.value == ImageType.EMPTY) {
                     DoNothingAction();
-                  } else if (map.value == ImageType.APP_SALES_ORDER) {
                   } else {
                     Navigator.pushNamed(context, map.value.routeName);
                   }
@@ -166,8 +165,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               padding: EdgeInsets.only(top: AppSize.homeTopPadding),
               child: buildIconRow(homeIconsListOne, homeIconsListOneText),
             ),
-            buildIconRow(homeIconsListTwo, homeIconsListTwoText),
-            buildIconRow(homeIconsListThree, homeIconsListThreeText),
+            buildIconRow(homeIconsListTow, homeIconsListTowText),
           ],
         ));
   }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/kolonApp.dart
  * Created Date: 2022-07-02 14:46:59
- * Last Modified: 2022-07-04 17:30:16
+ * Last Modified: 2022-07-04 21:35:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -21,7 +21,6 @@ import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
 import 'package:medsalesportal/view/settings/provider/settings_provider.dart';
 import 'package:medsalesportal/view/common/provider/water_marke_provider.dart';
 import 'package:medsalesportal/view/commonLogin/provider/notice_index_provider.dart';
-
 import 'service/key_service.dart';
 
 class KolonApp extends StatefulWidget {
