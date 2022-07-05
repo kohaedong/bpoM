@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-07-04 16:01:20
+ * Last Modified: 2022-07-05 11:38:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -29,8 +29,6 @@ enum RequestType {
   SAVE_DEVICE_INFO,
   SEND_SUGGETION,
   NOTICE_ALARM,
-  NOTICE_ALARM_COUNT,
-  NOTICE_ALARM_CONFIRM,
   NOTICE_DONT_SHOW_AGAIN,
   UN_CONFIRM_ALARM,
   SEND_IMAGE_TO_SERVER
@@ -103,10 +101,6 @@ extension RequestTypeExtension on RequestType {
       case RequestType.RFC_COMMON_CODE:
         return '$medical/commoncode';
       case RequestType.NOTICE_ALARM:
-        return '$medical/alarmlist';
-      case RequestType.NOTICE_ALARM_COUNT:
-        return '$rfcURL/common';
-      case RequestType.NOTICE_ALARM_CONFIRM:
         return '$rfcURL/common';
       case RequestType.UN_CONFIRM_ALARM:
         return '$rfcURL/common';
@@ -127,18 +121,22 @@ extension RequestTypeExtension on RequestType {
       case RequestType.SAP_SIGNIN_INFO:
         return 'ES_RETURN,ET_ORGHK,T_CODE,ET_VKGRP,IS_LOGIN,ES_LOGIN';
       case RequestType.NOTICE_ALARM:
-        return 'ES_RETURN,T_ALARM';
-      case RequestType.NOTICE_ALARM_CONFIRM:
-        return 'ES_RETURN';
-      case RequestType.NOTICE_ALARM_COUNT:
-        return 'ES_RETURN,ET_BASESUMMARY';
+        return 'ES_RETURN,T_ZLTSP0710';
       case RequestType.NOTICE_DONT_SHOW_AGAIN:
         return '';
       case RequestType.RFC_COMMON_CODE:
         return 'H_TVKO,H_TVKOV,H_TVTA,H_TVKBZ,H_TVBVK,H_T171,H_TVSB,H_TINC,SH_LORD_ZTERM,H_TVKT,ZLTS_H_LTS_AKONT,H_TSKD,SH_DWERK_EXTS,H_TVAG';
-
       case RequestType.UN_CONFIRM_ALARM:
         return 'ES_RETURN,T_ALARM';
+      default:
+        return '';
+    }
+  }
+
+  String get resultColums {
+    switch (this) {
+      case RequestType.NOTICE_ALARM:
+        return 'ERRCODE,ERRMSG';
       default:
         return '';
     }
@@ -166,11 +164,7 @@ extension RequestTypeExtension on RequestType {
       case RequestType.SAP_SIGNIN_INFO:
         return "Z_LTS_IFS0001";
       case RequestType.NOTICE_ALARM:
-        return 'Z_LTS_IFR0068';
-      case RequestType.NOTICE_ALARM_COUNT:
-        return 'Z_LTS_IFS0070';
-      case RequestType.NOTICE_ALARM_CONFIRM:
-        return 'Z_LTS_IFR0068';
+        return 'Z_LTSP_IF0710';
       case RequestType.RFC_COMMON_CODE:
         return 'Z_LTS_IFS0002';
       //! api 개발 완료 후 추가.

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_all_page.dart
  * Created Date: 2022-01-04 00:52:52
- * Last Modified: 2022-07-03 15:12:54
+ * Last Modified: 2022-07-05 11:49:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -25,7 +25,7 @@ import 'package:medsalesportal/view/home/provider/alarm_provider.dart';
 import 'package:provider/provider.dart';
 
 class NoticeAllPage extends StatefulWidget {
-  NoticeAllPage({Key? key}) : super(key: key);
+  const NoticeAllPage({Key? key}) : super(key: key);
   static const String routeName = '/noticeAllPage';
   @override
   _NoticeAllPageState createState() => _NoticeAllPageState();
@@ -55,7 +55,7 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
         builder: (context, _) {
           final p = context.read<AlarmProvider>();
 
-          if (p.responseModel == null) {
+          if (p.homeNoticeResponseModel == null) {
             p.getAlarmList(false);
           }
           return WillPopScope(
@@ -69,7 +69,7 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
                   titleText: AppStyles.text(
                       '${tr('recent_notice')}', AppTextStyle.w500_20),
                   callback: () {
-                    p.alarmConfirm().then((_) => Navigator.pop(context));
+                    Navigator.pop(context);
                   },
                 ),
                 child: Padding(
@@ -78,8 +78,9 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
                       children: [
                         Consumer<AlarmProvider>(
                             builder: (context, provider, _) {
-                          return provider.responseModel != null &&
-                                  provider.responseModel!.list!.isNotEmpty
+                          return provider.homeNoticeResponseModel != null &&
+                                  provider.homeNoticeResponseModel!.tZltsp0710!
+                                      .isNotEmpty
                               ? RefreshIndicator(
                                   child: ListView.builder(
                                     controller: scrollController!
@@ -98,19 +99,20 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
                                       }),
                                     shrinkWrap: true,
                                     physics: AlwaysScrollableScrollPhysics(),
-                                    itemCount:
-                                        provider.responseModel!.list!.length,
+                                    itemCount: provider.homeNoticeResponseModel!
+                                        .tZltsp0710!.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return homeNoticeListItem(
                                           context,
-                                          provider.responseModel!.list![index],
+                                          provider.homeNoticeResponseModel!
+                                              .tZltsp0710![index],
                                           index,
                                           false,
                                           !provider.hasMore &&
                                               index ==
-                                                  provider.responseModel!.list!
-                                                          .length -
+                                                  provider.homeNoticeResponseModel!
+                                                          .tZltsp0710!.length -
                                                       1);
                                     },
                                   ),
@@ -118,8 +120,9 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
                               : provider.isLoadData
                                   ? DefaultShimmer.buildDefaultPageShimmer(12,
                                       isNotWithPadding: true)
-                                  : provider.responseModel != null &&
-                                          provider.responseModel!.list!.isEmpty
+                                  : provider.homeNoticeResponseModel != null &&
+                                          provider.homeNoticeResponseModel!
+                                              .tZltsp0710!.isEmpty
                                       ? ListView(
                                           shrinkWrap: true,
                                           children: [

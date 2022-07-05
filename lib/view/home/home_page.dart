@@ -35,7 +35,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   var _isNoticeCheckDone = false;
   ScrollController? _scrollController;
   Timer? exitAppTimer;
-  List<TAlarmModel> confiremList = [];
 
   var showToast = true;
   @override
@@ -60,7 +59,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Future<void> checkNoticeWhenLogedin() async {
-    Future.delayed(Duration(seconds: 3), () async {
+    await Future.delayed(Duration.zero, () async {
       CheckUpdateAndNoticeService.check(context, CheckType.NOTICE_ONLY, true);
     }).then((value) => _isNoticeCheckDone = true);
   }
@@ -115,14 +114,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             ...list.asMap().entries.map((map) {
               return InkWell(
                 onTap: () async {
-                  if (confiremList.isNotEmpty) {
-                    if (map.value != ImageType.EMPTY) {
-                      print(confiremList.length);
-                      // AlarmProvider()
-                      //     .alarmConfirm(list: confiremList)
-                      //     .then((value) => confiremList.clear());
-                    }
-                  }
                   if (map.value == ImageType.EMPTY) {
                     DoNothingAction();
                   } else {
@@ -214,15 +205,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               padding: EdgeInsets.only(right: AppSize.noticeTitleTextSpacing),
               child: AppStyles.text(
                   '${tr('recent_notice')}', AppTextStyle.bold_20)),
-          Selector<AlarmProvider, EtAlarmCountResponseModel?>(
-            selector: (context, provider) => provider.alarmCountModel,
-            builder: (context, countModel, _) {
-              return countModel != null && countModel.model.isNotEmpty
-                  ? AppStyles.text('${countModel.model.single!.alarmCnt}',
-                      AppTextStyle.bold_20Color(AppColors.primary))
-                  : Container();
-            },
-          )
         ])),
         Align(
             alignment: Alignment.centerRight,
@@ -232,7 +214,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     await Navigator.pushNamed(context, NoticeAllPage.routeName);
                 if (result != null) {
                   p.refresh();
-                  p.getAlarmCount();
                 }
               },
               child: Icon(
@@ -254,22 +235,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     BorderRadius.all(Radius.circular(AppSize.radius8)),
                 color: AppColors.whiteText),
             child: Consumer<AlarmProvider>(builder: (context, provider, _) {
-              return provider.homeAlarmResponseModel != null &&
-                      provider.homeAlarmResponseModel!.list!.isNotEmpty
+              return provider.homeNoticeResponseModel != null &&
+                      provider.homeNoticeResponseModel!.tZltsp0710!.isNotEmpty
                   ? ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.all(AppSize.padding),
                       shrinkWrap: true,
-                      itemCount: provider.homeAlarmResponseModel!.list!
+                      itemCount: provider.homeNoticeResponseModel!.tZltsp0710!
                           .take(2)
                           .toList()
                           .length,
                       itemBuilder: (BuildContext context, int index) {
-                        var model = provider.homeAlarmResponseModel!.list!
+                        var model = provider
+                            .homeNoticeResponseModel!.tZltsp0710!
                             .take(2)
                             .toList()[index];
                         // home cache 된 알림, 다른 페이지로 이동하거나 앱이 종료 되면 확인처리 함.
-                        confiremList.add(model);
                         return homeNoticeListItem(
                             context,
                             model,
@@ -277,7 +258,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             true,
                             !provider.hasMore &&
                                 index ==
-                                    provider.homeAlarmResponseModel!.list!
+                                    provider.homeNoticeResponseModel!
+                                            .tZltsp0710!
                                             .take(2)
                                             .toList()
                                             .length -
@@ -294,9 +276,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 strokeWidth: AppSize.strokeWidth,
                               )),
                         )
-                      : provider.homeAlarmResponseModel != null &&
-                              provider.homeAlarmResponseModel!.list != null &&
-                              provider.homeAlarmResponseModel!.list!.isEmpty
+                      : provider.homeNoticeResponseModel != null &&
+                              provider.homeNoticeResponseModel!.tZltsp0710 !=
+                                  null &&
+                              provider
+                                  .homeNoticeResponseModel!.tZltsp0710!.isEmpty
                           ? Container(
                               height: 200, child: BaseNullDataWidget.build())
                           : Container(height: 200);
@@ -329,14 +313,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             borderColor: AppColors.blueTextColor));
   }
 
-  void getHomeAlarm(AlarmProvider p) {
-    if (p.responseModel == null) {
-      p.getHomeAlarmList(false).then((value) {
-        p.getAlarmCount();
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     // print('in');
@@ -347,10 +323,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         final p = context.read<AlarmProvider>();
         if (!_isNoticeCheckDone) {
           checkNoticeWhenLogedin().then((value) {
-            getHomeAlarm(p);
+            p.getAlarmList(true);
           });
         } else {
-          getHomeAlarm(p);
+          p.getAlarmList(true);
         }
 
         return WillPopScope(
