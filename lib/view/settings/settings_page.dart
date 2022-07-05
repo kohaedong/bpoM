@@ -13,7 +13,6 @@ import 'package:medsalesportal/view/settings/font_setting_page.dart';
 import 'package:medsalesportal/view/settings/notice_setting_page.dart';
 import 'package:medsalesportal/view/settings/provider/settings_provider.dart';
 import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
-import 'package:medsalesportal/view/signin/signin_page.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/model/update/check_update_model.dart';
 

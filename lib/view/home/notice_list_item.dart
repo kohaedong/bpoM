@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_list_item.dart
  * Created Date: 2022-01-04 00:52:36
- * Last Modified: 2022-07-05 13:59:33
+ * Last Modified: 2022-07-05 15:09:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,15 +15,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/home/notice_detail_page.dart';
-import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/home/provider/alarm_provider.dart';
 import 'package:medsalesportal/model/rfc/table_notice_T_ZLTSP0710_model.dart';
 
 Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
     int index, bool isHomeList, bool isShowLastPageText) {
-  final p = context.read<AlarmProvider>();
   return InkWell(
       onTap: () async {
         Navigator.pushNamed(context, NoticeDetailPage.routeName);

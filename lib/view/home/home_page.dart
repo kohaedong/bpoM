@@ -1,26 +1,24 @@
-import 'dart:async';
 import 'dart:io';
-import 'package:easy_localization/easy_localization.dart';
+import 'dart:async';
+import './home_icon_map.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
-import 'package:medsalesportal/model/rfc/et_alarm_count_response_model.dart';
-import 'package:medsalesportal/model/rfc/t_alarm_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/base_app_toast.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
-import 'package:medsalesportal/view/common/widget_of_null_data.dart';
-import 'package:medsalesportal/view/commonLogin/update_and_notice_dialog.dart';
 import 'package:medsalesportal/view/home/notice_all_page.dart';
+import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/home/notice_list_item.dart';
-import 'package:medsalesportal/view/home/provider/alarm_provider.dart';
-import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
 import 'package:medsalesportal/view/settings/settings_page.dart';
-import 'package:provider/provider.dart';
-import './home_icon_map.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:medsalesportal/view/common/widget_of_null_data.dart';
+import 'package:medsalesportal/view/home/provider/alarm_provider.dart';
+import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
+import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
+import 'package:medsalesportal/view/commonLogin/update_and_notice_dialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -308,7 +306,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         padding: AppSize.sendSuggestionPadding,
         child: AppStyles.buildButton(
             context,
-            '${tr('home_send_suggestion')}',
+            '${tr('med_salse_portal_send_suggestion')}',
             AppSize.realWith - AppSize.padding * 2,
             AppColors.lightBlueColor,
             AppTextStyle.color_16(AppColors.blueTextColor),

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/home_notice_response_model.dart
  * Created Date: 2022-07-05 11:06:29
- * Last Modified: 2022-07-05 11:10:04
+ * Last Modified: 2022-07-05 15:09:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -25,4 +25,5 @@ class HomeNoticeResponseModel {
   HomeNoticeResponseModel(this.esReturn, this.tZltsp0710);
   factory HomeNoticeResponseModel.fromJson(Object? json) =>
       _$HomeNoticeResponseModelFromJson(json as Map<String, dynamic>);
+  Map<String, dynamic> toJson() => _$HomeNoticeResponseModelToJson(this);
 }
