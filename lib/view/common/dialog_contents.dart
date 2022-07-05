@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-07-03 15:00:41
+ * Last Modified: 2022-07-05 16:56:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -26,7 +26,7 @@ Widget withTitleContents(String title) {
               padding: EdgeInsets.only(left: AppSize.padding),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: AppStyles.text('$title', AppTextStyle.w500_18),
+                child: AppText.text('$title', style: AppTextStyle.w500_18),
               ))),
       Divider(
         height: AppSize.dividerHeight,

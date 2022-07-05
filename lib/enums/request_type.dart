@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-07-05 11:38:54
+ * Last Modified: 2022-07-05 15:46:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -28,9 +28,9 @@ enum RequestType {
   GET_ENV,
   SAVE_DEVICE_INFO,
   SEND_SUGGETION,
-  NOTICE_ALARM,
+  HOME_NOTICE,
+  HOME_NOTICE_DETAIL,
   NOTICE_DONT_SHOW_AGAIN,
-  UN_CONFIRM_ALARM,
   SEND_IMAGE_TO_SERVER
 }
 
@@ -100,9 +100,9 @@ extension RequestTypeExtension on RequestType {
         return '$v2URL/rest';
       case RequestType.RFC_COMMON_CODE:
         return '$medical/commoncode';
-      case RequestType.NOTICE_ALARM:
+      case RequestType.HOME_NOTICE:
         return '$rfcURL/common';
-      case RequestType.UN_CONFIRM_ALARM:
+      case RequestType.HOME_NOTICE_DETAIL:
         return '$rfcURL/common';
     }
   }
@@ -120,14 +120,15 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SAP_SIGNIN_INFO:
         return 'ES_RETURN,ET_ORGHK,T_CODE,ET_VKGRP,IS_LOGIN,ES_LOGIN';
-      case RequestType.NOTICE_ALARM:
+      case RequestType.HOME_NOTICE:
         return 'ES_RETURN,T_ZLTSP0710';
+      case RequestType.HOME_NOTICE_DETAIL:
+        return 'ES_RETURN,T_ZLTSP0700,T_TEXT,T_VKGRP';
       case RequestType.NOTICE_DONT_SHOW_AGAIN:
         return '';
       case RequestType.RFC_COMMON_CODE:
         return 'H_TVKO,H_TVKOV,H_TVTA,H_TVKBZ,H_TVBVK,H_T171,H_TVSB,H_TINC,SH_LORD_ZTERM,H_TVKT,ZLTS_H_LTS_AKONT,H_TSKD,SH_DWERK_EXTS,H_TVAG';
-      case RequestType.UN_CONFIRM_ALARM:
-        return 'ES_RETURN,T_ALARM';
+
       default:
         return '';
     }
@@ -135,7 +136,9 @@ extension RequestTypeExtension on RequestType {
 
   String get resultColums {
     switch (this) {
-      case RequestType.NOTICE_ALARM:
+      case RequestType.HOME_NOTICE:
+        return 'ERRCODE,ERRMSG';
+      case RequestType.HOME_NOTICE_DETAIL:
         return 'ERRCODE,ERRMSG';
       default:
         return '';
@@ -146,7 +149,6 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.CHECK_NOTICE:
         return "noticeAll";
-
       case RequestType.SEND_IMAGE_TO_SERVER:
         return 'screenCapture';
       case RequestType.NOTICE_DONT_SHOW_AGAIN:
@@ -163,13 +165,12 @@ extension RequestTypeExtension on RequestType {
         return 'saveOfAppOpinionByAnonymous';
       case RequestType.SAP_SIGNIN_INFO:
         return "Z_LTS_IFS0001";
-      case RequestType.NOTICE_ALARM:
+      case RequestType.HOME_NOTICE:
         return 'Z_LTSP_IF0710';
+      case RequestType.HOME_NOTICE_DETAIL:
+        return 'Z_LTSP_IF0700';
       case RequestType.RFC_COMMON_CODE:
         return 'Z_LTS_IFS0002';
-      //! api 개발 완료 후 추가.
-      case RequestType.UN_CONFIRM_ALARM:
-        return 'Z_LTS_IFR0069';
       default:
         throw NullThrownError();
     }

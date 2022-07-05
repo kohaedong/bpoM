@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/popup_cell.dart
  * Created Date: 2021-08-19 10:00:29
- * Last Modified: 2022-07-03 15:12:54
+ * Last Modified: 2022-07-05 16:55:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -39,7 +39,8 @@ class BasePopupCell {
                         padding: EdgeInsets.only(left: AppSize.padding),
                         child: Align(
                           alignment: Alignment.centerLeft,
-                          child: AppStyles.text('$title', AppTextStyle.w500_18),
+                          child: AppText.text('$title',
+                              style: AppTextStyle.w500_18),
                         ))),
                 Divider(
                     height: AppSize.dividerHeight, color: AppColors.textGrey),
@@ -118,8 +119,8 @@ class BasePopupCell {
                                               : (AppSize.defaultContentsWidth -
                                                       AppSize.cellPadding * 2) *
                                                   .45,
-                                  child: AppStyles.text(
-                                      data.value, AppTextStyle.w700_14),
+                                  child: AppText.text(data.value,
+                                      style: AppTextStyle.w700_14),
                                 ));
                               }).toList(),
                               rows: snapshot.data!
@@ -142,8 +143,8 @@ class BasePopupCell {
                                                             2) *
                                                     .15,
                                             alignment: Alignment.center,
-                                            child: AppStyles.text(data.column1!,
-                                                AppTextStyle.default_14),
+                                            child: AppText.text(data.column1!,
+                                                style: AppTextStyle.default_14),
                                           )),
                                           DataCell(Container(
                                             width: groupType ==
@@ -158,8 +159,8 @@ class BasePopupCell {
                                                             2) *
                                                     .4,
                                             alignment: Alignment.center,
-                                            child: AppStyles.text(data.column2!,
-                                                AppTextStyle.default_14),
+                                            child: AppText.text(data.column2!,
+                                                style: AppTextStyle.default_14),
                                           )),
                                           DataCell(Container(
                                             width: groupType ==
@@ -174,8 +175,8 @@ class BasePopupCell {
                                                             2) *
                                                     .45,
                                             alignment: Alignment.centerLeft,
-                                            child: AppStyles.text(data.column3!,
-                                                AppTextStyle.default_14),
+                                            child: AppText.text(data.column3!,
+                                                style: AppTextStyle.default_14),
                                           )),
                                         ]),
                                   )
@@ -211,8 +212,8 @@ class BasePopupCell {
                                           : (AppSize.defaultContentsWidth -
                                                   AppSize.cellPadding * 2) *
                                               .45,
-                                  child: AppStyles.text(
-                                      data.value, AppTextStyle.w700_14),
+                                  child: AppText.text(data.value,
+                                      style: AppTextStyle.w700_14),
                                 ));
                               }).toList(),
                               rows: []);

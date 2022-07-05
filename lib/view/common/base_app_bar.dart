@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_bar.dart
  * Created Date: 2021-08-29 19:57:10
- * Last Modified: 2022-07-03 14:57:43
+ * Last Modified: 2022-07-05 16:52:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -58,9 +58,9 @@ class MainAppBar extends AppBar {
                                 padding: EdgeInsets.only(
                                     top: AppSize.appBarHeight * .6),
                                 child: Center(
-                                  child: AppStyles.text(
+                                  child: AppText.text(
                                       '${tr('is_exit_current_page')}',
-                                      context
+                                      style: context
                                           .read<AppThemeProvider>()
                                           .themeData
                                           .textTheme

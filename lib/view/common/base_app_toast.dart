@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_toast.dart
  * Created Date: 2021-10-01 14:02:55
- * Last Modified: 2022-07-03 14:57:29
+ * Last Modified: 2022-07-05 16:54:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -44,8 +44,8 @@ class AppToast {
             ],
             color: AppColors.textFieldUnfoucsColor,
             borderRadius: BorderRadius.all(Radius.circular(AppSize.radius8))),
-        child:
-            AppStyles.text('$str', AppTextStyle.color14(AppColors.whiteText)));
+        child: AppText.text('$str',
+            style: AppTextStyle.color14(AppColors.whiteText)));
     fToast!.showToast(
       child: toast,
       gravity: ToastGravity.TOP,

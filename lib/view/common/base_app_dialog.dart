@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-07-03 14:57:18
+ * Last Modified: 2022-07-05 16:53:50
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -64,9 +64,8 @@ class AppDialog {
                 AppImage.getImage(ImageType.INFO),
                 Padding(
                     padding: EdgeInsets.only(top: AppSize.infoBoxSpaccing * 2)),
-                AppStyles.text(
-                    '$str',
-                    context
+                AppText.text('$str',
+                    style: context
                         .read<AppThemeProvider>()
                         .themeData
                         .textTheme
@@ -94,8 +93,8 @@ class AppDialog {
                   child: Container(
                     alignment: Alignment.center,
                     height: AppSize.buttonHeight,
-                    child: AppStyles.text(
-                        '${tr('do_edit')}', AppTextStyle.default_18),
+                    child: AppText.text('${tr('do_edit')}',
+                        style: AppTextStyle.default_18),
                   ),
                 ),
                 Divider(
@@ -109,8 +108,8 @@ class AppDialog {
                   child: Container(
                     alignment: Alignment.center,
                     height: AppSize.buttonHeight,
-                    child: AppStyles.text(
-                        '${tr('do_delete')}', AppTextStyle.default_18),
+                    child: AppText.text('${tr('do_delete')}',
+                        style: AppTextStyle.default_18),
                   ),
                 )
               ],
@@ -132,9 +131,9 @@ class AppDialog {
                 child: Container(
                   width: AppSize.defaultContentsWidth,
                   child: Center(
-                    child: AppStyles.text(
+                    child: AppText.text(
                       '$contents',
-                      context
+                      style: context
                           .read<AppThemeProvider>()
                           .themeData
                           .textTheme

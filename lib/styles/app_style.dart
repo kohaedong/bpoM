@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/string_fomate_type.dart';
 import 'package:medsalesportal/styles/app_size.dart';
+import 'package:medsalesportal/styles/app_text.dart';
 import 'app_colors.dart';
 import 'app_text_style.dart';
 
@@ -12,22 +13,6 @@ class AppStyles {
 
   ///  일반 테스트 style 사전 정의.
   /// [TextStyle]은 [AppTextStyle]에 저의 된 style 적용.
-  static text(String data, TextStyle style,
-          {int? maxLines,
-          TextOverflow? overflow,
-          TextAlign? textAlign,
-          StringFormateType? type}) =>
-      Text(
-        type != null ? type.formate(data) : data,
-        style: style,
-        textAlign: textAlign,
-        maxLines: maxLines,
-        overflow: overflow != null
-            ? overflow
-            : maxLines != null
-                ? TextOverflow.ellipsis
-                : null,
-      );
 
   /// [TextButton] 사용시 style 사전 정의.
   static ButtonStyle getButtonStyle(Color backgroundColor, Color forgroundColor,
@@ -95,7 +80,7 @@ class AppStyles {
                               bottomRight: Radius.circular(radius))
                           : null
                       : BorderRadius.all(Radius.circular(radius))),
-          child: AppStyles.text('$text', style)),
+          child: AppText.text('$text', style: style)),
     );
   }
 

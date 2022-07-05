@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_list_item.dart
  * Created Date: 2022-01-04 00:52:36
- * Last Modified: 2022-07-05 15:09:57
+ * Last Modified: 2022-07-05 17:39:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -23,14 +23,14 @@ Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
     int index, bool isHomeList, bool isShowLastPageText) {
   return InkWell(
       onTap: () async {
-        Navigator.pushNamed(context, NoticeDetailPage.routeName);
+        Navigator.pushNamed(context, NoticeDetailPage.routeName,
+            arguments: model.noticeNo);
       },
       child: Column(
         children: [
           Container(
               alignment: Alignment.centerLeft,
-              child:
-                  AppStyles.text(model.nTitle!, AppTextStyle.h3, maxLines: 2)),
+              child: AppText.listViewText(model.nTitle!, maxLines: 2)),
           defaultSpacing(),
           Row(
             children: [
@@ -38,9 +38,10 @@ Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
                   ? Container()
                   : Row(
                       children: [
-                        AppText.text('${tr('notice')}',
-                            style: AppTextStyle.h4
-                                .copyWith(color: AppColors.primary)),
+                        AppText.listViewText('${tr('notice')}',
+                            style: AppTextStyle.h4.copyWith(
+                                color: AppColors.primary,
+                                fontSize: AppTextStyle.h4.fontSize! - 2)),
                         Padding(
                             padding: EdgeInsets.only(
                                 right: AppSize.defaultListItemSpacing))
@@ -48,16 +49,24 @@ Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
                     ),
               Align(
                   alignment: Alignment.centerLeft,
-                  child: AppStyles.text(
+                  child: AppText.listViewText(
                       '${FormatUtil.addDashForMonth('${model.aedat}')} ${FormatUtil.addColonForTime('${model.aezet}')}',
-                      AppTextStyle.h4.copyWith(color: AppColors.subText))),
+                      style: AppTextStyle.h4.copyWith(
+                          color: AppColors.subText,
+                          fontSize: AppTextStyle.h4.fontSize! - 2))),
               AppStyles.buildPipe(AppTextStyle.blod_16.fontSize!),
-              AppText.text('${model.sanumNm}',
-                  style: AppTextStyle.h4.copyWith(color: AppColors.subText))
+              AppText.listViewText('${model.sanumNm}',
+                  style: AppTextStyle.h4.copyWith(
+                      color: AppColors.subText,
+                      fontSize: AppTextStyle.h4.fontSize! - 2))
             ],
           ),
           defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
-          index == 0 ? Divider() : Container(),
+          isHomeList && index == 0
+              ? Divider()
+              : !isHomeList
+                  ? Divider()
+                  : Container(),
         ],
       ));
 }

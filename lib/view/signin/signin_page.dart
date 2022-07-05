@@ -141,7 +141,7 @@ class _SigninPageState extends State<SigninPage> {
               )),
           Padding(
               padding: EdgeInsets.only(right: AppSize.textFiledDefaultSpacing)),
-          AppStyles.text('${tr('save_id')}', AppTextStyle.sub_14)
+          AppText.text('${tr('save_id')}', style: AppTextStyle.sub_14)
         ],
       ),
     );
@@ -174,7 +174,7 @@ class _SigninPageState extends State<SigninPage> {
               )),
           Padding(
               padding: EdgeInsets.only(right: AppSize.textFiledDefaultSpacing)),
-          AppStyles.text('${tr('auto_signin')}', AppTextStyle.sub_14)
+          AppText.text('${tr('auto_signin')}', style: AppTextStyle.sub_14)
         ],
       ),
     );
@@ -277,8 +277,8 @@ class _SigninPageState extends State<SigninPage> {
                     : Container(),
                 Container(
                   alignment: Alignment.centerLeft,
-                  child:
-                      AppStyles.text('$errorMessage', AppTextStyle.danger_14),
+                  child: AppText.text('$errorMessage',
+                      style: AppTextStyle.danger_14),
                 ),
                 errorMessage.isNotEmpty
                     ? Padding(

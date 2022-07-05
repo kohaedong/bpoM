@@ -79,7 +79,7 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            AppStyles.text('$text', AppTextStyle.default_18),
+            AppText.text('$text', style: AppTextStyle.default_18),
             buildSwich(
                 context,
                 swichType,
@@ -91,7 +91,8 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
         isUseSubscription != null
             ? Align(
                 alignment: Alignment.centerLeft,
-                child: AppStyles.text('$subscription', AppTextStyle.sub_14))
+                child:
+                    AppText.text('$subscription', style: AppTextStyle.sub_14))
             : Container()
       ],
     );
@@ -154,12 +155,14 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
           children: isHour
               ? [
                   ...p.timePickerHourList.map((data) => Center(
-                        child: AppStyles.text('$data', AppTextStyle.default_16),
+                        child: AppText.text('$data',
+                            style: AppTextStyle.default_16),
                       ))
                 ]
               : [
                   ...p.timePickerminuteList.map((data) => Center(
-                      child: AppStyles.text('$data', AppTextStyle.default_16))),
+                      child: AppText.text('$data',
+                          style: AppTextStyle.default_16))),
                 ],
         ));
   }
@@ -209,11 +212,11 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
             border: Border.all(width: 1, color: AppColors.textGrey)),
         child: Center(
             child: Consumer<SettingsProvider>(builder: (context, provider, _) {
-          return AppStyles.text(
+          return AppText.text(
               isStartTime
                   ? '${provider.notDisturbStartHour != null && provider.notDisturbStartHour != '' ? provider.notDisturbStartHour! : '12'}:${provider.notDisturbStartMinute != null && provider.notDisturbStartMinute!.isNotEmpty ? provider.notDisturbStartMinute! : '00'}'
                   : '${provider.notDisturbEndHour != null && provider.notDisturbEndHour != '' ? provider.notDisturbEndHour! : '00'}:${provider.notDisturbEndMinute != null && provider.notDisturbEndMinute != '' ? provider.notDisturbEndMinute : '00'}',
-              AppTextStyle.default_18);
+              style: AppTextStyle.default_18);
         })),
       ),
     );
@@ -262,7 +265,7 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
             appBar: MainAppBar(
               context,
               titleText:
-                  AppStyles.text('${tr('notice')}', AppTextStyle.bold_20),
+                  AppText.text('${tr('notice')}', style: AppTextStyle.bold_20),
               callback: () async {
                 Navigator.pop(context);
                 await p.saveUserEvn();

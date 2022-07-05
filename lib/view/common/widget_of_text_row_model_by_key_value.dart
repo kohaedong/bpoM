@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/text_row_model_by_key_value.dart
  * Created Date: 2021-09-06 11:46:11
- * Last Modified: 2022-07-02 15:21:37
+ * Last Modified: 2022-07-05 16:58:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -17,6 +17,7 @@ import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_style.dart';
+import 'package:medsalesportal/styles/app_text.dart';
 import 'package:medsalesportal/styles/app_text_style.dart';
 import 'package:medsalesportal/util/regular.dart';
 import 'package:medsalesportal/view/common/base_shimmer.dart';
@@ -73,8 +74,8 @@ class TextRowModelByKeyValue extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              AppStyles.text('${showAllButtonText ?? ''}',
-                  AppTextStyle.color14(AppColors.showAllTextColor),
+              AppText.text('${showAllButtonText ?? ''}',
+                  style: AppTextStyle.color14(AppColors.showAllTextColor),
                   maxLines: isWithShowAllButton ? 2 : null,
                   overflow: TextOverflow.ellipsis),
               Padding(
@@ -105,8 +106,8 @@ class TextRowModelByKeyValue extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              AppStyles.text('${showAllButtonText ?? ''}',
-                  AppTextStyle.color14(AppColors.blueTextColor)),
+              AppText.text('${showAllButtonText ?? ''}',
+                  style: AppTextStyle.color14(AppColors.blueTextColor)),
               Padding(
                 padding: EdgeInsets.only(left: 3),
                 child: icon!,
@@ -129,17 +130,17 @@ class TextRowModelByKeyValue extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                child: AppStyles.text(
+                child: AppText.text(
                   '$title',
-                  p.themeData.textTheme.headline6!,
+                  style: p.themeData.textTheme.headline6!,
                   maxLines: isTitleTwoRow != null ? 2 : 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
             isWithStar != null
-                ? AppStyles.text(
-                    ' *', AppTextStyle.color14(AppColors.dangerColor))
+                ? AppText.text(' *',
+                    style: AppTextStyle.color14(AppColors.dangerColor))
                 : Container()
           ],
         ));
@@ -174,14 +175,13 @@ class TextRowModelByKeyValue extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     discription2 != null
-                        ? AppStyles.text(
-                            '$discription2  ', p.themeData.textTheme.headline4!)
+                        ? AppText.text('$discription2  ',
+                            style: p.themeData.textTheme.headline4!)
                         : Container(),
                     Expanded(
                         child: Container(
-                            child: AppStyles.text(
-                                '$discription',
-                                exceptionColor != null
+                            child: AppText.text('$discription',
+                                style: exceptionColor != null
                                     ? p.themeData.textTheme.headline4!
                                         .copyWith(color: exceptionColor)
                                     : p.themeData.textTheme.headline4!,

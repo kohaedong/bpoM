@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_all_page.dart
  * Created Date: 2022-01-04 00:52:52
- * Last Modified: 2022-07-05 15:08:12
+ * Last Modified: 2022-07-05 17:34:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -21,7 +21,7 @@ import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/home/notice_list_item.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
-import 'package:medsalesportal/view/home/provider/alarm_provider.dart';
+import 'package:medsalesportal/view/home/provider/notice_provider.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_next_page_loading.dart';
 import 'package:medsalesportal/view/common/provider/next_page_loading_provider.dart';
@@ -73,7 +73,7 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
   }
 
   Widget _buildListView(BuildContext context) {
-    return Consumer<AlarmProvider>(builder: (context, provider, _) {
+    return Consumer<NoticeProvider>(builder: (context, provider, _) {
       return provider.homeNoticeResponseModel != null &&
               provider.homeNoticeResponseModel!.tZltsp0710!.isNotEmpty
           ? RefreshIndicator(
@@ -159,21 +159,21 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => AlarmProvider()),
+          ChangeNotifierProvider(create: (context) => NoticeProvider()),
           ChangeNotifierProvider(create: (context) => NextPageLoadingProvider())
         ],
         builder: (context, _) {
-          final p = context.read<AlarmProvider>();
+          final p = context.read<NoticeProvider>();
 
           if (p.homeNoticeResponseModel == null) {
-            p.getAlarmList(false);
+            p.getNoticeList(false);
           }
           return BaseLayout(
               hasForm: false,
               appBar: MainAppBar(
                 context,
-                titleText: AppStyles.text(
-                    '${tr('recent_notice')}', AppTextStyle.w500_20),
+                titleText: AppText.text('${tr('recent_notice')}',
+                    style: AppTextStyle.w500_20),
                 callback: () {
                   Navigator.pop(context);
                 },

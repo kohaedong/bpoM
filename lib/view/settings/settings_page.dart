@@ -32,12 +32,12 @@ class SettingsPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppStyles.text(
-                        '${data.esLogin!.ename}', AppTextStyle.w500_16),
+                    AppText.text('${data.esLogin!.ename}',
+                        style: AppTextStyle.w500_16),
                     Padding(
                         padding: EdgeInsets.only(top: AppSize.listFontSpacing)),
-                    AppStyles.text('${data.esLogin!.logid!.toLowerCase()}',
-                        AppTextStyle.default_16)
+                    AppText.text('${data.esLogin!.logid!.toLowerCase()}',
+                        style: AppTextStyle.default_16)
                   ],
                 ),
                 Container(
@@ -53,10 +53,10 @@ class SettingsPage extends StatelessWidget {
                                     height: AppSize.singlePopupHeight -
                                         AppSize.buttonHeight,
                                     alignment: Alignment.center,
-                                    child: AppStyles.text(
+                                    child: AppText.text(
                                         //!빌드옵션 하드코딩! 앱 이름.
                                         '(개발)제약 영업포탈 ${tr('is_ready_to_logout')}',
-                                        AppTextStyle.default_16)),
+                                        style: AppTextStyle.default_16)),
                                 successButtonText: '${tr('ok')}',
                                 successTextColor: AppColors.primary,
                                 faildButtonText: '${tr('cancel')}'));
@@ -87,7 +87,7 @@ class SettingsPage extends StatelessWidget {
 
   Widget _buildItemRow(BuildContext context, String text) {
     return Row(
-      children: [AppStyles.text('$text', AppTextStyle.w500_16), Spacer()],
+      children: [AppText.text('$text', style: AppTextStyle.w500_16), Spacer()],
     );
   }
 
@@ -95,9 +95,10 @@ class SettingsPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        AppStyles.text('${tr('version_info')}', AppTextStyle.w500_16),
+        AppText.text('${tr('version_info')}', style: AppTextStyle.w500_16),
         Padding(padding: EdgeInsets.only(left: AppSize.versionInfoSpacing1)),
-        AppStyles.text('${versionInfo.currentVersion}', AppTextStyle.hint_16),
+        AppText.text('${versionInfo.currentVersion}',
+            style: AppTextStyle.hint_16),
         Padding(padding: EdgeInsets.only(left: AppSize.versionInfoSpacing2)),
         versionInfo.result == 'OK'
             ? Container(
@@ -115,8 +116,8 @@ class SettingsPage extends StatelessWidget {
                     child: Text(
                       '${tr('do_update')}',
                     )))
-            : AppStyles.text(
-                '${tr('is_latest_version')}', AppTextStyle.default_14),
+            : AppText.text('${tr('is_latest_version')}',
+                style: AppTextStyle.default_14),
       ],
     );
   }
@@ -132,7 +133,7 @@ class SettingsPage extends StatelessWidget {
         hasForm: true,
         appBar: MainAppBar(context,
             titleText:
-                AppStyles.text('${tr('settings')}', AppTextStyle.w500_20)),
+                AppText.text('${tr('settings')}', style: AppTextStyle.w500_20)),
         child: FutureBuilder<SettingsResult>(
             future: p.init(),
             builder: (context, snapshot) {

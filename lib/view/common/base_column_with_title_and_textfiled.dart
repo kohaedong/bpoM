@@ -27,9 +27,8 @@ class BaseColumWithTitleAndTextFiled {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        AppStyles.text(
-            '$text',
-            isTextSize14 != null
+        AppText.text('$text',
+            style: isTextSize14 != null
                 ? KeyService.baseAppKey.currentContext!
                     .read<AppThemeProvider>()
                     .themeData
@@ -44,8 +43,8 @@ class BaseColumWithTitleAndTextFiled {
             ? Container(
                 height: AppSize.zero,
               )
-            : AppStyles.text(
-                ' *', AppTextStyle.color_16(AppColors.dangerColor)),
+            : AppText.text(' *',
+                style: AppTextStyle.color_16(AppColors.dangerColor)),
       ],
     );
   }

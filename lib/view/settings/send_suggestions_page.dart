@@ -44,8 +44,8 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
         padding: AppSize.fontSizePageTopWidgetPadding,
         child: Align(
           alignment: Alignment.centerLeft,
-          child: AppStyles.text(
-              '${tr('send_suggestions_discription')}', AppTextStyle.default_16),
+          child: AppText.text('${tr('send_suggestions_discription')}',
+              style: AppTextStyle.default_16),
         ));
   }
 
@@ -56,8 +56,8 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
         children: [
           Align(
             alignment: Alignment.centerLeft,
-            child: AppStyles.text(
-                '${tr('write_some_suggestions')}', AppTextStyle.w500_16),
+            child: AppText.text('${tr('write_some_suggestions')}',
+                style: AppTextStyle.w500_16),
           ),
         ],
       ),
@@ -144,8 +144,8 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
         isResizeToAvoidBottomInset: true,
         appBar: MainAppBar(
           context,
-          titleText:
-              AppStyles.text('${tr('send_suggestion')}', AppTextStyle.w500_20),
+          titleText: AppText.text('${tr('send_suggestion')}',
+              style: AppTextStyle.w500_20),
           icon: Icon(Icons.close_rounded),
           cachePageTypeCallBack: () => _textEditingController!.text.isNotEmpty,
         ),

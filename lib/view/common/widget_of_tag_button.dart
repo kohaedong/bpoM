@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_tag_button.dart
  * Created Date: 2021-09-18 16:52:24
- * Last Modified: 2022-07-03 15:00:12
+ * Last Modified: 2022-07-05 16:57:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,7 +22,7 @@ class BaseTagButton {
             border: Border.all(color: AppColors.secondGreyColor, width: 1)),
         child: Padding(
           padding: AppSize.homeNoticeTageSidePadding,
-          child: AppStyles.text('$text', AppTextStyle.sub_12),
+          child: AppText.text('$text', style: AppTextStyle.sub_12),
         ));
   }
 }

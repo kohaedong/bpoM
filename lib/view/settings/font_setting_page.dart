@@ -67,13 +67,12 @@ class _FontSettingsPageState extends State<FontSettingsPage> {
           Container(
               alignment: Alignment.centerLeft,
               width: AppSize.defaultContentsWidth * .38,
-              child: AppStyles.text('$text1', AppTextStyle.default_16)),
+              child: AppText.text('$text1', style: AppTextStyle.default_16)),
           Expanded(
               child: Align(
                   alignment: Alignment.centerLeft,
-                  child: AppStyles.text(
-                      '$text2',
-                      type == AppThemeType.TEXT_SMALL
+                  child: AppText.text('$text2',
+                      style: type == AppThemeType.TEXT_SMALL
                           ? AppTextStyle.default_14
                           : type == AppThemeType.TEXT_MEDIUM
                               ? AppTextStyle.default_16
@@ -101,7 +100,8 @@ class _FontSettingsPageState extends State<FontSettingsPage> {
         hasForm: false,
         appBar: MainAppBar(
           context,
-          titleText: AppStyles.text('${tr('font_size')}', AppTextStyle.w500_20),
+          titleText:
+              AppText.text('${tr('font_size')}', style: AppTextStyle.w500_20),
           callback: () async {
             Navigator.pop(context);
             await settingsProvider.saveUserEvn();
@@ -113,8 +113,8 @@ class _FontSettingsPageState extends State<FontSettingsPage> {
                 padding: AppSize.fontSizePageTopWidgetPadding,
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: AppStyles.text(
-                      '${tr('font_size_description')}', AppTextStyle.sub_14),
+                  child: AppText.text('${tr('font_size_description')}',
+                      style: AppTextStyle.sub_14),
                 )),
             Divider(color: AppColors.textGrey, height: AppSize.dividerHeight),
             Padding(

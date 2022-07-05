@@ -9,6 +9,7 @@ import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_style.dart';
+import 'package:medsalesportal/styles/app_text.dart';
 import 'package:medsalesportal/styles/app_text_style.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_web_view.dart';
@@ -53,17 +54,17 @@ class CheckUpdateAndNoticeService {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            AppStyles.text(
+                            AppText.text(
                                 updateData.type == UpdateType.LOCAL_CHOOSE ||
                                         updateData.type == UpdateType.WEB_CHOOSE
                                     ? '${tr('update_text_choose')}'
                                     : '${tr('update_text_enforce')}',
-                                AppTextStyle.default_16),
+                                style: AppTextStyle.default_16),
                             Padding(
                                 padding: EdgeInsets.only(
                                     top: AppSize.defaultListItemSpacing)),
-                            AppStyles.text('${updateData.model!.appVerDscr}',
-                                AppTextStyle.default_16),
+                            AppText.text('${updateData.model!.appVerDscr}',
+                                style: AppTextStyle.default_16),
                           ],
                         ),
                       ),
@@ -83,9 +84,8 @@ class CheckUpdateAndNoticeService {
                                   Navigator.pop(context, false);
                                 },
                                 child: Center(
-                                    child: AppStyles.text(
-                                        '${tr('cancel')}',
-                                        AppTextStyle.color_18(
+                                    child: AppText.text('${tr('cancel')}',
+                                        style: AppTextStyle.color_18(
                                             AppColors.secondHintColor)))),
                           ),
                           Container(
@@ -105,9 +105,8 @@ class CheckUpdateAndNoticeService {
                                   p.doUpdate(context, updateData);
                                 },
                                 child: Center(
-                                    child: AppStyles.text(
-                                        '${tr('ok')}',
-                                        AppTextStyle.color_18(
+                                    child: AppText.text('${tr('ok')}',
+                                        style: AppTextStyle.color_18(
                                             AppColors.primary)))),
                           ),
                         ],
@@ -133,13 +132,13 @@ class CheckUpdateAndNoticeService {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AppStyles.text(
-                        '${tr('downloading')}', AppTextStyle.default_14),
+                    AppText.text('${tr('downloading')}',
+                        style: AppTextStyle.default_14),
                     Padding(
                         padding: EdgeInsets.only(
                             top: AppSize.defaultListItemSpacing)),
-                    AppStyles.text('${((value)! * 100).toInt()}%',
-                        AppTextStyle.default_14),
+                    AppText.text('${((value)! * 100).toInt()}%',
+                        style: AppTextStyle.default_14),
                     Padding(
                         padding: EdgeInsets.only(
                             top: AppSize.defaultListItemSpacing * 2)),
@@ -259,8 +258,9 @@ class CheckUpdateAndNoticeService {
                             Padding(
                                 padding: EdgeInsets.only(
                                     right: AppSize.defaultListItemSpacing)),
-                            AppStyles.text('${tr('not_show_again')}',
-                                AppTextStyle.color_18(AppColors.defaultText))
+                            AppText.text('${tr('not_show_again')}',
+                                style: AppTextStyle.color_18(
+                                    AppColors.defaultText))
                           ],
                         ),
                       ),
@@ -295,8 +295,8 @@ class CheckUpdateAndNoticeService {
                                 color: AppColors.unReadyButtonBorderColor,
                                 width: AppSize.defaultBorderWidth)),
                         color: AppColors.whiteText),
-                    child: AppStyles.text('${tr('close')}',
-                        AppTextStyle.color_18(AppColors.defaultText))),
+                    child: AppText.text('${tr('close')}',
+                        style: AppTextStyle.color_18(AppColors.defaultText))),
               )
             ],
           ),

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_error_dialog_contents.dart
  * Created Date: 2021-10-23 17:18:38
- * Last Modified: 2022-07-03 14:58:35
+ * Last Modified: 2022-07-05 16:54:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -27,8 +27,8 @@ class BaseNetworkErrorDialogContents {
         Padding(padding: EdgeInsets.only(top: AppSize.defaultListItemSpacing)),
         Align(
           alignment: Alignment.center,
-          child:
-              AppStyles.text('${tr('check_network')}', AppTextStyle.default_16),
+          child: AppText.text('${tr('check_network')}',
+              style: AppTextStyle.default_16),
         )
       ],
     );
@@ -43,8 +43,8 @@ class BaseServerErrorDialogContents {
         Padding(padding: EdgeInsets.only(top: AppSize.defaultListItemSpacing)),
         Align(
           alignment: Alignment.center,
-          child:
-              AppStyles.text('${tr('server_error')}', AppTextStyle.default_16),
+          child: AppText.text('${tr('server_error')}',
+              style: AppTextStyle.default_16),
         )
       ],
     );

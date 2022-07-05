@@ -15,7 +15,7 @@ import 'package:medsalesportal/view/home/notice_list_item.dart';
 import 'package:medsalesportal/view/settings/settings_page.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
-import 'package:medsalesportal/view/home/provider/alarm_provider.dart';
+import 'package:medsalesportal/view/home/provider/notice_provider.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
 import 'package:medsalesportal/view/commonLogin/update_and_notice_dialog.dart';
@@ -131,8 +131,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       width: AppSize.homeIconTextWidth,
                       child: map.value == ImageType.EMPTY
                           ? Container()
-                          : AppStyles.text(
-                              '${testList[map.key]}', AppTextStyle.sub_14),
+                          : AppText.text('${testList[map.key]}',
+                              style: AppTextStyle.sub_14),
                     ),
                   ],
                 ),
@@ -173,8 +173,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             padding: EdgeInsets.only(left: AppSize.padding),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: AppStyles.text(
-                  '${tr('med_sales_portal')}', AppTextStyle.blod30),
+              child: AppText.text('${tr('med_sales_portal')}',
+                  style: AppTextStyle.blod30),
             ),
           ),
           InkWell(
@@ -193,7 +193,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Widget buildNoticeTitleBar(BuildContext context) {
-    final p = context.read<AlarmProvider>();
+    final p = context.read<NoticeProvider>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -201,8 +201,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Padding(
               padding: EdgeInsets.only(right: AppSize.noticeTitleTextSpacing),
-              child: AppStyles.text(
-                  '${tr('recent_notice')}', AppTextStyle.bold_20)),
+              child: AppText.text('${tr('recent_notice')}',
+                  style: AppTextStyle.bold_20)),
         ])),
         InkWell(
           onTap: () async {
@@ -237,7 +237,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 borderRadius:
                     BorderRadius.all(Radius.circular(AppSize.radius8)),
                 color: AppColors.whiteText),
-            child: Consumer<AlarmProvider>(builder: (context, provider, _) {
+            child: Consumer<NoticeProvider>(builder: (context, provider, _) {
               return provider.homeNoticeResponseModel != null &&
                       provider.homeNoticeResponseModel!.tZltsp0710!.isNotEmpty
                   ? ListView.builder(
@@ -306,7 +306,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         padding: AppSize.sendSuggestionPadding,
         child: AppStyles.buildButton(
             context,
-            '${tr('med_salse_portal_send_suggestion')}',
+            '${tr('home_send_suggestion')}',
             AppSize.realWith - AppSize.padding * 2,
             AppColors.lightBlueColor,
             AppTextStyle.color_16(AppColors.blueTextColor),
@@ -323,15 +323,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     // print('in');
 
     return ChangeNotifierProvider(
-      create: (context) => AlarmProvider(),
+      create: (context) => NoticeProvider(),
       builder: (context, _) {
-        final p = context.read<AlarmProvider>();
+        final p = context.read<NoticeProvider>();
         if (!_isNoticeCheckDone) {
           checkNoticeWhenLogedin().then((value) {
-            p.getAlarmList(true);
+            p.getNoticeList(true);
           });
         } else {
-          p.getAlarmList(true);
+          p.getNoticeList(true);
         }
 
         return WillPopScope(
