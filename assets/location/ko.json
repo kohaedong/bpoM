@@ -32,16 +32,16 @@
     "biggest":"가장 크게",
     "hello":"안녕하세요.",
     "font_size_description":"목록과 상세 화면 글자 크기에 반영됩니다.",
-    "send_suggestions_discription":"Sales Potal 앱  잘 사용하고 계신가요? \n\n 저희 서비스는 여러분의 목소리에 항상 귀 기울이고 있습니다.\n\n개선/제안/문제점 등 다양한 의견을 자유롭게 보내주시면 직접 회신을 드리고 보다 나은 서비스로 보답하겠습니다.",
+    "send_suggestions_discription":"제약 영업포탈 앱  잘 사용하고 계신가요? \n\n 저희 서비스는 여러분의 목소리에 항상 귀 기울이고 있습니다.\n\n개선/제안/문제점 등 다양한 의견을 자유롭게 보내주시면 직접 회신을 드리고 보다 나은 서비스로 보답하겠습니다.",
     "write_some_suggestions":"의견 남기기",
     "suggestion_hint":"내용을 입력해주세요.",
     "submmit":"등록",
     "med_sales_portal":"제약 영업포탈",
-    "app_activity_manager":"영업활동\n   관리",
-    "app_activity_search":"영업활동\n   조회",
-    "app_order_manager":"주문요청\n   관리",
+    "app_activity_manager":"영업활동\n    관리",
+    "app_activity_search":"영업활동\n    조회",
+    "app_order_manager":"주문요청\n    관리",
     "app_order_search":"주문요청\n   조회",
-    "app_salse_report":"거래원장\n  Report",
+    "app_salse_report":"거래원장\n Report",
     "app_buld_order_search":"도매주문\n요청 조회",
     "app_detail_book":"Detail Book",
     "appbar_customer_profile":"  고객 Profile",
@@ -65,7 +65,7 @@
     "search_recent_order_info":"최근 주문 정보 조회",
     "search_customer_manager_info":"고객 담당자 조회",
     "search_recent_consultation_report_info":"최근 상담보고서 조회",
-    "home_send_suggestion":"Sales Potal 개선 의견 보내기",
+    "home_send_suggestion":"제약 영업포탈 앱 개선 의견 보내기",
     "default_info":"기본정보",
     "attach_info":"부가정보", 
     "attach_info_1":"부가정보 1",
@@ -405,7 +405,11 @@
     "ext_app_when_tap_again":"뒤로 버튼을 한번더 누르면 앱이 종료됩니다.",
     "plz_check_discount_option":"할인할증 옵션을 확인해주세요",
     "not_authorized_to_use_create_order":"본 사업부는 모바일에서 Sales Order 생성 불가합니다.",
-    "is_last_item":"-"
+    "is_last_item":"-",
+
+
+
+    "notice_is_null":"최근 공지사항이 없습니다."
 
 
 }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_all_page.dart
  * Created Date: 2022-01-04 00:52:52
- * Last Modified: 2022-07-05 11:49:04
+ * Last Modified: 2022-07-05 14:47:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,9 +13,11 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_next_page_loading.dart';
@@ -32,7 +34,10 @@ class NoticeAllPage extends StatefulWidget {
 }
 
 class _NoticeAllPageState extends State<NoticeAllPage> {
-  ScrollController? scrollController;
+  late ScrollController? scrollController;
+  bool upLock = true;
+  bool downLock = true;
+  var _scrollSwich = ValueNotifier<bool>(false);
   @override
   void initState() {
     scrollController = ScrollController();
@@ -41,8 +46,30 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
 
   @override
   void dispose() {
-    scrollController!.dispose();
+    scrollController?.dispose();
     super.dispose();
+  }
+
+  Widget _buildScrollToTop(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+        valueListenable: _scrollSwich,
+        builder: (context, isCanScroll, _) {
+          return isCanScroll
+              ? Positioned(
+                  right: 20,
+                  bottom: 20,
+                  child: FloatingActionButton(
+                    backgroundColor: AppColors.whiteText,
+                    foregroundColor: AppColors.primary,
+                    onPressed: () {
+                      scrollController!.animateTo(0,
+                          duration: Duration(milliseconds: 400),
+                          curve: Curves.easeIn);
+                    },
+                    child: AppImage.getImage(ImageType.SCROLL_TO_TOP),
+                  ))
+              : Container();
+        });
   }
 
   @override
@@ -75,6 +102,7 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
                 child: Padding(
                     padding: AppSize.defaultSidePadding,
                     child: Stack(
+                      fit: StackFit.expand,
                       children: [
                         Consumer<AlarmProvider>(
                             builder: (context, provider, _) {
@@ -82,9 +110,26 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
                                   provider.homeNoticeResponseModel!.tZltsp0710!
                                       .isNotEmpty
                               ? RefreshIndicator(
-                                  child: ListView.builder(
+                                  onRefresh: () => provider.refresh(),
+                                  child: SingleChildScrollView(
                                     controller: scrollController!
                                       ..addListener(() {
+                                        if (scrollController!.offset >
+                                            AppSize.realHeight) {
+                                          if (downLock == true) {
+                                            pr('downLock');
+                                            downLock = false;
+                                            upLock = true;
+                                            _scrollSwich.value = true;
+                                          }
+                                        } else {
+                                          pr('upLock');
+                                          if (upLock == true) {
+                                            upLock = false;
+                                            downLock = true;
+                                            _scrollSwich.value = false;
+                                          }
+                                        }
                                         if (scrollController!.offset ==
                                                 scrollController!
                                                     .position.maxScrollExtent &&
@@ -97,29 +142,33 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
                                               (_) => nextPageProvider.stop());
                                         }
                                       }),
-                                    shrinkWrap: true,
-                                    physics: AlwaysScrollableScrollPhysics(),
-                                    itemCount: provider.homeNoticeResponseModel!
-                                        .tZltsp0710!.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return homeNoticeListItem(
-                                          context,
-                                          provider.homeNoticeResponseModel!
-                                              .tZltsp0710![index],
-                                          index,
-                                          false,
-                                          !provider.hasMore &&
-                                              index ==
-                                                  provider.homeNoticeResponseModel!
-                                                          .tZltsp0710!.length -
-                                                      1);
-                                    },
-                                  ),
-                                  onRefresh: () => provider.refresh())
+                                    child: Column(
+                                        children: provider
+                                            .homeNoticeResponseModel!
+                                            .tZltsp0710!
+                                            .asMap()
+                                            .entries
+                                            .map((map) => homeNoticeListItem(
+                                                context,
+                                                provider
+                                                    .homeNoticeResponseModel!
+                                                    .tZltsp0710![map.key],
+                                                map.key,
+                                                false,
+                                                !provider.hasMore &&
+                                                    map.key ==
+                                                        provider
+                                                                .homeNoticeResponseModel!
+                                                                .tZltsp0710!
+                                                                .length -
+                                                            1))
+                                            .toList()),
+                                  ))
                               : provider.isLoadData
-                                  ? DefaultShimmer.buildDefaultPageShimmer(12,
-                                      isNotWithPadding: true)
+                                  ? DefaultShimmer.buildDefaultPageShimmer(3,
+                                      isNotWithPadding: true,
+                                      isWithSet: true,
+                                      setLenght: 10)
                                   : provider.homeNoticeResponseModel != null &&
                                           provider.homeNoticeResponseModel!
                                               .tZltsp0710!.isEmpty
@@ -129,12 +178,14 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
                                             Padding(
                                                 padding: AppSize
                                                     .nullValueWidgetPadding,
-                                                child:
-                                                    BaseNullDataWidget.build())
+                                                child: BaseNullDataWidget.build(
+                                                    message:
+                                                        '${tr('notice_is_null')}'))
                                           ],
                                         )
                                       : Container();
                         }),
+                        _buildScrollToTop(context),
                         Positioned(
                             left: 0,
                             bottom: 0,

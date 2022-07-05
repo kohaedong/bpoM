@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/provider/alarm_provider.dart
  * Created Date: 2022-01-03 14:00:12
- * Last Modified: 2022-07-05 11:43:10
+ * Last Modified: 2022-07-05 14:45:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,7 +14,7 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/rfc/home_notice_response_model.dart';
-import 'package:medsalesportal/model/rfc/t_alarm_response_model.dart';
+import 'package:medsalesportal/model/rfc/table_notice_T_ZLTSP0710_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 
@@ -78,6 +78,61 @@ class AlarmProvider extends ChangeNotifier {
       }
       if (homeNoticeResponseModel == null) {
         homeNoticeResponseModel = temp;
+        var modelTemp = TableNoticeZLTSP0710Model(
+          'aa',
+          'bb',
+          'cc',
+          'aa',
+          'bb',
+          'bb',
+          'cc',
+          'aa',
+          'bb',
+          'cc',
+          'aa',
+          'bb',
+          'bb',
+          'cc',
+          'bb',
+          'cc',
+        );
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
+        homeNoticeResponseModel!.tZltsp0710!.add(modelTemp);
       } else {
         homeNoticeResponseModel!.tZltsp0710!.addAll(temp.tZltsp0710!);
       }

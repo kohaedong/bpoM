@@ -4,8 +4,15 @@ import 'package:medsalesportal/enums/image_type.dart';
 
 /// [ImageType] 에 지정된 SVG 이미지 파일을 [SvgPicture]로 보여주기.
 class AppImage {
-  static getImage(ImageType imageType, {Color? color}) => SvgPicture.asset(
-        imageType.path,
-        color: color,
-      );
+  static Widget getImage(ImageType imageType, {Color? color}) => imageType.isSvg
+      ? SizedBox(
+          child: SvgPicture.asset(
+            imageType.path,
+            color: color,
+          ),
+        )
+      : Image(
+          image: AssetImage(imageType.path),
+          fit: BoxFit.cover,
+        );
 }

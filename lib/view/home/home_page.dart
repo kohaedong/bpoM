@@ -146,9 +146,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   Widget buildIcons() {
     return Container(
-        height: (AppSize.homeIconHeight * 3) +
-            (AppSize.homeIconTextHeight) * 3 +
-            AppSize.homeTopPadding,
+        height: (AppSize.homeIconHeight * 2) +
+            (AppSize.homeIconTextHeight) * 2 +
+            AppSize.homeTopPadding * 2,
         color: AppColors.whiteText,
         child: Column(
           children: [
@@ -206,21 +206,26 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               child: AppStyles.text(
                   '${tr('recent_notice')}', AppTextStyle.bold_20)),
         ])),
-        Align(
-            alignment: Alignment.centerRight,
-            child: InkWell(
-              onTap: () async {
-                final result =
-                    await Navigator.pushNamed(context, NoticeAllPage.routeName);
-                if (result != null) {
-                  p.refresh();
-                }
-              },
-              child: Icon(
-                Icons.arrow_forward_ios,
-                size: AppSize.defaultIconWidth,
-              ),
-            ))
+        InkWell(
+          onTap: () async {
+            final result =
+                await Navigator.pushNamed(context, NoticeAllPage.routeName);
+            if (result != null) {
+              p.refresh();
+            }
+          },
+          child: Align(
+              alignment: Alignment.centerRight,
+              child: Row(
+                children: [
+                  SizedBox(width: 50),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: AppSize.defaultIconWidth,
+                  ),
+                ],
+              )),
+        )
       ],
     );
   }
@@ -282,7 +287,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               provider
                                   .homeNoticeResponseModel!.tZltsp0710!.isEmpty
                           ? Container(
-                              height: 200, child: BaseNullDataWidget.build())
+                              height: 200,
+                              child: BaseNullDataWidget.build(
+                                  message: '${tr('notice_is_null')}'))
                           : Container(height: 200);
             })));
   }

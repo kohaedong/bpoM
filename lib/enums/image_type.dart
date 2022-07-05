@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/image_type.dart
  * Created Date: 2021-08-20 14:37:40
- * Last Modified: 2022-07-05 10:06:59
+ * Last Modified: 2022-07-05 14:24:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -39,12 +39,15 @@ enum ImageType {
   PLUS,
   MENU,
   PLUS_SMALL,
-  INFO
+  INFO,
+  SCROLL_TO_TOP
 }
 
 extension RequestTypeExtension on ImageType {
   String get path {
     switch (this) {
+      case ImageType.SCROLL_TO_TOP:
+        return 'assets/images/icon_outlined_24_lg_2_go_to_top.svg';
       case ImageType.SPLASH_ICON:
         return 'assets/images/icon_app_material.svg';
       case ImageType.TEXT_LOGO:
@@ -83,7 +86,6 @@ extension RequestTypeExtension on ImageType {
         return 'assets/images/icon_outlined_18_lg_3_add.svg';
       case ImageType.INFO:
         return 'assets/images/icon_outlined_24_lg_3_warning.svg';
-
       default:
         return '';
     }
@@ -108,6 +110,13 @@ extension RequestTypeExtension on ImageType {
         return DetailBookPage.routeName;
       default:
         return '';
+    }
+  }
+
+  bool get isSvg {
+    switch (this) {
+      default:
+        return true;
     }
   }
 }
