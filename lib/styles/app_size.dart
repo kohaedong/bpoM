@@ -105,7 +105,7 @@ class AppSize {
   static EdgeInsets get fontSizePagePadding =>
       EdgeInsets.fromLTRB(16.w, 5.h, 0.w, 5.h);
   static EdgeInsets get fontSizePageTopWidgetPadding =>
-      EdgeInsets.fromLTRB(16.w, 25.h, 0.w, 5.h);
+      EdgeInsets.fromLTRB(padding, 25.h, padding, 5.h);
   static EdgeInsets get sendSuggestionsCenterPadding =>
       EdgeInsets.fromLTRB(16.w, 60.h, 16.w, 10.h);
   // --------- home ------------

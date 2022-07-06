@@ -45,7 +45,9 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
         child: Align(
           alignment: Alignment.centerLeft,
           child: AppText.text('${tr('send_suggestions_discription')}',
-              style: AppTextStyle.default_16),
+              style: AppTextStyle.default_16,
+              maxLines: 20,
+              textAlign: TextAlign.start),
         ));
   }
 

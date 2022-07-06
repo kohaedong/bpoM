@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/image_type.dart
  * Created Date: 2021-08-20 14:37:40
- * Last Modified: 2022-07-05 14:24:17
+ * Last Modified: 2022-07-05 21:23:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,12 +12,12 @@
  */
 
 //* 이미지 url 사전 등록후 사용.
-import 'package:medsalesportal/view/activityManager/activity_manager_page.dart';
-import 'package:medsalesportal/view/activitySearch/activity_search_page.dart';
 import 'package:medsalesportal/view/bulkOrderSearch/bulk_order_search_page.dart';
 import 'package:medsalesportal/view/detailBook/detail_book_page.dart';
 import 'package:medsalesportal/view/orderManager/order_manager_page.dart';
 import 'package:medsalesportal/view/orderSearch/order_search_page.dart';
+import 'package:medsalesportal/view/salesActivityManager/sales_activity_manager_page.dart';
+import 'package:medsalesportal/view/salesActivitySearch/salse_activity_search_page.dart';
 import 'package:medsalesportal/view/salseReport/salse_report_page.dart';
 
 enum ImageType {
@@ -95,9 +95,9 @@ extension RequestTypeExtension on ImageType {
   String get routeName {
     switch (this) {
       case ImageType.APP_ACTIVITY_MANEGER:
-        return ActivityManagerPage.routeName;
+        return SalseActivityManagerPage.routeName;
       case ImageType.APP_ACTIVITY_SEARCH:
-        return ActivitySearchPage.routeName;
+        return SalseActivitySearchPage.routeName;
       case ImageType.APP_ORDER_MANEGER:
         return OrderManagerPage.routeName;
       case ImageType.APP_ORDER_SEARCH:
