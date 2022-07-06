@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-07 00:05:54
+ * Last Modified: 2022-07-07 00:20:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -411,7 +411,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     iconType: customerInputText != null
                         ? InputIconType.DELETE_AND_SEARCH
                         : InputIconType.SEARCH,
-                    onChangeCallBack: (e) => p.setPersonInputText(e),
+                    onChangeCallBack: (e) => p.setCustomerInputText(e),
                     iconColor: customerInputText == null
                         ? AppColors.textFieldUnfoucsColor
                         : null,
