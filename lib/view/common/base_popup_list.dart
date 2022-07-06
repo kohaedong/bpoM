@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_list.dart
  * Created Date: 2021-09-10 09:48:38
- * Last Modified: 2022-07-06 11:18:02
+ * Last Modified: 2022-07-06 15:00:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,19 +11,17 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'dart:convert';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/globalProvider/base_one_cell_popup_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/enums/check_box_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/util/date_util.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
-import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
-import 'package:medsalesportal/view/common/provider/base_one_cell_popup_provider.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
-import 'package:provider/provider.dart';
 import 'package:medsalesportal/view/common/widget_of_flutter_source_code_calendar_pickerBody.dart'
     as calendar_body;
 

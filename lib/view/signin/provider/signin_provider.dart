@@ -1,25 +1,25 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
-import 'package:medsalesportal/enums/app_theme_type.dart';
+import 'package:provider/provider.dart';
+import 'package:medsalesportal/model/user/user.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/model/http/token_model.dart';
-import 'package:medsalesportal/model/rfc/sap_login_info_response_model.dart';
-import 'package:medsalesportal/model/user/user.dart';
-import 'package:medsalesportal/model/user/user_settings.dart';
 import 'package:medsalesportal/service/api_service.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/service/deviceInfo_service.dart';
-import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/service/key_service.dart';
+import 'package:medsalesportal/service/hive_service.dart';
+import 'package:medsalesportal/enums/app_theme_type.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/model/http/token_model.dart';
+import 'package:medsalesportal/model/user/user_settings.dart';
+import 'package:medsalesportal/service/deviceInfo_service.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
-import 'package:medsalesportal/view/common/provider/water_marke_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
+import 'package:medsalesportal/globalProvider/water_marke_provider.dart';
+import 'package:medsalesportal/model/rfc/sap_login_info_response_model.dart';
 
 class SigninProvider extends ChangeNotifier {
   String errorMessage = '';

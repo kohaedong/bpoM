@@ -8,10 +8,10 @@
  */
 
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 
 // title 과 input 묶음으로 보여주는 widget.
 // 예:

@@ -1,13 +1,13 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/app_theme_type.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/base_app_bar.dart';
-import 'package:medsalesportal/view/common/base_layout.dart';
-import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
-import 'package:medsalesportal/view/settings/provider/settings_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/enums/app_theme_type.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/styles/export_common.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:medsalesportal/view/common/base_layout.dart';
+import 'package:medsalesportal/view/common/base_app_bar.dart';
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
+import 'package:medsalesportal/view/settings/provider/settings_provider.dart';
 
 class FontSettingsPage extends StatefulWidget {
   static const String routeName = '/fontSettings';

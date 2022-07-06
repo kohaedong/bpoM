@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-06 11:25:50
+ * Last Modified: 2022-07-06 15:01:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,8 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
+import 'package:medsalesportal/globalProvider/base_popup_search_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -25,8 +27,6 @@ import 'package:medsalesportal/view/common/widget_of_last_page_text.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_next_page_loading.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
-import 'package:medsalesportal/view/common/provider/next_page_loading_provider.dart';
-import 'package:medsalesportal/view/common/provider/base_popup_search_provider.dart';
 
 class BasePopupSearch {
   final PopupSearchType? type;

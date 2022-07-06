@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/customer_info_top_widget.dart
  * Created Date: 2021-09-16 11:49:56
- * Last Modified: 2022-07-06 10:33:13
+ * Last Modified: 2022-07-06 15:01:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,9 +13,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
 
 class CustomerinfoWidget {
   static Widget buildCustomerTopRow(

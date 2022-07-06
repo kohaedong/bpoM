@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/date_util.dart
  * Created Date: 2021-11-23 07:56:54
- * Last Modified: 2022-07-03 13:33:43
+ * Last Modified: 2022-07-06 14:43:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,6 +22,20 @@ class DateUtil {
     var formatter = new DateFormat('yyyy-MM-dd');
 
     return formatter.format(DateTime(date.year, date.month - 1, date.day));
+  }
+
+  static String prevWeek() {
+    var date = DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+    var temp = date.millisecondsSinceEpoch - (24 * 60 * 60 * 1000) * 7;
+    return formatter.format(DateTime.fromMillisecondsSinceEpoch(temp));
+  }
+
+  static toKrWeekDateStr(DateTime date, {bool? isWithMonth}) {
+    var week = date.weekday;
+    var weekKr = ['월', '화', '수', '목', '금', '토', '일'];
+    var formater = DateFormat('yyyy.MM.dd(${weekKr[week - 1]})');
+    return formater.format(date);
   }
 
   static String getDateStr(String date) {

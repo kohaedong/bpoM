@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/text_row_model_by_key_value.dart
  * Created Date: 2021-09-06 11:46:11
- * Last Modified: 2022-07-06 10:33:13
+ * Last Modified: 2022-07-06 15:02:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,17 +13,16 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/styles/app_style.dart';
-import 'package:medsalesportal/styles/app_text.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
-import 'package:medsalesportal/util/regular.dart';
-import 'package:medsalesportal/view/common/base_shimmer.dart';
-import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:medsalesportal/util/regular.dart';
+import 'package:medsalesportal/styles/app_size.dart';
+import 'package:medsalesportal/styles/app_text.dart';
+import 'package:medsalesportal/styles/app_colors.dart';
+import 'package:medsalesportal/styles/app_text_style.dart';
+import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/view/common/base_shimmer.dart';
 
 class TextRowModelByKeyValue extends StatelessWidget {
   const TextRowModelByKeyValue(this.title, this.discription,

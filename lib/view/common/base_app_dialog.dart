@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-07-05 16:53:50
+ * Last Modified: 2022-07-06 14:59:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,13 +12,13 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/base_error_dialog_contents.dart';
-import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
 
 class AppDialog {
   static dynamic showPopup(BuildContext context, Widget widget,

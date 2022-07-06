@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-07-06 10:49:00
+ * Last Modified: 2022-07-06 14:49:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -23,8 +23,8 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   String? selectedCompanyDistribution;
   String? selectedSalesOrg;
   String? selectedBusinessGroup;
-  String? selectedRequestedShippingStartDate;
-  String? selectedRequestedShippingEndDate;
+  String? selectedStartDate;
+  String? selectedEndDate;
   String? selectedOrderNumber;
   String? selectedDeliveryNumber;
 
@@ -46,8 +46,8 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
       selectedCompanyDistribution != null &&
       selectedSalesOrg != null &&
       selectedBusinessGroup != null &&
-      selectedRequestedShippingStartDate != null &&
-      selectedRequestedShippingEndDate != null;
+      selectedStartDate != null &&
+      selectedEndDate != null;
   Future<ResultModel?> nextPage() async {
     if (hasMore) {
       pos = partial + pos;
@@ -60,13 +60,31 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
     var esLogin = CacheService.getEsLogin();
     setDefaultOrganization();
     selectedCompanyDistribution = esLogin!.bukrs;
-    selectedRequestedShippingStartDate = DateUtil.prevMonth();
-    selectedRequestedShippingEndDate = DateUtil.now();
+    selectedStartDate = DateUtil.prevWeek();
+    selectedEndDate = DateUtil.now();
   }
 
   void setDefaultOrganization() async {
     var esLogin = CacheService.getEsLogin();
     selectedOrgCode = esLogin!.vkorg;
+  }
+
+  void setStartDate(BuildContext context, String? str) {
+    DateUtil.checkDateIsBefore(context, str, selectedEndDate).then((before) {
+      if (before) {
+        this.selectedStartDate = str;
+        notifyListeners();
+      }
+    });
+  }
+
+  void setEndDate(BuildContext context, String? str) {
+    DateUtil.checkDateIsBefore(context, selectedStartDate, str).then((before) {
+      if (before) {
+        this.selectedEndDate = str;
+        notifyListeners();
+      }
+    });
   }
 
   Future<ResultModel> onSearch(bool isMouted) async {

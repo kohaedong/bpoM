@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-06 13:02:54
+ * Last Modified: 2022-07-06 15:03:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,25 +11,25 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:medsalesportal/util/format_util.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
-import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
-import 'package:medsalesportal/view/common/base_layout.dart';
-import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
-import 'package:medsalesportal/view/common/provider/next_page_loading_provider.dart';
-import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
-import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
-import 'package:medsalesportal/view/common/widget_of_next_page_loading.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
+import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
+import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
+import 'package:medsalesportal/view/common/widget_of_next_page_loading.dart';
+import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
+import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
+import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
 import 'package:medsalesportal/view/salesActivitySearch/provider/salse_activity_search_page_provider.dart';
-import 'package:provider/provider.dart';
 
 class SalseActivitySearchPage extends StatefulWidget {
   const SalseActivitySearchPage({Key? key}) : super(key: key);
@@ -106,8 +106,8 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                                     Selector<
                                             SalseSalseActivitySearchPageProvider,
                                             String?>(
-                                        selector: (context, provider) => provider
-                                            .selectedRequestedShippingStartDate,
+                                        selector: (context, provider) =>
+                                            provider.selectedStartDate,
                                         builder: (context, startDate, _) {
                                           return BaseInputWidget(
                                               context: context,
@@ -127,7 +127,7 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                                               iconType:
                                                   InputIconType.DATA_PICKER,
                                               isSelectedStrCallBack: (str) =>
-                                                  '',
+                                                  p.setStartDate(context, str),
                                               width: AppSize.timeBoxWidth,
                                               enable: false);
                                         }),
@@ -137,8 +137,8 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                                     Selector<
                                             SalseSalseActivitySearchPageProvider,
                                             String?>(
-                                        selector: (context, provider) => provider
-                                            .selectedRequestedShippingEndDate,
+                                        selector: (context, provider) =>
+                                            provider.selectedEndDate,
                                         builder: (context, endDate, _) {
                                           return BaseInputWidget(
                                               context: context,
@@ -158,7 +158,7 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                                               iconType:
                                                   InputIconType.DATA_PICKER,
                                               isSelectedStrCallBack: (str) =>
-                                                  'null',
+                                                  p.setEndDate(context, str),
                                               width: AppSize.timeBoxWidth,
                                               enable: false);
                                         }),
