@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/string_fomate_type.dart';
-import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/styles/app_text.dart';
 import 'app_colors.dart';
 import 'app_text_style.dart';
+import 'package:flutter/material.dart';
+import 'package:medsalesportal/styles/app_size.dart';
+import 'package:medsalesportal/styles/app_text.dart';
 
 class AppStyles {
   // input Border style.

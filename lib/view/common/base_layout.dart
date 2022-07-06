@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_widget.dart
  * Created Date: 2021-08-19 11:37:50
- * Last Modified: 2022-07-06 11:08:56
+ * Last Modified: 2022-07-06 15:07:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,7 +11,6 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';

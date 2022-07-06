@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-07-06 11:31:21
+ * Last Modified: 2022-07-06 15:07:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,6 @@
  * 												Discription													
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medsalesportal/enums/check_box_type.dart';
