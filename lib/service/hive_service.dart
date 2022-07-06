@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/hive_service.dart
  * Created Date: 2021-08-17 13:17:07
- * Last Modified: 2022-07-02 13:49:49
+ * Last Modified: 2022-07-06 13:41:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -262,19 +262,45 @@ class HiveService {
   }
 
   static Future<List<String>?> getDataFromTCode(String cdgrp,
-      {String? cditm, String? cdnam, bool? isMatchCditm}) async {
+      {String? cditm, String? cdnam, String? cdcls, bool? isMatchCditm}) async {
     final resultList = await HiveSelectDataUtil.select(HiveBoxType.T_CODE,
         tcodeConditional: (tcode) {
           if (cdnam != null) {
             return tcode.cdgrp == cdgrp && tcode.cdnam == cdnam;
           }
-          if (cditm != null) {
+          if (cditm != null && cdcls == null) {
             return tcode.cdgrp == cdgrp && tcode.cditm == cditm;
+          }
+          if (cditm != null && cdcls != null) {
+            return tcode.cdgrp == cdgrp &&
+                tcode.cdcls == cdcls &&
+                tcode.cditm == cditm;
           }
           return tcode.cdgrp == cdgrp && tcode.cditm != '';
         },
         tcodeResultCondition: (tcode) =>
             isMatchCditm != null ? tcode.cditm! : tcode.cdnam!);
     return resultList.strList;
+  }
+
+// 제약 영업포탈 공통코드 .
+  static Future<List<String>?> getProcessingStatus() async {
+    return getDataFromTCode('SHIP_STAT', cdcls: 'LTS', cditm: '');
+  }
+
+  static Future<List<String>?> getProductFamily() async {
+    return getDataFromTCode('KPC_SPART', cdcls: 'LTS', cditm: '');
+  }
+
+  static Future<List<String>?> getProductType() async {
+    return getDataFromTCode('KPC_SPART', cditm: '');
+  }
+
+  static Future<List<String>?> getBusinessPlace() async {
+    return getDataFromTCode('KPC_BIZ', cdcls: 'LTS', cditm: '');
+  }
+
+  static Future<List<String>?> getBusinessGroup() async {
+    return getDataFromTCode('VKGRP', cdcls: 'LTS', cditm: '');
   }
 }
