@@ -1,12 +1,11 @@
-import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/util/hiden_keybord.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
+import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:medsalesportal/view/settings/provider/settings_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -119,9 +118,7 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
                   : AppStyles.getButtonStyle(AppColors.primary,
                       AppColors.whiteText, AppTextStyle.default_18, 0),
               onPressed: () async {
-                Platform.isIOS
-                    ? hideKeyboard(context)
-                    : hideKeyboardForAndroid(context);
+                hideKeyboard(context);
                 if (_textEditingController!.text.isNotEmpty) {
                   final isSended = await provider.sendSuggestion();
                   if (isSended) {

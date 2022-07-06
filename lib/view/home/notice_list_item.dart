@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_list_item.dart
  * Created Date: 2022-01-04 00:52:36
- * Last Modified: 2022-07-05 17:39:13
+ * Last Modified: 2022-07-06 13:22:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -39,9 +39,7 @@ Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
                   : Row(
                       children: [
                         AppText.listViewText('${tr('notice')}',
-                            style: AppTextStyle.h4.copyWith(
-                                color: AppColors.primary,
-                                fontSize: AppTextStyle.h4.fontSize! - 2)),
+                            isSubTitle: true),
                         Padding(
                             padding: EdgeInsets.only(
                                 right: AppSize.defaultListItemSpacing))
@@ -51,14 +49,9 @@ Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
                   alignment: Alignment.centerLeft,
                   child: AppText.listViewText(
                       '${FormatUtil.addDashForMonth('${model.aedat}')} ${FormatUtil.addColonForTime('${model.aezet}')}',
-                      style: AppTextStyle.h4.copyWith(
-                          color: AppColors.subText,
-                          fontSize: AppTextStyle.h4.fontSize! - 2))),
-              AppStyles.buildPipe(AppTextStyle.blod_16.fontSize!),
-              AppText.listViewText('${model.sanumNm}',
-                  style: AppTextStyle.h4.copyWith(
-                      color: AppColors.subText,
-                      fontSize: AppTextStyle.h4.fontSize! - 2))
+                      isSubTitle: true)),
+              AppStyles.buildPipe(AppTextStyle.h4.fontSize! - 2),
+              AppText.listViewText('${model.sanumNm}', isSubTitle: true)
             ],
           ),
           defaultSpacing(height: AppSize.defaultListItemSpacing / 2),

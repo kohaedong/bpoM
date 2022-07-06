@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_all_page.dart
  * Created Date: 2022-01-04 00:52:52
- * Last Modified: 2022-07-05 17:34:08
+ * Last Modified: 2022-07-06 11:39:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -56,8 +56,8 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
         builder: (context, isCanScroll, _) {
           return isCanScroll
               ? Positioned(
-                  right: 20,
-                  bottom: 20,
+                  right: 0,
+                  bottom: AppSize.padding,
                   child: FloatingActionButton(
                     backgroundColor: AppColors.whiteText,
                     foregroundColor: AppColors.primary,

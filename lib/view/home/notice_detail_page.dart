@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/home/notice_detail_page.dart
  * Created Date: 2022-07-05 13:17:36
- * Last Modified: 2022-07-05 17:41:57
+ * Last Modified: 2022-07-06 13:23:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -59,9 +59,10 @@ class NoticeDetailPage extends StatelessWidget {
       return Column(
         children: [
           defaultSpacing(),
-          AppText.listViewText(
+          AppText.text(
               provider.homeNoticeDetailResponseModel!.tText!.last.ztext!,
               maxLines: 100,
+              style: AppTextStyle.default_16,
               textAlign: TextAlign.start)
         ],
       );

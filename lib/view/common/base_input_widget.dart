@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-07-03 14:59:08
+ * Last Modified: 2022-07-06 11:31:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,43 +22,10 @@ import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/enums/popup_search_type.dart';
 import 'package:medsalesportal/model/commonCode/cell_model.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/util/hiden_keybord.dart';
+import 'package:medsalesportal/view/common/base_popup_list.dart';
+import 'package:medsalesportal/view/common/base_popup_search.dart';
+import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'base_popup_cell.dart';
-
-/// 사용 패턴 설명:
-/// [BaseInputWidget]은 Provider와 함께 사용함으로서 State가 변동시 증시 재build 한다.
-/// 때문에 한page에 여러개의 input가 있을경우 provider + selector 사용하여 최소한의 범위내에서 build 해야한다.
-/// [BaseInputWidget]는 3가지의 사용 패턴을 같고 있다.
-/// 1 tap 하여 팝업창 띄울경우:
-///   - 팝업창 내부 contents 구조에 때라 [OneCellType].[ThreeCellType].[PopupSearchType]으로 구분 된다.
-///   - [OneCellType]은 contents가 일반 list 일경우 사용 한다. 예: 영업사원 조회.
-///   - [ThreeCellType]은 contents가 table 일 경우 사용 한다. 예: 잠재고객 국가선택.
-///   - [PopupSearchType]은 contents가 검색페턴 일 경우 사용 한다. 예: 플랜트 조회.
-///   - [OneCellType]유형 일경우 [BasePopupList]이란 widget으로 보내 contents를 그려준다.
-///   - [ThreeCellType]유형 일경우 [BasePopupCell]이란 widget으로 보내 contents를 그려준다.
-///   - [PopupSearchType]유형 일경우 [BasePopupSearch]란 widget으로 보내 contents를 그려준다.
-///   - 팝업창 닫을 때 선택결과 혹은 처리결과를 pop 기능으로 부모창인 [BaseInputWidget]으로 넘겨 준다.
-///   - 받은 data를 사전 선언한 각종 callback을 통해 혜당 provider로 넘겨줍니다.
-///   - provider가 data를 받아 처리후  notifyListeners()를 통해 page provider에게 update지시한다.
-///   - page에서 view를 update 해준다.
-///
-/// 2 tap하여 page 띄우 경우:
-///   - [routeName]을 지정해준다.
-///   - [bodyMap]통해 page에 필요한 arguments를 추가 한다.
-///   - page 닫을 때 or back 할때 선택결과 혹은 처리결과를 pop 기능으로 부모창인 [BaseInputWidget]으로 넘겨 준다
-///   - 결과를 callback으로 혜당페이지 provider로 보낸다. 현재는 고객조회에서 [IsSelectedStrCallBack]으로 받고 있음.
-///
-/// 3 tap하여 text input로 사용 할경우:
-///   -  [TextEditingController]를 이용해 입력된 내용[OnChangeCallBack]통해 provider로 보낸다.
-///
-///
-/// 위 3가지 패턴을 자유롭게 전화 할수 있는 포인트는 input Aciton [onTap] callback 이다.
-/// onTap 은 [BaseInputWidget]의 첫번째 widget인 [InkWell]의 callback이다.
-/// 때문에 우선 순의가 가장 높다.
-/// [TextField]의 enable 속성은 활성화 여부를 결정한다.
-/// [onTap]를 통해 enable 변수에 관련된 값을 제어하여 input 활성화/비활성화 를 컨트롤 할수 있다.
-/// 비활성화시 보여지는 내용은 사실상 HintText다.
-///
 
 typedef OnChangeCallBack = Function(String);
 typedef IsSelectedStrCallBack = Function(dynamic);
@@ -69,12 +36,15 @@ typedef CheckBoxDefaultValue = Future<List<bool>> Function();
 
 class BaseInputWidget extends StatefulWidget {
   final BuildContext context;
+  final ThreeCellType? threeCellType;
+  final OneCellType? oneCellType;
+  final PopupSearchType? popupSearchType;
   final InputIconType? iconType;
   final String? hintText;
   final double width;
   final Function? onTap;
-  final bool enable;
   final FocusNode? focusNode;
+  final bool enable;
   final IsSelectedStrCallBack? isSelectedStrCallBack;
   final IsSelectedCellCallBack? isSelectedCellCallBack;
   final double? height;
@@ -88,11 +58,14 @@ class BaseInputWidget extends StatefulWidget {
   final CommonThreeCellDataCallback? commonThreeCellDataCallback;
   final Color? iconColor;
   final String? initText;
+  final CheckBoxCallBack? checkBoxCallBack;
   final TextInputType? keybordType;
   final TextStyle? textStyle;
+  final InitDataCallback? initDataCallback;
   final int? maxLine;
   final dynamic arguments;
   final Map<String, dynamic>? bodyMap;
+  final DiscountListCallback? discountListCallback;
   final AddressSelectedCity? selectedCity;
   final CheckBoxDefaultValue? checkBoxDefaultValue;
   final CheckBoxType? checkBoxType;
@@ -105,9 +78,13 @@ class BaseInputWidget extends StatefulWidget {
       this.iconType,
       this.onTap,
       this.hintText,
+      this.focusNode,
       this.isSelectedStrCallBack,
       this.isSelectedCellCallBack,
       this.defaultIconCallback,
+      this.threeCellType,
+      this.oneCellType,
+      this.popupSearchType,
       this.height,
       this.otherIconcallback,
       this.onChangeCallBack,
@@ -118,12 +95,14 @@ class BaseInputWidget extends StatefulWidget {
       this.commonThreeCellDataCallback,
       this.iconColor,
       this.initText,
+      this.checkBoxCallBack,
       this.keybordType,
       this.textStyle,
+      this.initDataCallback,
       this.maxLine,
       this.arguments,
       this.bodyMap,
-      this.focusNode,
+      this.discountListCallback,
       this.selectedCity,
       this.checkBoxDefaultValue,
       this.checkBoxType,
@@ -172,14 +151,72 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
           result as CellModel;
           widget.isSelectedCellCallBack!.call(result);
           return;
-        }
-        if (result.runtimeType != CellModel) {
+        } else {
           if (widget.isSelectedStrCallBack != null) {
             widget.isSelectedStrCallBack!.call(result);
           }
         }
       }
-    } else {}
+    } else {
+      if (widget.threeCellType != null) {
+        final result = widget.commonThreeCellDataCallback != null
+            ? await BasePopupCell(groupType: widget.threeCellType!).show(
+                context,
+                commonThreeCellDataCallback: widget.commonThreeCellDataCallback)
+            : await BasePopupCell(groupType: widget.threeCellType!)
+                .show(context);
+        if (result != null) {
+          widget.isSelectedCellCallBack!.call(result);
+        }
+      }
+      if (widget.oneCellType != null) {
+        if (widget.oneCellType == OneCellType.DO_NOTHING) {
+          return;
+        }
+        if (widget.oneCellType == OneCellType.CONSULTATION_REPORT_TYPE) {
+          print(widget.checkBoxCallBack.runtimeType);
+          final result = await BasePopupList(widget.oneCellType!).show(context,
+              checkBoxCallback: widget.checkBoxCallBack,
+              checkBoxDefaultValue: widget.checkBoxDefaultValue,
+              checkBoxType: widget.checkBoxType);
+          if (result != null) {
+            return;
+          }
+        } else if (widget.oneCellType == OneCellType.ADDRESS_CITY ||
+            widget.oneCellType == OneCellType.ADDRESS_CITY_AREA) {
+          final result = await BasePopupList(widget.oneCellType!).show(
+            context,
+            selectedCity: widget.selectedCity,
+          );
+          if (result != null && result.runtimeType != bool) {
+            widget.isSelectedStrCallBack!.call(result);
+          }
+        } else {
+          final result = widget.commononeCellDataCallback != null
+              ? await BasePopupList(widget.oneCellType!).show(context,
+                  commononeCellDataCallback: widget.commononeCellDataCallback,
+                  textEditingController: widget.textEditingController,
+                  selectedDateStr: widget.dateStr)
+              : await BasePopupList(widget.oneCellType!).show(context,
+                  discountListCallback: widget.discountListCallback,
+                  selectedDateStr: widget.dateStr);
+          if (result != null) {
+            widget.isSelectedStrCallBack!.call(result);
+          }
+        }
+      }
+      if (widget.popupSearchType != null) {
+        if (widget.threeCellType == ThreeCellType.DO_NOTHING) {
+          return;
+        }
+        final result = await BasePopupSearch(
+                type: widget.popupSearchType, bodyMap: widget.bodyMap)
+            .show(context);
+        if (result != null && result.runtimeType != bool) {
+          widget.isSelectedStrCallBack!.call(result);
+        }
+      }
+    }
   }
 
   enableLogic() {
@@ -196,9 +233,7 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
         AppSize.customerTextFiledIconSidePadding / 2;
     return InkWell(
         onTap: () async {
-          Platform.isIOS
-              ? hideKeyboard(context)
-              : hideKeyboardForAndroid(context);
+          hideKeyboard(context);
           // 비 활성화
           if (!widget.enable) {
             notEnableLogic();
@@ -211,6 +246,7 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
           height: widget.height ?? AppSize.defaultTextFieldHeight,
           width: widget.width,
           child: TextField(
+            focusNode: widget.focusNode,
             textInputAction: widget.iconType == InputIconType.DELETE_AND_SEARCH
                 ? TextInputAction.search
                 : null,
@@ -222,7 +258,6 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                 return;
               }
             },
-            focusNode: widget.focusNode,
             inputFormatters: [LengthLimitingTextInputFormatter(200)],
             keyboardType: widget.keybordType,
             obscureText: widget.keybordType != null &&

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-07-06 09:06:08
+ * Last Modified: 2022-07-06 10:49:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,5 +12,64 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/service/hive_service.dart';
+import 'package:medsalesportal/util/date_util.dart';
 
-class SalseSalseActivitySearchPageProvider extends ChangeNotifier {}
+class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
+  bool isLoadData = false;
+  bool isFirstIn = true;
+  String? selectedCompanyDistribution;
+  String? selectedSalesOrg;
+  String? selectedBusinessGroup;
+  String? selectedRequestedShippingStartDate;
+  String? selectedRequestedShippingEndDate;
+  String? selectedOrderNumber;
+  String? selectedDeliveryNumber;
+
+  String? selectedOrgCode;
+  String? selectedBusinessGroupCode;
+
+  int pos = 0;
+  int partial = 30;
+  bool hasMore = false;
+
+  Future<void> refresh() async {
+    pos = 0;
+    hasMore = true;
+    // model = null;
+    onSearch(true);
+  }
+
+  bool get isValidate =>
+      selectedCompanyDistribution != null &&
+      selectedSalesOrg != null &&
+      selectedBusinessGroup != null &&
+      selectedRequestedShippingStartDate != null &&
+      selectedRequestedShippingEndDate != null;
+  Future<ResultModel?> nextPage() async {
+    if (hasMore) {
+      pos = partial + pos;
+      return onSearch(false);
+    }
+    return null;
+  }
+
+  Future<void> initPageData() async {
+    var esLogin = CacheService.getEsLogin();
+    setDefaultOrganization();
+    selectedCompanyDistribution = esLogin!.bukrs;
+    selectedRequestedShippingStartDate = DateUtil.prevMonth();
+    selectedRequestedShippingEndDate = DateUtil.now();
+  }
+
+  void setDefaultOrganization() async {
+    var esLogin = CacheService.getEsLogin();
+    selectedOrgCode = esLogin!.vkorg;
+  }
+
+  Future<ResultModel> onSearch(bool isMouted) async {
+    return ResultModel(false);
+  }
+}

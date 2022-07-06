@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/util/hiden_keybord.dart';
 import 'package:medsalesportal/view/home/home_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
@@ -226,9 +226,7 @@ class _SigninPageState extends State<SigninPage> {
                           tuple.item3
                               ? () async {
                                   p.startErrorMessage('');
-                                  Platform.isAndroid
-                                      ? hideKeyboardForAndroid(context)
-                                      : hideKeyboard(context);
+                                  hideKeyboard(context);
                                   p.setIsIdFocused(false);
                                   p.setIsPwFocused(false);
                                   final result = await p.signIn();
