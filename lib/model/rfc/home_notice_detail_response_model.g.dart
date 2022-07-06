@@ -13,13 +13,13 @@ HomeNoticeDetailResponseModel _$HomeNoticeDetailResponseModelFromJson(
           ? null
           : EsReturnModel.fromJson(json['ES_RETURN'] as Object),
       (json['T_VKGRP'] as List<dynamic>?)
-          ?.map((e) => TVkgrpModel.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => TVkgrpModel.fromJson(e as Object))
           .toList(),
       (json['T_ZLTSP0700'] as List<dynamic>?)
           ?.map((e) => TableNoticeZLTSP0710Model.fromJson(e as Object))
           .toList(),
       (json['T_TEXT'] as List<dynamic>?)
-          ?.map((e) => TTextModel.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => TTextModel.fromJson(e as Object))
           .toList(),
     );
 

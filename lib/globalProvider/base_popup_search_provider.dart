@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-06 17:00:04
+ * Last Modified: 2022-07-06 23:39:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,22 +15,27 @@ import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/model/rfc/et_customer_model.dart';
+import 'package:medsalesportal/model/rfc/et_customer_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class BasePopupSearchProvider extends ChangeNotifier {
   bool isLoadData = false;
   String? selectedOneRowValue1;
-  String? selectedOneRowValue2;
+  String? personInputText;
+  String? customerInputText;
   String? selectedThreeRowValue1;
   String? selectedThreeRowValue2;
   String? selectedThreeRowValue3;
   String? selectedThreeRowValue4;
   String? selectedOneRowValue1DefaultValue;
   EtStaffListResponseModel? staList;
+  EtCustomerResponseModel? etCustomerResponseModel;
   // List<PlantResultModel>? plantList;
   OneCellType? type;
   Map<String, dynamic>? bodyMap;
@@ -40,7 +45,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   String? seletedCirculationCode;
 
   bool get isOneRowValue1Selected => selectedOneRowValue1 != null;
-  bool get isOneRowValue2Selected => selectedOneRowValue2 != null;
+  bool get isOneRowValue2Selected => personInputText != null;
   bool get isThreeRowValue1Selected => selectedThreeRowValue1 != null;
   bool get isThreeRowValue2Selected => selectedThreeRowValue2 != null;
   bool get isThreeRowValue3Selected => selectedThreeRowValue3 != null;
@@ -94,13 +99,15 @@ class BasePopupSearchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setOneRowValue1(String value) {
-    this.selectedOneRowValue1 = value;
-    notifyListeners();
+  setPersonInputText(String? value) {
+    this.personInputText = value;
+    if (value == null || (value.length == 1) || value == '') {
+      notifyListeners();
+    }
   }
 
-  setOneRowValue2(String? value) {
-    this.selectedOneRowValue2 = value;
+  setCustomerInputText(String? value) {
+    this.customerInputText = value;
     if (value == null || (value.length == 1) || value == '') {
       notifyListeners();
     }
@@ -177,7 +184,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
       "methodName": RequestType.SEARCH_STAFF.serverMethod,
       "methodParamMap": {
         "IV_SALESM": "",
-        "IV_SNAME": selectedOneRowValue2 ?? '',
+        "IV_SNAME": personInputText ?? '',
         "IV_DPTNM": esLogin!.dptnm,
         "IS_LOGIN": isLogin,
         "pos": "$pos",
@@ -217,59 +224,75 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return BasePoupSearchResult(false);
   }
 
-  // Future<BasePoupSearchResult> searchPerson(bool isMounted) async {
-  //   isLoadData = true;
-  //   if (isMounted) {
-  //     notifyListeners();
-  //   }
-  //   var _api = ApiService();
-  //   final isLogin = CacheService.getIsLogin();
-  //   var esLogin = CacheService.getEsLogin();
-  //   Map<String, dynamic>? body;
-  //   body = {
-  //     "methodName": RequestType.SEARCH_STAFF.serverMethod,
-  //     "methodParamMap": {
-  //       "IV_SALESM": '',
-  //       "IV_SNAME": selectedOneRowValue1,
-  //       "IV_DPTNM": esLogin!.dptnm,
-  //       "IS_LOGIN": isLogin,
-  //       "resultTables": RequestType.SEARCH_STAFF.resultTable,
-  //       "functionName": RequestType.SEARCH_STAFF.serverMethod,
-  //     }
-  //   };
-  //   print(selectedOneRowValue1);
-  //   _api.init(RequestType.SEARCH_STAFF);
-  //   final result = await _api.request(body: body);
-  //   pr(result?.body);
-  //   if (result == null || result.statusCode != 200) {
-  //     isLoadData = false;
-  //     staList = null;
-  //     notifyListeners();
-  //     return BasePoupSearchResult(false);
-  //   }
-  //   if (result.statusCode == 200 &&
-  //       result.body['data'] != null &&
-  //       result.body['data'].isNotEmpty) {
-  //     var temp = EtStaffListResponseModel.fromJson(result.body['data']);
-  //     if (temp.staffList!.length != partial) {
-  //       hasMore = false;
-  //     }
-  //     if (staList == null) {
-  //       staList = temp;
-  //     } else {
-  //       staList!.staffList!.addAll(temp.staffList!);
-  //     }
-  //     if (staList != null && staList!.staffList == null) {
-  //       staList = null;
-  //     }
+  Future<BasePoupSearchResult> searchCustomer(
+    bool isMounted,
+  ) async {
+    isLoadData = true;
+    if (isMounted) {
+      notifyListeners();
+    }
+    var _api = ApiService();
+    final isLogin = CacheService.getIsLogin();
+    final esLogin = CacheService.getEsLogin();
+    Map<String, dynamic>? body;
 
-  //     isLoadData = false;
-  //     notifyListeners();
-  //     return BasePoupSearchResult(true);
-  //   }
-  //   isLoadData = false;
-  //   return BasePoupSearchResult(false);
-  // }
+    body = {
+      "methodName": RequestType.SEARCH_CUSTOMER.serverMethod,
+      "methodParamMap": {
+        "IV_ZBIZ": "",
+        "IV_DORMA": "X",
+        "IV_ZKIND": "",
+        "IV_SALES": "X",
+        "IV_ZLOEVM": "A",
+        "IV_ZCLASS": "",
+        "IV_VKGRP": "",
+        "IV_POSSIB": "X",
+        "IV_ZADD_NAME1": "",
+        "IV_SPART": "",
+        "IV_ZIMPORT": "",
+        "IV_ZTREAT3": "",
+        "IV_HIDDEN": "",
+        "IV_CLOSE": "",
+        "IV_SANUM": esLogin!.logid,
+        "IV_NAME": customerInputText ?? '',
+        "IV_ORGHK": esLogin.orghk,
+        "IS_LOGIN": "$isLogin",
+        "pos": "$pos",
+        "partial": "$partial",
+        "functionName": RequestType.SEARCH_CUSTOMER.serverMethod,
+        "resultTables": RequestType.SEARCH_CUSTOMER.resultTable
+      }
+    };
+    _api.init(RequestType.SEARCH_CUSTOMER);
+    final result = await _api.request(body: body);
+    if (result == null || result.statusCode != 200) {
+      isLoadData = false;
+      staList = null;
+      notifyListeners();
+      return BasePoupSearchResult(false);
+    }
+    if (result.statusCode == 200 && result.body['data'] != null) {
+      var temp = EtCustomerResponseModel.fromJson(result.body['data']);
+      pr(temp.toJson());
+      if (temp.etKunnr!.length != partial) {
+        hasMore = false;
+      }
+      if (etCustomerResponseModel == null) {
+        etCustomerResponseModel = temp;
+      } else {
+        etCustomerResponseModel!.etKunnr!.addAll(temp.etKunnr!);
+      }
+      if (etCustomerResponseModel != null &&
+          etCustomerResponseModel!.etKunnr == null) {
+        etCustomerResponseModel = null;
+      }
+      isLoadData = false;
+      notifyListeners();
+      return BasePoupSearchResult(true);
+    }
+    isLoadData = false;
+    return BasePoupSearchResult(false);
+  }
 
   Future<BasePoupSearchResult> onSearch(OneCellType type, bool isMounted,
       {Map<String, dynamic>? bodyMaps}) async {
@@ -281,6 +304,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
     switch (type) {
       case OneCellType.SEARCH_SALSE_PERSON:
         return await searchPerson(isMounted);
+      case OneCellType.SEARCH_CUSTOMER:
+        return await searchCustomer(isMounted);
       default:
         return BasePoupSearchResult(false);
     }

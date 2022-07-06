@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-07-06 17:01:24
+ * Last Modified: 2022-07-07 00:15:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
+import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
@@ -23,17 +24,12 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirstIn = true;
   bool isTeamLeader = false;
-  String? selectedCompanyDistribution;
-  String? managerName;
-  String? selectedBusinessGroup;
+  String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
-  String? selectedOrderNumber;
-  String? selectedDeliveryNumber;
-
-  String? selectedOrgCode;
-  String? selectedBusinessGroupCode;
+  String? customerName;
   EtStaffListModel? selectedSalesPerson;
+  EtCustomerModel? selectedCustomerModel;
   IsLoginModel? isLoginModel;
   int pos = 0;
   int partial = 30;
@@ -47,11 +43,7 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   }
 
   bool get isValidate =>
-      selectedCompanyDistribution != null &&
-      managerName != null &&
-      selectedBusinessGroup != null &&
-      selectedStartDate != null &&
-      selectedEndDate != null;
+      staffName != null && selectedStartDate != null && selectedEndDate != null;
   Future<ResultModel?> nextPage() async {
     if (hasMore) {
       pos = partial + pos;
@@ -61,9 +53,7 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   }
 
   Future<void> initPageData() async {
-    var esLogin = CacheService.getEsLogin();
     setIsLoginModel();
-    selectedCompanyDistribution = esLogin!.bukrs;
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
   }
@@ -71,8 +61,9 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   void setIsLoginModel() async {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-    isTeamLeader = isLoginModel!.xtm == 'X';
-    managerName = isLoginModel!.ename;
+    // isTeamLeader = isLoginModel!.xtm == 'X';
+    isTeamLeader = true;
+    staffName = isLoginModel!.ename;
   }
 
   void setStartDate(BuildContext context, String? str) {
@@ -84,10 +75,27 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
     });
   }
 
+  void setCustomerName(String? str) {
+    customerName = str;
+    notifyListeners();
+  }
+
+  void setStaffName(String? str) {
+    staffName = str;
+    notifyListeners();
+  }
+
   void setSalesPerson(dynamic str) {
     str as EtStaffListModel;
     selectedSalesPerson = str;
-    managerName = selectedSalesPerson!.sname;
+    staffName = selectedSalesPerson!.sname;
+    notifyListeners();
+  }
+
+  void setCustomerModel(dynamic str) {
+    str as EtCustomerModel;
+    selectedCustomerModel = str;
+    customerName = selectedCustomerModel!.name;
     notifyListeners();
   }
 

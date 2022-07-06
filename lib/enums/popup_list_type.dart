@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/list_group_type.dart
  * Created Date: 2021-09-10 09:52:32
- * Last Modified: 2022-07-06 15:49:51
+ * Last Modified: 2022-07-06 17:37:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -19,6 +19,9 @@ import 'package:medsalesportal/styles/app_size.dart';
 typedef CommononeCellDataCallback = Future<List<String>?> Function();
 
 enum OneCellType {
+  SEARCH_CUSTOMER,
+
+  // -------------
   SEARCH_CUSTOMER_CONDITION,
   SEARCH_CUSOMER_TYPE,
   SEARCH_SALSE_PERSON,
@@ -88,6 +91,8 @@ enum OneCellType {
 extension OneCellTypeExtension on OneCellType {
   String get title {
     switch (this) {
+      case OneCellType.SEARCH_CUSTOMER:
+        return '${tr('search_customer')}';
       case OneCellType.SEARCH_CUSOMER_TYPE:
         return '${tr('customer_type')}';
       case OneCellType.CUSTOMER_RELATION:
@@ -215,7 +220,6 @@ extension OneCellTypeExtension on OneCellType {
         return '${tr('approval')}';
       case OneCellType.SEARCH_MATERIALS:
         return '${tr('cancel')}';
-
       default:
         return '${tr('close')}';
     }

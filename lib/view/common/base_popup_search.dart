@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-06 16:23:10
+ * Last Modified: 2022-07-07 00:05:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,9 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
 import 'package:medsalesportal/globalProvider/base_popup_search_provider.dart';
+import 'package:medsalesportal/model/rfc/et_customer_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -37,8 +40,7 @@ class BasePopupSearch {
     final result = await AppDialog.showPopup(
         context,
         type == PopupSearchType.SEARCH_SALSE_PERSON ||
-                type == PopupSearchType.SEARCH_MATERIALS
-
+                type == PopupSearchType.SEARCH_CUSTOMER
             // 이페이지는 2개의 StatefulWidget이 있습니다.
             // [PopupSearchOneRowContents] 와 [PopupSearchThreeRowContents]
             ? PopupSearchOneRowContents(type!, bodyMap: bodyMap)
@@ -335,66 +337,112 @@ class PopupSearchOneRowContents extends StatefulWidget {
 }
 
 class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
-  TextEditingController? _controller;
-  ScrollController? scrollController;
+  late TextEditingController _personInputController;
+  late TextEditingController _customerInputController;
+  late ScrollController _scrollController;
   @override
   void initState() {
     super.initState();
-    scrollController = ScrollController();
-    _controller = TextEditingController();
+    _scrollController = ScrollController();
+    _personInputController = TextEditingController();
+    _customerInputController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _controller!.dispose();
-    scrollController!.dispose();
+    _personInputController.dispose();
+    _customerInputController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
-  Widget buildSearchBar(BuildContext context) {
+  Widget _buildPersonSearchBar(BuildContext context) {
     final p = context.read<BasePopupSearchProvider>();
 
+    return Expanded(
+        child: Selector<BasePopupSearchProvider, String?>(
+            selector: (context, provider) => provider.personInputText,
+            builder: (context, personInputText, _) {
+              return Builder(builder: (context) {
+                return BaseInputWidget(
+                    context: context,
+                    width: AppSize.defaultContentsWidth - AppSize.padding * 2,
+                    enable: true,
+                    hintTextStyleCallBack: personInputText != null
+                        ? null
+                        : () => AppTextStyle.hint_16,
+                    iconType: personInputText != null
+                        ? InputIconType.DELETE_AND_SEARCH
+                        : InputIconType.SEARCH,
+                    onChangeCallBack: (e) => p.setPersonInputText(e),
+                    iconColor: personInputText == null
+                        ? AppColors.textFieldUnfoucsColor
+                        : null,
+                    defaultIconCallback: () {
+                      hideKeyboard(context);
+                      p.refresh();
+                    },
+                    textEditingController: _personInputController,
+                    otherIconcallback: () {
+                      p.setPersonInputText(null);
+                      _personInputController.text = '';
+                    },
+                    hintText:
+                        personInputText != null ? null : '${tr('plz_enter')}');
+              });
+            }));
+  }
+
+  Widget _buildCustomerSearchBar(BuildContext context) {
+    final p = context.read<BasePopupSearchProvider>();
+
+    return Expanded(
+        child: Selector<BasePopupSearchProvider, String?>(
+            selector: (context, provider) => provider.customerInputText,
+            builder: (context, customerInputText, _) {
+              return Builder(builder: (context) {
+                return BaseInputWidget(
+                    context: context,
+                    width: AppSize.defaultContentsWidth - AppSize.padding * 2,
+                    enable: true,
+                    hintTextStyleCallBack: customerInputText != null
+                        ? null
+                        : () => AppTextStyle.hint_16,
+                    iconType: customerInputText != null
+                        ? InputIconType.DELETE_AND_SEARCH
+                        : InputIconType.SEARCH,
+                    onChangeCallBack: (e) => p.setPersonInputText(e),
+                    iconColor: customerInputText == null
+                        ? AppColors.textFieldUnfoucsColor
+                        : null,
+                    defaultIconCallback: () {
+                      hideKeyboard(context);
+                      p.refresh();
+                    },
+                    textEditingController: _customerInputController,
+                    otherIconcallback: () {
+                      p.setCustomerInputText(null);
+                      _customerInputController.text = '';
+                    },
+                    hintText: customerInputText != null
+                        ? null
+                        : '${tr('plz_enter')}');
+              });
+            }));
+  }
+
+  Widget _buildSearchBar(BuildContext context) {
     return Container(
       height: AppSize.titleHeightInOneRowsSearchBarPopup,
       child: Column(
         children: [
           Padding(
               padding: EdgeInsets.only(top: AppSize.searchBarTitleSidePadding)),
-          Expanded(
-              child: Selector<BasePopupSearchProvider, String?>(
-                  selector: (context, provider) =>
-                      provider.selectedOneRowValue2,
-                  builder: (context, selectedOneRowValue2, _) {
-                    return Builder(builder: (context) {
-                      return BaseInputWidget(
-                          context: context,
-                          width: AppSize.defaultContentsWidth -
-                              AppSize.padding * 2,
-                          enable: true,
-                          hintTextStyleCallBack: selectedOneRowValue2 != null
-                              ? null
-                              : () => AppTextStyle.hint_16,
-                          iconType: selectedOneRowValue2 != null
-                              ? InputIconType.DELETE_AND_SEARCH
-                              : InputIconType.SEARCH,
-                          onChangeCallBack: (e) => p.setOneRowValue2(e),
-                          iconColor: selectedOneRowValue2 == null
-                              ? AppColors.textFieldUnfoucsColor
-                              : null,
-                          defaultIconCallback: () {
-                            hideKeyboard(context);
-                            p.refresh();
-                          },
-                          textEditingController: _controller,
-                          otherIconcallback: () {
-                            p.setOneRowValue2(null);
-                            _controller!.text = '';
-                          },
-                          hintText: selectedOneRowValue2 != null
-                              ? null
-                              : '${tr('plz_enter')}');
-                    });
-                  })),
+          widget.type == PopupSearchType.SEARCH_SALSE_PERSON
+              ? _buildPersonSearchBar(context)
+              : widget.type == PopupSearchType.SEARCH_CUSTOMER
+                  ? _buildCustomerSearchBar(context)
+                  : Container(),
           Divider(
             color: AppColors.textGrey,
           )
@@ -403,8 +451,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     );
   }
 
-  Widget buildListViewContents(BuildContext context) {
+  Widget _buildListViewContents(BuildContext context) {
     final p = context.read<BasePopupSearchProvider>();
+
     return FutureBuilder<BasePoupSearchResult>(
         future: p.onSearch(widget.type.popupStrListType[0], false,
             bodyMaps: widget.bodyMap),
@@ -412,8 +461,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
           return Consumer<BasePopupSearchProvider>(
               builder: (context, provider, _) {
             return (provider.staList != null &&
-                    provider.staList!.staffList != null &&
-                    provider.staList!.staffList!.isNotEmpty)
+                        provider.staList!.staffList != null &&
+                        provider.staList!.staffList!.isNotEmpty) ||
+                    (provider.etCustomerResponseModel != null &&
+                        provider.etCustomerResponseModel!.etKunnr != null &&
+                        provider.etCustomerResponseModel!.etKunnr!.isNotEmpty)
                 ? Padding(
                     padding: AppSize.defaultSearchPopupSidePadding,
                     child: Container(
@@ -422,10 +474,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                             AppSize.titleHeightInOneRowsSearchBarPopup,
                         child: RefreshIndicator(
                             child: ListView.builder(
-                              controller: scrollController!
+                              controller: _scrollController
                                 ..addListener(() {
-                                  if (scrollController!.offset ==
-                                          scrollController!
+                                  if (_scrollController.offset ==
+                                          _scrollController
                                               .position.maxScrollExtent &&
                                       !provider.isLoadData &&
                                       provider.hasMore) {
@@ -442,11 +494,15 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                               itemCount: widget.type ==
                                       PopupSearchType.SEARCH_SALSE_PERSON
                                   ? provider.staList!.staffList!.length
-                                  : 10,
+                                  : widget.type ==
+                                          PopupSearchType.SEARCH_CUSTOMER
+                                      ? provider.etCustomerResponseModel!
+                                          .etKunnr!.length
+                                      : 0,
                               itemBuilder: (BuildContext context, int index) {
                                 return widget.type ==
                                         PopupSearchType.SEARCH_SALSE_PERSON
-                                    ? buildPersonContentsItem(
+                                    ? _buildPersonContentsItem(
                                         context,
                                         provider.staList!.staffList![index],
                                         index,
@@ -455,7 +511,19 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                 provider.staList!.staffList!
                                                         .length -
                                                     1)
-                                    : Container();
+                                    : widget.type ==
+                                            PopupSearchType.SEARCH_CUSTOMER
+                                        ? _buildCustomerContentsItem(
+                                            context,
+                                            provider.etCustomerResponseModel!
+                                                .etKunnr![index],
+                                            index,
+                                            !provider.hasMore &&
+                                                index ==
+                                                    provider.etCustomerResponseModel!
+                                                            .etKunnr!.length -
+                                                        1)
+                                        : Container();
                               },
                             ),
                             // 수정 ! nextPage ->  refresh
@@ -478,8 +546,15 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         });
   }
 
-  Widget buildPersonContentsItem(
-      BuildContext context, dynamic model, int index, bool isShowLastPageText) {
+  Widget _horizontalRow(Widget w) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: w),
+    );
+  }
+
+  Widget _buildPersonContentsItem(BuildContext context, EtStaffListModel model,
+      int index, bool isShowLastPageText) {
     return InkWell(
       onTap: () {
         Navigator.pop(context, model);
@@ -490,17 +565,53 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppText.text('${model!.sname} (${model.levelcdnm ?? ''})',
-                          style: AppTextStyle.h3),
-                      AppText.text('${model.dptnm}', style: AppTextStyle.h5)
-                    ],
-                  ),
-                ],
+              _horizontalRow(
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText.text(
+                            '${model.sname} (${model.levelcdnm ?? ''})',
+                            style: AppTextStyle.h3),
+                        AppText.text('${model.dptnm}', style: AppTextStyle.h5)
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              isShowLastPageText ? lastPageText() : Container()
+            ],
+          )),
+    );
+  }
+
+  Widget _buildCustomerContentsItem(BuildContext context, EtCustomerModel model,
+      int index, bool isShowLastPageText) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context, model);
+      },
+      child: Padding(
+          padding:
+              index == 0 ? EdgeInsets.all(0) : AppSize.searchPopupListPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _horizontalRow(
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText.text('${model.name} (${model.zstatus ?? ''})',
+                            style: AppTextStyle.h3),
+                        AppText.text('${model.zaddName1}',
+                            style: AppTextStyle.h5)
+                      ],
+                    ),
+                  ],
+                ),
               ),
               isShowLastPageText ? lastPageText() : Container()
             ],
@@ -526,8 +637,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  buildSearchBar(context),
-                  buildListViewContents(context),
+                  _buildSearchBar(context),
+                  _buildListViewContents(context),
                 ],
               ),
               Positioned(

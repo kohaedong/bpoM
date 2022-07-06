@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-06 16:19:57
+ * Last Modified: 2022-07-07 00:15:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -171,21 +171,29 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                             Selector<SalseSalseActivitySearchPageProvider,
                                 Tuple2<bool, String?>>(
                               selector: (context, provider) => Tuple2(
-                                  provider.isTeamLeader, provider.managerName),
+                                  provider.isTeamLeader, provider.staffName),
                               builder: (context, tuple, _) {
                                 return BaseColumWithTitleAndTextFiled.build(
-                                    '${tr('manager')}',
+                                    '${tr('salse_person')}',
                                     BaseInputWidget(
                                       context: context,
                                       iconType: InputIconType.SEARCH,
-                                      iconColor: tuple.item1
-                                          ? null
-                                          : AppColors.unReadyText,
-                                      hintText: tuple.item2,
+                                      iconColor: tuple.item2 != null
+                                          ? AppColors.defaultText
+                                          : AppColors.textFieldUnfoucsColor,
+                                      hintText: tuple.item2 ?? tr('plz_select'),
+                                      // 팀장 일때 만 팀원선택후 삭제가능.
+                                      isShowDeleteForHintText:
+                                          tuple.item1 && tuple.item2 != null
+                                              ? true
+                                              : false,
+                                      deleteIconCallback: () =>
+                                          p.setStaffName(null),
                                       width: AppSize.defaultContentsWidth,
-                                      hintTextStyleCallBack: () => tuple.item1
-                                          ? AppTextStyle.default_16
-                                          : AppTextStyle.hint_16,
+                                      hintTextStyleCallBack: () =>
+                                          tuple.item1 && tuple.item2 != null
+                                              ? AppTextStyle.default_16
+                                              : AppTextStyle.hint_16,
                                       popupSearchType: tuple.item1
                                           ? PopupSearchType.SEARCH_SALSE_PERSON
                                           : null,
@@ -198,102 +206,36 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                             ),
                             Selector<SalseSalseActivitySearchPageProvider,
                                 String?>(
-                              selector: (context, prvider) =>
-                                  prvider.selectedBusinessGroup,
-                              builder: (context, group, _) {
-                                return Builder(builder: (context) {
-                                  return BaseColumWithTitleAndTextFiled.build(
-                                      '${tr('business_group')}',
-                                      BaseInputWidget(
-                                        context: context,
-                                        iconType: InputIconType.SEARCH,
-                                        hintText:
-                                            group ?? '${tr('plz_select')}',
-                                        width: AppSize.defaultContentsWidth,
-                                        hintTextStyleCallBack: group != null
-                                            ? () => AppTextStyle.default_16
-                                            : () => AppTextStyle.hint_16,
-                                        commononeCellDataCallback: () =>
-                                            Future.delayed(
-                                                Duration.zero, () => []),
-                                        oneCellType:
-                                            OneCellType.SEARCH_BUSINESS_GROUP,
-                                        isSelectedStrCallBack: (str) => 'null',
-                                        enable: false,
-                                      ));
-                                });
-                              },
-                            ),
-                            Selector<SalseSalseActivitySearchPageProvider,
-                                String?>(
                               selector: (context, provider) =>
-                                  provider.selectedOrderNumber,
-                              builder: (context, orderNumber, _) {
-                                return Builder(builder: (context) {
-                                  return BaseColumWithTitleAndTextFiled.build(
-                                      '${tr('order_number')}',
-                                      BaseInputWidget(
-                                        context: context,
-                                        hintText: orderNumber != null
-                                            ? null
-                                            : '${tr('plz_enter')}',
-                                        hintTextStyleCallBack: () =>
-                                            AppTextStyle.hint_16,
-                                        textEditingController:
-                                            _orderNumberEditingController,
-                                        onChangeCallBack: (str) => null,
-                                        iconType: orderNumber != null
-                                            ? InputIconType.DELETE
-                                            : null,
-                                        defaultIconCallback: () {
-                                          _orderNumberEditingController.text =
-                                              '';
-                                          // p.setOrderNumber(null);
-                                        },
-                                        width: AppSize.defaultContentsWidth,
-                                        enable: true,
-                                      ),
-                                      isNotShowStar: true,
-                                      isTextSize14: true);
-                                });
-                              },
-                            ),
-                            Selector<SalseSalseActivitySearchPageProvider,
-                                String?>(
-                              selector: (context, provider) =>
-                                  provider.selectedDeliveryNumber,
-                              builder: (context, deliveryNumber, _) {
-                                return Builder(builder: (context) {
-                                  return BaseColumWithTitleAndTextFiled.build(
-                                      '${tr('delivery_number')}',
-                                      BaseInputWidget(
-                                        context: context,
-                                        hintText: deliveryNumber != null
-                                            ? null
-                                            : '${tr('plz_enter')}',
-                                        hintTextStyleCallBack:
-                                            deliveryNumber != null
-                                                ? null
-                                                : () => AppTextStyle.hint_16,
-                                        textEditingController:
-                                            _deliveryNumberEditingController,
-                                        onChangeCallBack: (str) =>
-                                            // p.setDeliveryNumber(str),
-                                            null,
-                                        iconType: deliveryNumber != null
-                                            ? InputIconType.DELETE
-                                            : null,
-                                        defaultIconCallback: () {
-                                          _deliveryNumberEditingController
-                                              .text = '';
-                                          // p.setDeliveryNumber(null);
-                                        },
-                                        width: AppSize.defaultContentsWidth,
-                                        enable: true,
-                                      ),
-                                      isNotShowStar: true,
-                                      isTextSize14: true);
-                                });
+                                  provider.customerName,
+                              builder: (context, customerName, _) {
+                                return BaseColumWithTitleAndTextFiled.build(
+                                    '${tr('customer_name')}',
+                                    BaseInputWidget(
+                                      context: context,
+                                      iconType: InputIconType.SEARCH,
+                                      iconColor: customerName != null
+                                          ? AppColors.defaultText
+                                          : AppColors.textFieldUnfoucsColor,
+                                      deleteIconCallback: () =>
+                                          p.setCustomerName(null),
+                                      hintText:
+                                          customerName ?? tr('plz_select'),
+                                      // 팀장 일때 만 팀원선택후 삭제가능.
+                                      isShowDeleteForHintText:
+                                          customerName != null ? true : false,
+                                      width: AppSize.defaultContentsWidth,
+                                      hintTextStyleCallBack: () =>
+                                          customerName != null
+                                              ? AppTextStyle.default_16
+                                              : AppTextStyle.hint_16,
+                                      popupSearchType:
+                                          PopupSearchType.SEARCH_CUSTOMER,
+                                      isSelectedStrCallBack: (customer) {
+                                        return p.setCustomerModel(customer);
+                                      },
+                                      enable: false,
+                                    ));
                               },
                             ),
                             AppStyles.buildSearchButton(

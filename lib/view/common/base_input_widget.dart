@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-07-06 15:07:28
+ * Last Modified: 2022-07-06 20:56:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medsalesportal/enums/check_box_type.dart';
+import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/enums/popup_cell_type.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
@@ -24,6 +25,7 @@ import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_popup_list.dart';
 import 'package:medsalesportal/view/common/base_popup_search.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'base_popup_cell.dart';
 
 typedef OnChangeCallBack = Function(String);
@@ -40,6 +42,8 @@ class BaseInputWidget extends StatefulWidget {
   final PopupSearchType? popupSearchType;
   final InputIconType? iconType;
   final String? hintText;
+  final bool? isShowDeleteForHintText;
+  final Function? deleteIconCallback;
   final double width;
   final Function? onTap;
   final FocusNode? focusNode;
@@ -75,9 +79,11 @@ class BaseInputWidget extends StatefulWidget {
       required this.width,
       required this.enable,
       this.iconType,
+      this.deleteIconCallback,
       this.onTap,
       this.hintText,
       this.focusNode,
+      this.isShowDeleteForHintText,
       this.isSelectedStrCallBack,
       this.isSelectedCellCallBack,
       this.defaultIconCallback,
@@ -230,119 +236,140 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
         AppSize.customerTextFiledIconSidePadding / 2;
     final iconMinWidth = AppSize.customerTextFiledIconMainWidth +
         AppSize.customerTextFiledIconSidePadding / 2;
-    return InkWell(
-        onTap: () async {
-          hideKeyboard(context);
-          // 비 활성화
-          if (!widget.enable) {
-            notEnableLogic();
-          } else {
-            enableLogic();
-          }
-        },
-        child: Container(
-          alignment: Alignment.center,
-          height: widget.height ?? AppSize.defaultTextFieldHeight,
-          width: widget.width,
-          child: TextField(
-            focusNode: widget.focusNode,
-            textInputAction: widget.iconType == InputIconType.DELETE_AND_SEARCH
-                ? TextInputAction.search
-                : null,
-            onSubmitted: (str) {
-              if (widget.iconType == InputIconType.DELETE_AND_SEARCH &&
-                  widget.defaultIconCallback != null) {
-                return widget.defaultIconCallback!.call();
-              } else {
-                return;
-              }
-            },
-            inputFormatters: [LengthLimitingTextInputFormatter(200)],
-            keyboardType: widget.keybordType,
-            obscureText: widget.keybordType != null &&
-                    widget.keybordType == TextInputType.visiblePassword
-                ? true
-                : false,
-            enableSuggestions: widget.keybordType != null &&
-                    widget.keybordType == TextInputType.visiblePassword
-                ? false
-                : true,
-            autocorrect: widget.keybordType != null &&
-                    widget.keybordType == TextInputType.visiblePassword
-                ? false
-                : true,
-            style: widget.textStyle ?? AppTextStyle.default_16,
-            controller: widget.textEditingController,
-            onTap: () {
-              widget.onTap != null ? widget.onTap!.call() : DoNothingAction();
-              widget.initText != null
-                  ? widget.textEditingController!.text = widget.initText!
-                  : DoNothingAction();
-            },
-            onChanged: (text) {
-              if (widget.onChangeCallBack != null) {
-                widget.onChangeCallBack!.call(text);
-              }
-            },
-            enabled: widget.enable,
-            maxLines: widget.maxLine ?? 1,
-            decoration: InputDecoration(
-              fillColor: AppColors.whiteText,
-              hintMaxLines: 1,
-              errorMaxLines: 1,
-              filled: true,
-              contentPadding: widget.height != null
-                  ? AppSize.defaultTextFieldPaddingWidthSigninPage(
-                      widget.textStyle != null
-                          ? widget.textStyle!.fontSize!
-                          : AppTextStyle.default_16.fontSize!)
-                  : AppSize.defaultTextFieldPadding,
-              border: widget._disabledBorder,
-              enabledBorder: widget._enabledBorder,
-              disabledBorder: widget.enable ? null : widget._disabledBorder,
-              focusedBorder: widget._focusedBorder,
-              suffixIconConstraints: BoxConstraints(
-                maxHeight: widget.iconType != InputIconType.DELETE_AND_SEARCH
-                    ? iconMaxWidth
-                    : iconMaxWidth * 2,
-                maxWidth: widget.iconType != InputIconType.DELETE_AND_SEARCH
-                    ? iconMaxWidth
-                    : iconMaxWidth * 2,
-                minHeight: widget.iconType != InputIconType.DELETE_AND_SEARCH
-                    ? iconMinWidth
-                    : iconMinWidth * 2,
-                minWidth: widget.iconType != InputIconType.DELETE_AND_SEARCH
-                    ? iconMinWidth
-                    : iconMinWidth * 2,
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        InkWell(
+          onTap: () async {
+            hideKeyboard(context);
+            // 비 활성화
+            if (!widget.enable) {
+              notEnableLogic();
+            } else {
+              enableLogic();
+            }
+          },
+          child: Container(
+            alignment: Alignment.center,
+            height: widget.height ?? AppSize.defaultTextFieldHeight,
+            width: widget.width,
+            child: TextField(
+              focusNode: widget.focusNode,
+              textInputAction:
+                  widget.iconType == InputIconType.DELETE_AND_SEARCH
+                      ? TextInputAction.search
+                      : null,
+              onSubmitted: (str) {
+                if (widget.iconType == InputIconType.DELETE_AND_SEARCH &&
+                    widget.defaultIconCallback != null) {
+                  return widget.defaultIconCallback!.call();
+                } else {
+                  return;
+                }
+              },
+              inputFormatters: [LengthLimitingTextInputFormatter(200)],
+              keyboardType: widget.keybordType,
+              obscureText: widget.keybordType != null &&
+                      widget.keybordType == TextInputType.visiblePassword
+                  ? true
+                  : false,
+              enableSuggestions: widget.keybordType != null &&
+                      widget.keybordType == TextInputType.visiblePassword
+                  ? false
+                  : true,
+              autocorrect: widget.keybordType != null &&
+                      widget.keybordType == TextInputType.visiblePassword
+                  ? false
+                  : true,
+              style: widget.textStyle ?? AppTextStyle.default_16,
+              controller: widget.textEditingController,
+              onTap: () {
+                widget.onTap != null ? widget.onTap!.call() : DoNothingAction();
+                widget.initText != null
+                    ? widget.textEditingController!.text = widget.initText!
+                    : DoNothingAction();
+              },
+              onChanged: (text) {
+                if (widget.onChangeCallBack != null) {
+                  widget.onChangeCallBack!.call(text);
+                }
+              },
+              enabled: widget.enable,
+              maxLines: widget.maxLine ?? 1,
+              decoration: InputDecoration(
+                fillColor: AppColors.whiteText,
+                hintMaxLines: 1,
+                errorMaxLines: 1,
+                filled: true,
+                contentPadding: widget.height != null
+                    ? AppSize.defaultTextFieldPaddingWidthSigninPage(
+                        widget.textStyle != null
+                            ? widget.textStyle!.fontSize!
+                            : AppTextStyle.default_16.fontSize!)
+                    : AppSize.defaultTextFieldPadding,
+                border: widget._disabledBorder,
+                enabledBorder: widget._enabledBorder,
+                disabledBorder: widget.enable ? null : widget._disabledBorder,
+                focusedBorder: widget._focusedBorder,
+                suffixIconConstraints: BoxConstraints(
+                  maxHeight: widget.iconType != InputIconType.DELETE_AND_SEARCH
+                      ? iconMaxWidth
+                      : iconMaxWidth * 2,
+                  maxWidth: widget.iconType != InputIconType.DELETE_AND_SEARCH
+                      ? iconMaxWidth
+                      : iconMaxWidth * 2,
+                  minHeight: widget.iconType != InputIconType.DELETE_AND_SEARCH
+                      ? iconMinWidth
+                      : iconMinWidth * 2,
+                  minWidth: widget.iconType != InputIconType.DELETE_AND_SEARCH
+                      ? iconMinWidth
+                      : iconMinWidth * 2,
+                ),
+                suffixIcon: widget.iconType != null
+                    ? widget.iconType != InputIconType.DELETE_AND_SEARCH
+                        ? InkWell(
+                            onTap: () => widget.defaultIconCallback!.call(),
+                            child: Padding(
+                                padding: EdgeInsets.only(
+                                    right: AppSize
+                                        .customerTextFiledIconSidePadding),
+                                child: SizedBox(
+                                    height: AppSize.iconSmallDefaultWidth,
+                                    child: widget.iconType!
+                                        .icon(color: widget.iconColor))))
+                        : Padding(
+                            padding: EdgeInsets.only(
+                                right:
+                                    AppSize.customerTextFiledIconSidePadding),
+                            child: widget.iconType!.icon(
+                                callback1: widget.defaultIconCallback,
+                                callback2: widget.otherIconcallback,
+                                color: widget.iconColor),
+                          )
+                    : null,
+                hintText: widget.hintText,
+                hintStyle: widget.hintTextStyleCallBack != null
+                    ? widget.hintTextStyleCallBack!.call()
+                    : AppTextStyle.hint_16,
+                isDense: true,
               ),
-              suffixIcon: widget.iconType != null
-                  ? widget.iconType != InputIconType.DELETE_AND_SEARCH
-                      ? InkWell(
-                          onTap: () => widget.defaultIconCallback!.call(),
-                          child: Padding(
-                              padding: EdgeInsets.only(
-                                  right:
-                                      AppSize.customerTextFiledIconSidePadding),
-                              child: SizedBox(
-                                  height: AppSize.iconSmallDefaultWidth,
-                                  child: widget.iconType!
-                                      .icon(color: widget.iconColor))))
-                      : Padding(
-                          padding: EdgeInsets.only(
-                              right: AppSize.customerTextFiledIconSidePadding),
-                          child: widget.iconType!.icon(
-                              callback1: widget.defaultIconCallback,
-                              callback2: widget.otherIconcallback,
-                              color: widget.iconColor),
-                        )
-                  : null,
-              hintText: widget.hintText,
-              hintStyle: widget.hintTextStyleCallBack != null
-                  ? widget.hintTextStyleCallBack!.call()
-                  : AppTextStyle.hint_16,
-              isDense: true,
             ),
           ),
-        ));
+        ),
+        widget.isShowDeleteForHintText != null &&
+                widget.isShowDeleteForHintText!
+            ? Positioned(
+                right: AppSize.padding +
+                    AppSize.iconSmallDefaultWidth +
+                    AppSize.defaultListItemSpacing,
+                child: InkWell(
+                  onTap: () {
+                    widget.deleteIconCallback?.call();
+                  },
+                  child: AppImage.getImage(ImageType.DELETE),
+                ))
+            : Container()
+      ],
+    );
   }
 }
