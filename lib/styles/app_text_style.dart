@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:medsalesportal/service/key_service.dart';
-import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
-import 'app_colors.dart';
 import 'app_size.dart';
+import 'app_colors.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/service/key_service.dart';
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 
 // 각종 text 스타일 사전 정의.
 class AppTextStyle {

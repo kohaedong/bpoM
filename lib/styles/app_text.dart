@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/styles/app_text.dart
  * Created Date: 2022-07-03 14:42:12
- * Last Modified: 2022-07-06 13:20:52
+ * Last Modified: 2022-07-06 15:06:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,11 +12,10 @@
  */
 
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/service/key_service.dart';
+import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/styles/app_text_style.dart';
-import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 
 class AppText {
   static text(

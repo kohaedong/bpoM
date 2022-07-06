@@ -1,9 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
+import 'app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/view/common/provider/app_theme_provider.dart';
-import 'app_colors.dart';
 
 /// 기본 [ThemeData] 사전 정의 .
 /// [AppThemeProvider] 의 base [ThemeData] 이기도 함.
