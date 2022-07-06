@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_divider_line.dart
  * Created Date: 2022-07-02 14:22:53
- * Last Modified: 2022-07-02 14:23:26
+ * Last Modified: 2022-07-06 10:33:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -19,7 +19,7 @@ Widget buildDividingLine() {
   return Container(
     alignment: Alignment.centerLeft,
     height: AppSize.defaultLineHeight,
-    width: AppSize.realWith,
+    width: AppSize.realWidth,
     color: AppColors.homeBgColor,
   );
 }

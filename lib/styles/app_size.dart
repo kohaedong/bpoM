@@ -6,9 +6,9 @@ class AppSize {
   static double fontSize(double size) => size;
   static double bottomSafeAreaHeight(BuildContext context) =>
       MediaQuery.of(context).padding.bottom;
-  static double get defaultContentsWidth => realWith - padding * 2;
+  static double get defaultContentsWidth => realWidth - padding * 2;
   static double get zero => 0;
-  static double get realWith => 1.sw;
+  static double get realWidth => 1.sw;
   static double get realHeight => 1.sh;
   static double get progressTopPadding => 350.h;
   static double get itemExtent => 40;

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_loading_view_on_stack_widget.dart
  * Created Date: 2021-10-20 22:21:27
- * Last Modified: 2022-07-03 14:59:24
+ * Last Modified: 2022-07-06 10:33:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -20,7 +20,7 @@ class BaseLoadingViewOnStackWidget {
     return isLoadData
         ? Container(
             height: height ?? AppSize.realHeight,
-            width: width ?? AppSize.realWith,
+            width: width ?? AppSize.realWidth,
             color: color ?? AppColors.defaultText.withOpacity(.4),
             child: Column(
               mainAxisAlignment: height != null

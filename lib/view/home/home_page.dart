@@ -307,7 +307,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         child: AppStyles.buildButton(
             context,
             '${tr('home_send_suggestion')}',
-            AppSize.realWith - AppSize.padding * 2,
+            AppSize.realWidth - AppSize.padding * 2,
             AppColors.lightBlueColor,
             AppTextStyle.color_16(AppColors.blueTextColor),
             AppSize.radius8, () {

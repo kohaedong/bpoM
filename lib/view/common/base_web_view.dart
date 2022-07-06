@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_web_view.dart
  * Created Date: 2021-10-01 16:35:01
- * Last Modified: 2022-07-03 15:12:54
+ * Last Modified: 2022-07-06 10:33:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -105,7 +105,7 @@ class _BaseWebViewState extends State<BaseWebView> {
                                   opacity: swich ? 1 : 0,
                                   duration: Duration(microseconds: 300),
                                   child: Container(
-                                    width: AppSize.realWith,
+                                    width: AppSize.realWidth,
                                     height: AppSize.realHeight -
                                         AppSize.appBarHeight -
                                         AppSize.buttonHeight,

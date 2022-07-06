@@ -36,7 +36,7 @@ class AppStyles {
         child: AppStyles.buildButton(
             context,
             '$buttonText',
-            AppSize.realWith * .55,
+            AppSize.realWidth * .55,
             AppColors.lightBlueColor,
             AppTextStyle.color_16(AppColors.blueTextColor),
             AppSize.radius5,

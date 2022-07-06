@@ -161,7 +161,7 @@ class CheckUpdateAndNoticeService {
         bottom: 0,
         left: 0,
         child: Container(
-          width: totalWidth ?? AppSize.realWith,
+          width: totalWidth ?? AppSize.realWidth,
           child: Row(
             children: [
               model.recnfrmYn == 'y'
@@ -170,7 +170,7 @@ class CheckUpdateAndNoticeService {
                       '${tr('not_show_again')}',
                       totalWidth != null
                           ? totalWidth / 2
-                          : AppSize.realWith / 2,
+                          : AppSize.realWidth / 2,
                       AppColors.lightBlueColor,
                       AppTextStyle.color_18(AppColors.primary),
                       0, () {
@@ -184,8 +184,8 @@ class CheckUpdateAndNoticeService {
                   model.recnfrmYn == 'y'
                       ? totalWidth != null
                           ? totalWidth / 2
-                          : AppSize.realWith / 2
-                      : AppSize.realWith,
+                          : AppSize.realWidth / 2
+                      : AppSize.realWidth,
                   AppColors.primary,
                   AppTextStyle.color_18(AppColors.whiteText),
                   0, () {
@@ -209,7 +209,7 @@ class CheckUpdateAndNoticeService {
         bottom: isBottom ? 0 : AppSize.radius8,
         left: 0,
         child: Container(
-          width: totalWidth != null ? totalWidth : AppSize.realWith,
+          width: totalWidth != null ? totalWidth : AppSize.realWidth,
           child: Row(
             children: [
               model.recnfrmYn == 'y'
@@ -219,7 +219,7 @@ class CheckUpdateAndNoticeService {
                         alignment: Alignment.center,
                         width: totalWidth != null
                             ? totalWidth * .65
-                            : AppSize.realWith * .65,
+                            : AppSize.realWidth * .65,
                         height: isBottom
                             ? AppSize.bottomButtonHeight
                             : AppSize.buttonHeight,
@@ -285,10 +285,10 @@ class CheckUpdateAndNoticeService {
                     width: model.recnfrmYn == 'y'
                         ? totalWidth != null
                             ? totalWidth * .35
-                            : AppSize.realWith * .35
+                            : AppSize.realWidth * .35
                         : totalWidth != null
                             ? totalWidth
-                            : AppSize.realWith,
+                            : AppSize.realWidth,
                     decoration: BoxDecoration(
                         border: Border(
                             top: BorderSide(
@@ -311,7 +311,7 @@ class CheckUpdateAndNoticeService {
           children: [
             Container(
               height: AppSize.realHeight,
-              width: AppSize.realWith,
+              width: AppSize.realWidth,
             ),
             Container(
                 constraints: BoxConstraints(
@@ -330,7 +330,7 @@ class CheckUpdateAndNoticeService {
           children: [
             Container(
               height: AppSize.realHeight,
-              width: AppSize.realWith,
+              width: AppSize.realWidth,
               color: AppColors.unReadySigninBg,
             ),
             Container(
@@ -370,7 +370,7 @@ class CheckUpdateAndNoticeService {
       BuildContext context, NoticeModel model) {
     return Container(
         height: AppSize.realHeight,
-        width: AppSize.realWith,
+        width: AppSize.realWidth,
         child: SafeArea(
             bottom: false,
             child: Scaffold(

@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/text_row_model_by_key_value.dart
  * Created Date: 2021-09-06 11:46:11
- * Last Modified: 2022-07-05 16:58:32
+ * Last Modified: 2022-07-06 10:33:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -64,10 +64,10 @@ class TextRowModelByKeyValue extends StatelessWidget {
         width: isWithShowAllButton
             ? contentsTextWidth != null
                 ? contentsTextWidth! * .25
-                : (AppSize.realWith - AppSize.padding * 2) * .3
+                : (AppSize.realWidth - AppSize.padding * 2) * .3
             : isWithStar != null
-                ? (AppSize.realWith - AppSize.padding * 2) * .35
-                : (AppSize.realWith - AppSize.padding * 2) * .3,
+                ? (AppSize.realWidth - AppSize.padding * 2) * .35
+                : (AppSize.realWidth - AppSize.padding * 2) * .3,
         child: InkWell(
           onTap: () => callback != null ? callback!.call() : DoNothingAction(),
           child: Row(
@@ -101,7 +101,7 @@ class TextRowModelByKeyValue extends StatelessWidget {
         child: Container(
           width: contentsTextWidth != null
               ? contentsTextWidth! * .25
-              : (AppSize.realWith - AppSize.padding * 2) * .25,
+              : (AppSize.realWidth - AppSize.padding * 2) * .25,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -123,8 +123,8 @@ class TextRowModelByKeyValue extends StatelessWidget {
         width: leadingTextWidth != null
             ? leadingTextWidth
             : isWithStar != null
-                ? (AppSize.realWith - AppSize.padding * 2) * .35
-                : (AppSize.realWith - AppSize.padding * 2) * .3,
+                ? (AppSize.realWidth - AppSize.padding * 2) * .35
+                : (AppSize.realWidth - AppSize.padding * 2) * .3,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -156,12 +156,12 @@ class TextRowModelByKeyValue extends StatelessWidget {
             width: isWithEndShowAllButton
                 ? contentsTextWidth != null
                     ? contentsTextWidth! * .75
-                    : (AppSize.realWith - AppSize.padding * 2) * .45
+                    : (AppSize.realWidth - AppSize.padding * 2) * .45
                 : contentsTextWidth != null
                     ? contentsTextWidth
                     : isWithStar != null
-                        ? (AppSize.realWith - AppSize.padding * 2) * .65
-                        : (AppSize.realWith - AppSize.padding * 2) * .7,
+                        ? (AppSize.realWidth - AppSize.padding * 2) * .65
+                        : (AppSize.realWidth - AppSize.padding * 2) * .7,
             child: InkWell(
                 onTap: () {
                   // 전화번호 클릭 -> 벡그라운드 진입 -> 포그라운드로 돌아올때 업데이트 체크안함.

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/customer_info_top_widget.dart
  * Created Date: 2021-09-16 11:49:56
- * Last Modified: 2022-07-06 09:07:06
+ * Last Modified: 2022-07-06 10:33:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -50,7 +50,7 @@ class CustomerinfoWidget {
     return Container(
         alignment: Alignment.centerLeft,
         height: AppSize.searchCustomerSubTitleHeight,
-        width: AppSize.realWith,
+        width: AppSize.realWidth,
         color: AppColors.homeBgColor,
         child: Padding(
             padding: AppSize.defaultSidePadding,
@@ -61,7 +61,7 @@ class CustomerinfoWidget {
     return Container(
       alignment: Alignment.centerLeft,
       height: AppSize.defaultLineHeight,
-      width: AppSize.realWith,
+      width: AppSize.realWidth,
       color: AppColors.homeBgColor,
     );
   }
