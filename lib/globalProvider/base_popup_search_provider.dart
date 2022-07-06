@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-06 15:07:14
+ * Last Modified: 2022-07-06 17:00:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,10 +11,11 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
+import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
@@ -29,9 +30,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   String? selectedThreeRowValue3;
   String? selectedThreeRowValue4;
   String? selectedOneRowValue1DefaultValue;
-  // EtStaffListResponseModel? staList;
-  // SearchMaterialResponseModel? materiaModel;
-  // SalesorderDefaultPersonResponseModel? defaultPersonResponseModel;
+  EtStaffListResponseModel? staList;
   // List<PlantResultModel>? plantList;
   OneCellType? type;
   Map<String, dynamic>? bodyMap;
@@ -53,8 +52,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   bool hasMore = true;
   Future<void> refresh() async {
     pos = 0;
-    // materiaModel = null;
-    // staList = null;
+    staList = null;
     onSearch(type!, true);
   }
 
@@ -164,201 +162,114 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return resultList.strList;
   }
 
-  Future<BasePoupSearchResult> searchPersonForSalesOrder(
-      {required Map<String, dynamic> bodyMaps}) async {
+  Future<BasePoupSearchResult> searchPerson(
+    bool isMounted,
+  ) async {
+    isLoadData = true;
+    if (isMounted) {
+      notifyListeners();
+    }
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();
-    // _api.init(RequestType.DEFAULT_VALUE_FOR_PERSON);
-    // Map<String, dynamic> body = {
-    //   "methodName": RequestType.SEARCH_STAFF.serverMethod,
-    //   "methodParamMap": {
-    //     ...bodyMaps,
-    //     "IS_LOGIN": isLogin,
-    //     "resultTables": RequestType.DEFAULT_VALUE_FOR_PERSON.resultTable,
-    //     "functionName": RequestType.DEFAULT_VALUE_FOR_PERSON.serverMethod,
-    //   }
-    // };
-    // body.addAll(bodyMaps);
-    // final result = await _api.request(body: body);
-    // if (result == null || result.statusCode != 200) {
-    //   return BasePoupSearchResult(false,
-    //       message: result != null ? result.message : null);
-    // }
-    // if (result.statusCode == 200 && result.body['data'] != null) {
-    //   defaultPersonResponseModel =
-    //       SalesorderDefaultPersonResponseModel.fromJson(result.body['data']);
-    //   if (defaultPersonResponseModel!.esReturn!.mtype == 'S') {
-    //     return BasePoupSearchResult(true,
-    //         defaultPersonResponseModel: defaultPersonResponseModel);
-    //   }
-    // }
-    // return BasePoupSearchResult(false, message: result.errorMessage);
+    final esLogin = CacheService.getEsLogin();
+    Map<String, dynamic>? body;
+    body = {
+      "methodName": RequestType.SEARCH_STAFF.serverMethod,
+      "methodParamMap": {
+        "IV_SALESM": "",
+        "IV_SNAME": selectedOneRowValue2 ?? '',
+        "IV_DPTNM": esLogin!.dptnm,
+        "IS_LOGIN": isLogin,
+        "pos": "$pos",
+        "partial": "$partial",
+        "resultTables": RequestType.SEARCH_STAFF.resultTable,
+        "functionName": RequestType.SEARCH_STAFF.serverMethod,
+      }
+    };
+    print(selectedOneRowValue1);
+    _api.init(RequestType.SEARCH_STAFF);
+    final result = await _api.request(body: body);
+    if (result == null || result.statusCode != 200) {
+      isLoadData = false;
+      staList = null;
+      notifyListeners();
+      return BasePoupSearchResult(false);
+    }
+    if (result.statusCode == 200 && result.body['data'] != null) {
+      var temp = EtStaffListResponseModel.fromJson(result.body['data']);
+      if (temp.staffList!.length != partial) {
+        hasMore = false;
+      }
+      if (staList == null) {
+        staList = temp;
+      } else {
+        staList!.staffList!.addAll(temp.staffList!);
+      }
+      if (staList != null && staList!.staffList == null) {
+        staList = null;
+      }
+
+      isLoadData = false;
+      notifyListeners();
+      return BasePoupSearchResult(true);
+    }
+    isLoadData = false;
     return BasePoupSearchResult(false);
   }
 
-  Future<BasePoupSearchResult> searchPerson(bool isMounted) async {
-    // isLoadData = true;
-    // if (isMounted) {
-    //   notifyListeners();
-    // }
-    // var _api = ApiService();
-    // final isLogin = CacheService.getIsLogin();
-    // Map<String, dynamic>? body;
-    // if (bodyMap != null) {
-    //   body = {
-    //     "methodName": RequestType.SEARCH_STAFF.serverMethod,
-    //     "methodParamMap": {
-    //       ...bodyMap!,
-    //       "IV_SALESM": "X",
-    //       "IV_SNAME": selectedOneRowValue1 == '${tr('staff_name')}'
-    //           ? selectedOneRowValue2 == null || selectedOneRowValue2 == ''
-    //               ? ''
-    //               : '*$selectedOneRowValue2*'
-    //           : '',
-    //       "IV_DPTNM": selectedOneRowValue1 == '${tr('department_name')}'
-    //           ? selectedOneRowValue2 == null || selectedOneRowValue2 == ''
-    //               ? ''
-    //               : '*$selectedOneRowValue2*'
-    //           : '',
-    //       "IS_LOGIN": isLogin,
-    //       "pos": "$pos",
-    //       "partial": "$partial",
-    //       "resultTables": RequestType.SEARCH_STAFF.resultTable,
-    //       "functionName": RequestType.SEARCH_STAFF.serverMethod,
-    //     }
-    //   };
-    // } else {
-    //   body = {
-    //     "methodName": RequestType.SEARCH_STAFF.serverMethod,
-    //     "methodParamMap": {
-    //       "IV_SALESM": "X",
-    //       "IV_SNAME": selectedOneRowValue1 == '${tr('staff_name')}'
-    //           ? selectedOneRowValue2 == null || selectedOneRowValue2 == ''
-    //               ? ''
-    //               : '*$selectedOneRowValue2*'
-    //           : '',
-    //       "IV_DPTNM": selectedOneRowValue1 == '${tr('department_name')}'
-    //           ? selectedOneRowValue2 == null || selectedOneRowValue2 == ''
-    //               ? ''
-    //               : '*$selectedOneRowValue2*'
-    //           : '',
-    //       "pos": "$pos",
-    //       "partial": "$partial",
-    //       "IS_LOGIN": isLogin,
-    //       "resultTables": RequestType.SEARCH_STAFF.resultTable,
-    //       "functionName": RequestType.SEARCH_STAFF.serverMethod,
-    //     }
-    //   };
-    // }
-    // print(selectedOneRowValue1);
-    // _api.init(RequestType.SEARCH_STAFF);
-    // final result = await _api.request(body: body);
-    // if (result == null || result.statusCode != 200) {
-    //   isLoadData = false;
-    //   staList = null;
-    //   notifyListeners();
-    //   return BasePoupSearchResult(false);
-    // }
-    // if (result.statusCode == 200 && result.body['data'] != null) {
-    //   var temp = EtStaffListResponseModel.fromJson(result.body['data']);
-    //   if (temp.staffList!.length != partial) {
-    //     hasMore = false;
-    //   }
-    //   if (staList == null) {
-    //     staList = temp;
-    //   } else {
-    //     staList!.staffList!.addAll(temp.staffList!);
-    //   }
-    //   if (staList != null && staList!.staffList == null) {
-    //     staList = null;
-    //   }
+  // Future<BasePoupSearchResult> searchPerson(bool isMounted) async {
+  //   isLoadData = true;
+  //   if (isMounted) {
+  //     notifyListeners();
+  //   }
+  //   var _api = ApiService();
+  //   final isLogin = CacheService.getIsLogin();
+  //   var esLogin = CacheService.getEsLogin();
+  //   Map<String, dynamic>? body;
+  //   body = {
+  //     "methodName": RequestType.SEARCH_STAFF.serverMethod,
+  //     "methodParamMap": {
+  //       "IV_SALESM": '',
+  //       "IV_SNAME": selectedOneRowValue1,
+  //       "IV_DPTNM": esLogin!.dptnm,
+  //       "IS_LOGIN": isLogin,
+  //       "resultTables": RequestType.SEARCH_STAFF.resultTable,
+  //       "functionName": RequestType.SEARCH_STAFF.serverMethod,
+  //     }
+  //   };
+  //   print(selectedOneRowValue1);
+  //   _api.init(RequestType.SEARCH_STAFF);
+  //   final result = await _api.request(body: body);
+  //   pr(result?.body);
+  //   if (result == null || result.statusCode != 200) {
+  //     isLoadData = false;
+  //     staList = null;
+  //     notifyListeners();
+  //     return BasePoupSearchResult(false);
+  //   }
+  //   if (result.statusCode == 200 &&
+  //       result.body['data'] != null &&
+  //       result.body['data'].isNotEmpty) {
+  //     var temp = EtStaffListResponseModel.fromJson(result.body['data']);
+  //     if (temp.staffList!.length != partial) {
+  //       hasMore = false;
+  //     }
+  //     if (staList == null) {
+  //       staList = temp;
+  //     } else {
+  //       staList!.staffList!.addAll(temp.staffList!);
+  //     }
+  //     if (staList != null && staList!.staffList == null) {
+  //       staList = null;
+  //     }
 
-    //   isLoadData = false;
-    //   notifyListeners();
-    //   return BasePoupSearchResult(true);
-    // }
-    // isLoadData = false;
-    return BasePoupSearchResult(false);
-  }
-
-  Future<BasePoupSearchResult> searchMaterial(bool isMounted) async {
-    // isLoadData = true;
-    // if (isMounted) {
-    //   notifyListeners();
-    // }
-    // var _api = ApiService();
-    // final isLogin = CacheService.getIsLogin();
-
-    // Map<String, dynamic> body;
-    // if (bodyMap != null) {
-    //   body = {
-    //     "methodName": RequestType.SEARCH_MATERIAL.serverMethod,
-    //     "methodParamMap": {
-    //       ...bodyMap!,
-    //       "IV_MATNR":
-    //           '${selectedOneRowValue1 != '${tr('materials_name')}' ? '${selectedOneRowValue2 != null ? '$selectedOneRowValue2' : ''}' : ''}', // 자재 번호
-    //       "IV_MAKTX":
-    //           '${selectedOneRowValue1 == '${tr('materials_name')}' ? '${selectedOneRowValue2 != null ? '$selectedOneRowValue2' : ''}' : ''}', //자재내역
-    //       "IV_BISMT": '', //기존자재번호
-    //       "pos": "$pos",
-    //       "partial": "$partial",
-    //       "IS_LOGIN": isLogin,
-    //       "resultTables": RequestType.SEARCH_MATERIAL.resultTable,
-    //       "functionName": RequestType.SEARCH_MATERIAL.serverMethod,
-    //     }
-    //   };
-    // } else {
-    //   body = {
-    //     "methodName": RequestType.SEARCH_MATERIAL.serverMethod,
-    //     "methodParamMap": {
-    //       "IV_MATNR":
-    //           '${selectedOneRowValue1 != '${tr('materials_name')}' ? '${selectedOneRowValue2 != null ? '$selectedOneRowValue2' : ''}' : ''}', // 자재 번호
-    //       "IV_MAKTX":
-    //           '${selectedOneRowValue1 == '${tr('materials_name')}' ? '${selectedOneRowValue2 != null ? '$selectedOneRowValue2' : ''}' : ''}', //자재내역
-    //       "IV_BISMT": '',
-    //       "IV_VKORG": '',
-    //       "IV_VTWEG": '',
-    //       "IV_WERKS": "",
-    //       "IT_WERKS": "",
-    //       "pos": "$pos",
-    //       "partial": "$partial",
-    //       "IS_LOGIN": isLogin,
-    //       "resultTables": RequestType.SEARCH_MATERIAL.resultTable,
-    //       "functionName": RequestType.SEARCH_MATERIAL.serverMethod,
-    //     }
-    //   };
-    // }
-    // _api.init(RequestType.SEARCH_MATERIAL);
-    // final result = await _api.request(body: body);
-    // if (result == null || result.statusCode != 200) {
-    //   isLoadData = false;
-    //   staList = null;
-    //   notifyListeners();
-    //   return BasePoupSearchResult(false);
-    // }
-    // if (result.statusCode == 200 && result.body['data'] != null) {
-    //   var temp = SearchMaterialResponseModel.fromJson(result.body['data']);
-    //   if (temp.materialList!.length != partial) {
-    //     hasMore = false;
-    //   }
-    //   if (materiaModel == null) {
-    //     materiaModel = temp;
-    //   } else {
-    //     materiaModel!.materialList!.addAll(temp.materialList!);
-    //   }
-    //   print(materiaModel!.toJson());
-    //   if (materiaModel != null && materiaModel!.materialList == null) {
-    //     materiaModel = null;
-    //   }
-
-    //   isLoadData = false;
-    //   notifyListeners();
-    //   return BasePoupSearchResult(true);
-    // }
-    // isLoadData = false;
-
-    return BasePoupSearchResult(false);
-  }
+  //     isLoadData = false;
+  //     notifyListeners();
+  //     return BasePoupSearchResult(true);
+  //   }
+  //   isLoadData = false;
+  //   return BasePoupSearchResult(false);
+  // }
 
   Future<BasePoupSearchResult> onSearch(OneCellType type, bool isMounted,
       {Map<String, dynamic>? bodyMaps}) async {
@@ -369,17 +280,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
     switch (type) {
       case OneCellType.SEARCH_SALSE_PERSON:
-        if (selectedOneRowValue1 == null)
-          // set default value
-          selectedOneRowValue1 = '${tr('staff_name')}';
         return await searchPerson(isMounted);
-      case OneCellType.SEARCH_MATERIALS:
-        if (selectedOneRowValue1 == null)
-          // set default value
-          selectedOneRowValue1 = '${tr('materials_name')}';
-        return await searchMaterial(isMounted);
-      // case OneCellType.SEARCH_PLANT_RESULT:
-      //   return await searchPlant();
       default:
         return BasePoupSearchResult(false);
     }

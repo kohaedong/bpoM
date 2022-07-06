@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-06 15:01:26
+ * Last Modified: 2022-07-06 16:23:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -354,10 +354,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
   Widget buildSearchBar(BuildContext context) {
     final p = context.read<BasePopupSearchProvider>();
 
-    var width = AppSize.defaultContentsWidth -
-        AppSize.textFiledDefaultSpacing * 2 -
-        AppSize.padding;
-
     return Container(
       height: AppSize.titleHeightInOneRowsSearchBarPopup,
       child: Column(
@@ -365,36 +361,15 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
           Padding(
               padding: EdgeInsets.only(top: AppSize.searchBarTitleSidePadding)),
           Expanded(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Selector<BasePopupSearchProvider, String?>(
-                  selector: (context, provider) =>
-                      provider.selectedOneRowValue1,
-                  builder: (context, selectedOneRowValue1, _) {
-                    return Builder(builder: (context) {
-                      return BaseInputWidget(
-                          context: context,
-                          width: (width - AppSize.textFiledDefaultSpacing) * .4,
-                          oneCellType: widget.type.popupStrListType[0],
-                          enable: false,
-                          iconType: InputIconType.SELECT,
-                          hintTextStyleCallBack: () => AppTextStyle.default_16,
-                          isSelectedStrCallBack: (str) =>
-                              p.setOneRowValue1(str),
-                          hintText:
-                              selectedOneRowValue1 ?? widget.type.hintText![0]);
-                    });
-                  }),
-              SizedBox(width: AppSize.textFiledDefaultSpacing),
-              Selector<BasePopupSearchProvider, String?>(
+              child: Selector<BasePopupSearchProvider, String?>(
                   selector: (context, provider) =>
                       provider.selectedOneRowValue2,
                   builder: (context, selectedOneRowValue2, _) {
                     return Builder(builder: (context) {
                       return BaseInputWidget(
                           context: context,
-                          width: (width - AppSize.textFiledDefaultSpacing) * .6,
+                          width: AppSize.defaultContentsWidth -
+                              AppSize.padding * 2,
                           enable: true,
                           hintTextStyleCallBack: selectedOneRowValue2 != null
                               ? null
@@ -419,9 +394,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                               ? null
                               : '${tr('plz_enter')}');
                     });
-                  }),
-            ],
-          )),
+                  })),
           Divider(
             color: AppColors.textGrey,
           )
@@ -438,7 +411,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         builder: (context, snapshot) {
           return Consumer<BasePopupSearchProvider>(
               builder: (context, provider, _) {
-            return (1 + 1 == 2)
+            return (provider.staList != null &&
+                    provider.staList!.staffList != null &&
+                    provider.staList!.staffList!.isNotEmpty)
                 ? Padding(
                     padding: AppSize.defaultSearchPopupSidePadding,
                     child: Container(
@@ -466,17 +441,20 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                               padding: EdgeInsets.zero,
                               itemCount: widget.type ==
                                       PopupSearchType.SEARCH_SALSE_PERSON
-                                  ? 10
-                                  : 20,
+                                  ? provider.staList!.staffList!.length
+                                  : 10,
                               itemBuilder: (BuildContext context, int index) {
                                 return widget.type ==
                                         PopupSearchType.SEARCH_SALSE_PERSON
                                     ? buildPersonContentsItem(
                                         context,
-                                        'model',
+                                        provider.staList!.staffList![index],
                                         index,
                                         !provider.hasMore &&
-                                            index == 'is last item'.length)
+                                            index ==
+                                                provider.staList!.staffList!
+                                                        .length -
+                                                    1)
                                     : Container();
                               },
                             ),

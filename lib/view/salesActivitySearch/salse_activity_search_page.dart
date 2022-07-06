@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-06 15:03:11
+ * Last Modified: 2022-07-06 16:19:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/enums/popup_search_type.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -30,6 +31,7 @@ import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
 import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
 import 'package:medsalesportal/view/salesActivitySearch/provider/salse_activity_search_page_provider.dart';
+import 'package:tuple/tuple.dart';
 
 class SalseActivitySearchPage extends StatefulWidget {
   const SalseActivitySearchPage({Key? key}) : super(key: key);
@@ -167,51 +169,31 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                               );
                             }),
                             Selector<SalseSalseActivitySearchPageProvider,
-                                String?>(
-                              selector: (context, provider) =>
-                                  provider.selectedCompanyDistribution,
-                              builder: (context, compnay, _) {
-                                return Builder(builder: (context) {
-                                  return BaseColumWithTitleAndTextFiled.build(
-                                      '${tr('company_distribution')}',
-                                      BaseInputWidget(
-                                        context: context,
-                                        textEditingController:
-                                            _companyDistributionEditingController,
-                                        hintText: compnay ?? '',
-                                        hintTextStyleCallBack: () =>
-                                            AppTextStyle.hint_16,
-                                        iconType: null,
-                                        width: AppSize.defaultContentsWidth,
-                                        enable: false,
-                                      ));
-                                });
-                              },
-                            ),
-                            Selector<SalseSalseActivitySearchPageProvider,
-                                String?>(
-                              selector: (context, prvider) =>
-                                  prvider.selectedSalesOrg,
-                              builder: (context, org, _) {
-                                return Builder(builder: (context) {
-                                  return BaseColumWithTitleAndTextFiled.build(
-                                      '${tr('sales_org')}',
-                                      BaseInputWidget(
-                                        context: context,
-                                        iconType: InputIconType.SEARCH,
-                                        hintText: org ?? '${tr('plz_select')}',
-                                        width: AppSize.defaultContentsWidth,
-                                        hintTextStyleCallBack: org != null
-                                            ? () => AppTextStyle.default_16
-                                            : () => AppTextStyle.hint_16,
-                                        commononeCellDataCallback: () async {
-                                          return null;
-                                        },
-                                        oneCellType: OneCellType.SEARCH_ORG,
-                                        isSelectedStrCallBack: (str) => 'true',
-                                        enable: false,
-                                      ));
-                                });
+                                Tuple2<bool, String?>>(
+                              selector: (context, provider) => Tuple2(
+                                  provider.isTeamLeader, provider.managerName),
+                              builder: (context, tuple, _) {
+                                return BaseColumWithTitleAndTextFiled.build(
+                                    '${tr('manager')}',
+                                    BaseInputWidget(
+                                      context: context,
+                                      iconType: InputIconType.SEARCH,
+                                      iconColor: tuple.item1
+                                          ? null
+                                          : AppColors.unReadyText,
+                                      hintText: tuple.item2,
+                                      width: AppSize.defaultContentsWidth,
+                                      hintTextStyleCallBack: () => tuple.item1
+                                          ? AppTextStyle.default_16
+                                          : AppTextStyle.hint_16,
+                                      popupSearchType: tuple.item1
+                                          ? PopupSearchType.SEARCH_SALSE_PERSON
+                                          : null,
+                                      isSelectedStrCallBack: (persion) {
+                                        return p.setSalesPerson(persion);
+                                      },
+                                      enable: false,
+                                    ));
                               },
                             ),
                             Selector<SalseSalseActivitySearchPageProvider,

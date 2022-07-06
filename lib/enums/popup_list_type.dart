@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/list_group_type.dart
  * Created Date: 2021-09-10 09:52:32
- * Last Modified: 2022-07-02 13:50:47
+ * Last Modified: 2022-07-06 15:49:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -80,6 +80,9 @@ enum OneCellType {
   SPECIAL_DELIVERY_CONDITION,
   NULL_CHECK,
   DO_NOTHING,
+
+  // medSalesPortal
+  MANAGER
 }
 
 extension OneCellTypeExtension on OneCellType {
@@ -187,6 +190,10 @@ extension OneCellTypeExtension on OneCellType {
         return '${tr('method_of_consulting')}';
       case OneCellType.CONSULTATION_REPORT_IMPOTANCE:
         return '${tr('importance_')}';
+
+      // medSalsePortal
+      case OneCellType.MANAGER:
+        return '${tr('manager')}';
       default:
         return '${tr('search_condition')}';
     }
