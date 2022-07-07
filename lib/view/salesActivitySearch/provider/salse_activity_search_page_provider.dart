@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-07-07 14:20:26
+ * Last Modified: 2022-07-07 16:30:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -63,7 +63,7 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
 
   Future<void> initPageData() async {
     setIsLoginModel();
-    selectedStartDate = DateUtil.prevMonth();
+    selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
   }
 

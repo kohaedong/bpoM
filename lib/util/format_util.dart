@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/util/number_format.dart
  * Created Date: 2021-09-08 09:34:02
- * Last Modified: 2022-07-07 15:32:29
+ * Last Modified: 2022-07-07 16:35:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class FormatUtil {
   // 콤마 추가.
@@ -33,8 +34,9 @@ class FormatUtil {
   }
 
   static String getDistance(data) {
-    return data.toString().isEmpty || int.tryParse(data.toString()) == 0
-        ? ''
+    pr(data.toString());
+    return data.toString().trim() == '' || double.tryParse(data.toString()) == 0
+        ? '-'
         : '${data.toString()}km';
   }
 

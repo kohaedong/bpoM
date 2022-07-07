@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-07 12:39:43
+ * Last Modified: 2022-07-07 16:49:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/service/hive_service.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -603,10 +604,22 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AppText.text('${model.name} (${model.zstatus ?? ''})',
-                            style: AppTextStyle.h3),
+                        FutureBuilder<List<String>?>(
+                            future: HiveService.getCustomerType(model.zstatus!),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData &&
+                                  snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                return AppText.text(
+                                    '${model.name} (${snapshot.data!.single})',
+                                    style: AppTextStyle.h3);
+                              }
+                              return AppText.text('${model.name} ()',
+                                  style: AppTextStyle.h3);
+                            }),
                         AppText.text('${model.zaddName1}',
-                            style: AppTextStyle.h5)
+                            style: AppTextStyle.h5),
+                        AppText.text('${model.telf1}', style: AppTextStyle.h5),
                       ],
                     ),
                   ],

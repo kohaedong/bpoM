@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/provider/alarm_provider.dart
  * Created Date: 2022-01-03 14:00:12
- * Last Modified: 2022-07-05 17:40:55
+ * Last Modified: 2022-07-07 16:31:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -109,33 +109,6 @@ class NoticeProvider extends ChangeNotifier {
       }
       if (homeNoticeResponseModel == null) {
         homeNoticeResponseModel = temp;
-        var dd = homeNoticeResponseModel?.tZltsp0710?.last;
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
-        homeNoticeResponseModel?.tZltsp0710?.add(dd!);
       } else {
         homeNoticeResponseModel!.tZltsp0710!.addAll(temp.tZltsp0710!);
       }

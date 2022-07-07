@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-07 13:58:19
+ * Last Modified: 2022-07-07 16:36:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -283,8 +283,9 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                 AppText.listViewText(
                     FormatUtil.addDashForDateStr2(model.adate ?? ''),
                     isSubTitle: true),
-                BaseTagButton.build(
-                    model.xmeet == 'S' ? '${tr('success_lable')}' : '')
+                BaseTagButton.build(model.xvisit != null && model.xvisit == 'Y'
+                    ? '${tr('visited')}'
+                    : '${tr('not_visited')}')
               ],
             ),
             defaultSpacing(),
@@ -311,12 +312,6 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                     }),
                 AppStyles.buildPipe(),
                 AppText.listViewText(model.zkmnoNm!, isSubTitle: true),
-                AppStyles.buildPipe(),
-                AppText.listViewText(
-                    model.xvisit != null && model.xvisit == 'Y'
-                        ? '${tr('visited')}'
-                        : '${tr('not_visited')}',
-                    isSubTitle: true),
               ],
             ),
             defaultSpacing(),
