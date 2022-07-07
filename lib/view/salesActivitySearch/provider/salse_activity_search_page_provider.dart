@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-07-07 16:30:34
+ * Last Modified: 2022-07-07 17:07:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -49,10 +49,7 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   }
 
   bool get isValidate =>
-      staffName != null &&
-      selectedStartDate != null &&
-      selectedEndDate != null &&
-      customerName != null;
+      staffName != null && selectedStartDate != null && selectedEndDate != null;
   Future<ResultModel?> nextPage() async {
     if (hasMore) {
       pos = partial + pos;
@@ -129,7 +126,8 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
       "methodParamMap": {
         "IV_SANUM": esLogin!.logid,
         "IV_ORGHK": esLogin.orghk,
-        "IV_ZSKUNNR": selectedCustomerModel!.zskunnr,
+        "IV_ZSKUNNR":
+            selectedCustomerModel != null ? selectedCustomerModel!.zskunnr : '',
         "IV_FRDAT": FormatUtil.removeDash(selectedStartDate!),
         "IV_TODAT": FormatUtil.removeDash(selectedEndDate!),
         "pos": pos,

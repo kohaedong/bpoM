@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-07 16:36:41
+ * Last Modified: 2022-07-07 17:06:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -245,7 +245,8 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                                         return p.setCustomerModel(customer);
                                       },
                                       enable: false,
-                                    ));
+                                    ),
+                                    isNotShowStar: true);
                               },
                             ),
                             AppStyles.buildSearchButton(
