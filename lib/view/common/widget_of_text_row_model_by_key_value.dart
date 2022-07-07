@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/text_row_model_by_key_value.dart
  * Created Date: 2021-09-06 11:46:11
- * Last Modified: 2022-07-06 15:02:14
+ * Last Modified: 2022-07-07 15:02:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -129,12 +129,11 @@ class TextRowModelByKeyValue extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                child: AppText.text(
-                  '$title',
-                  style: p.themeData.textTheme.headline6!,
-                  maxLines: isTitleTwoRow != null ? 2 : 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                child: AppText.text('$title',
+                    style: p.themeData.textTheme.headline6!,
+                    maxLines: isTitleTwoRow != null ? 2 : 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start),
               ),
             ),
             isWithStar != null
@@ -149,7 +148,7 @@ class TextRowModelByKeyValue extends StatelessWidget {
     final p = context.read<AppThemeProvider>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
             width: isWithEndShowAllButton
@@ -171,7 +170,7 @@ class TextRowModelByKeyValue extends StatelessWidget {
                   }
                 },
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     discription2 != null
                         ? AppText.text('$discription2  ',
@@ -185,7 +184,8 @@ class TextRowModelByKeyValue extends StatelessWidget {
                                         .copyWith(color: exceptionColor)
                                     : p.themeData.textTheme.headline4!,
                                 maxLines: isWithEndShowAllButton ? 1 : 2,
-                                overflow: TextOverflow.ellipsis)))
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.start)))
                   ],
                 ))),
         isWithEndShowAllButton ? buildEndShowAllButton() : Container()

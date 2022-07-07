@@ -411,11 +411,25 @@
 
     "notice_is_null":"최근 공지사항이 없습니다.",
     "salse_activity_search":"영업활동 조회",
+    "salse_activity_detail":"영업활동 상세",
     "salse_activity_cycle":"활동 기간",
     "salse_person":"영업사원",
     "visited":"방문",
+    "is_visited":"방문여부",
     "not_visited":"미방문",
-    "success_lable":"성공"
+    "success_lable":"성공",
+    "activity_date":"활동일자",
+    "activity_report":"활동보고서",
+    "customer_type_2":"고객형태",
+    "address":"주소",
+    "key_man":"key man",
+    "leader_together":"팀장 동행",
+    "colleague_together":"영업사원 동행",
+    "distance":"거리",
+    "reason_for_not_visiting":"미방문사유",
+    "is_interview":"면담여부",
+    "reason_for_interview_faild":"면담실패 사유",
+    "activity_type_2":"활동유형"
 
 
 }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/route.dart
  * Created Date: 2022-07-02 14:47:58
- * Last Modified: 2022-07-05 21:23:18
+ * Last Modified: 2022-07-07 13:43:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -26,6 +26,7 @@ import 'package:medsalesportal/view/commonLogin/common_login_page.dart';
 import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
 import 'package:medsalesportal/view/orderManager/order_manager_page.dart';
 import 'package:medsalesportal/view/bulkOrderSearch/bulk_order_search_page.dart';
+import 'package:medsalesportal/view/salesActivitySearch/salse_activity_detail_page.dart';
 import 'package:medsalesportal/view/salesActivitySearch/salse_activity_search_page.dart';
 import 'package:medsalesportal/view/salesActivityManager/sales_activity_manager_page.dart';
 
@@ -47,5 +48,7 @@ Map<String, WidgetBuilder> routes = {
   OrderSearchPage.routeName: (context) => const OrderSearchPage(),
   SalseReportPage.routeName: (context) => const SalseReportPage(),
   NoticeAllPage.routeName: (context) => const NoticeAllPage(),
-  NoticeDetailPage.routeName: (context) => const NoticeDetailPage()
+  NoticeDetailPage.routeName: (context) => const NoticeDetailPage(),
+  SalseActivityDetailPage.routeName: (context) =>
+      const SalseActivityDetailPage()
 };

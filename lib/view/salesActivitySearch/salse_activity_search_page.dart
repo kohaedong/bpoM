@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-07 13:33:27
+ * Last Modified: 2022-07-07 13:58:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,33 +11,34 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/enums/popup_search_type.dart';
-import 'package:medsalesportal/model/rfc/t_list_model.dart';
-import 'package:medsalesportal/service/hive_service.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
-import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/service/hive_service.dart';
+import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
-import 'package:medsalesportal/styles/export_common.dart';
+import 'package:medsalesportal/model/rfc/t_list_model.dart';
+import 'package:medsalesportal/enums/popup_search_type.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
+import 'package:medsalesportal/view/common/widget_of_tag_button.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
 import 'package:medsalesportal/view/common/widget_of_next_page_loading.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
 import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
+import 'package:medsalesportal/view/salesActivitySearch/salse_activity_detail_page.dart';
 import 'package:medsalesportal/view/salesActivitySearch/provider/salse_activity_search_page_provider.dart';
-import 'package:tuple/tuple.dart';
 
 class SalseActivitySearchPage extends StatefulWidget {
   const SalseActivitySearchPage({Key? key}) : super(key: key);
@@ -79,7 +80,7 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
     super.dispose();
   }
 
-  Widget buildPanel(BuildContext context) {
+  Widget _buildPanel(BuildContext context) {
     final p = context.read<SalseSalseActivitySearchPageProvider>();
     p.initPageData();
     return ValueListenableBuilder<bool>(
@@ -265,57 +266,63 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
 
   Widget _buildListViewItem(
       BuildContext context, TlistModel model, bool isShowLastPage) {
-    return Padding(
-      padding: AppSize.defaultSidePadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          defaultSpacing(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AppText.listViewText(
-                  FormatUtil.addDashForDateStr2(model.adate ?? ''),
-                  isSubTitle: true),
-              AppText.listViewText(
-                  model.xmeet == 'S' ? '${tr('success_lable')}' : '',
-                  isSubTitle: true)
-            ],
-          ),
-          defaultSpacing(),
-          AppText.listViewText(model.zskunnrNm!),
-          defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
-          Row(
-            children: [
-              AppText.listViewText('${tr('salse_person')}:', isSubTitle: true),
-              AppText.listViewText(model.sanumNm!, isSubTitle: true),
-              AppStyles.buildPipe(),
-              FutureBuilder<List<String>?>(
-                  future: HiveService.getCustomerType(model.zstatus!),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData &&
-                        snapshot.connectionState == ConnectionState.done) {
-                      return AppText.listViewText(snapshot.data!.single,
-                          isSubTitle: true);
-                    }
-                    return Container(
-                      width: AppSize.padding * 4,
-                      height: AppSize.padding * 4,
-                    );
-                  }),
-              AppStyles.buildPipe(),
-              AppText.listViewText(model.zkmnoNm!, isSubTitle: true),
-              AppStyles.buildPipe(),
-              AppText.listViewText(
-                  model.xvisit != null && model.xvisit == 'Y'
-                      ? '${tr('visited')}'
-                      : '${tr('not_visited')}',
-                  isSubTitle: true),
-            ],
-          ),
-          defaultSpacing(),
-          Divider(),
-        ],
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, SalseActivityDetailPage.routeName,
+            arguments: model);
+      },
+      child: Padding(
+        padding: AppSize.defaultSidePadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            defaultSpacing(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AppText.listViewText(
+                    FormatUtil.addDashForDateStr2(model.adate ?? ''),
+                    isSubTitle: true),
+                BaseTagButton.build(
+                    model.xmeet == 'S' ? '${tr('success_lable')}' : '')
+              ],
+            ),
+            defaultSpacing(),
+            AppText.listViewText(model.zskunnrNm!),
+            defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
+            Row(
+              children: [
+                AppText.listViewText('${tr('salse_person')}:',
+                    isSubTitle: true),
+                AppText.listViewText(model.sanumNm!, isSubTitle: true),
+                AppStyles.buildPipe(),
+                FutureBuilder<List<String>?>(
+                    future: HiveService.getCustomerType(model.zstatus!),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData &&
+                          snapshot.connectionState == ConnectionState.done) {
+                        return AppText.listViewText(snapshot.data!.single,
+                            isSubTitle: true);
+                      }
+                      return Container(
+                        width: AppSize.padding * 4,
+                        height: AppSize.padding * 4,
+                      );
+                    }),
+                AppStyles.buildPipe(),
+                AppText.listViewText(model.zkmnoNm!, isSubTitle: true),
+                AppStyles.buildPipe(),
+                AppText.listViewText(
+                    model.xvisit != null && model.xvisit == 'Y'
+                        ? '${tr('visited')}'
+                        : '${tr('not_visited')}',
+                    isSubTitle: true),
+              ],
+            ),
+            defaultSpacing(),
+            Divider(),
+          ],
+        ),
       ),
     );
   }
@@ -398,7 +405,7 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
         });
   }
 
-  Widget buildResult(BuildContext context) {
+  Widget _buildResult(BuildContext context) {
     return Consumer<SalseSalseActivitySearchPageProvider>(
         builder: (context, provider, _) {
       return provider.isFirstIn ? Container() : _buildListView(provider);
@@ -455,9 +462,9 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                         }),
                       children: [
                         CustomerinfoWidget.buildDividingLine(),
-                        buildPanel(context),
+                        _buildPanel(context),
                         CustomerinfoWidget.buildDividingLine(),
-                        buildResult(context),
+                        _buildResult(context),
                         Padding(
                             padding: EdgeInsets.only(
                                 bottom: AppSize.appBarHeight / 2),
