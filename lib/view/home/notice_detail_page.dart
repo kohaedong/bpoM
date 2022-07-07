@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/home/notice_detail_page.dart
  * Created Date: 2022-07-05 13:17:36
- * Last Modified: 2022-07-06 15:07:44
+ * Last Modified: 2022-07-07 12:43:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -40,7 +40,7 @@ class NoticeDetailPage extends StatelessWidget {
               AppText.text('${noticeModel.sanumNm}',
                   style: AppTextStyle.default_14
                       .copyWith(color: AppColors.subText)),
-              AppStyles.buildPipe(AppTextStyle.default_14.fontSize!),
+              AppStyles.buildPipe(height: AppTextStyle.default_14.fontSize!),
               AppText.text(
                   '${FormatUtil.addDashForDateStr('${noticeModel.aedat}')} ${FormatUtil.addColonForTime('${noticeModel.aezet}')}',
                   style: AppTextStyle.default_14

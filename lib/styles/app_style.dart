@@ -1,3 +1,5 @@
+import 'package:medsalesportal/service/key_service.dart';
+
 import 'app_colors.dart';
 import 'app_text_style.dart';
 import 'package:flutter/material.dart';
@@ -84,13 +86,13 @@ class AppStyles {
   }
 
 // Pipe 공통 style.
-  static Widget buildPipe(double height) {
+  static Widget buildPipe({double? height}) {
     return Padding(
       padding: EdgeInsets.only(
           left: AppSize.defaultListItemSpacing,
           right: AppSize.defaultListItemSpacing),
       child: Container(
-          height: height,
+          height: height ?? AppTextStyle.h4.fontSize! - 2,
           decoration: BoxDecoration(
               border: Border(right: BorderSide(color: AppColors.textGrey)))),
     );

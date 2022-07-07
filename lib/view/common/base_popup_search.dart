@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-07 00:20:05
+ * Last Modified: 2022-07-07 12:39:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,24 +12,23 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
-import 'package:medsalesportal/globalProvider/base_popup_search_provider.dart';
-import 'package:medsalesportal/model/rfc/et_customer_model.dart';
-import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_search_type.dart';
 import 'package:medsalesportal/view/common/base_shimmer.dart';
+import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/common/widget_of_last_page_text.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_next_page_loading.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
+import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
+import 'package:medsalesportal/globalProvider/base_popup_search_provider.dart';
 
 class BasePopupSearch {
   final PopupSearchType? type;

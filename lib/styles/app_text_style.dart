@@ -43,6 +43,11 @@ class AppTextStyle {
       fontWeight: FontWeight.w400,
       fontStyle: FontStyle.normal,
       color: AppColors.subText);
+  static TextStyle get sub_16 => TextStyle(
+      fontSize: AppSize.fontSize(16),
+      fontWeight: FontWeight.w400,
+      fontStyle: FontStyle.normal,
+      color: AppColors.subText);
   static TextStyle get w500_14 => TextStyle(
       fontSize: AppSize.fontSize(14),
       fontWeight: FontWeight.w500,

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/default_shimmer.dart
  * Created Date: 2021-10-13 10:00:13
- * Last Modified: 2022-07-02 14:24:11
+ * Last Modified: 2022-07-07 12:43:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -104,7 +104,7 @@ class DefaultShimmer {
                 children: [
                   BaseShimmer.shimmerBox(AppTextStyle.sub_14.fontSize!,
                       AppSize.defaultContentsWidth * .2),
-                  AppStyles.buildPipe(AppTextStyle.sub_14.fontSize!),
+                  AppStyles.buildPipe(),
                   BaseShimmer.shimmerBox(
                       AppTextStyle.sub_14.fontSize!,
                       isNotPadding != null

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-07-06 22:44:57
+ * Last Modified: 2022-07-07 09:18:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -32,8 +32,10 @@ enum RequestType {
   HOME_NOTICE_DETAIL,
   NOTICE_DONT_SHOW_AGAIN,
   SEND_IMAGE_TO_SERVER,
+  // --------------
   SEARCH_STAFF,
   SEARCH_CUSTOMER,
+  SEARCH_SALSE_ACTIVITY
 }
 
 // [KolonBuildConfig] 빌드 옵션에 따라 url가 변한다.
@@ -79,6 +81,8 @@ extension RequestTypeExtension on RequestType {
       case RequestType.SEARCH_STAFF:
         return '$rfcURL/common';
       case RequestType.SEARCH_CUSTOMER:
+        return '$rfcURL/common';
+      case RequestType.SEARCH_SALSE_ACTIVITY:
         return '$rfcURL/common';
       case RequestType.REQEUST_TOKEN:
         return '$baseURL/common/oauth/token';
@@ -128,6 +132,8 @@ extension RequestTypeExtension on RequestType {
         return 'ES_RETURN,ET_STAFFLIST';
       case RequestType.SEARCH_CUSTOMER:
         return 'ES_RETURN,ET_KUNNR';
+      case RequestType.SEARCH_SALSE_ACTIVITY:
+        return 'ES_RETURN,T_LIST';
       case RequestType.SAP_SIGNIN_INFO:
         return 'ES_RETURN,ET_ORGHK,T_CODE,ET_VKGRP,IS_LOGIN,ES_LOGIN';
       case RequestType.HOME_NOTICE:
@@ -181,10 +187,13 @@ extension RequestTypeExtension on RequestType {
         return 'Z_LTSP_IF0700';
       case RequestType.RFC_COMMON_CODE:
         return 'Z_LTS_IFS0002';
+      // --------------------
       case RequestType.SEARCH_STAFF:
         return 'Z_LTS_IFS0068';
       case RequestType.SEARCH_CUSTOMER:
         return 'Z_LTSP_IF0030';
+      case RequestType.SEARCH_SALSE_ACTIVITY:
+        return 'Z_LTSP_IF0160';
       default:
         throw NullThrownError();
     }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_list_item.dart
  * Created Date: 2022-01-04 00:52:36
- * Last Modified: 2022-07-06 17:27:12
+ * Last Modified: 2022-07-07 12:43:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -50,7 +50,7 @@ Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
                   child: AppText.listViewText(
                       '${FormatUtil.addDashForMonth('${model.aedat}')} ${FormatUtil.addColonForTime('${model.aezet}')}',
                       isSubTitle: true)),
-              AppStyles.buildPipe(AppTextStyle.h4.fontSize! - 2),
+              AppStyles.buildPipe(),
               AppText.listViewText('${model.sanumNm}', isSubTitle: true)
             ],
           ),

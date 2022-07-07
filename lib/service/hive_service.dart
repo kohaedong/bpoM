@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/hive_service.dart
  * Created Date: 2021-08-17 13:17:07
- * Last Modified: 2022-07-06 13:41:16
+ * Last Modified: 2022-07-07 13:27:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,6 +18,7 @@ import 'package:medsalesportal/model/commonCode/t_code_model.dart';
 import 'package:medsalesportal/model/commonCode/t_values_model.dart';
 import 'package:medsalesportal/model/commonCode/et_dd07v_customer_category_model.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 
 typedef SearchEtDd07vCustomerConditional = bool Function(TCustomerCustomsModel);
 
@@ -289,18 +290,24 @@ class HiveService {
   }
 
   static Future<List<String>?> getProductFamily() async {
-    return getDataFromTCode('KPC_SPART', cdcls: 'LTS', cditm: '');
+    return await getDataFromTCode('KPC_SPART', cdcls: 'LTS', cditm: '');
   }
 
   static Future<List<String>?> getProductType() async {
-    return getDataFromTCode('KPC_SPART', cditm: '');
+    return await getDataFromTCode('KPC_SPART', cditm: '');
   }
 
   static Future<List<String>?> getBusinessPlace() async {
-    return getDataFromTCode('KPC_BIZ', cdcls: 'LTS', cditm: '');
+    return await getDataFromTCode('KPC_BIZ', cdcls: 'LTS', cditm: '');
   }
 
   static Future<List<String>?> getBusinessGroup() async {
-    return getDataFromTCode('VKGRP', cdcls: 'LTS', cditm: '');
+    return await getDataFromTCode('VKGRP', cdcls: 'LTS', cditm: '');
+  }
+
+  static Future<List<String>?> getCustomerType(String cditm) async {
+    var ss = await getDataFromTCode('CUST_STAT', cditm: cditm);
+    pr(ss);
+    return ss;
   }
 }

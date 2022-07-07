@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-07 00:15:39
+ * Last Modified: 2022-07-07 13:33:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,13 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/enums/popup_search_type.dart';
+import 'package:medsalesportal/model/rfc/t_list_model.dart';
+import 'package:medsalesportal/service/hive_service.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
+import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -47,7 +53,10 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
   late TextEditingController _companyDistributionEditingController;
   late ScrollController _scrollController;
   late ScrollController _scrollController2;
+  bool upLock = true;
+  bool downLock = true;
   DateTime selectedDate = DateTime.now();
+  var _scrollSwich = ValueNotifier<bool>(false);
   var _panelSwich = ValueNotifier(true);
   var mountedSwich = ValueNotifier(false);
   @override
@@ -254,36 +263,145 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
         });
   }
 
-  Widget _buildListViewItem() {
-    return Container();
+  Widget _buildListViewItem(
+      BuildContext context, TlistModel model, bool isShowLastPage) {
+    return Padding(
+      padding: AppSize.defaultSidePadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          defaultSpacing(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AppText.listViewText(
+                  FormatUtil.addDashForDateStr2(model.adate ?? ''),
+                  isSubTitle: true),
+              AppText.listViewText(
+                  model.xmeet == 'S' ? '${tr('success_lable')}' : '',
+                  isSubTitle: true)
+            ],
+          ),
+          defaultSpacing(),
+          AppText.listViewText(model.zskunnrNm!),
+          defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
+          Row(
+            children: [
+              AppText.listViewText('${tr('salse_person')}:', isSubTitle: true),
+              AppText.listViewText(model.sanumNm!, isSubTitle: true),
+              AppStyles.buildPipe(),
+              FutureBuilder<List<String>?>(
+                  future: HiveService.getCustomerType(model.zstatus!),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData &&
+                        snapshot.connectionState == ConnectionState.done) {
+                      return AppText.listViewText(snapshot.data!.single,
+                          isSubTitle: true);
+                    }
+                    return Container(
+                      width: AppSize.padding * 4,
+                      height: AppSize.padding * 4,
+                    );
+                  }),
+              AppStyles.buildPipe(),
+              AppText.listViewText(model.zkmnoNm!, isSubTitle: true),
+              AppStyles.buildPipe(),
+              AppText.listViewText(
+                  model.xvisit != null && model.xvisit == 'Y'
+                      ? '${tr('visited')}'
+                      : '${tr('not_visited')}',
+                  isSubTitle: true),
+            ],
+          ),
+          defaultSpacing(),
+          Divider(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTotal(BuildContext context) {
+    return Consumer<SalseSalseActivitySearchPageProvider>(
+        builder: (context, provider, _) {
+      return provider.searchResponseModel != null &&
+              provider.searchResponseModel!.tList!.isNotEmpty
+          ? Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.symmetric(
+                  vertical: AppSize.defaultListItemSpacing / 2,
+                  horizontal: AppSize.padding),
+              child: Row(
+                children: [
+                  AppText.text('총', style: AppTextStyle.sub_14),
+                  AppText.text(
+                      '${provider.searchResponseModel!.tList!.length}'),
+                  AppText.text('건', style: AppTextStyle.sub_14)
+                ],
+              ))
+          : Container();
+    });
+  }
+
+  Widget _buildListView(SalseSalseActivitySearchPageProvider provider) {
+    return Column(
+      children: [
+        _buildTotal(context),
+        provider.searchResponseModel != null &&
+                provider.searchResponseModel!.tList != null &&
+                provider.searchResponseModel!.tList!.isNotEmpty
+            ? ListView.builder(
+                shrinkWrap: true,
+                controller: _scrollController,
+                itemCount: provider.searchResponseModel!.tList!.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return _buildListViewItem(
+                      context,
+                      provider.searchResponseModel!.tList![index],
+                      !provider.hasMore &&
+                          index ==
+                              provider.searchResponseModel!.tList!.length - 1);
+                },
+              )
+            : provider.isLoadData
+                ? DefaultShimmer.buildDefaultResultShimmer()
+                : ListView(
+                    shrinkWrap: true,
+                    children: [
+                      Padding(
+                          padding: AppSize.nullValueWidgetPadding,
+                          child: BaseNullDataWidget.build())
+                    ],
+                  )
+      ],
+    );
+  }
+
+  Widget _buildScrollToTop(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+        valueListenable: _scrollSwich,
+        builder: (context, isCanScroll, _) {
+          return isCanScroll
+              ? Positioned(
+                  right: AppSize.padding,
+                  bottom: AppSize.padding,
+                  child: FloatingActionButton(
+                    backgroundColor: AppColors.whiteText,
+                    foregroundColor: AppColors.primary,
+                    onPressed: () {
+                      _scrollController2.animateTo(0,
+                          duration: Duration(milliseconds: 400),
+                          curve: Curves.easeIn);
+                    },
+                    child: AppImage.getImage(ImageType.SCROLL_TO_TOP),
+                  ))
+              : Container();
+        });
   }
 
   Widget buildResult(BuildContext context) {
     return Consumer<SalseSalseActivitySearchPageProvider>(
         builder: (context, provider, _) {
-      return provider.isFirstIn
-          ? Container()
-          : 1 + 1 == 2
-              ? ListView.builder(
-                  // physics: BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  controller: _scrollController,
-                  // itemCount: provider.model!.modelList!.length,
-                  itemCount: 10,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildListViewItem();
-                  },
-                )
-              : provider.isLoadData
-                  ? DefaultShimmer.buildDefaultResultShimmer()
-                  : ListView(
-                      shrinkWrap: true,
-                      children: [
-                        Padding(
-                            padding: AppSize.nullValueWidgetPadding,
-                            child: BaseNullDataWidget.build())
-                      ],
-                    );
+      return provider.isFirstIn ? Container() : _buildListView(provider);
     });
   }
 
@@ -303,35 +421,56 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
           ],
           builder: (context, _) {
             final p = context.read<SalseSalseActivitySearchPageProvider>();
-            return RefreshIndicator(
-                child: ListView(
-                  controller: _scrollController2
-                    ..addListener(() {
-                      if (_scrollController2.offset ==
-                              _scrollController2.position.maxScrollExtent &&
-                          !p.isLoadData &&
-                          p.hasMore) {
-                        final nextPageProvider =
-                            context.read<NextPageLoadingProvider>();
-                        nextPageProvider.show();
-                        p.nextPage().then((_) => nextPageProvider.stop());
-                      }
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                RefreshIndicator(
+                    child: ListView(
+                      controller: _scrollController2
+                        ..addListener(() {
+                          if (_scrollController2.offset > AppSize.realHeight) {
+                            if (downLock == true) {
+                              pr('downLock');
+                              downLock = false;
+                              upLock = true;
+                              _scrollSwich.value = true;
+                            }
+                          } else {
+                            pr('upLock');
+                            if (upLock == true) {
+                              upLock = false;
+                              downLock = true;
+                              _scrollSwich.value = false;
+                            }
+                          }
+                          if (_scrollController2.offset ==
+                                  _scrollController2.position.maxScrollExtent &&
+                              !p.isLoadData &&
+                              p.hasMore) {
+                            final nextPageProvider =
+                                context.read<NextPageLoadingProvider>();
+                            nextPageProvider.show();
+                            p.nextPage().then((_) => nextPageProvider.stop());
+                          }
+                        }),
+                      children: [
+                        CustomerinfoWidget.buildDividingLine(),
+                        buildPanel(context),
+                        CustomerinfoWidget.buildDividingLine(),
+                        buildResult(context),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                bottom: AppSize.appBarHeight / 2),
+                            child: NextPageLoadingWdiget.build(context))
+                      ],
+                    ),
+                    onRefresh: () {
+                      _panelSwich.value = false;
+                      return p.refresh();
                     }),
-                  children: [
-                    CustomerinfoWidget.buildDividingLine(),
-                    buildPanel(context),
-                    CustomerinfoWidget.buildDividingLine(),
-                    buildResult(context),
-                    Padding(
-                        padding:
-                            EdgeInsets.only(bottom: AppSize.appBarHeight / 2),
-                        child: NextPageLoadingWdiget.build(context))
-                  ],
-                ),
-                onRefresh: () {
-                  _panelSwich.value = false;
-                  return p.refresh();
-                });
+                _buildScrollToTop(context)
+              ],
+            );
           },
         ));
   }
