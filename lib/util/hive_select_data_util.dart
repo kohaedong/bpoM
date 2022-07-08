@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/util/hive_select_data_util.dart
  * Created Date: 2021-09-24 15:54:09
- * Last Modified: 2022-07-02 14:30:30
+ * Last Modified: 2022-07-08 13:59:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -493,6 +493,7 @@ class HiveSelectDataUtil {
 
 class HiveSelectResult {
   List<String>? strList;
+  List<String>? codeList;
   List<CellModel>? cellList;
   HiveSelectResult({
     this.cellList,

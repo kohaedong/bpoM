@@ -434,5 +434,7 @@
     "plz_enter_products_category":"사업을 선택해주세요.",
     "plz_enter_products_family":"제품군을 선택해주세요.",
     "products_category":"사업",
-    "plz_enter_search_key":"검색어를 입력해주세요."
+    "plz_enter_search_key_for_something":"{} (을)를 입력해주세요.",
+    "keyword_must_greater_than_two":"고객명은 2자 이상 입력하세요.",
+    "plz_select_one_more_than":"조회조건을 1가지 이상 입력해 주세요."
 }

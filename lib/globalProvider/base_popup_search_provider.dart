@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-08 11:12:06
+ * Last Modified: 2022-07-08 14:28:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -19,6 +19,7 @@ import 'package:medsalesportal/model/rfc/et_customer_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
@@ -29,6 +30,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
   String? customerInputText;
   String? selectedProductCategory;
   String? selectedProductFamily;
+  List<String>? productCategoryDataList;
+  List<String>? productFamilyDataList;
+
   EtStaffListResponseModel? staList;
   EtCustomerResponseModel? etCustomerResponseModel;
 
@@ -83,6 +87,24 @@ class BasePopupSearchProvider extends ChangeNotifier {
     if (value == null || (value.length == 1) || value == '') {
       notifyListeners();
     }
+  }
+
+  Future<List<String>?> getProductCategory() async {
+    productCategoryDataList = await HiveService.getBusinessCategory();
+    var dataStr = <String>[];
+    productCategoryDataList!.forEach((data) {
+      dataStr.add(data.substring(0, data.indexOf('-')));
+    });
+    return dataStr;
+  }
+
+  Future<List<String>?> getProductFamily() async {
+    productFamilyDataList = await HiveService.getProductFamily();
+    var dataStr = <String>[];
+    productFamilyDataList!.forEach((data) {
+      dataStr.add(data.substring(0, data.indexOf('-')));
+    });
+    return dataStr;
   }
 
   Future<List<String>?> getOrganizationFromDB() async {
@@ -172,11 +194,24 @@ class BasePopupSearchProvider extends ChangeNotifier {
     final isLogin = CacheService.getIsLogin();
     final esLogin = CacheService.getEsLogin();
     Map<String, dynamic>? body;
+    var zbiz = '';
+    var spart = '';
+    if (selectedProductCategory != null) {
+      var temp = productCategoryDataList!
+          .where((data) => data.contains(selectedProductCategory!))
+          .first;
+      zbiz = temp.substring(temp.indexOf('-') + 1);
+    }
+    if (selectedProductFamily != null) {
+      var temp = productFamilyDataList!
+          .where((data) => data.contains(selectedProductFamily!))
+          .first;
+      spart = temp.substring(temp.indexOf('-') + 1);
+    }
 
     body = {
       "methodName": RequestType.SEARCH_CUSTOMER.serverMethod,
       "methodParamMap": {
-        "IV_ZBIZ": "",
         "IV_DORMA": "X",
         "IV_ZKIND": "",
         "IV_SALES": "X",
@@ -185,11 +220,12 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "IV_VKGRP": "",
         "IV_POSSIB": "X",
         "IV_ZADD_NAME1": "",
-        "IV_SPART": "",
         "IV_ZIMPORT": "",
         "IV_ZTREAT3": "",
         "IV_HIDDEN": "",
         "IV_CLOSE": "",
+        "IV_SPART": spart,
+        "IV_ZBIZ": zbiz,
         "IV_SANUM": esLogin!.logid,
         "IV_NAME": customerInputText ?? '',
         "IV_ORGHK": esLogin.orghk,

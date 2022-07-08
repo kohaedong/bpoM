@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/kolonApp.dart
  * Created Date: 2022-07-02 14:46:59
- * Last Modified: 2022-07-06 15:05:08
+ * Last Modified: 2022-07-08 14:38:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -10,6 +10,8 @@
  * 												Discription													
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
+
+import 'package:medsalesportal/globalProvider/timer_provider.dart';
 
 import 'service/key_service.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +47,9 @@ class KolonAppState extends State<KolonApp> {
         ),
         ChangeNotifierProvider<NoticeIndexProvider>(
           create: (_) => NoticeIndexProvider(),
+        ),
+        ChangeNotifierProvider<TimerProvider>(
+          create: (_) => TimerProvider(),
         ),
       ],
       child: MediaQuery(

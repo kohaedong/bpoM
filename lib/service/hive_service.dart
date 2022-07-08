@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/hive_service.dart
  * Created Date: 2021-08-17 13:17:07
- * Last Modified: 2022-07-07 14:21:56
+ * Last Modified: 2022-07-08 14:32:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -263,7 +263,11 @@ class HiveService {
   }
 
   static Future<List<String>?> getDataFromTCode(String cdgrp,
-      {String? cditm, String? cdnam, String? cdcls, bool? isMatchCditm}) async {
+      {String? cditm,
+      String? cdnam,
+      String? cdcls,
+      bool? isMatchCditm,
+      bool? isWithCode}) async {
     final resultList = await HiveSelectDataUtil.select(HiveBoxType.T_CODE,
         tcodeConditional: (tcode) {
           if (cdnam != null) {
@@ -279,32 +283,44 @@ class HiveService {
           }
           return tcode.cdgrp == cdgrp && tcode.cditm != '';
         },
-        tcodeResultCondition: (tcode) =>
-            isMatchCditm != null ? tcode.cditm! : tcode.cdnam!);
+        tcodeResultCondition: (tcode) => isMatchCditm != null
+            ? tcode.cditm!
+            : isWithCode != null
+                ? '${tcode.cdnam!}-${tcode.cditm}'
+                : '${tcode.cdnam!}');
     return resultList.strList;
   }
 
-// 제약 영업포탈 공통코드 .
+// 고객사 운영상태.
   static Future<List<String>?> getProcessingStatus() async {
     return getDataFromTCode('SHIP_STAT', cdcls: 'LTS', cditm: '');
   }
 
+// 제품군
   static Future<List<String>?> getProductFamily() async {
-    return await getDataFromTCode('KPC_SPART', cdcls: 'LTS', cditm: '');
+    var a = await getDataFromTCode('KPC_SPART', cdcls: 'LTS', isWithCode: true);
+    pr(a);
+    return a;
   }
 
+//제품유형
   static Future<List<String>?> getProductType() async {
     return await getDataFromTCode('KPC_SPART', cditm: '');
   }
 
-  static Future<List<String>?> getBusinessPlace() async {
-    return await getDataFromTCode('KPC_BIZ', cdcls: 'LTS', cditm: '');
+// 사업
+  static Future<List<String>?> getBusinessCategory() async {
+    var a = await getDataFromTCode('KPC_BIZ', cdcls: 'LTS', isWithCode: true);
+    pr(a);
+    return a;
   }
 
+// 영업그룹
   static Future<List<String>?> getBusinessGroup() async {
     return await getDataFromTCode('VKGRP', cdcls: 'LTS', cditm: '');
   }
 
+// 처리상태
   static Future<List<String>?> getCustomerType(String cditm) async {
     return await getDataFromTCode('CUST_STAT', cditm: cditm);
   }
