@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-08 15:53:03
+ * Last Modified: 2022-07-08 16:36:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -338,10 +338,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
               p.customerInputText!.length < 2) {
             AppToast().show(context, tr('keyword_must_greater_than_two'));
           } else {
-            hideKeyboard(context);
-            Future.delayed(Duration(milliseconds: 500), () {
-              p.refresh();
-            });
+            p.refresh();
           }
         }, doNotWithPadding: true),
       ],
