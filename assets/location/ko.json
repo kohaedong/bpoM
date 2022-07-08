@@ -436,5 +436,12 @@
     "products_category":"사업",
     "plz_enter_search_key_for_something":"{} (을)를 입력해주세요.",
     "keyword_must_greater_than_two":"고객명은 2자 이상 입력하세요.",
-    "plz_select_one_more_than":"조회조건을 1가지 이상 입력해 주세요."
+    "plz_select_one_more_than":"조회조건을 1가지 이상 입력해 주세요.",
+    "salse_activity_manager":"영업활동 관리",
+    "salse_order_manager":"주문요청 관리",
+    "salse_order_search":"주문요청 조회",
+    "transaction_ledger":"거래원장 Report",
+    "buld_order_search":"도매주문 요청 조회",
+    "detail_book":"Detail Book"
+
 }

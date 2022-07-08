@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/route.dart
  * Created Date: 2022-07-02 14:47:58
- * Last Modified: 2022-07-07 13:43:37
+ * Last Modified: 2022-07-08 16:00:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -21,7 +21,6 @@ import 'package:medsalesportal/view/settings/font_setting_page.dart';
 import 'package:medsalesportal/view/detailBook/detail_book_page.dart';
 import 'package:medsalesportal/view/settings/notice_setting_page.dart';
 import 'package:medsalesportal/view/orderSearch/order_search_page.dart';
-import 'package:medsalesportal/view/salseReport/salse_report_page.dart';
 import 'package:medsalesportal/view/commonLogin/common_login_page.dart';
 import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
 import 'package:medsalesportal/view/orderManager/order_manager_page.dart';
@@ -29,6 +28,7 @@ import 'package:medsalesportal/view/bulkOrderSearch/bulk_order_search_page.dart'
 import 'package:medsalesportal/view/salesActivitySearch/salse_activity_detail_page.dart';
 import 'package:medsalesportal/view/salesActivitySearch/salse_activity_search_page.dart';
 import 'package:medsalesportal/view/salesActivityManager/sales_activity_manager_page.dart';
+import 'package:medsalesportal/view/transactionLedger/transaction_ledger_page.dart';
 
 Map<String, WidgetBuilder> routes = {
   SettingsPage.routeName: (context) => const SettingsPage(),
@@ -46,7 +46,7 @@ Map<String, WidgetBuilder> routes = {
   DetailBookPage.routeName: (context) => const DetailBookPage(),
   OrderManagerPage.routeName: (context) => const OrderManagerPage(),
   OrderSearchPage.routeName: (context) => const OrderSearchPage(),
-  SalseReportPage.routeName: (context) => const SalseReportPage(),
+  TransactionLedgerPage.routeName: (context) => const TransactionLedgerPage(),
   NoticeAllPage.routeName: (context) => const NoticeAllPage(),
   NoticeDetailPage.routeName: (context) => const NoticeDetailPage(),
   SalseActivityDetailPage.routeName: (context) =>

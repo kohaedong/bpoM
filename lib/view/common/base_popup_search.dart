@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-08 14:35:22
+ * Last Modified: 2022-07-08 15:53:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -338,7 +338,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
               p.customerInputText!.length < 2) {
             AppToast().show(context, tr('keyword_must_greater_than_two'));
           } else {
-            p.refresh();
+            hideKeyboard(context);
+            Future.delayed(Duration(milliseconds: 500), () {
+              p.refresh();
+            });
           }
         }, doNotWithPadding: true),
       ],
@@ -395,9 +398,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                 ? Padding(
                     padding: AppSize.defaultSearchPopupSidePadding,
                     child: Container(
-                        height: widget.type.height -
-                            AppSize.buttonHeight -
-                            widget.type.appBarHeight,
                         child: RefreshIndicator(
                             child: ListView.builder(
                               controller: _scrollController
@@ -572,12 +572,13 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
           width: AppSize.updatePopupWidth,
           height: widget.type.height,
           child: Stack(
+            fit: StackFit.expand,
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   _buildSearchBar(context),
-                  _buildListViewContents(context),
+                  Expanded(child: _buildListViewContents(context))
                 ],
               ),
               Positioned(
@@ -592,20 +593,29 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
               Positioned(
                   left: 0,
                   bottom: 0,
-                  child: Container(
-                    width: AppSize.defaultContentsWidth,
-                    decoration: BoxDecoration(
-                        border: Border(
-                            top: BorderSide(
-                                width: .7, color: AppColors.textGrey))),
-                    child: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Center(
-                          child: AppText.text(widget.type.buttonText,
-                              style: AppTextStyle.color_16(AppColors.primary)),
-                        )),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(AppSize.radius8),
+                            bottomRight: Radius.circular(AppSize.radius8)),
+                        child: Container(
+                            alignment: Alignment.center,
+                            width: AppSize.defaultContentsWidth,
+                            height: AppSize.buttonHeight,
+                            decoration: BoxDecoration(
+                                color: AppColors.whiteText,
+                                border: Border(
+                                    top: BorderSide(
+                                        color: AppColors.tableBorderColor,
+                                        width: AppSize.defaultBorderWidth))),
+                            child: AppText.text(
+                              widget.type.popupStrListType.first.buttonText,
+                              style: AppTextStyle.default_16
+                                  .copyWith(color: AppColors.primary),
+                            ))),
                   ))
             ],
           ),

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/image_type.dart
  * Created Date: 2021-08-20 14:37:40
- * Last Modified: 2022-07-05 21:23:18
+ * Last Modified: 2022-07-08 16:00:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,13 +12,13 @@
  */
 
 //* 이미지 url 사전 등록후 사용.
-import 'package:medsalesportal/view/bulkOrderSearch/bulk_order_search_page.dart';
 import 'package:medsalesportal/view/detailBook/detail_book_page.dart';
 import 'package:medsalesportal/view/orderManager/order_manager_page.dart';
 import 'package:medsalesportal/view/orderSearch/order_search_page.dart';
-import 'package:medsalesportal/view/salesActivityManager/sales_activity_manager_page.dart';
+import 'package:medsalesportal/view/bulkOrderSearch/bulk_order_search_page.dart';
+import 'package:medsalesportal/view/transactionLedger/transaction_ledger_page.dart';
 import 'package:medsalesportal/view/salesActivitySearch/salse_activity_search_page.dart';
-import 'package:medsalesportal/view/salseReport/salse_report_page.dart';
+import 'package:medsalesportal/view/salesActivityManager/sales_activity_manager_page.dart';
 
 enum ImageType {
   SPLASH_ICON,
@@ -105,7 +105,7 @@ extension RequestTypeExtension on ImageType {
       case ImageType.APP_BULK_ORDER_SEARCH:
         return BulkOrderSearchPage.routeName;
       case ImageType.APP_SALSE_REPORT:
-        return SalseReportPage.routeName;
+        return TransactionLedgerPage.routeName;
       case ImageType.APP_DETAIL_BOOK:
         return DetailBookPage.routeName;
       default:

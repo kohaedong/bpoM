@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-05 10:27:36
+ * Last Modified: 2022-07-08 16:06:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,23 +11,27 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:medsalesportal/styles/export_common.dart';
+import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 
-class SalseReportPage extends StatefulWidget {
-  const SalseReportPage({Key? key}) : super(key: key);
+class TransactionLedgerPage extends StatefulWidget {
+  const TransactionLedgerPage({Key? key}) : super(key: key);
   static const String routeName = '/salseReportPage';
   @override
-  State<SalseReportPage> createState() => _SalseReportPageState();
+  State<TransactionLedgerPage> createState() => _TransactionLedgerPageState();
 }
 
-class _SalseReportPageState extends State<SalseReportPage> {
+class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   @override
   Widget build(BuildContext context) {
     return BaseLayout(
         hasForm: true,
-        appBar: null,
+        appBar: MainAppBar(context,
+            titleText: AppText.text('${tr('transaction_ledger')}',
+                style: AppTextStyle.w500_20)),
         child: Center(
           child: AppText.text('/salseReportPage'),
         ));
