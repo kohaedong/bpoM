@@ -160,7 +160,8 @@ class AppSize {
   static double get popupListDefaultItemExtent => 40.w;
   static double get popupHeightWidthOneRowSearchBar => 420.w;
   static double get popupHeightWidthTwoRowsSearchBar => 530.w;
-  static double get titleHeightInOneRowsSearchBarPopup => 88.w;
+  // static double get titleHeightInOneRowsSearchBarPopup => 88.w;
+  static double get popupAppbarHeight => 88.w;
   static double get titleHeightInTwoRowsSearchBarPopup => 199.w;
   static double get searchBarTitleSidePadding => 20.w;
   static EdgeInsets get defaultTextFieldPadding =>

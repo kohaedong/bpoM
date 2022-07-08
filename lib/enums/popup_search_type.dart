@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/popup_search_type.dart
  * Created Date: 2021-09-10 21:38:04
- * Last Modified: 2022-07-06 17:39:36
+ * Last Modified: 2022-07-08 10:15:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/styles/app_size.dart';
 
 import 'popup_list_type.dart';
 
@@ -87,6 +88,27 @@ extension PopupSearchTypeExtension on PopupSearchType {
           OneCellType.SEARCH_PLANT_CONDITION, // index[2]
           OneCellType.SEARCH_PLANT_RESULT, // index[3]
         ];
+    }
+  }
+
+  double get height {
+    switch (this) {
+      case PopupSearchType.SEARCH_CUSTOMER:
+        return AppSize.realHeight * .8; // 영업사원
+      default:
+        return AppSize.popupHeightWidthOneRowSearchBar;
+    }
+  }
+
+  double get appBarHeight {
+    switch (this) {
+      case PopupSearchType.SEARCH_CUSTOMER:
+        return AppSize.defaultTextFieldHeight * 3 +
+            AppSize.defaultListItemSpacing * 5 +
+            AppSize.appBarHeight +
+            AppSize.secondButtonHeight; // 영업사원
+      default:
+        return AppSize.popupAppbarHeight;
     }
   }
 }

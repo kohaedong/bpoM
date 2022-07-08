@@ -430,7 +430,9 @@
     "is_interview":"면담여부",
     "reason_for_interview_faild":"면담실패 사유",
     "activity_type_2":"활동유형",
-    "activity_detail":"활동상세"
+    "activity_detail":"활동상세",
+    "plz_enter_products_category":"사업을 선택해주세요.",
+    "plz_enter_products_family":"제품군을 선택해주세요."
 
 
 }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-07 17:06:31
+ * Last Modified: 2022-07-08 10:21:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -187,7 +187,9 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                                     '${tr('salse_person')}',
                                     BaseInputWidget(
                                       context: context,
-                                      iconType: InputIconType.SEARCH,
+                                      iconType: tuple.item1
+                                          ? InputIconType.SEARCH
+                                          : null,
                                       iconColor: tuple.item2 != null
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,

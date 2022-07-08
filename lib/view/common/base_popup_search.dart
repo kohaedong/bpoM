@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-07 16:49:43
+ * Last Modified: 2022-07-08 10:18:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,9 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/service/hive_service.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -91,204 +93,23 @@ class _PopupSearchThreeRowContentsState
     super.dispose();
   }
 
-  Widget buildPlantSearchBar(BuildContext context) {
-    final p = context.read<BasePopupSearchProvider>();
-
-    var width = AppSize.defaultContentsWidth -
-        AppSize.textFiledDefaultSpacing * 2 -
-        AppSize.padding;
-
-    return Container(
-      child: Column(
-        children: [
-          Padding(
-              padding: EdgeInsets.only(top: AppSize.searchBarTitleSidePadding)),
-          Selector<BasePopupSearchProvider, String?>(
-            selector: (context, provider) => provider.selectedThreeRowValue1,
-            builder: (context, org, _) {
-              return Builder(builder: (context) {
-                return BaseInputWidget(
-                  context: context,
-                  iconType: InputIconType.SELECT,
-                  hintText: org != null ? org : '${tr('plz_select')}',
-                  width: width,
-                  hintTextStyleCallBack: org != null
-                      ? () => AppTextStyle.default_16
-                      : () => AppTextStyle.hint_16,
-                  commononeCellDataCallback: p.getOrganizationFromDB,
-                  oneCellType: widget.type.popupStrListType[0],
-                  isSelectedStrCallBack: (str) {
-                    p.setThreeRowValue1(str);
-                    if (_plantCodeController != null) {
-                      _plantCodeController!.text = '';
-                    }
-                  },
-                  enable: false,
-                );
-              });
-            },
-          ),
-          Padding(
-              padding: EdgeInsets.only(top: AppSize.defaultListItemSpacing)),
-          Selector<BasePopupSearchProvider, String?>(
-            selector: (context, provider) => provider.selectedThreeRowValue2,
-            builder: (context, cannel, _) {
-              return Builder(builder: (context) {
-                return BaseInputWidget(
-                  context: context,
-                  iconType: InputIconType.SELECT,
-                  hintText: cannel != null ? cannel : '${tr('plz_select')}',
-                  width: width,
-                  hintTextStyleCallBack: cannel != null
-                      ? () => AppTextStyle.default_16
-                      : () => AppTextStyle.hint_16,
-                  commononeCellDataCallback: p.getCirculationFromDB,
-                  oneCellType: widget.type.popupStrListType[1],
-                  isSelectedStrCallBack: (str) {
-                    p.setThreeRowValue2(str);
-                  },
-                  enable: false,
-                );
-              });
-            },
-          ),
-          Padding(
-              padding: EdgeInsets.only(top: AppSize.defaultListItemSpacing)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Selector<BasePopupSearchProvider, String?>(
-                  selector: (context, provider) =>
-                      provider.selectedThreeRowValue3,
-                  builder: (context, value3, _) {
-                    return Builder(builder: (context) {
-                      return BaseInputWidget(
-                          context: context,
-                          width:
-                              (width - AppSize.textFiledDefaultSpacing) * .43,
-                          oneCellType: widget.type.popupStrListType[2],
-                          enable: false,
-                          iconType: InputIconType.SELECT,
-                          hintTextStyleCallBack: () => AppTextStyle.default_16,
-                          isSelectedStrCallBack: (str) =>
-                              p.setThreeRowValue3(str),
-                          hintText: value3 != null
-                              ? value3
-                              : widget.type.hintText![2]);
-                    });
-                  }),
-              SizedBox(width: AppSize.textFiledDefaultSpacing),
-              Selector<BasePopupSearchProvider, String?>(
-                  selector: (context, provider) =>
-                      provider.selectedThreeRowValue4,
-                  builder: (context, searchCondition, _) {
-                    return Builder(builder: (context) {
-                      return BaseInputWidget(
-                          context: context,
-                          width:
-                              (width - AppSize.textFiledDefaultSpacing) * .57,
-                          enable: true,
-                          hintTextStyleCallBack: searchCondition != null
-                              ? null
-                              : () => AppTextStyle.hint_16,
-                          iconType: searchCondition != null
-                              ? InputIconType.DELETE_AND_SEARCH
-                              : InputIconType.SEARCH,
-                          onChangeCallBack: (e) =>
-                              p.setThreeRowValue4(e == '' ? null : e),
-                          iconColor: searchCondition == null
-                              ? AppColors.textFieldUnfoucsColor
-                              : null,
-                          defaultIconCallback: () {
-                            hideKeyboard(context);
-                            // p.searchForKeyWord();
-                          },
-                          textEditingController: _plantCodeController,
-                          otherIconcallback: () {
-                            p.setThreeRowValue4(null);
-                            _plantCodeController!.text = '';
-                          },
-                          hintText: searchCondition != null
-                              ? null
-                              : '${tr('plz_enter')}');
-                    });
-                  }),
-            ],
-          ),
-          Divider(
-            color: AppColors.textGrey,
-          )
-        ],
-      ),
-    );
-  }
-
-  // Widget buildPlantListViewContents(BuildContext context) {
-  //   final p = context.read<BasePopupSearchProvider>();
-  //   return FutureBuilder<BasePoupSearchResult>(
-  //       future: p.searchPlant(),
-  //       builder: (context, snapshot) {
-  //         return Selector<BasePopupSearchProvider, List<PlantResultModel>?>(
-  //           selector: (context, provider) => provider.plantList,
-  //           builder: (context, plantList, _) {
-  //             return plantList != null && plantList.isNotEmpty
-  //                 ? ListView.builder(
-  //                     shrinkWrap: true,
-  //                     itemExtent: AppSize.defaultTextFieldHeight,
-  //                     padding: EdgeInsets.only(
-  //                         top: AppSize.padding,
-  //                         bottom: AppSize.padding,
-  //                         left: AppSize.padding * 2,
-  //                         right: AppSize.padding * 2),
-  //                     physics: BouncingScrollPhysics(),
-  //                     itemCount: plantList.length,
-  //                     itemBuilder: (context, index) {
-  //                       return InkWell(
-  //                         onTap: () {
-  //                           Navigator.pop(context, plantList[index]);
-  //                         },
-  //                         child: Column(
-  //                           crossAxisAlignment: CrossAxisAlignment.start,
-  //                           mainAxisAlignment: MainAxisAlignment.center,
-  //                           children: [
-  //                             AppStyles.text(
-  //                                 '${plantList[index].pName!}(${plantList[index].pNumber})',
-  //                                 AppTextStyle.default_16,
-  //                                 maxLines: 2,
-  //                                 overflow: TextOverflow.ellipsis),
-  //                             Padding(
-  //                                 padding: EdgeInsets.only(
-  //                                     top: AppSize.defaultListItemSpacing))
-  //                           ],
-  //                         ),
-  //                       );
-  //                     })
-  //                 : shimmer();
-  //           },
-  //         );
-  //       });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => BasePopupSearchProvider(),
       builder: (context, _) {
-        final p = context.read<BasePopupSearchProvider>();
-        p.setDefaultOrganization(bodyMaps: widget.bodyMap);
         return Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(AppSize.radius8))),
           width: AppSize.updatePopupWidth,
-          height: AppSize.popupHeightWidthOneRowSearchBar,
+          height: widget.type.height,
           child: Stack(
             children: [
               Container(
-                  height: AppSize.popupHeightWidthOneRowSearchBar -
-                      AppSize.buttonHeight,
+                  height: widget.type.height - AppSize.buttonHeight,
                   child: Column(
                     children: [
-                      buildPlantSearchBar(context),
+                      // buildPlantSearchBar(context),
                       Expanded(
                           child:
 
@@ -397,47 +218,140 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     final p = context.read<BasePopupSearchProvider>();
 
     return Expanded(
-        child: Selector<BasePopupSearchProvider, String?>(
-            selector: (context, provider) => provider.customerInputText,
-            builder: (context, customerInputText, _) {
-              return Builder(builder: (context) {
-                return BaseInputWidget(
-                    context: context,
-                    width: AppSize.defaultContentsWidth - AppSize.padding * 2,
-                    enable: true,
-                    hintTextStyleCallBack: customerInputText != null
-                        ? null
-                        : () => AppTextStyle.hint_16,
-                    iconType: customerInputText != null
-                        ? InputIconType.DELETE_AND_SEARCH
-                        : InputIconType.SEARCH,
-                    onChangeCallBack: (e) => p.setCustomerInputText(e),
-                    iconColor: customerInputText == null
-                        ? AppColors.textFieldUnfoucsColor
-                        : null,
-                    defaultIconCallback: () {
-                      hideKeyboard(context);
-                      p.refresh();
-                    },
-                    textEditingController: _customerInputController,
-                    otherIconcallback: () {
-                      p.setCustomerInputText(null);
-                      _customerInputController.text = '';
-                    },
-                    hintText: customerInputText != null
-                        ? null
-                        : '${tr('plz_enter')}');
-              });
-            }));
+        child: Column(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Selector<BasePopupSearchProvider, String?>(
+                selector: (context, provider) =>
+                    provider.selectedProductCategory,
+                builder: (context, selectedProductCategory, _) {
+                  return Builder(builder: (context) {
+                    return BaseInputWidget(
+                        context: context,
+                        width: (AppSize.defaultContentsWidth -
+                            AppSize.padding * 2),
+                        enable: false,
+                        hintTextStyleCallBack: selectedProductCategory != null
+                            ? () => AppTextStyle.default_16
+                            : () => AppTextStyle.hint_16,
+                        iconType: InputIconType.SELECT,
+                        iconColor: selectedProductCategory == null
+                            ? AppColors.textFieldUnfoucsColor
+                            : null,
+                        isShowDeleteForHintText:
+                            selectedProductCategory != null ? true : false,
+                        defaultIconCallback: () => p.setProductsCategory(null),
+                        oneCellType: OneCellType.SEARCH_PRODUCTS_CATEGORY,
+                        isSelectedStrCallBack: (str) =>
+                            p.setProductsCategory(str),
+                        hintText: selectedProductCategory != null
+                            ? null
+                            : '${tr('plz_enter_products_category')}');
+                  });
+                }),
+          ],
+        ),
+        defaultSpacing(),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Selector<BasePopupSearchProvider, String?>(
+                selector: (context, provider) => provider.selectedProductFamily,
+                builder: (context, selectedProductFamily, _) {
+                  return Builder(builder: (context) {
+                    return BaseInputWidget(
+                        context: context,
+                        width: (AppSize.defaultContentsWidth -
+                            AppSize.padding * 2),
+                        enable: false,
+                        hintTextStyleCallBack: selectedProductFamily != null
+                            ? () => AppTextStyle.default_16
+                            : () => AppTextStyle.hint_16,
+                        iconType: InputIconType.SELECT,
+                        iconColor: selectedProductFamily == null
+                            ? AppColors.textFieldUnfoucsColor
+                            : null,
+                        isShowDeleteForHintText:
+                            selectedProductFamily != null ? true : false,
+                        defaultIconCallback: () => p.setProductsFamily(null),
+                        oneCellType: OneCellType.SEARCH_PRODUCTS_CATEGORY,
+                        isSelectedStrCallBack: (str) =>
+                            p.setProductsFamily(str),
+                        hintText: selectedProductFamily != null
+                            ? null
+                            : '${tr('plz_enter_products_family')}');
+                  });
+                }),
+          ],
+        ),
+        defaultSpacing(),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Selector<BasePopupSearchProvider, String?>(
+                selector: (context, provider) => provider.customerInputText,
+                builder: (context, customerInputText, _) {
+                  return Builder(builder: (context) {
+                    return BaseInputWidget(
+                        context: context,
+                        width: (AppSize.defaultContentsWidth -
+                            AppSize.padding * 2),
+                        enable: true,
+                        hintTextStyleCallBack: customerInputText != null
+                            ? null
+                            : () => AppTextStyle.hint_16,
+                        iconType: customerInputText != null
+                            ? InputIconType.DELETE
+                            : null,
+                        onChangeCallBack: (e) => p.setCustomerInputText(e),
+                        iconColor: customerInputText == null
+                            ? AppColors.textFieldUnfoucsColor
+                            : null,
+                        defaultIconCallback: () {
+                          p.setCustomerInputText(null);
+                          _customerInputController.text = '';
+                        },
+                        textEditingController: _customerInputController,
+                        hintText: customerInputText != null
+                            ? null
+                            : '${tr('plz_enter')}');
+                  });
+                }),
+          ],
+        ),
+        defaultSpacing(),
+        AppStyles.buildSearchButton(context, tr('search'), () {},
+            doNotWithPadding: true),
+      ],
+    ));
   }
 
   Widget _buildSearchBar(BuildContext context) {
     return Container(
-      height: AppSize.titleHeightInOneRowsSearchBarPopup,
+      height: widget.type.appBarHeight,
       child: Column(
         children: [
-          Padding(
-              padding: EdgeInsets.only(top: AppSize.searchBarTitleSidePadding)),
+          Container(
+              height: AppSize.buttonHeight,
+              width: AppSize.updatePopupWidth,
+              child: Padding(
+                  padding: EdgeInsets.only(left: AppSize.padding),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: AppText.text('Title', style: AppTextStyle.w500_18),
+                  ))),
+          Divider(
+            height: AppSize.dividerHeight,
+            color: AppColors.textGrey,
+          ),
+          defaultSpacing(),
+          // Padding(
+          //     padding: EdgeInsets.only(top: AppSize.searchBarTitleSidePadding)),
           widget.type == PopupSearchType.SEARCH_SALSE_PERSON
               ? _buildPersonSearchBar(context)
               : widget.type == PopupSearchType.SEARCH_CUSTOMER
@@ -469,9 +383,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                 ? Padding(
                     padding: AppSize.defaultSearchPopupSidePadding,
                     child: Container(
-                        height: AppSize.popupHeightWidthOneRowSearchBar -
+                        height: widget.type.height -
                             AppSize.buttonHeight -
-                            AppSize.titleHeightInOneRowsSearchBarPopup,
+                            widget.type.appBarHeight,
                         child: RefreshIndicator(
                             child: ListView.builder(
                               controller: _scrollController
@@ -531,9 +445,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   )
                 : provider.isLoadData
                     ? Container(
-                        height: AppSize.popupHeightWidthOneRowSearchBar -
+                        height: widget.type.height -
                             AppSize.buttonHeight -
-                            AppSize.titleHeightInOneRowsSearchBarPopup,
+                            widget.type.appBarHeight,
                         child: Padding(
                           padding: AppSize.defaultSidePadding,
                           child: DefaultShimmer.buildDefaultPopupShimmer(),
@@ -643,7 +557,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(AppSize.radius8))),
           width: AppSize.updatePopupWidth,
-          height: AppSize.popupHeightWidthOneRowSearchBar,
+          height: widget.type.height,
           child: Stack(
             children: [
               Column(

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-07 09:04:36
+ * Last Modified: 2022-07-08 09:51:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -19,36 +19,25 @@ import 'package:medsalesportal/model/rfc/et_customer_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class BasePopupSearchProvider extends ChangeNotifier {
   bool isLoadData = false;
-  String? selectedOneRowValue1;
   String? personInputText;
   String? customerInputText;
-  String? selectedThreeRowValue1;
-  String? selectedThreeRowValue2;
-  String? selectedThreeRowValue3;
-  String? selectedThreeRowValue4;
-  String? selectedOneRowValue1DefaultValue;
+  String? selectedProductCategory;
+  String? selectedProductFamily;
   EtStaffListResponseModel? staList;
   EtCustomerResponseModel? etCustomerResponseModel;
-  // List<PlantResultModel>? plantList;
+
   OneCellType? type;
   Map<String, dynamic>? bodyMap;
 
 //--------------- plant Code----------
   String? selectedOrganizationCode;
   String? seletedCirculationCode;
-
-  bool get isOneRowValue1Selected => selectedOneRowValue1 != null;
   bool get isOneRowValue2Selected => personInputText != null;
-  bool get isThreeRowValue1Selected => selectedThreeRowValue1 != null;
-  bool get isThreeRowValue2Selected => selectedThreeRowValue2 != null;
-  bool get isThreeRowValue3Selected => selectedThreeRowValue3 != null;
-  bool get isThreeRowValue4Selected => selectedThreeRowValue4 != null;
 
 //------ pageing ----------
   int pos = 0;
@@ -69,84 +58,28 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return null;
   }
 
-  void setDefaultOrganization({Map<String, dynamic>? bodyMaps}) async {
-    if (this.bodyMap == null) {
-      this.bodyMap = bodyMaps;
-    }
-    if (bodyMap != null) {
-      if (bodyMap!['IV_VKORG'] != null &&
-          bodyMap!['IV_VKORG'].toString().trim() != '') {
-        selectedOrganizationCode = bodyMap!['IV_VKORG'].toString().trim();
-        await HiveService.getSingleDataBySearchKey(
-                selectedOrganizationCode!, 'H_TVKO',
-                searchLevel: 1, group1SearchKey: selectedOrganizationCode!)
-            .then((result) => selectedThreeRowValue1 = result);
-      }
-      if (bodyMap!['IV_VTWEG'] != null) {
-        seletedCirculationCode = bodyMap!['IV_VTWEG'];
-        await HiveService.getDataFromTValue(
-                group1SearchKey: selectedOrganizationCode!,
-                group2SearchKey: seletedCirculationCode,
-                searchLevel: 2,
-                tname: 'H_TVKOV')
-            .then((list) => selectedThreeRowValue2 = list!.single);
-      } else {
-        // default
-        seletedCirculationCode = '10';
-        selectedThreeRowValue2 = '내수';
-      }
-    }
-    notifyListeners();
-  }
-
-  setPersonInputText(String? value) {
+  void setPersonInputText(String? value) {
     this.personInputText = value;
     if (value == null || (value.length == 1) || value == '') {
       notifyListeners();
     }
   }
 
-  setCustomerInputText(String? value) {
+  void setProductsCategory(String? value) {
+    selectedProductCategory = value;
+    notifyListeners();
+  }
+
+  void setProductsFamily(String? value) {
+    selectedProductFamily = value;
+    notifyListeners();
+  }
+
+  void setCustomerInputText(String? value) {
     this.customerInputText = value;
     if (value == null || (value.length == 1) || value == '') {
       notifyListeners();
     }
-  }
-
-  setThreeRowValue1(String value) async {
-    this.selectedThreeRowValue1 = value;
-    this.selectedThreeRowValue2 = null;
-    this.selectedThreeRowValue4 = null;
-    selectedOrganizationCode = await HiveService.getSingleDataBySearchKey(
-        selectedThreeRowValue1!, 'H_TVKO',
-        searchLevel: 1,
-        group1SearchKey: selectedThreeRowValue1,
-        isMatchGroup1KeyList: true);
-    // notifyListeners();
-  }
-
-  setThreeRowValue2(String value) async {
-    this.selectedThreeRowValue2 = value;
-    seletedCirculationCode = await HiveService.getSingleDataBySearchKey(
-      selectedThreeRowValue2!,
-      'H_TVKOV',
-      searchLevel: 2,
-      group1SearchKey: selectedOrganizationCode,
-      group2SearchKey: selectedThreeRowValue2,
-      isMatchGroup2KeyList: true,
-    );
-    notifyListeners();
-  }
-
-  setThreeRowValue3(String? value) {
-    this.selectedThreeRowValue3 = value;
-    notifyListeners();
-  }
-
-  setThreeRowValue4(String? value) {
-    if (value == null) {}
-    this.selectedThreeRowValue4 = value;
-    notifyListeners();
   }
 
   Future<List<String>?> getOrganizationFromDB() async {
@@ -193,7 +126,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "functionName": RequestType.SEARCH_STAFF.serverMethod,
       }
     };
-    print(selectedOneRowValue1);
     _api.init(RequestType.SEARCH_STAFF);
     final result = await _api.request(body: body);
     if (result == null || result.statusCode != 200) {

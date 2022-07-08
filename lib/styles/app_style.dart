@@ -31,9 +31,12 @@ class AppStyles {
 
   // 검색버튼 사전 정의.
   static Widget buildSearchButton(
-      BuildContext context, String buttonText, Function callback) {
+      BuildContext context, String buttonText, Function callback,
+      {bool? doNotWithPadding}) {
     return Padding(
-        padding: AppSize.customerManagerPageSearchButtonPadding,
+        padding: doNotWithPadding != null
+            ? EdgeInsets.all(AppSize.zero)
+            : AppSize.customerManagerPageSearchButtonPadding,
         child: AppStyles.buildButton(
             context,
             '$buttonText',
