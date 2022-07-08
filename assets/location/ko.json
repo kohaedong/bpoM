@@ -432,7 +432,7 @@
     "activity_type_2":"활동유형",
     "activity_detail":"활동상세",
     "plz_enter_products_category":"사업을 선택해주세요.",
-    "plz_enter_products_family":"제품군을 선택해주세요."
-
-
+    "plz_enter_products_family":"제품군을 선택해주세요.",
+    "products_category":"사업",
+    "plz_enter_search_key":"검색어를 입력해주세요."
 }

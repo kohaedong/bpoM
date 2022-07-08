@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-08 09:51:37
+ * Last Modified: 2022-07-08 11:12:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -24,6 +24,7 @@ import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class BasePopupSearchProvider extends ChangeNotifier {
   bool isLoadData = false;
+  bool isFirestRun = true;
   String? personInputText;
   String? customerInputText;
   String? selectedProductCategory;
@@ -46,7 +47,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
   Future<void> refresh() async {
     pos = 0;
     staList = null;
+    hasMore = true;
     etCustomerResponseModel = null;
+    staList = null;
     onSearch(type!, true);
   }
 
@@ -156,9 +159,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return BasePoupSearchResult(false);
   }
 
-  Future<BasePoupSearchResult> searchCustomer(
-    bool isMounted,
-  ) async {
+  Future<BasePoupSearchResult> searchCustomer(bool isMounted) async {
+    if (isFirestRun) {
+      isFirestRun = false;
+      return BasePoupSearchResult(false);
+    }
     isLoadData = true;
     if (isMounted) {
       notifyListeners();

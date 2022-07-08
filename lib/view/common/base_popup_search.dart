@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-08 10:18:19
+ * Last Modified: 2022-07-08 11:07:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -179,9 +179,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
 
   Widget _buildPersonSearchBar(BuildContext context) {
     final p = context.read<BasePopupSearchProvider>();
-
-    return Expanded(
-        child: Selector<BasePopupSearchProvider, String?>(
+    return Column(
+      children: [
+        defaultSpacing(),
+        Selector<BasePopupSearchProvider, String?>(
             selector: (context, provider) => provider.personInputText,
             builder: (context, personInputText, _) {
               return Builder(builder: (context) {
@@ -208,10 +209,13 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       p.setPersonInputText(null);
                       _personInputController.text = '';
                     },
-                    hintText:
-                        personInputText != null ? null : '${tr('plz_enter')}');
+                    hintText: personInputText != null
+                        ? null
+                        : '${tr('plz_enter_search_key')}');
               });
-            }));
+            })
+      ],
+    );
   }
 
   Widget _buildCustomerSearchBar(BuildContext context) {
@@ -278,7 +282,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                         isShowDeleteForHintText:
                             selectedProductFamily != null ? true : false,
                         defaultIconCallback: () => p.setProductsFamily(null),
-                        oneCellType: OneCellType.SEARCH_PRODUCTS_CATEGORY,
+                        oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,
                         isSelectedStrCallBack: (str) =>
                             p.setProductsFamily(str),
                         hintText: selectedProductFamily != null
@@ -319,14 +323,16 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                         textEditingController: _customerInputController,
                         hintText: customerInputText != null
                             ? null
-                            : '${tr('plz_enter')}');
+                            : '${tr('plz_enter_search_key')}');
                   });
                 }),
           ],
         ),
         defaultSpacing(),
-        AppStyles.buildSearchButton(context, tr('search'), () {},
-            doNotWithPadding: true),
+        AppStyles.buildSearchButton(context, tr('search'), () {
+          final p = context.read<BasePopupSearchProvider>();
+          p.onSearch(widget.type.popupStrListType.first, true);
+        }, doNotWithPadding: true),
       ],
     ));
   }
@@ -337,19 +343,20 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
       child: Column(
         children: [
           Container(
-              height: AppSize.buttonHeight,
-              width: AppSize.updatePopupWidth,
-              child: Padding(
-                  padding: EdgeInsets.only(left: AppSize.padding),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: AppText.text('Title', style: AppTextStyle.w500_18),
-                  ))),
+            padding: EdgeInsets.only(left: AppSize.padding),
+            alignment: Alignment.centerLeft,
+            height: AppSize.buttonHeight,
+            width: AppSize.updatePopupWidth,
+            child: AppText.text(widget.type.popupStrListType[0].title,
+                style: AppTextStyle.w500_18),
+          ),
           Divider(
-            height: AppSize.dividerHeight,
+            height: 1,
             color: AppColors.textGrey,
           ),
-          defaultSpacing(),
+          widget.type == PopupSearchType.SEARCH_CUSTOMER
+              ? defaultSpacing()
+              : Container(),
           // Padding(
           //     padding: EdgeInsets.only(top: AppSize.searchBarTitleSidePadding)),
           widget.type == PopupSearchType.SEARCH_SALSE_PERSON
@@ -357,9 +364,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
               : widget.type == PopupSearchType.SEARCH_CUSTOMER
                   ? _buildCustomerSearchBar(context)
                   : Container(),
-          Divider(
-            color: AppColors.textGrey,
-          )
         ],
       ),
     );
@@ -474,8 +478,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         Navigator.pop(context, model);
       },
       child: Padding(
-          padding:
-              index == 0 ? EdgeInsets.all(0) : AppSize.searchPopupListPadding,
+          padding: index == 0
+              ? EdgeInsets.only(bottom: AppSize.defaultListItemSpacing)
+              : AppSize.searchPopupListPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

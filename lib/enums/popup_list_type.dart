@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/list_group_type.dart
  * Created Date: 2021-09-10 09:52:32
- * Last Modified: 2022-07-08 09:56:30
+ * Last Modified: 2022-07-08 10:44:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -92,6 +92,8 @@ extension OneCellTypeExtension on OneCellType {
     switch (this) {
       case OneCellType.SEARCH_CUSTOMER:
         return '${tr('search_customer')}';
+      case OneCellType.SEARCH_SALSE_PERSON:
+        return '${tr('sales_person')}';
       case OneCellType.SEARCH_CUSOMER_TYPE:
         return '${tr('customer_type')}';
       case OneCellType.CUSTOMER_RELATION:
@@ -198,6 +200,12 @@ extension OneCellTypeExtension on OneCellType {
       // medSalsePortal
       case OneCellType.MANAGER:
         return '${tr('manager')}';
+      case OneCellType.SEARCH_CUSTOMER:
+        return '${tr('search_customer')}';
+      case OneCellType.SEARCH_PRODUCTS_CATEGORY:
+        return '${tr('products_category')}';
+      case OneCellType.SEARCH_PRODUCT_FAMILY:
+        return '${tr('product_family')}';
       default:
         return '${tr('search_condition')}';
     }
