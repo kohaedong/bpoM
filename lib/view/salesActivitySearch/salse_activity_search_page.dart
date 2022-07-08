@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-08 10:21:11
+ * Last Modified: 2022-07-08 17:44:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -195,12 +195,14 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: tuple.item2 ?? tr('plz_select'),
                                       // 팀장 일때 만 팀원선택후 삭제가능.
-                                      isShowDeleteForHintText:
-                                          tuple.item1 && tuple.item2 != null
-                                              ? true
-                                              : false,
-                                      deleteIconCallback: () =>
-                                          p.setStaffName(null),
+                                      isShowDeleteForHintText: tuple.item1 &&
+                                              tuple.item2 != null &&
+                                              tuple.item2 != tr('all')
+                                          ? true
+                                          : false,
+                                      deleteIconCallback: () => tuple.item1
+                                          ? p.setStaffName(tr('all'))
+                                          : p.setStaffName(null),
                                       width: AppSize.defaultContentsWidth,
                                       hintTextStyleCallBack: () =>
                                           tuple.item1 && tuple.item2 != null
@@ -406,7 +408,7 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
   Widget _buildResult(BuildContext context) {
     return Consumer<SalseSalseActivitySearchPageProvider>(
         builder: (context, provider, _) {
-      return provider.isFirstIn ? Container() : _buildListView(provider);
+      return _buildListView(provider);
     });
   }
 

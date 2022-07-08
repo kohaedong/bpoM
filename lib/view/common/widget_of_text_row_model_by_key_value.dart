@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/text_row_model_by_key_value.dart
  * Created Date: 2021-09-06 11:46:11
- * Last Modified: 2022-07-07 15:02:31
+ * Last Modified: 2022-07-08 17:52:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -37,15 +37,18 @@ class TextRowModelByKeyValue extends StatelessWidget {
       this.isWithStar,
       this.isTitleTwoRow,
       this.discription2,
+      this.maxLine,
       this.contentsTextWidth,
       this.leadingTextWidth})
       : super(key: key);
+
   final String title;
   final String discription;
   final String? discription2;
   final bool isWithShowAllButton;
   final bool isWithEndShowAllButton;
   final Function? callback;
+  final int? maxLine;
   final String? showAllButtonText;
   final Widget? icon;
   final Color? exceptionColor;
@@ -183,7 +186,11 @@ class TextRowModelByKeyValue extends StatelessWidget {
                                     ? p.themeData.textTheme.headline4!
                                         .copyWith(color: exceptionColor)
                                     : p.themeData.textTheme.headline4!,
-                                maxLines: isWithEndShowAllButton ? 1 : 2,
+                                maxLines: maxLine != null
+                                    ? maxLine
+                                    : isWithEndShowAllButton
+                                        ? 1
+                                        : 2,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.start)))
                   ],

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-07-08 16:15:09
+ * Last Modified: 2022-07-08 17:38:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
@@ -27,7 +28,6 @@ import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
-  bool isFirstIn = true;
   bool isTeamLeader = false;
   String? staffName;
   String? selectedStartDate;
@@ -68,7 +68,11 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
     isTeamLeader = isLoginModel!.xtm == 'X';
-    staffName = isLoginModel!.ename;
+    if (isTeamLeader) {
+      staffName = tr('all');
+    } else {
+      staffName = isLoginModel!.ename;
+    }
   }
 
   void setStartDate(BuildContext context, String? str) {
@@ -123,8 +127,12 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
     Map<String, dynamic> _body = {
       "methodName": RequestType.SEARCH_SALSE_ACTIVITY.serverMethod,
       "methodParamMap": {
-        "IV_SANUM": esLogin!.logid,
-        "IV_ORGHK": esLogin.orghk,
+        "IV_SANUM": isTeamLeader
+            ? staffName == tr('all')
+                ? ''
+                : selectedSalesPerson!.logid
+            : esLogin!.logid,
+        "IV_ORGHK": esLogin!.orghk,
         "IV_ZSKUNNR":
             selectedCustomerModel != null ? selectedCustomerModel!.zskunnr : '',
         "IV_FRDAT": FormatUtil.removeDash(selectedStartDate!),
@@ -160,7 +168,6 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
         searchResponseModel = null;
       }
       isLoadData = false;
-      isFirstIn = false;
       notifyListeners();
       return ResultModel(true);
     }

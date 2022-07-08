@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/splash/splash_page_contents.dart
  * Created Date: 2021-08-20 14:37:40
- * Last Modified: 2022-07-04 17:48:28
+ * Last Modified: 2022-07-08 16:44:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,7 +22,7 @@ class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseLayout(
-        hasForm: true,
+        hasForm: false,
         isResizeToAvoidBottomInset: false,
         appBar: null,
         child: Stack(

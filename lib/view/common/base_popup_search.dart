@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-08 16:36:31
+ * Last Modified: 2022-07-08 18:03:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -323,7 +323,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       hintText: customerInputText != null
                           ? null
                           : '${tr('plz_enter_search_key_for_something', args: [
-                                  '${tr('customer_name')}'
+                                  '${tr('customer_name')}',
+                                  '*'
                                 ])}');
                 }),
           ],
@@ -331,11 +332,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         defaultSpacing(),
         AppStyles.buildSearchButton(context, tr('search'), () {
           final p = context.read<BasePopupSearchProvider>();
-          if (!(p.selectedProductCategory != null ||
-              p.selectedProductFamily != null)) {
-            AppToast().show(context, tr('plz_select_one_more_than'));
-          } else if (p.customerInputText == null ||
-              p.customerInputText!.length < 2) {
+          if (p.customerInputText == null || p.customerInputText!.length < 2) {
             AppToast().show(context, tr('keyword_must_greater_than_two'));
           } else {
             p.refresh();
@@ -413,7 +410,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                   }
                                 }),
                               shrinkWrap: true,
-                              padding: EdgeInsets.zero,
+                              padding:
+                                  EdgeInsets.only(bottom: AppSize.appBarHeight),
                               itemCount: widget.type ==
                                       PopupSearchType.SEARCH_SALSE_PERSON
                                   ? provider.staList!.staffList!.length

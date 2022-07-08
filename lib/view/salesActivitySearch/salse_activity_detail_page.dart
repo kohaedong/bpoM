@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivitySearch/salse_activity_detail_page.dart
  * Created Date: 2022-07-07 13:41:48
- * Last Modified: 2022-07-07 16:44:57
+ * Last Modified: 2022-07-08 17:50:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -20,6 +20,7 @@ import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
 
 class SalseActivityDetailPage extends StatelessWidget {
@@ -28,6 +29,7 @@ class SalseActivityDetailPage extends StatelessWidget {
 
   Widget _buildContents(BuildContext context) {
     final model = ModalRoute.of(context)?.settings.arguments as TlistModel;
+    pr(model.rslt?.length);
     return ListView(
       children: [
         CustomerinfoWidget.buildSubTitle(context, '${tr('activity_report')}'),
@@ -101,7 +103,8 @@ class SalseActivityDetailPage extends StatelessWidget {
                   tr('result'),
                   model.rslt != null && model.rslt!.isNotEmpty
                       ? model.rslt!
-                      : '-')
+                      : '-',
+                  maxLine: 50)
             ],
           ),
         )

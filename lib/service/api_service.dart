@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/api_service.dart
  * Created Date: 2021-08-22 21:53:15
- * Last Modified: 2022-07-02 16:30:49
+ * Last Modified: 2022-07-08 17:33:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -64,9 +64,9 @@ class ApiService {
     if (_client == null) {
       // * Dio BaseOptions 추가.
       final _baseOption = BaseOptions(
-          connectTimeout: 10000,
-          receiveTimeout: 10000,
-          sendTimeout: 10000,
+          connectTimeout: 50000,
+          receiveTimeout: 50000,
+          sendTimeout: 50000,
           contentType: 'application/json');
       //* Dio 초기화.
       _client = Dio(_baseOption)
