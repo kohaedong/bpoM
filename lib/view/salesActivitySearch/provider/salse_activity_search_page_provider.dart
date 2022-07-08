@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-07-08 12:55:41
+ * Last Modified: 2022-07-08 16:15:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -67,8 +67,7 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   void setIsLoginModel() async {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-    // isTeamLeader = isLoginModel!.xtm == 'X';
-    isTeamLeader = true;
+    isTeamLeader = isLoginModel!.xtm == 'X';
     staffName = isLoginModel!.ename;
   }
 
