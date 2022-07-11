@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-11 17:48:00
+ * Last Modified: 2022-07-11 23:07:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -74,6 +74,13 @@ class BasePopupSearchProvider extends ChangeNotifier {
       return onSearch(type!, false).then((result) => result.isSuccessful);
     }
     return null;
+  }
+
+  Future<void> initData() async {
+    if (isFirestRun && bodyMap != null) {
+      staffName = bodyMap?['staff'];
+      selectedProductFamily = bodyMap?['product_family'];
+    }
   }
 
   void setPersonInputText(String? value) {
@@ -283,7 +290,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtKunnrResponseModel.fromJson(result.body['data']);
-      pr(temp.toJson());
       if (temp.etKunnr!.length != partial) {
         hasMore = false;
       }
@@ -305,10 +311,10 @@ class BasePopupSearchProvider extends ChangeNotifier {
   }
 
   Future<BasePoupSearchResult> searchSaller(bool isMounted) async {
-    // if (isFirestRun) {
-    //   isFirestRun = false;
-    //   return BasePoupSearchResult(false);
-    // }
+    if (isFirestRun) {
+      isFirestRun = false;
+      return BasePoupSearchResult(false);
+    }
     isLoadData = true;
     if (isMounted) {
       notifyListeners();
@@ -318,33 +324,28 @@ class BasePopupSearchProvider extends ChangeNotifier {
     final esLogin = CacheService.getEsLogin();
 
     Map<String, dynamic>? _body;
-    // var zbiz = '';
-    // var spart = '';
-    // if (selectedProductCategory != null) {
-    //   var temp = productCategoryDataList!
-    //       .where((data) => data.contains(selectedProductCategory!))
-    //       .first;
-    //   zbiz = temp.substring(temp.indexOf('-') + 1);
-    // }
-    // if (selectedProductFamily != null) {
-    //   var temp = productFamilyDataList!
-    //       .where((data) => data.contains(selectedProductFamily!))
-    //       .first;
-    //   spart = temp.substring(temp.indexOf('-') + 1);
-    // }
-
+    var spart = productFamilyDataList
+        ?.where((str) => str.contains(selectedProductFamily!))
+        .toList();
+    var vkgrp = productBusinessDataList
+        ?.where((str) => str.contains(selectedBusinessGroup!))
+        .toList();
     _body = {
       "methodName": RequestType.SEARCH_SALLER.serverMethod,
       "methodParamMap": {
         "IV_VTWEG": "10",
-        "IV_VKORG": "1610",
-        "IV_SPART": "6B",
-        "IV_VKGRP": "",
-        "IV_PERNR": "",
+        "IV_VKORG": esLogin!.vkorg,
+        "IV_SPART": spart != null && spart.isNotEmpty
+            ? spart.first.substring(spart.first.indexOf('-') + 1)
+            : '',
+        "IV_VKGRP": vkgrp != null && vkgrp.isNotEmpty
+            ? vkgrp.first.substring(vkgrp.first.indexOf('-') + 1)
+            : '',
+        "IV_PERNR": staffName ?? '',
         "pos": pos,
         "partial": partial,
         "IV_KUNNR": "",
-        "IV_KEYWORD": "",
+        "IV_KEYWORD": customerInputText ?? '',
         "IS_LOGIN": isLogin,
         "functionName": RequestType.SEARCH_SALLER.serverMethod,
         "resultTables": RequestType.SEARCH_SALLER.resultTable
@@ -360,7 +361,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtCustomerResponseModel.fromJson(result.body['data']);
-      pr(temp.toJson());
       if (temp.etCustomer!.length != partial) {
         hasMore = false;
       }
@@ -399,7 +399,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
     }
     this.type = type;
     setIsLoginModel();
-
+    if (type == OneCellType.SEARCH_SALLER) {
+      initData();
+    }
     switch (type) {
       case OneCellType.SEARCH_SALSE_PERSON:
         return await searchPerson(isMounted);

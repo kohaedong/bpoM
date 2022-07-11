@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-07-11 17:17:33
+ * Last Modified: 2022-07-11 23:18:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -31,6 +31,7 @@ import 'package:medsalesportal/view/common/function_of_print.dart';
 class OrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isTeamLeader = false;
+  bool isFirstRun = true;
   String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
@@ -44,6 +45,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
   List<String>? processingStatusListWithCode;
   List<String>? productsFamilyListWithCode;
   IsLoginModel? isLoginModel;
+
   int pos = 0;
   int partial = 30;
   bool hasMore = false;
@@ -66,15 +68,17 @@ class OrderSearchPageProvider extends ChangeNotifier {
   }
 
   Future<void> initPageData() async {
+    pr('init');
     setIsLoginModel();
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
+    isFirstRun = false;
   }
 
   void setIsLoginModel() async {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-    // isTeamLeader = isLoginModel!.xtm == 'X';
+    isTeamLeader = isLoginModel!.xtm == 'X';
     isTeamLeader = true;
     if (isTeamLeader) {
       staffName = tr('all');
@@ -98,6 +102,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
   }
 
   void setStaffName(String? str) {
+    pr(str);
     staffName = str;
     notifyListeners();
   }
@@ -106,18 +111,20 @@ class OrderSearchPageProvider extends ChangeNotifier {
     str as EtStaffListModel;
     selectedSalesPerson = str;
     staffName = selectedSalesPerson!.sname;
+    pr(staffName);
     notifyListeners();
   }
 
   void setCustomerModel(dynamic map) {
     map as Map<String, dynamic>;
-    var model = map['model'] as EtCustomerModel;
-    var productsFamily = map['productsFamily'] as String;
-    var staff = map['staff'] as String;
+    var productsFamily = map['product_family'] as String?;
+    var staff = map['staff'] as String?;
     selectedProductsFamily = productsFamily;
     staffName = staff;
+    var model = map['model'] as EtCustomerModel?;
     selectedCustomerModel = model;
-    customerName = selectedCustomerModel!.kunnrNm;
+    customerName = selectedCustomerModel?.kunnrNm;
+
     notifyListeners();
   }
 

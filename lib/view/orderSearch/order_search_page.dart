@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-07-11 17:34:52
+ * Last Modified: 2022-07-11 23:18:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -73,7 +73,6 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
 
   Widget _buildPanel(BuildContext context) {
     final p = context.read<OrderSearchPageProvider>();
-    p.initPageData();
     return ValueListenableBuilder<bool>(
         valueListenable: _panelSwich,
         builder: (context, swichValue, _) {
@@ -308,6 +307,11 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                       isSelectedStrCallBack: (customer) {
                                         return p.setCustomerModel(customer);
                                       },
+                                      bodyMap: {
+                                        'product_family':
+                                            p.selectedProductsFamily,
+                                        'staff': p.staffName
+                                      },
                                       enable: false,
                                     ),
                                     isNotShowStar: true);
@@ -465,7 +469,10 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                 create: (context) => NextPageLoadingProvider()),
           ],
           builder: (context, _) {
-            final p = context.read<OrderSearchPageProvider>();
+            final p = context.watch<OrderSearchPageProvider>();
+            if (p.isFirstRun) {
+              p.initPageData();
+            }
             return Stack(
               fit: StackFit.expand,
               children: [

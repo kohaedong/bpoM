@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-11 17:52:39
+ * Last Modified: 2022-07-11 23:16:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,11 +13,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
-import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
-import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
@@ -191,36 +189,34 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         Selector<BasePopupSearchProvider, String?>(
             selector: (context, provider) => provider.personInputText,
             builder: (context, personInputText, _) {
-              return Builder(builder: (context) {
-                return BaseInputWidget(
-                    context: context,
-                    width: AppSize.defaultContentsWidth - AppSize.padding * 2,
-                    enable: true,
-                    hintTextStyleCallBack: personInputText != null
-                        ? null
-                        : () => AppTextStyle.hint_16,
-                    iconType: personInputText != null
-                        ? InputIconType.DELETE_AND_SEARCH
-                        : InputIconType.SEARCH,
-                    onChangeCallBack: (e) => p.setPersonInputText(e),
-                    iconColor: personInputText == null
-                        ? AppColors.textFieldUnfoucsColor
-                        : null,
-                    defaultIconCallback: () {
-                      hideKeyboard(context);
-                      p.refresh();
-                    },
-                    textEditingController: _personInputController,
-                    otherIconcallback: () {
-                      p.setPersonInputText(null);
-                      _personInputController.text = '';
-                    },
-                    hintText: personInputText != null
-                        ? null
-                        : '${tr('plz_enter_search_key_for_something', args: [
-                                '${tr('name')}'
-                              ])}');
-              });
+              return BaseInputWidget(
+                  context: context,
+                  width: AppSize.defaultContentsWidth - AppSize.padding * 2,
+                  enable: true,
+                  hintTextStyleCallBack: personInputText != null
+                      ? null
+                      : () => AppTextStyle.hint_16,
+                  iconType: personInputText != null
+                      ? InputIconType.DELETE_AND_SEARCH
+                      : InputIconType.SEARCH,
+                  onChangeCallBack: (e) => p.setPersonInputText(e),
+                  iconColor: personInputText == null
+                      ? AppColors.textFieldUnfoucsColor
+                      : null,
+                  defaultIconCallback: () {
+                    hideKeyboard(context);
+                    p.refresh();
+                  },
+                  textEditingController: _personInputController,
+                  otherIconcallback: () {
+                    p.setPersonInputText(null);
+                    _personInputController.text = '';
+                  },
+                  hintText: personInputText != null
+                      ? null
+                      : '${tr('plz_enter_search_key_for_something', args: [
+                              '${tr('name')}'
+                            ])}');
             })
       ],
     );
@@ -347,7 +343,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
 
   Widget _buildSallerSearchBar(BuildContext context) {
     final p = context.read<BasePopupSearchProvider>();
-
     return Expanded(
         child: Column(
       children: [
@@ -390,7 +385,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? AppColors.textFieldUnfoucsColor
                       : null,
                   commononeCellDataCallback: p.getBusinessGroup,
-                  oneCellType: OneCellType.SEARCH_PRODUCTS_CATEGORY,
+                  oneCellType: OneCellType.SEARCH_BUSINESS_GROUP,
                   isSelectedStrCallBack: (str) => p.setBusinessGroup(str),
                   hintText: businessGroup != null
                       ? businessGroup
@@ -717,11 +712,13 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
       onTap: () {
         Navigator.pop(
           context,
-          {
-            'model': model,
-            'staff': p.staffName,
-            'productsFamily': p.selectedProductFamily ?? ''
-          },
+          widget.type == PopupSearchType.SEARCH_SALLER
+              ? {
+                  'model': model,
+                  'staff': p.staffName,
+                  'product_family': p.selectedProductFamily ?? ''
+                }
+              : null,
         );
       },
       child: Padding(
@@ -788,7 +785,16 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   bottom: 0,
                   child: InkWell(
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context, {
+                        'staff':
+                            context.read<BasePopupSearchProvider>().staffName,
+                        'product_family': context
+                                .read<BasePopupSearchProvider>()
+                                .selectedProductFamily ??
+                            context
+                                .read<BasePopupSearchProvider>()
+                                .bodyMap?['product_family']
+                      });
                     },
                     child: ClipRRect(
                         borderRadius: BorderRadius.only(

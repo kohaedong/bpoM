@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/cache_service.dart
  * Created Date: 2021-08-22 19:45:10
- * Last Modified: 2022-07-04 14:36:23
+ * Last Modified: 2022-07-11 22:36:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -128,7 +128,6 @@ class CacheService {
 
   static String? getIsLogin() {
     final result = getData('is_login');
-    print('isLogin :: $result');
     return result;
   }
 
