@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-07-11 17:20:38
+ * Last Modified: 2022-07-11 23:38:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,8 +12,6 @@
  * 												Discription													
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
-import 'package:medsalesportal/view/common/function_of_print.dart';
-
 import 'base_popup_cell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-11 23:32:38
+ * Last Modified: 2022-07-11 23:38:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -26,7 +26,6 @@ import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class BasePopupSearchProvider extends ChangeNotifier {
   bool isLoadData = false;
@@ -385,7 +384,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
     isTeamLeader = isLoginModel!.xtm == 'X';
-    isTeamLeader = true;
     if (isTeamLeader) {
       staffName = tr('all');
     } else {
