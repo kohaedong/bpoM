@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-08 17:44:15
+ * Last Modified: 2022-07-11 09:13:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -327,32 +327,32 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
     );
   }
 
-  Widget _buildTotal(BuildContext context) {
-    return Consumer<SalseSalseActivitySearchPageProvider>(
-        builder: (context, provider, _) {
-      return provider.searchResponseModel != null &&
-              provider.searchResponseModel!.tList!.isNotEmpty
-          ? Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.symmetric(
-                  vertical: AppSize.defaultListItemSpacing / 2,
-                  horizontal: AppSize.padding),
-              child: Row(
-                children: [
-                  AppText.text('총', style: AppTextStyle.sub_14),
-                  AppText.text(
-                      '${provider.searchResponseModel!.tList!.length}'),
-                  AppText.text('건', style: AppTextStyle.sub_14)
-                ],
-              ))
-          : Container();
-    });
-  }
+  // Widget _buildTotal(BuildContext context) {
+  //   return Consumer<SalseSalseActivitySearchPageProvider>(
+  //       builder: (context, provider, _) {
+  //     return provider.searchResponseModel != null &&
+  //             provider.searchResponseModel!.tList!.isNotEmpty
+  //         ? Container(
+  //             alignment: Alignment.centerLeft,
+  //             padding: EdgeInsets.symmetric(
+  //                 vertical: AppSize.defaultListItemSpacing / 2,
+  //                 horizontal: AppSize.padding),
+  //             child: Row(
+  //               children: [
+  //                 AppText.text('총', style: AppTextStyle.sub_14),
+  //                 AppText.text(
+  //                     '${provider.searchResponseModel!.tList!.length}'),
+  //                 AppText.text('건', style: AppTextStyle.sub_14)
+  //               ],
+  //             ))
+  //         : Container();
+  //   });
+  // }
 
   Widget _buildListView(SalseSalseActivitySearchPageProvider provider) {
     return Column(
       children: [
-        _buildTotal(context),
+        // _buildTotal(context),
         provider.searchResponseModel != null &&
                 provider.searchResponseModel!.tList != null &&
                 provider.searchResponseModel!.tList!.isNotEmpty
