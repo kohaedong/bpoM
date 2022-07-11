@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-07-11 13:46:38
+ * Last Modified: 2022-07-11 17:17:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -74,7 +74,8 @@ class OrderSearchPageProvider extends ChangeNotifier {
   void setIsLoginModel() async {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-    isTeamLeader = isLoginModel!.xtm == 'X';
+    // isTeamLeader = isLoginModel!.xtm == 'X';
+    isTeamLeader = true;
     if (isTeamLeader) {
       staffName = tr('all');
     } else {
@@ -108,9 +109,14 @@ class OrderSearchPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setCustomerModel(dynamic str) {
-    str as EtCustomerModel;
-    selectedCustomerModel = str;
+  void setCustomerModel(dynamic map) {
+    map as Map<String, dynamic>;
+    var model = map['model'] as EtCustomerModel;
+    var productsFamily = map['productsFamily'] as String;
+    var staff = map['staff'] as String;
+    selectedProductsFamily = productsFamily;
+    staffName = staff;
+    selectedCustomerModel = model;
     customerName = selectedCustomerModel!.kunnrNm;
     notifyListeners();
   }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_list.dart
  * Created Date: 2021-09-10 09:48:38
- * Last Modified: 2022-07-06 15:00:13
+ * Last Modified: 2022-07-11 17:43:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/globalProvider/base_one_cell_popup_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,8 @@ typedef CheckBoxDefaultValue = Future<List<bool>> Function();
 
 class BasePopupList {
   final OneCellType type;
-  BasePopupList(this.type);
+  final InputIconType? iconType;
+  BasePopupList(this.type, this.iconType);
   Widget selectBoxContents(
       BuildContext context,
       List<String> contents,
@@ -129,7 +131,13 @@ class BasePopupList {
       BuildContext ctx, Future<List<String>?> Function()? contentsCallback) {
     return FutureBuilder<List<String>?>(
         future: contentsCallback != null
-            ? contentsCallback.call()
+            ? iconType == InputIconType.SELECT
+                ? Future.delayed(Duration.zero, () async {
+                    var temp = await contentsCallback.call();
+                    temp!.insert(0, '- ${tr('all')} - ');
+                    return temp;
+                  })
+                : contentsCallback.call()
             : type.contents(),
         builder: (context, snapshot) {
           if (snapshot.hasData &&
@@ -216,7 +224,10 @@ class BasePopupList {
                 type == OneCellType.CONSULTATION_REPORT_TYPE
                     ? selectBoxContents(context, contents!, checkBoxCallback!,
                         checkBoxDefaultValue, checkBoxType)
-                    : listContents(context, commononeCellDataCallback),
+                    : listContents(
+                        context,
+                        commononeCellDataCallback,
+                      ),
                 true,
                 type.contentsHeight,
                 signgleButtonText: type.buttonText,

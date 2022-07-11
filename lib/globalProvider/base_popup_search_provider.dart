@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-11 15:00:47
+ * Last Modified: 2022-07-11 17:48:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,16 +11,20 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
@@ -31,15 +35,21 @@ class BasePopupSearchProvider extends ChangeNotifier {
   String? customerInputText;
   String? selectedProductCategory;
   String? selectedProductFamily;
+  String? selectedBusinessGroup;
   List<String>? productCategoryDataList;
+  List<String>? productBusinessDataList;
   List<String>? productFamilyDataList;
+  IsLoginModel? isLoginModel;
 
+  EtStaffListModel? selectedSalesPerson;
   EtStaffListResponseModel? staList;
   EtKunnrResponseModel? etKunnrResponseModel;
   EtCustomerResponseModel? etCustomerResponseModel;
   OneCellType? type;
   Map<String, dynamic>? bodyMap;
 
+  bool isTeamLeader = false;
+  String? staffName;
 //--------------- plant Code----------
   String? selectedOrganizationCode;
   String? seletedCirculationCode;
@@ -73,6 +83,18 @@ class BasePopupSearchProvider extends ChangeNotifier {
     }
   }
 
+  void setSalesPerson(dynamic str) {
+    str as EtStaffListModel;
+    selectedSalesPerson = str;
+    staffName = selectedSalesPerson!.sname;
+    notifyListeners();
+  }
+
+  void setStaffName(String? str) {
+    staffName = str;
+    notifyListeners();
+  }
+
   void setProductsCategory(String? value) {
     selectedProductCategory = value;
     notifyListeners();
@@ -80,6 +102,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   void setProductsFamily(String? value) {
     selectedProductFamily = value;
+    notifyListeners();
+  }
+
+  void setBusinessGroup(String? value) {
+    selectedBusinessGroup = value;
     notifyListeners();
   }
 
@@ -94,6 +121,15 @@ class BasePopupSearchProvider extends ChangeNotifier {
     productCategoryDataList = await HiveService.getBusinessCategory();
     var dataStr = <String>[];
     productCategoryDataList!.forEach((data) {
+      dataStr.add(data.substring(0, data.indexOf('-')));
+    });
+    return dataStr;
+  }
+
+  Future<List<String>?> getBusinessGroup() async {
+    productBusinessDataList = await HiveService.getBusinessGroup();
+    var dataStr = <String>[];
+    productBusinessDataList!.forEach((data) {
       dataStr.add(data.substring(0, data.indexOf('-')));
     });
     return dataStr;
@@ -200,14 +236,14 @@ class BasePopupSearchProvider extends ChangeNotifier {
     if (selectedProductCategory != null) {
       var temp = productCategoryDataList!
           .where((data) => data.contains(selectedProductCategory!))
-          .first;
-      zbiz = temp.substring(temp.indexOf('-') + 1);
+          .toList();
+      zbiz = temp.isEmpty ? '' : temp.first.substring(temp.indexOf('-') + 1);
     }
     if (selectedProductFamily != null) {
       var temp = productFamilyDataList!
           .where((data) => data.contains(selectedProductFamily!))
-          .first;
-      spart = temp.substring(temp.indexOf('-') + 1);
+          .toList();
+      spart = temp.isEmpty ? '' : temp.first.substring(temp.indexOf('-') + 1);
     }
 
     body = {
@@ -345,12 +381,24 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return BasePoupSearchResult(false);
   }
 
+  void setIsLoginModel() async {
+    var isLogin = CacheService.getIsLogin();
+    isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
+    isTeamLeader = isLoginModel!.xtm == 'X';
+    if (isTeamLeader) {
+      staffName = tr('all');
+    } else {
+      staffName = isLoginModel!.ename;
+    }
+  }
+
   Future<BasePoupSearchResult> onSearch(OneCellType type, bool isMounted,
       {Map<String, dynamic>? bodyMaps}) async {
     if (bodyMaps != null && bodyMaps != bodyMap) {
       this.bodyMap = bodyMaps;
     }
     this.type = type;
+    setIsLoginModel();
 
     switch (type) {
       case OneCellType.SEARCH_SALSE_PERSON:

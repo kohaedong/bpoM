@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-07-11 13:52:51
+ * Last Modified: 2022-07-11 17:34:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -180,7 +180,10 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                       iconColor: tuple.item2 != null
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
-                                      hintText: tuple.item2 ?? tr('plz_select'),
+                                      hintText: tuple.item2 ??
+                                          '${tr('plz_select_something', args: [
+                                                tr('manager')
+                                              ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       isShowDeleteForHintText: tuple.item1 &&
                                               tuple.item2 != null &&
@@ -213,16 +216,15 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                     '${tr('product_process_status')}',
                                     BaseInputWidget(
                                       context: context,
-                                      iconType: InputIconType.SEARCH,
+                                      iconType: InputIconType.SELECT,
                                       iconColor: status != null
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
-                                      deleteIconCallback: () =>
-                                          p.setProcessingStatus(null),
-                                      hintText: status ?? tr('plz_select'),
+                                      hintText: status ??
+                                          '${tr('plz_select_something', args: [
+                                                tr('product_process_status')
+                                              ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
-                                      isShowDeleteForHintText:
-                                          status != null ? true : false,
                                       width: AppSize.defaultContentsWidth,
                                       hintTextStyleCallBack: () =>
                                           status != null
@@ -248,16 +250,16 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                     '${tr('product_family')}',
                                     BaseInputWidget(
                                       context: context,
-                                      iconType: InputIconType.SEARCH,
+                                      iconType: InputIconType.SELECT,
                                       iconColor: family != null
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
-                                      deleteIconCallback: () =>
-                                          p.setProductsFamily(null),
-                                      hintText: family ?? tr('plz_select'),
+                                      hintText: family ??
+                                          '${tr('plz_select_something', args: [
+                                                tr('product_family')
+                                              ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
-                                      isShowDeleteForHintText:
-                                          family != null ? true : false,
+                                      isShowDeleteForHintText: false,
                                       width: AppSize.defaultContentsWidth,
                                       hintTextStyleCallBack: () =>
                                           family != null
@@ -289,8 +291,10 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           : AppColors.textFieldUnfoucsColor,
                                       deleteIconCallback: () =>
                                           p.setCustomerName(null),
-                                      hintText:
-                                          customerName ?? tr('plz_select'),
+                                      hintText: customerName ??
+                                          '${tr('plz_select_something', args: [
+                                                tr('sales_office')
+                                              ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       isShowDeleteForHintText:
                                           customerName != null ? true : false,

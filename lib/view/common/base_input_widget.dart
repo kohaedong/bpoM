@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-07-07 12:39:17
+ * Last Modified: 2022-07-11 17:20:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,8 @@
  * 												Discription													
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
+import 'package:medsalesportal/view/common/function_of_print.dart';
+
 import 'base_popup_cell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -179,16 +181,19 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
         }
         if (widget.oneCellType == OneCellType.CONSULTATION_REPORT_TYPE) {
           print(widget.checkBoxCallBack.runtimeType);
-          final result = await BasePopupList(widget.oneCellType!).show(context,
-              checkBoxCallback: widget.checkBoxCallBack,
-              checkBoxDefaultValue: widget.checkBoxDefaultValue,
-              checkBoxType: widget.checkBoxType);
+          final result =
+              await BasePopupList(widget.oneCellType!, widget.iconType).show(
+                  context,
+                  checkBoxCallback: widget.checkBoxCallBack,
+                  checkBoxDefaultValue: widget.checkBoxDefaultValue,
+                  checkBoxType: widget.checkBoxType);
           if (result != null) {
             return;
           }
         } else if (widget.oneCellType == OneCellType.ADDRESS_CITY ||
             widget.oneCellType == OneCellType.ADDRESS_CITY_AREA) {
-          final result = await BasePopupList(widget.oneCellType!).show(
+          final result =
+              await BasePopupList(widget.oneCellType!, widget.iconType).show(
             context,
             selectedCity: widget.selectedCity,
           );
@@ -197,11 +202,13 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
           }
         } else {
           final result = widget.commononeCellDataCallback != null
-              ? await BasePopupList(widget.oneCellType!).show(context,
+              ? await BasePopupList(widget.oneCellType!, widget.iconType).show(
+                  context,
                   commononeCellDataCallback: widget.commononeCellDataCallback,
                   textEditingController: widget.textEditingController,
                   selectedDateStr: widget.dateStr)
-              : await BasePopupList(widget.oneCellType!).show(context,
+              : await BasePopupList(widget.oneCellType!, widget.iconType).show(
+                  context,
                   discountListCallback: widget.discountListCallback,
                   selectedDateStr: widget.dateStr);
           if (result != null) {
