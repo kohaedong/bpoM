@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-11 11:17:06
+ * Last Modified: 2022-07-11 15:00:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/model/rfc/et_customer_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
@@ -34,8 +35,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
   List<String>? productFamilyDataList;
 
   EtStaffListResponseModel? staList;
-  EtKunnrResponseModel? etCustomerResponseModel;
-
+  EtKunnrResponseModel? etKunnrResponseModel;
+  EtCustomerResponseModel? etCustomerResponseModel;
   OneCellType? type;
   Map<String, dynamic>? bodyMap;
 
@@ -50,6 +51,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   bool hasMore = true;
   Future<void> refresh() async {
     pos = 0;
+    etKunnrResponseModel = null;
     etCustomerResponseModel = null;
     staList = null;
     hasMore = true;
@@ -249,13 +251,90 @@ class BasePopupSearchProvider extends ChangeNotifier {
       if (temp.etKunnr!.length != partial) {
         hasMore = false;
       }
+      if (etKunnrResponseModel == null) {
+        etKunnrResponseModel = temp;
+      } else {
+        etKunnrResponseModel!.etKunnr!.addAll(temp.etKunnr!);
+      }
+      if (etKunnrResponseModel != null &&
+          etKunnrResponseModel!.etKunnr == null) {
+        etKunnrResponseModel = null;
+      }
+      isLoadData = false;
+      notifyListeners();
+      return BasePoupSearchResult(true);
+    }
+    isLoadData = false;
+    return BasePoupSearchResult(false);
+  }
+
+  Future<BasePoupSearchResult> searchSaller(bool isMounted) async {
+    // if (isFirestRun) {
+    //   isFirestRun = false;
+    //   return BasePoupSearchResult(false);
+    // }
+    isLoadData = true;
+    if (isMounted) {
+      notifyListeners();
+    }
+    var _api = ApiService();
+    final isLogin = CacheService.getIsLogin();
+    final esLogin = CacheService.getEsLogin();
+
+    Map<String, dynamic>? _body;
+    // var zbiz = '';
+    // var spart = '';
+    // if (selectedProductCategory != null) {
+    //   var temp = productCategoryDataList!
+    //       .where((data) => data.contains(selectedProductCategory!))
+    //       .first;
+    //   zbiz = temp.substring(temp.indexOf('-') + 1);
+    // }
+    // if (selectedProductFamily != null) {
+    //   var temp = productFamilyDataList!
+    //       .where((data) => data.contains(selectedProductFamily!))
+    //       .first;
+    //   spart = temp.substring(temp.indexOf('-') + 1);
+    // }
+
+    _body = {
+      "methodName": RequestType.SEARCH_SALLER.serverMethod,
+      "methodParamMap": {
+        "IV_VTWEG": "10",
+        "IV_VKORG": "1610",
+        "IV_SPART": "6B",
+        "IV_VKGRP": "",
+        "IV_PERNR": "",
+        "pos": pos,
+        "partial": partial,
+        "IV_KUNNR": "",
+        "IV_KEYWORD": "",
+        "IS_LOGIN": isLogin,
+        "functionName": RequestType.SEARCH_SALLER.serverMethod,
+        "resultTables": RequestType.SEARCH_SALLER.resultTable
+      }
+    };
+    _api.init(RequestType.SEARCH_SALLER);
+    final result = await _api.request(body: _body);
+    if (result == null || result.statusCode != 200) {
+      isLoadData = false;
+      staList = null;
+      notifyListeners();
+      return BasePoupSearchResult(false);
+    }
+    if (result.statusCode == 200 && result.body['data'] != null) {
+      var temp = EtCustomerResponseModel.fromJson(result.body['data']);
+      pr(temp.toJson());
+      if (temp.etCustomer!.length != partial) {
+        hasMore = false;
+      }
       if (etCustomerResponseModel == null) {
         etCustomerResponseModel = temp;
       } else {
-        etCustomerResponseModel!.etKunnr!.addAll(temp.etKunnr!);
+        etCustomerResponseModel!.etCustomer!.addAll(temp.etCustomer!);
       }
       if (etCustomerResponseModel != null &&
-          etCustomerResponseModel!.etKunnr == null) {
+          etCustomerResponseModel!.etCustomer == null) {
         etCustomerResponseModel = null;
       }
       isLoadData = false;
@@ -278,6 +357,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
         return await searchPerson(isMounted);
       case OneCellType.SEARCH_CUSTOMER:
         return await searchCustomer(isMounted);
+      case OneCellType.SEARCH_SALLER:
+        return await searchSaller(isMounted);
       default:
         return BasePoupSearchResult(false);
     }

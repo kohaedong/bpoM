@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-11 14:09:38
+ * Last Modified: 2022-07-11 15:06:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
+import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
+import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
@@ -343,6 +345,127 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     ));
   }
 
+  Widget _buildSallerSearchBar(BuildContext context) {
+    final p = context.read<BasePopupSearchProvider>();
+
+    return Expanded(
+        child: Column(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Selector<BasePopupSearchProvider, String?>(
+                selector: (context, provider) =>
+                    provider.selectedProductCategory,
+                builder: (context, selectedProductCategory, _) {
+                  return BaseInputWidget(
+                      context: context,
+                      width:
+                          (AppSize.defaultContentsWidth - AppSize.padding * 2),
+                      enable: false,
+                      hintTextStyleCallBack: selectedProductCategory != null
+                          ? () => AppTextStyle.default_16
+                          : () => AppTextStyle.hint_16,
+                      iconType: InputIconType.SELECT,
+                      iconColor: selectedProductCategory == null
+                          ? AppColors.textFieldUnfoucsColor
+                          : null,
+                      commononeCellDataCallback: p.getProductCategory,
+                      isShowDeleteForHintText:
+                          selectedProductCategory != null ? true : false,
+                      deleteIconCallback: () => p.setProductsCategory(null),
+                      oneCellType: OneCellType.SEARCH_PRODUCTS_CATEGORY,
+                      isSelectedStrCallBack: (str) =>
+                          p.setProductsCategory(str),
+                      hintText: selectedProductCategory != null
+                          ? selectedProductCategory
+                          : '${tr('plz_enter_products_category')}');
+                }),
+          ],
+        ),
+        defaultSpacing(),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Selector<BasePopupSearchProvider, String?>(
+                selector: (context, provider) => provider.selectedProductFamily,
+                builder: (context, selectedProductFamily, _) {
+                  return BaseInputWidget(
+                      context: context,
+                      width:
+                          (AppSize.defaultContentsWidth - AppSize.padding * 2),
+                      enable: false,
+                      hintTextStyleCallBack: selectedProductFamily != null
+                          ? () => AppTextStyle.default_16
+                          : () => AppTextStyle.hint_16,
+                      iconType: InputIconType.SELECT,
+                      iconColor: selectedProductFamily == null
+                          ? AppColors.textFieldUnfoucsColor
+                          : null,
+                      commononeCellDataCallback: p.getProductFamily,
+                      isShowDeleteForHintText:
+                          selectedProductFamily != null ? true : false,
+                      deleteIconCallback: () => p.setProductsFamily(null),
+                      oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,
+                      isSelectedStrCallBack: (str) => p.setProductsFamily(str),
+                      hintText: selectedProductFamily != null
+                          ? selectedProductFamily
+                          : '${tr('plz_enter_products_family')}');
+                }),
+          ],
+        ),
+        defaultSpacing(),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Selector<BasePopupSearchProvider, String?>(
+                selector: (context, provider) => provider.customerInputText,
+                builder: (context, customerInputText, _) {
+                  return BaseInputWidget(
+                      context: context,
+                      width:
+                          (AppSize.defaultContentsWidth - AppSize.padding * 2),
+                      enable: true,
+                      hintTextStyleCallBack: customerInputText != null
+                          ? null
+                          : () => AppTextStyle.hint_16,
+                      iconType: customerInputText != null
+                          ? InputIconType.DELETE
+                          : null,
+                      onChangeCallBack: (e) => p.setCustomerInputText(e),
+                      iconColor: customerInputText == null
+                          ? AppColors.textFieldUnfoucsColor
+                          : null,
+                      defaultIconCallback: () {
+                        p.setCustomerInputText(null);
+                        _customerInputController.text = '';
+                      },
+                      textEditingController: _customerInputController,
+                      hintText: customerInputText != null
+                          ? null
+                          : '${tr('plz_enter_search_key_for_something', args: [
+                                  '${tr('customer_name')}',
+                                  '*'
+                                ])}');
+                }),
+          ],
+        ),
+        defaultSpacing(),
+        AppStyles.buildSearchButton(context, tr('search'), () {
+          final p = context.read<BasePopupSearchProvider>();
+          if (p.customerInputText == null || p.customerInputText!.length < 2) {
+            AppToast().show(context, tr('keyword_must_greater_than_two'));
+          } else {
+            p.refresh();
+          }
+        }, doNotWithPadding: true),
+      ],
+    ));
+  }
+
   Widget _buildSearchBar(BuildContext context) {
     return Container(
       height: widget.type.appBarHeight,
@@ -360,7 +483,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
             height: 1,
             color: AppColors.textGrey,
           ),
-          widget.type == PopupSearchType.SEARCH_CUSTOMER
+          widget.type == PopupSearchType.SEARCH_CUSTOMER ||
+                  widget.type == PopupSearchType.SEARCH_SALLER
               ? defaultSpacing()
               : Container(),
           // Padding(
@@ -369,7 +493,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
               ? _buildPersonSearchBar(context)
               : widget.type == PopupSearchType.SEARCH_CUSTOMER
                   ? _buildCustomerSearchBar(context)
-                  : Container(),
+                  : widget.type == PopupSearchType.SEARCH_SALLER
+                      ? _buildSallerSearchBar(context)
+                      : Container(),
         ],
       ),
     );
@@ -387,9 +513,13 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
             return (provider.staList != null &&
                         provider.staList!.staffList != null &&
                         provider.staList!.staffList!.isNotEmpty) ||
+                    (provider.etKunnrResponseModel != null &&
+                        provider.etKunnrResponseModel!.etKunnr != null &&
+                        provider.etKunnrResponseModel!.etKunnr!.isNotEmpty) ||
                     (provider.etCustomerResponseModel != null &&
-                        provider.etCustomerResponseModel!.etKunnr != null &&
-                        provider.etCustomerResponseModel!.etKunnr!.isNotEmpty)
+                        provider.etCustomerResponseModel!.etCustomer != null &&
+                        provider
+                            .etCustomerResponseModel!.etCustomer!.isNotEmpty)
                 ? Padding(
                     padding: AppSize.defaultSearchPopupSidePadding,
                     child: Container(
@@ -418,9 +548,13 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                   ? provider.staList!.staffList!.length
                                   : widget.type ==
                                           PopupSearchType.SEARCH_CUSTOMER
-                                      ? provider.etCustomerResponseModel!
-                                          .etKunnr!.length
-                                      : 0,
+                                      ? provider
+                                          .etKunnrResponseModel!.etKunnr!.length
+                                      : widget.type ==
+                                              PopupSearchType.SEARCH_SALLER
+                                          ? provider.etCustomerResponseModel!
+                                              .etCustomer!.length
+                                          : 0,
                               itemBuilder: (BuildContext context, int index) {
                                 return widget.type ==
                                         PopupSearchType.SEARCH_SALSE_PERSON
@@ -437,15 +571,30 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                             PopupSearchType.SEARCH_CUSTOMER
                                         ? _buildCustomerContentsItem(
                                             context,
-                                            provider.etCustomerResponseModel!
+                                            provider.etKunnrResponseModel!
                                                 .etKunnr![index],
                                             index,
                                             !provider.hasMore &&
                                                 index ==
-                                                    provider.etCustomerResponseModel!
+                                                    provider.etKunnrResponseModel!
                                                             .etKunnr!.length -
                                                         1)
-                                        : Container();
+                                        : widget.type ==
+                                                PopupSearchType.SEARCH_SALLER
+                                            ? _buildSallerContentsItem(
+                                                context,
+                                                provider
+                                                    .etCustomerResponseModel!
+                                                    .etCustomer![index],
+                                                index,
+                                                !provider.hasMore &&
+                                                    index ==
+                                                        provider
+                                                                .etCustomerResponseModel!
+                                                                .etCustomer!
+                                                                .length -
+                                                            1)
+                                            : Container();
                               },
                             ),
                             // 수정 ! nextPage ->  refresh
@@ -542,6 +691,39 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                             }),
                         AppText.text('${model.zaddName1}',
                             style: AppTextStyle.h5),
+                        AppText.text('${model.telf1}', style: AppTextStyle.h5),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              isShowLastPageText ? lastPageText() : Container()
+            ],
+          )),
+    );
+  }
+
+  Widget _buildSallerContentsItem(BuildContext context, EtCustomerModel model,
+      int index, bool isShowLastPageText) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context, model);
+      },
+      child: Padding(
+          padding:
+              index == 0 ? EdgeInsets.all(0) : AppSize.searchPopupListPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _horizontalRow(
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText.text('${model.kunnrNm ?? ''} ',
+                            style: AppTextStyle.h3),
+                        AppText.text('${model.pstlz}', style: AppTextStyle.h5),
                         AppText.text('${model.telf1}', style: AppTextStyle.h5),
                       ],
                     ),
