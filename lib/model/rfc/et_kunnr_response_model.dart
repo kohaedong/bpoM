@@ -1,8 +1,8 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/et_customer_response_model.dart
- * Created Date: 2022-07-11 11:19:39
- * Last Modified: 2022-07-11 11:22:06
+ * Created Date: 2022-07-06 22:28:46
+ * Last Modified: 2022-07-11 11:18:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,18 +13,17 @@
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:medsalesportal/model/rfc/es_return_model.dart';
-import 'package:medsalesportal/model/rfc/et_customer_model.dart';
-
-part 'et_customer_response_model.g.dart';
+import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
+part 'et_kunnr_response_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class EtCustomerResponseModel {
+class EtKunnrResponseModel {
   @JsonKey(name: 'ES_RETURN')
   EsReturnModel? esReturn;
-  @JsonKey(name: 'ET_CUSTOMER')
-  List<EtCustomerModel>? etCustomer;
-  EtCustomerResponseModel(this.esReturn, this.etCustomer);
-  factory EtCustomerResponseModel.fromJson(Object? json) =>
-      _$EtCustomerResponseModelFromJson(json as Map<String, dynamic>);
-  Map<String, dynamic> toJson() => _$EtCustomerResponseModelToJson(this);
+  @JsonKey(name: 'ET_KUNNR')
+  List<EtKunnrModel>? etKunnr;
+  EtKunnrResponseModel(this.esReturn, this.etKunnr);
+  factory EtKunnrResponseModel.fromJson(Object? json) =>
+      _$EtKunnrResponseModelFromJson(json as Map<String, dynamic>);
+  Map<String, dynamic> toJson() => _$EtKunnrResponseModelToJson(this);
 }

@@ -1,25 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'et_customer_response_model.dart';
+part of 'et_cust_list_response_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-EtCustomerResponseModel _$EtCustomerResponseModelFromJson(
+EtCustListResponseModel _$EtCustListResponseModelFromJson(
         Map<String, dynamic> json) =>
-    EtCustomerResponseModel(
+    EtCustListResponseModel(
       json['ES_RETURN'] == null
           ? null
           : EsReturnModel.fromJson(json['ES_RETURN'] as Object),
-      (json['ET_CUSTOMER'] as List<dynamic>?)
-          ?.map((e) => EtCustomerModel.fromJson(e as Object))
+      (json['ET_CUSTLIST'] as List<dynamic>?)
+          ?.map((e) => EtCustListModel.fromJson(e as Object))
           .toList(),
     );
 
-Map<String, dynamic> _$EtCustomerResponseModelToJson(
-        EtCustomerResponseModel instance) =>
+Map<String, dynamic> _$EtCustListResponseModelToJson(
+        EtCustListResponseModel instance) =>
     <String, dynamic>{
       'ES_RETURN': instance.esReturn?.toJson(),
-      'ET_CUSTOMER': instance.etCustomer?.map((e) => e.toJson()).toList(),
+      'ET_CUSTLIST': instance.etCustList?.map((e) => e.toJson()).toList(),
     };

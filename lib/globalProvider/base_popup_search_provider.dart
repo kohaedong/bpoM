@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-08 16:28:42
+ * Last Modified: 2022-07-11 11:17:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/model/rfc/et_customer_response_model.dart';
+import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
@@ -34,7 +34,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   List<String>? productFamilyDataList;
 
   EtStaffListResponseModel? staList;
-  EtCustomerResponseModel? etCustomerResponseModel;
+  EtKunnrResponseModel? etCustomerResponseModel;
 
   OneCellType? type;
   Map<String, dynamic>? bodyMap;
@@ -244,7 +244,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
       return BasePoupSearchResult(false);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
-      var temp = EtCustomerResponseModel.fromJson(result.body['data']);
+      var temp = EtKunnrResponseModel.fromJson(result.body['data']);
       pr(temp.toJson());
       if (temp.etKunnr!.length != partial) {
         hasMore = false;

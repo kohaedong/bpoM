@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-11 09:13:26
+ * Last Modified: 2022-07-11 09:37:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -49,22 +49,15 @@ class SalseActivitySearchPage extends StatefulWidget {
 }
 
 class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
-  late TextEditingController _orderNumberEditingController;
-  late TextEditingController _deliveryNumberEditingController;
-  late TextEditingController _companyDistributionEditingController;
   late ScrollController _scrollController;
   late ScrollController _scrollController2;
   bool upLock = true;
   bool downLock = true;
   DateTime selectedDate = DateTime.now();
   var _scrollSwich = ValueNotifier<bool>(false);
-  var _panelSwich = ValueNotifier(true);
-  var mountedSwich = ValueNotifier(false);
+  var _panelSwich = ValueNotifier<bool>(true);
   @override
   void initState() {
-    _orderNumberEditingController = TextEditingController();
-    _deliveryNumberEditingController = TextEditingController();
-    _companyDistributionEditingController = TextEditingController();
     _scrollController = ScrollController();
     _scrollController2 = ScrollController();
     super.initState();
@@ -72,9 +65,8 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
 
   @override
   void dispose() {
-    _orderNumberEditingController.dispose();
-    _deliveryNumberEditingController.dispose();
-    _companyDistributionEditingController.dispose();
+    _scrollSwich.dispose();
+    _panelSwich.dispose();
     _scrollController.dispose();
     _scrollController2.dispose();
     super.dispose();
@@ -327,32 +319,9 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
     );
   }
 
-  // Widget _buildTotal(BuildContext context) {
-  //   return Consumer<SalseSalseActivitySearchPageProvider>(
-  //       builder: (context, provider, _) {
-  //     return provider.searchResponseModel != null &&
-  //             provider.searchResponseModel!.tList!.isNotEmpty
-  //         ? Container(
-  //             alignment: Alignment.centerLeft,
-  //             padding: EdgeInsets.symmetric(
-  //                 vertical: AppSize.defaultListItemSpacing / 2,
-  //                 horizontal: AppSize.padding),
-  //             child: Row(
-  //               children: [
-  //                 AppText.text('총', style: AppTextStyle.sub_14),
-  //                 AppText.text(
-  //                     '${provider.searchResponseModel!.tList!.length}'),
-  //                 AppText.text('건', style: AppTextStyle.sub_14)
-  //               ],
-  //             ))
-  //         : Container();
-  //   });
-  // }
-
   Widget _buildListView(SalseSalseActivitySearchPageProvider provider) {
     return Column(
       children: [
-        // _buildTotal(context),
         provider.searchResponseModel != null &&
                 provider.searchResponseModel!.tList != null &&
                 provider.searchResponseModel!.tList!.isNotEmpty

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-08 18:03:04
+ * Last Modified: 2022-07-11 14:09:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,7 +22,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_search_type.dart';
 import 'package:medsalesportal/view/common/base_shimmer.dart';
-import 'package:medsalesportal/model/rfc/et_customer_model.dart';
+import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
@@ -43,7 +43,8 @@ class BasePopupSearch {
     final result = await AppDialog.showPopup(
         context,
         type == PopupSearchType.SEARCH_SALSE_PERSON ||
-                type == PopupSearchType.SEARCH_CUSTOMER
+                type == PopupSearchType.SEARCH_CUSTOMER ||
+                type == PopupSearchType.SEARCH_SALLER
             // 이페이지는 2개의 StatefulWidget이 있습니다.
             // [PopupSearchOneRowContents] 와 [PopupSearchThreeRowContents]
             ? PopupSearchOneRowContents(type!, bodyMap: bodyMap)
@@ -460,9 +461,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                           child: DefaultShimmer.buildDefaultPopupShimmer(),
                         ),
                       )
-                    : Padding(
-                        padding: AppSize.nullValueWidgetPadding,
-                        child: BaseNullDataWidget.build());
+                    : Column(
+                        children: [BaseNullDataWidget.build()],
+                      );
           });
         });
   }
@@ -508,7 +509,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     );
   }
 
-  Widget _buildCustomerContentsItem(BuildContext context, EtCustomerModel model,
+  Widget _buildCustomerContentsItem(BuildContext context, EtKunnrModel model,
       int index, bool isShowLastPageText) {
     return InkWell(
       onTap: () {

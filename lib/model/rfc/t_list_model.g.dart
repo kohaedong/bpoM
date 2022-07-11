@@ -19,7 +19,7 @@ TlistModel _$TlistModelFromJson(Map<String, dynamic> json) => TlistModel(
       json['BZACTNO'] as String?,
       json['CFM_FLAG'] as String?,
       json['COMNT'] as String?,
-      json['DIST'] as double?,
+      (json['DIST'] as num?)?.toDouble(),
       json['FADDCAT'] as String?,
       json['FADDCAT_NM'] as String?,
       json['MAKTX1'] as String?,
@@ -63,6 +63,7 @@ TlistModel _$TlistModelFromJson(Map<String, dynamic> json) => TlistModel(
 Map<String, dynamic> _$TlistModelToJson(TlistModel instance) =>
     <String, dynamic>{
       'BZACTNO': instance.bzactno,
+      'NAME': instance.name,
       'SEQNO': instance.seqno,
       'STPNO': instance.stpno,
       'ADATE': instance.adate,
@@ -105,7 +106,6 @@ Map<String, dynamic> _$TlistModelToJson(TlistModel instance) =>
       'MAKTX3': instance.maktx3,
       'MATNR1': instance.matnr1,
       'MATNR2': instance.matnr2,
-      'NAME': instance.name,
       'MATNR3': instance.matnr3,
       'ZTREAT3': instance.ztreat3,
       'ZTREAT3_NM': instance.ztreat3Nm,

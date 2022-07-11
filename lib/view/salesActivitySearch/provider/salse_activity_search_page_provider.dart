@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-07-08 17:38:01
+ * Last Modified: 2022-07-11 12:33:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
-import 'package:medsalesportal/model/rfc/et_customer_model.dart';
+import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_search_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
@@ -34,7 +34,7 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   String? selectedEndDate;
   String? customerName;
   EtStaffListModel? selectedSalesPerson;
-  EtCustomerModel? selectedCustomerModel;
+  EtKunnrModel? selectedCustomerModel;
   SalseActivitySearchResponseModel? searchResponseModel;
   IsLoginModel? isLoginModel;
   int pos = 0;
@@ -102,7 +102,7 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   }
 
   void setCustomerModel(dynamic str) {
-    str as EtCustomerModel;
+    str as EtKunnrModel;
     selectedCustomerModel = str;
     customerName = selectedCustomerModel!.name;
     notifyListeners();

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/hive_service.dart
  * Created Date: 2021-08-17 13:17:07
- * Last Modified: 2022-07-08 14:32:38
+ * Last Modified: 2022-07-11 13:28:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -293,7 +293,7 @@ class HiveService {
 
 // 고객사 운영상태.
   static Future<List<String>?> getProcessingStatus() async {
-    return getDataFromTCode('SHIP_STAT', cdcls: 'LTS', cditm: '');
+    return getDataFromTCode('SHIP_STAT', cdcls: 'LTS', isWithCode: true);
   }
 
 // 제품군
