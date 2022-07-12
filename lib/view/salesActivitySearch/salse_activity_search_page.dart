@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-11 16:35:55
+ * Last Modified: 2022-07-12 15:16:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -408,13 +408,11 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                         ..addListener(() {
                           if (_scrollController2.offset > AppSize.realHeight) {
                             if (downLock == true) {
-                              pr('downLock');
                               downLock = false;
                               upLock = true;
                               _scrollSwich.value = true;
                             }
                           } else {
-                            pr('upLock');
                             if (upLock == true) {
                               upLock = false;
                               downLock = true;

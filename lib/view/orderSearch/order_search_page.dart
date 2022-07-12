@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-07-11 23:18:36
+ * Last Modified: 2022-07-12 15:21:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -16,6 +16,7 @@ import 'package:medsalesportal/model/rfc/t_list_search_order_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
+import 'package:medsalesportal/view/orderSearch/order_detail_page.dart';
 import 'package:medsalesportal/view/salesActivitySearch/salse_activity_detail_page.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
@@ -337,7 +338,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
       BuildContext context, TlistSearchOrderModel model, bool isShowLastPage) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, SalseActivityDetailPage.routeName,
+        Navigator.pushNamed(context, OrderDetailPage.routeName,
             arguments: model);
       },
       child: Padding(
@@ -367,21 +368,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                     isSubTitle: true),
                 AppText.listViewText(model.posnr!, isSubTitle: true),
                 AppStyles.buildPipe(),
-                FutureBuilder<List<String>?>(
-                    future: HiveService.getCustomerType(model.zstatus!),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData &&
-                          snapshot.connectionState == ConnectionState.done) {
-                        return AppText.listViewText(snapshot.data!.single,
-                            isSubTitle: true);
-                      }
-                      return Container(
-                        width: AppSize.padding * 4,
-                        height: AppSize.padding * 4,
-                      );
-                    }),
-                AppStyles.buildPipe(),
-                AppText.listViewText(model.netpr!, isSubTitle: true),
+                AppText.listViewText(model.kunnrNm!, isSubTitle: true),
               ],
             ),
             defaultSpacing(),
@@ -395,7 +382,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
   Widget _buildListView(OrderSearchPageProvider provider) {
     return Column(
       children: [
-        provider.searchResponseModel != null &&
+        provider.searchOrderResponseModel != null &&
                 provider.searchOrderResponseModel!.tList != null &&
                 provider.searchOrderResponseModel!.tList!.isNotEmpty
             ? ListView.builder(
@@ -482,13 +469,11 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                         ..addListener(() {
                           if (_scrollController2.offset > AppSize.realHeight) {
                             if (downLock == true) {
-                              pr('downLock');
                               downLock = false;
                               upLock = true;
                               _scrollSwich.value = true;
                             }
                           } else {
-                            pr('upLock');
                             if (upLock == true) {
                               upLock = false;
                               downLock = true;

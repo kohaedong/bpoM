@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_all_page.dart
  * Created Date: 2022-01-04 00:52:52
- * Last Modified: 2022-07-06 15:02:27
+ * Last Modified: 2022-07-12 15:15:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/enums/image_type.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -25,6 +24,7 @@ import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/home/provider/notice_provider.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_next_page_loading.dart';
+import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
 
 class NoticeAllPage extends StatefulWidget {
   const NoticeAllPage({Key? key}) : super(key: key);
@@ -83,13 +83,11 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
                   ..addListener(() {
                     if (scrollController!.offset > AppSize.realHeight) {
                       if (downLock == true) {
-                        pr('downLock');
                         downLock = false;
                         upLock = true;
                         _scrollSwich.value = true;
                       }
                     } else {
-                      pr('upLock');
                       if (upLock == true) {
                         upLock = false;
                         downLock = true;

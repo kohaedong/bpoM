@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-12 09:25:45
+ * Last Modified: 2022-07-12 15:03:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -369,24 +369,27 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
             }),
         defaultSpacing(),
         Selector<BasePopupSearchProvider, String?>(
-            selector: (context, provider) => provider.selectedBusinessGroup,
-            builder: (context, businessGroup, _) {
+            selector: (context, provider) => provider.selectedSalesGroup,
+            builder: (context, salesGroup, _) {
               return BaseInputWidget(
                   context: context,
                   width: (AppSize.defaultContentsWidth - AppSize.padding * 2),
                   enable: false,
-                  hintTextStyleCallBack: businessGroup != null
-                      ? () => AppTextStyle.default_16
-                      : () => AppTextStyle.hint_16,
-                  iconType: InputIconType.SELECT,
-                  iconColor: businessGroup == null
+                  // hintTextStyleCallBack: salesGroup != null
+                  //     ? () => AppTextStyle.default_16
+                  //     : () => AppTextStyle.hint_16,
+                  hintTextStyleCallBack: () => AppTextStyle.hint_16,
+                  // iconType: InputIconType.SELECT,
+                  iconType: null,
+                  iconColor: salesGroup == null
                       ? AppColors.textFieldUnfoucsColor
                       : null,
-                  commononeCellDataCallback: p.getBusinessGroup,
-                  oneCellType: OneCellType.SEARCH_BUSINESS_GROUP,
-                  isSelectedStrCallBack: (str) => p.setBusinessGroup(str),
-                  hintText: businessGroup != null
-                      ? businessGroup
+                  // commononeCellDataCallback: p.getSalesGroup,
+                  // oneCellType: OneCellType.SEARCH_BUSINESS_GROUP,
+                  oneCellType: OneCellType.DO_NOTHING,
+                  // isSelectedStrCallBack: (str) => p.setSalesGroup(str),
+                  hintText: salesGroup != null
+                      ? salesGroup
                       : '${tr('plz_select_something', args: [
                               tr('business_group')
                             ])}');

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-12 09:14:28
+ * Last Modified: 2022-07-12 15:07:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -26,6 +26,7 @@ import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class BasePopupSearchProvider extends ChangeNotifier {
   bool isLoadData = false;
@@ -34,7 +35,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   String? customerInputText;
   String? selectedProductCategory;
   String? selectedProductFamily;
-  String? selectedBusinessGroup;
+  String? selectedSalesGroup;
   List<String>? productCategoryDataList;
   List<String>? productBusinessDataList;
   List<String>? productFamilyDataList;
@@ -76,9 +77,14 @@ class BasePopupSearchProvider extends ChangeNotifier {
   }
 
   Future<void> initData() async {
+    // data(String) 를 map으로 받아와 조건에 맞는 model로 초기화 해준다.
+    // 제품군 / 영업사원
     if (isFirestRun && bodyMap != null) {
       staffName = bodyMap?['staff'];
       selectedProductFamily = bodyMap?['product_family'];
+      await getProductFamily();
+      await getSalesGroup(isFirstRun: isFirestRun);
+      searchPerson(true, isFromSearchSaller: true);
     }
   }
 
@@ -111,8 +117,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setBusinessGroup(String? value) {
-    selectedBusinessGroup = value;
+  void setSalesGroup(String? value) {
+    selectedSalesGroup = value;
     notifyListeners();
   }
 
@@ -132,8 +138,20 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return dataStr;
   }
 
-  Future<List<String>?> getBusinessGroup() async {
-    productBusinessDataList = await HiveService.getBusinessGroup();
+  Future<List<String>?> getSalesGroup({bool? isFirstRun}) async {
+    productBusinessDataList = await HiveService.getSalesGroup();
+    if (isFirestRun) {
+      //------ default data ------
+      final esLogin = CacheService.getEsLogin();
+      var temp = productBusinessDataList
+          ?.where((str) => str.contains(esLogin!.dptnm!))
+          .toList();
+      if (temp != null && temp.isNotEmpty) {
+        selectedSalesGroup = temp.first.substring(0, temp.first.indexOf('-'));
+        notifyListeners();
+      }
+      //------ default data ------
+    }
     var dataStr = <String>[];
     productBusinessDataList!.forEach((data) {
       dataStr.add(data.substring(0, data.indexOf('-')));
@@ -170,12 +188,13 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return resultList.strList;
   }
 
-  Future<BasePoupSearchResult> searchPerson(
-    bool isMounted,
-  ) async {
-    isLoadData = true;
-    if (isMounted) {
-      notifyListeners();
+  Future<BasePoupSearchResult> searchPerson(bool isMounted,
+      {bool? isFromSearchSaller}) async {
+    if (isFromSearchSaller == null) {
+      isLoadData = true;
+      if (isMounted) {
+        notifyListeners();
+      }
     }
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();
@@ -188,36 +207,49 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "IV_SNAME": personInputText ?? '',
         "IV_DPTNM": esLogin!.dptnm,
         "IS_LOGIN": isLogin,
-        "pos": "$pos",
-        "partial": "$partial",
         "resultTables": RequestType.SEARCH_STAFF.resultTable,
         "functionName": RequestType.SEARCH_STAFF.serverMethod,
       }
     };
+    if (isFromSearchSaller == null) {
+      body.addAll({
+        "pos": "$pos",
+        "partial": "$partial",
+      });
+    }
     _api.init(RequestType.SEARCH_STAFF);
     final result = await _api.request(body: body);
     if (result == null || result.statusCode != 200) {
-      isLoadData = false;
-      staList = null;
-      notifyListeners();
+      if (isFromSearchSaller == null) {
+        isLoadData = false;
+        staList = null;
+        notifyListeners();
+      }
       return BasePoupSearchResult(false);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
-      var temp = EtStaffListResponseModel.fromJson(result.body['data']);
-      if (temp.staffList!.length != partial) {
-        hasMore = false;
-      }
-      if (staList == null) {
-        staList = temp;
-      } else {
-        staList!.staffList!.addAll(temp.staffList!);
-      }
-      if (staList != null && staList!.staffList == null) {
-        staList = null;
-      }
+      if (isFromSearchSaller == null) {
+        var temp = EtStaffListResponseModel.fromJson(result.body['data']);
+        if (temp.staffList!.length != partial) {
+          hasMore = false;
+        }
+        if (staList == null) {
+          staList = temp;
+        } else {
+          staList!.staffList!.addAll(temp.staffList!);
+        }
+        if (staList != null && staList!.staffList == null) {
+          staList = null;
+        }
 
-      isLoadData = false;
-      notifyListeners();
+        isLoadData = false;
+        notifyListeners();
+      } else {
+        var temp = EtStaffListResponseModel.fromJson(result.body['data']);
+        var staffList =
+            temp.staffList!.where((model) => model.sname == staffName).toList();
+        selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
+      }
       return BasePoupSearchResult(true);
     }
     isLoadData = false;
@@ -310,7 +342,10 @@ class BasePopupSearchProvider extends ChangeNotifier {
   }
 
   Future<BasePoupSearchResult> searchSaller(bool isMounted) async {
+    // 검색 하기 전에 popup body 에는  '조회결관가 없습니다.' 문구만 보여주기 위해.
+    // 첫 진입시 data 초기화 작업만 해주고 BasePoupSearchResult(false) 로 return 한다;
     if (isFirestRun) {
+      await initData();
       isFirestRun = false;
       return BasePoupSearchResult(false);
     }
@@ -327,7 +362,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
         ?.where((str) => str.contains(selectedProductFamily!))
         .toList();
     var vkgrp = productBusinessDataList
-        ?.where((str) => str.contains(selectedBusinessGroup!))
+        ?.where((str) => str.contains(selectedSalesGroup!))
         .toList();
     _body = {
       "methodName": RequestType.SEARCH_SALLER.serverMethod,
@@ -340,7 +375,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "IV_VKGRP": vkgrp != null && vkgrp.isNotEmpty
             ? vkgrp.first.substring(vkgrp.first.indexOf('-') + 1)
             : '',
-        "IV_PERNR": staffName ?? '',
+        "IV_PERNR": staffName == tr('all') ? '' : selectedSalesPerson!.pernr,
         "pos": pos,
         "partial": partial,
         "IV_KUNNR": "",
@@ -384,11 +419,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
     isTeamLeader = isLoginModel!.xtm == 'X';
-    if (isTeamLeader) {
-      staffName = tr('all');
-    } else {
-      staffName = isLoginModel!.ename;
-    }
+    isTeamLeader = true;
   }
 
   Future<BasePoupSearchResult> onSearch(OneCellType type, bool isMounted,
@@ -398,9 +429,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
     }
     this.type = type;
     setIsLoginModel();
-    if (type == OneCellType.SEARCH_SALLER) {
-      initData();
-    }
     switch (type) {
       case OneCellType.SEARCH_SALSE_PERSON:
         return await searchPerson(isMounted);

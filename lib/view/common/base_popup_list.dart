@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_list.dart
  * Created Date: 2021-09-10 09:48:38
- * Last Modified: 2022-07-12 09:11:02
+ * Last Modified: 2022-07-12 10:36:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -134,7 +134,7 @@ class BasePopupList {
             ? iconType == InputIconType.SELECT
                 ? Future.delayed(Duration.zero, () async {
                     var temp = await contentsCallback.call();
-                    temp!.insert(0, '- ${tr('all')} - ');
+                    temp!.insert(0, '${tr('all')}');
                     return temp;
                   })
                 : contentsCallback.call()
