@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/list_group_type.dart
  * Created Date: 2021-09-10 09:52:32
- * Last Modified: 2022-07-11 13:52:26
+ * Last Modified: 2022-07-12 17:37:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -115,7 +115,7 @@ extension OneCellTypeExtension on OneCellType {
       case OneCellType.SEARCH_PRODUCT_FAMILY:
         return '${tr('product_family')}';
       case OneCellType.SEARCH_BUSINESS_GROUP:
-        return '${tr('business_group')}';
+        return '${tr('salse_group')}';
       case OneCellType.SEARCH_BUSINESS_PLACE:
         return '${tr('business_place')}';
       case OneCellType.SEARCH_TARIFF:
@@ -143,9 +143,9 @@ extension OneCellTypeExtension on OneCellType {
       case OneCellType.AGENCY_APPROVAL_REFUSE:
         return '${tr('refuse_')} ${tr('do_you')}';
       case OneCellType.SEARCH_ORDER_MONITORING_BUSINISS_GROUP:
-        return '${tr('business_group')}';
+        return '${tr('salse_group')}';
       case OneCellType.SALES_ORDER_PAGE_BUSINESS_GROUP:
-        return '${tr('business_group')}';
+        return '${tr('salse_group')}';
       case OneCellType.SALES_ORDER_PAGE_BUSINESS_PLACE:
         return '${tr('business_place')}';
       case OneCellType.SALES_ORDER_PAGE_CIRCULATION_CHANNEL:

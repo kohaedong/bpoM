@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-07-12 15:48:44
+ * Last Modified: 2022-07-12 16:46:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,10 @@
  */
 
 import 'package:medsalesportal/enums/popup_search_type.dart';
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 import 'package:medsalesportal/model/rfc/t_list_search_order_model.dart';
+import 'package:medsalesportal/service/key_service.dart';
+import 'package:medsalesportal/util/check_overflow_util.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
@@ -364,22 +367,41 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                 AppText.listViewText(
                     FormatUtil.addDashForDateStr2(model.zreqDate ?? ''),
                     isSubTitle: true),
-                BaseTagButton.build(
-                    model.zreqmsg != null && model.zreqmsg == 'Y'
-                        ? '${tr('visited')}'
-                        : '${tr('not_visited')}')
+                BaseTagButton.build(model.zstatusNm ?? '')
               ],
             ),
             defaultSpacing(),
-            AppText.listViewText(model.kunnrNm!),
+            CheckOverflowUtil.hasTextOverflow(
+                    '${model.kunnrNm!}${model.maktx!}',
+                    KeyService.baseAppKey.currentContext!
+                        .read<AppThemeProvider>()
+                        .themeData
+                        .textTheme
+                        .headline4!,
+                    AppSize.defaultContentsWidth * .7,
+                    AppSize.defaultContentsWidth * .7,
+                    1)
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppText.listViewText(model.kunnrNm!,
+                          textAlign: TextAlign.start),
+                      AppText.listViewText(' - ${model.maktx!}',
+                          textAlign: TextAlign.start),
+                    ],
+                  )
+                : AppText.listViewText('${model.kunnrNm!} - ${model.maktx!}',
+                    maxLines: 1),
             defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
             Row(
               children: [
-                AppText.listViewText('${tr('salse_person')}:',
+                AppText.listViewText(
+                    '${tr('price')}/${tr('vat')}:${FormatUtil.addComma('${model.netwr}')}/${FormatUtil.addComma('${model.mwsbp}')}',
                     isSubTitle: true),
-                AppText.listViewText(model.posnr!, isSubTitle: true),
                 AppStyles.buildPipe(),
-                AppText.listViewText(model.kunnrNm!, isSubTitle: true),
+                AppText.listViewText(
+                    '${tr('total')}:${FormatUtil.addComma('${model.mwsbp! + model.netwr!}')}',
+                    isSubTitle: true),
               ],
             ),
             defaultSpacing(),

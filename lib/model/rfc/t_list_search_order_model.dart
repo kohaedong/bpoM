@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/t_list_search_order_model.dart
  * Created Date: 2022-07-11 12:35:31
- * Last Modified: 2022-07-12 11:22:48
+ * Last Modified: 2022-07-12 17:07:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -19,7 +19,7 @@ class TlistSearchOrderModel {
   @JsonKey(name: 'ZREQNO')
   String? zreqno;
   @JsonKey(name: 'VBELN')
-  String? vbeoh;
+  String? vbeln;
   @JsonKey(name: 'POSNR')
   String? posnr;
   @JsonKey(name: 'ZREQ_DATE')
@@ -99,7 +99,7 @@ class TlistSearchOrderModel {
       this.posnr,
       this.sname,
       this.spart,
-      this.vbeoh,
+      this.vbeln,
       this.vkgrp,
       this.vkgrpNm,
       this.vrkme,

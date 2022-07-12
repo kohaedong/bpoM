@@ -48,7 +48,7 @@ Map<String, dynamic> _$TlistSearchOrderModelToJson(
         TlistSearchOrderModel instance) =>
     <String, dynamic>{
       'ZREQNO': instance.zreqno,
-      'VBELN': instance.vbeoh,
+      'VBELN': instance.vbeln,
       'POSNR': instance.posnr,
       'ZREQ_DATE': instance.zreqDate,
       'ZSTATUS': instance.zstatus,

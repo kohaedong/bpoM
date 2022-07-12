@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-12 16:07:25
+ * Last Modified: 2022-07-12 17:37:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -391,7 +391,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   hintText: salesGroup != null
                       ? salesGroup
                       : '${tr('plz_select_something', args: [
-                              tr('business_group')
+                              tr('salse_group')
                             ])}');
             }),
         defaultSpacing(),
