@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-07-12 15:21:56
+ * Last Modified: 2022-07-12 15:48:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -285,6 +285,17 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                     '${tr('sales_office')}',
                                     BaseInputWidget(
                                       context: context,
+                                      onTap: p.selectedProductsFamily == null
+                                          ? () {
+                                              AppToast().show(
+                                                  context,
+                                                  tr('plz_select_something',
+                                                      args: [
+                                                        tr('product_family')
+                                                      ]));
+                                              return 'continue';
+                                            }
+                                          : null,
                                       iconType: InputIconType.SEARCH,
                                       iconColor: customerName != null
                                           ? AppColors.defaultText

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-12 15:03:36
+ * Last Modified: 2022-07-12 16:07:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -734,10 +734,21 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AppText.text('${model.kunnrNm ?? ''} ',
-                            style: AppTextStyle.h3),
-                        AppText.text('${model.pstlz}', style: AppTextStyle.h5),
-                        AppText.text('${model.telf1}', style: AppTextStyle.h5),
+                        AppText.listViewText('${model.kunnrNm ?? ''} '),
+                        AppText.listViewText('${model.ort01} ${model.stras}',
+                            isSubTitle: true),
+                        Row(
+                          children: [
+                            AppText.listViewText('${model.telf1}',
+                                isSubTitle: true),
+                            AppStyles.buildPipe(),
+                            AppText.listViewText('${model.j1kfrepre}',
+                                isSubTitle: true),
+                            AppStyles.buildPipe(),
+                            AppText.listViewText('${model.stcd2}',
+                                isSubTitle: true),
+                          ],
+                        )
                       ],
                     ),
                   ],
