@@ -446,6 +446,7 @@
     "detail_book":"Detail Book",
     "date":"{}요청일",
     "manager":"담당자",
-    "product_process_status":"처리상태"
+    "product_process_status":"처리상태",
+    "_all_":"- 전체 -"
 
 }

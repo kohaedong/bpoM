@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-07-11 14:43:13
+ * Last Modified: 2022-07-12 09:32:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -38,6 +38,7 @@ enum RequestType {
   SEARCH_SALSE_ACTIVITY,
   SALSE_ACTIVITY_DETAIL,
   SEARCH_SALLER,
+  SEARCH_ORDER,
 }
 
 // [KolonBuildConfig] 빌드 옵션에 따라 url가 변한다.
@@ -81,6 +82,8 @@ extension RequestTypeExtension on RequestType {
   String url({String? params}) {
     switch (this) {
       case RequestType.SEARCH_STAFF:
+        return '$rfcURL/common';
+      case RequestType.SEARCH_ORDER:
         return '$rfcURL/common';
       case RequestType.SEARCH_SALLER:
         return '$rfcURL/common';
@@ -136,6 +139,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SEARCH_STAFF:
         return 'ES_RETURN,ET_STAFFLIST';
+      case RequestType.SEARCH_ORDER:
+        return 'ES_RETURN,T_LIST';
       case RequestType.SEARCH_SALLER:
         return 'ES_RETURN,ET_CUSTOMER,IT_KTOKD';
       case RequestType.SEARCH_CUSTOMER:
@@ -204,6 +209,8 @@ extension RequestTypeExtension on RequestType {
         return 'Z_LTSP_IF0160';
       case RequestType.SEARCH_SALLER:
         return 'Z_LTSP_IF0022';
+      case RequestType.SEARCH_ORDER:
+        return 'Z_LTSP_IF0081';
       default:
         throw NullThrownError();
     }

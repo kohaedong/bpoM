@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_list.dart
  * Created Date: 2021-09-10 09:48:38
- * Last Modified: 2022-07-11 17:43:15
+ * Last Modified: 2022-07-12 09:11:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,7 @@
  */
 
 import 'package:medsalesportal/enums/input_icon_type.dart';
-import 'package:medsalesportal/globalProvider/base_one_cell_popup_provider.dart';
+import 'package:medsalesportal/view/common/provider/base_one_cell_popup_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/util/date_util.dart';

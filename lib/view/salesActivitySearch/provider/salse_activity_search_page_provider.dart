@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-07-11 12:33:31
+ * Last Modified: 2022-07-12 09:06:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -102,6 +102,7 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   }
 
   void setCustomerModel(dynamic str) {
+    pr(str);
     str as EtKunnrModel;
     selectedCustomerModel = str;
     customerName = selectedCustomerModel!.name;

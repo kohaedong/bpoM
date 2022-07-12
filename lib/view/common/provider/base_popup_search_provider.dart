@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-11 23:38:29
+ * Last Modified: 2022-07-12 09:14:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,21 +11,21 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/hive_box_type.dart';
-import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/model/commonCode/is_login_model.dart';
-import 'package:medsalesportal/model/rfc/et_customer_response_model.dart';
-import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
-import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
-import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
-import 'package:medsalesportal/service/api_service.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
+import 'package:medsalesportal/service/api_service.dart';
+import 'package:medsalesportal/enums/hive_box_type.dart';
+import 'package:medsalesportal/service/hive_service.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/enums/popup_list_type.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/model/commonCode/is_login_model.dart';
+import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
+import 'package:medsalesportal/model/rfc/et_customer_response_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 
 class BasePopupSearchProvider extends ChangeNotifier {
   bool isLoadData = false;

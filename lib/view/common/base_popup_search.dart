@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-11 23:29:54
+ * Last Modified: 2022-07-12 09:25:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,30 +11,30 @@
  * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
  */
 
+import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/popup_list_type.dart';
-import 'package:medsalesportal/model/rfc/et_customer_model.dart';
-import 'package:medsalesportal/service/hive_service.dart';
-import 'package:medsalesportal/view/common/base_app_toast.dart';
-import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/enums/popup_list_type.dart';
+import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_search_type.dart';
 import 'package:medsalesportal/view/common/base_shimmer.dart';
+import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/common/widget_of_last_page_text.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_next_page_loading.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
-import 'package:medsalesportal/globalProvider/base_popup_search_provider.dart';
-import 'package:tuple/tuple.dart';
+import 'package:medsalesportal/view/common/provider/base_popup_search_provider.dart';
 
 class BasePopupSearch {
   final PopupSearchType? type;
@@ -47,8 +47,6 @@ class BasePopupSearch {
         type == PopupSearchType.SEARCH_SALSE_PERSON ||
                 type == PopupSearchType.SEARCH_CUSTOMER ||
                 type == PopupSearchType.SEARCH_SALLER
-            // 이페이지는 2개의 StatefulWidget이 있습니다.
-            // [PopupSearchOneRowContents] 와 [PopupSearchThreeRowContents]
             ? PopupSearchOneRowContents(type!, bodyMap: bodyMap)
             : PopupSearchThreeRowContents(
                 type!,
@@ -785,16 +783,21 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   bottom: 0,
                   child: InkWell(
                     onTap: () {
-                      Navigator.pop(context, {
-                        'staff':
-                            context.read<BasePopupSearchProvider>().staffName,
-                        'product_family': context
-                                .read<BasePopupSearchProvider>()
-                                .selectedProductFamily ??
-                            context
-                                .read<BasePopupSearchProvider>()
-                                .bodyMap?['product_family']
-                      });
+                      Navigator.pop(
+                          context,
+                          widget.type == PopupSearchType.SEARCH_SALLER
+                              ? {
+                                  'staff': context
+                                      .read<BasePopupSearchProvider>()
+                                      .staffName,
+                                  'product_family': context
+                                          .read<BasePopupSearchProvider>()
+                                          .selectedProductFamily ??
+                                      context
+                                          .read<BasePopupSearchProvider>()
+                                          .bodyMap?['product_family']
+                                }
+                              : null);
                     },
                     child: ClipRRect(
                         borderRadius: BorderRadius.only(

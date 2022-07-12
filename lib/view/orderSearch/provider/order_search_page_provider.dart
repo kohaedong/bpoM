@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-07-11 23:38:45
+ * Last Modified: 2022-07-12 09:55:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -73,13 +73,13 @@ class OrderSearchPageProvider extends ChangeNotifier {
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
     isFirstRun = false;
-    notifyListeners();
   }
 
   void setIsLoginModel() async {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
     isTeamLeader = isLoginModel!.xtm == 'X';
+    isTeamLeader = true;
     if (isTeamLeader) {
       staffName = tr('all');
     } else {
@@ -173,28 +173,34 @@ class OrderSearchPageProvider extends ChangeNotifier {
       notifyListeners();
     }
     final isLogin = CacheService.getIsLogin();
+    pr(isLoginModel?.toJson());
     final esLogin = CacheService.getEsLogin();
+    pr(esLogin?.toJson());
+    pr(selectedSalesPerson!.pernr);
     Map<String, dynamic> _body = {
-      "methodName": RequestType.SEARCH_SALSE_ACTIVITY.serverMethod,
+      "methodName": RequestType.SEARCH_ORDER.serverMethod,
       "methodParamMap": {
-        "IV_SANUM": isTeamLeader
-            ? staffName == tr('all')
-                ? ''
-                : selectedSalesPerson!.logid
-            : esLogin!.logid,
-        "IV_ORGHK": esLogin!.orghk,
-        "IV_ZSKUNNR":
-            selectedCustomerModel != null ? selectedCustomerModel!.kunnr : '',
-        "IV_FRDAT": FormatUtil.removeDash(selectedStartDate!),
-        "IV_TODAT": FormatUtil.removeDash(selectedEndDate!),
-        "pos": pos,
-        "partial": partial,
+        "IV_PTYPE": "R",
+        "IV_ORGHK": "",
+        "IV_MATKL": "",
+        "IV_PERNR":
+            selectedSalesPerson != null ? selectedSalesPerson!.pernr : '',
+        "IV_KUNNR": "",
+        "IV_ZZKUNNR_END": "",
+        "IV_MATNR": "",
+        "IV_ZREQNO": "",
+        "IV_VKORG": "1610",
+        "IV_VTWEG": "10",
+        "IV_SPART": "6B",
+        "IV_STATUS": "",
+        "IV_ZREQ_DATE_FR": FormatUtil.removeDash(selectedStartDate!),
+        "IV_ZREQ_DATE_TO": FormatUtil.removeDash(selectedEndDate!),
         "IS_LOGIN": isLogin,
-        "functionName": RequestType.SEARCH_SALSE_ACTIVITY.serverMethod,
-        "resultTables": RequestType.SEARCH_SALSE_ACTIVITY.resultTable,
+        "functionName": RequestType.SEARCH_ORDER.serverMethod,
+        "resultTables": RequestType.SEARCH_ORDER.resultTable,
       }
     };
-    _api.init(RequestType.SEARCH_SALSE_ACTIVITY);
+    _api.init(RequestType.SEARCH_ORDER);
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {
       isLoadData = false;
