@@ -101,7 +101,7 @@ class _FontSettingsPageState extends State<FontSettingsPage> {
         appBar: MainAppBar(
           context,
           titleText:
-              AppText.text('${tr('font_size')}', style: AppTextStyle.w500_20),
+              AppText.text('${tr('font_size')}', style: AppTextStyle.w500_22),
           callback: () async {
             Navigator.pop(context);
             await settingsProvider.saveUserEvn();

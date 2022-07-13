@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-07-12 15:50:11
+ * Last Modified: 2022-07-13 13:45:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/rfc/t_list_search_order_model.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
@@ -46,7 +47,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
   IsLoginModel? isLoginModel;
 
   int pos = 0;
-  int partial = 30;
+  int partial = 100;
   bool hasMore = false;
   final _api = ApiService();
   Future<void> refresh() async {
@@ -64,6 +65,15 @@ class OrderSearchPageProvider extends ChangeNotifier {
       return onSearch(false);
     }
     return null;
+  }
+
+  Future<void> removeListitem(List<TlistSearchOrderModel>? tList) async {
+    searchOrderResponseModel!.tList!
+        .removeWhere((item) => item.vbeln == tList!.first.vbeln);
+    var temp = searchOrderResponseModel;
+    searchOrderResponseModel =
+        SearchOrderResponseModel.fromJson(temp!.toJson());
+    notifyListeners();
   }
 
   Future<ResultModel> searchPerson() async {
@@ -208,17 +218,18 @@ class OrderSearchPageProvider extends ChangeNotifier {
       notifyListeners();
     }
     final isLogin = CacheService.getIsLogin();
-    final esLogin = CacheService.getEsLogin();
-    var spart = productsFamilyListWithCode != null
-        ? productsFamilyListWithCode!
-            .where((str) => str.contains(selectedProductsFamily!))
-            .toList()
-        : <String>[];
-    var status = processingStatusListWithCode != null
-        ? processingStatusListWithCode!
-            .where((str) => str.contains(selectedProcessingStatus!))
-            .toList()
-        : <String>[];
+    var spart =
+        productsFamilyListWithCode != null && selectedProductsFamily != null
+            ? productsFamilyListWithCode!
+                .where((str) => str.contains(selectedProductsFamily ?? ''))
+                .toList()
+            : <String>[];
+    var status =
+        processingStatusListWithCode != null && selectedProcessingStatus != null
+            ? processingStatusListWithCode!
+                .where((str) => str.contains(selectedProcessingStatus!))
+                .toList()
+            : <String>[];
     var ptype = 'R';
     var vtweg = '10';
     Map<String, dynamic> _body = {

@@ -133,7 +133,7 @@ class SettingsPage extends StatelessWidget {
         hasForm: true,
         appBar: MainAppBar(context,
             titleText:
-                AppText.text('${tr('settings')}', style: AppTextStyle.w500_20)),
+                AppText.text('${tr('settings')}', style: AppTextStyle.w500_22)),
         child: FutureBuilder<SettingsResult>(
             future: p.init(),
             builder: (context, snapshot) {

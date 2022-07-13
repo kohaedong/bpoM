@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/home/notice_detail_page.dart
  * Created Date: 2022-07-05 13:17:36
- * Last Modified: 2022-07-07 12:43:32
+ * Last Modified: 2022-07-13 11:15:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -86,7 +86,7 @@ class NoticeDetailPage extends StatelessWidget {
         appBar: MainAppBar(
           context,
           titleText: AppText.text('${tr('notice_detail')}',
-              style: AppTextStyle.w500_20),
+              style: AppTextStyle.w500_22),
           callback: () {
             Navigator.pop(context);
           },

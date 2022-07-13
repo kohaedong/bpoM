@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-08 16:06:24
+ * Last Modified: 2022-07-13 11:15:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -31,7 +31,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
         hasForm: true,
         appBar: MainAppBar(context,
             titleText: AppText.text('${tr('transaction_ledger')}',
-                style: AppTextStyle.w500_20)),
+                style: AppTextStyle.w500_22)),
         child: Center(
           child: AppText.text('/salseReportPage'),
         ));

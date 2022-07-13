@@ -465,6 +465,10 @@
     "currency_unit_2":"통화",
     "order_number_2":"주문번호",
     "posnr_number":"품목번호",
-    "massage":"메시지"
+    "massage":"메시지",
+    "order_detail_description":"총{}건 / 총 금액(공급가):{}원",
+    "order_cancel":"주문취소",
+    "successful_for_something":"{}가 정상적으로 처리되였습니다.",
+    "faild_for_something":"{}가 실패하였습니다."
 
 }

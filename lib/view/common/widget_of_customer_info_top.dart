@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/customer_info_top_widget.dart
  * Created Date: 2021-09-16 11:49:56
- * Last Modified: 2022-07-06 15:01:37
+ * Last Modified: 2022-07-13 11:06:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,10 +18,10 @@ import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 
 class CustomerinfoWidget {
-  static Widget buildCustomerTopRow(
-      BuildContext context, String data, String data2) {
+  static Widget buildCustomerTopRow(BuildContext context, String data,
+      {String? data2}) {
     return Container(
-      height: AppSize.searchCustomerTopWidgetHeight,
+      height: data2 != null ? AppSize.searchCustomerTopWidgetHeight : null,
       child: Padding(
         padding: AppSize.defaultSidePadding,
         child: Column(
@@ -34,12 +34,14 @@ class CustomerinfoWidget {
                     .themeData
                     .textTheme
                     .headline1!),
-            AppText.text('$data2',
-                style: context
-                    .read<AppThemeProvider>()
-                    .themeData
-                    .textTheme
-                    .headline2!)
+            data2 != null
+                ? AppText.text('$data2',
+                    style: context
+                        .read<AppThemeProvider>()
+                        .themeData
+                        .textTheme
+                        .headline2!)
+                : Container()
           ],
         ),
       ),
@@ -54,7 +56,7 @@ class CustomerinfoWidget {
         color: AppColors.homeBgColor,
         child: Padding(
             padding: AppSize.defaultSidePadding,
-            child: AppText.text(text, style: AppTextStyle.w500_14)));
+            child: AppText.text(text, style: AppTextStyle.w500_16)));
   }
 
   static Widget buildDividingLine() {

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_all_page.dart
  * Created Date: 2022-01-04 00:52:52
- * Last Modified: 2022-07-12 15:15:37
+ * Last Modified: 2022-07-13 11:15:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -171,7 +171,7 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
               appBar: MainAppBar(
                 context,
                 titleText: AppText.text('${tr('recent_notice')}',
-                    style: AppTextStyle.w500_20),
+                    style: AppTextStyle.w500_22),
                 callback: () {
                   Navigator.pop(context);
                 },

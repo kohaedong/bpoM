@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/app_theme.dart
  * Created Date: 2021-09-01 20:12:58
- * Last Modified: 2022-07-02 13:50:47
+ * Last Modified: 2022-07-13 11:15:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -61,7 +61,7 @@ extension ThemeTypeExtension on AppThemeType {
         return Apptheme().appTheme.copyWith(
                 textTheme: TextTheme(
               headline1: AppTextStyle.bold_22,
-              headline2: AppTextStyle.w500_20,
+              headline2: AppTextStyle.w500_22,
               headline3: AppTextStyle.default_20,
               headline4: AppTextStyle.default_18,
               headline5: AppTextStyle.hint_16,

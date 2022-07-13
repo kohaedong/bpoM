@@ -144,7 +144,7 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
         appBar: MainAppBar(
           context,
           titleText: AppText.text('${tr('send_suggestion')}',
-              style: AppTextStyle.w500_20),
+              style: AppTextStyle.w500_22),
           icon: Icon(Icons.close_rounded),
           cachePageTypeCallBack: () => _textEditingController!.text.isNotEmpty,
         ),

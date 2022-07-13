@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-07-12 16:46:54
+ * Last Modified: 2022-07-13 13:47:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -351,9 +351,18 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
   Widget _buildListViewItem(
       BuildContext context, TlistSearchOrderModel model, bool isShowLastPage) {
     return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, OrderDetailPage.routeName,
-            arguments: model);
+      onTap: () async {
+        final p = context.read<OrderSearchPageProvider>();
+        var tempList = p.searchOrderResponseModel!.tList;
+        var result =
+            tempList!.where((item) => item.zreqno == model.zreqno).toList();
+        final routeResult = await Navigator.pushNamed(
+            context, OrderDetailPage.routeName,
+            arguments: result);
+        if (routeResult != null) {
+          routeResult as List<TlistSearchOrderModel>;
+          p.removeListitem(routeResult);
+        }
       },
       child: Padding(
         padding: AppSize.defaultSidePadding,
@@ -480,7 +489,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
         hasForm: true,
         appBar: MainAppBar(context,
             titleText: AppText.text('${tr('salse_order_search')}',
-                style: AppTextStyle.w500_20)),
+                style: AppTextStyle.w500_22)),
         child: MultiProvider(
           providers: [
             ChangeNotifierProvider(
