@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_detail_page_provider.dart
  * Created Date: 2022-07-13 09:31:34
- * Last Modified: 2022-07-13 13:25:01
+ * Last Modified: 2022-07-13 17:13:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -24,20 +24,23 @@ class OrderDetailPageProvider extends ChangeNotifier {
     _api.init(RequestType.ORDER_CANCEL);
     final isLogin = CacheService.getIsLogin();
     final result = await _api.request(body: {
-      'IV_VBELN': orderNumber,
-      'IS_LOGIN': isLogin,
-      'resultTables': 'ES_RETURN',
+      "methodName": RequestType.ORDER_CANCEL.serverMethod,
+      "methodParamMap": {
+        'IV_VBELN': orderNumber,
+        'IS_LOGIN': isLogin,
+        'resultTables': RequestType.ORDER_CANCEL.resultTable,
+        'functionName': RequestType.ORDER_CANCEL.serverMethod,
+      },
     });
     if (result != null && result.statusCode != 200) {
       return ResultModel(false);
     }
-    if (result != null &&
-        result.statusCode == 200 &&
-        result.body['data'] != null) {
-      if (result.body['mtype'] == 'S') {
-        return ResultModel(true);
+    if (result != null && result.statusCode == 200) {
+      final esReturn = EsReturnModel.fromJson(result.body['data']['ES_RETURN']);
+      if (esReturn.mtype == 'S') {
+        return ResultModel(true, message: esReturn.message);
       }
     }
-    return ResultModel(false, errorMassage: result!.errorMessage);
+    return ResultModel(false, message: result!.message);
   }
 }

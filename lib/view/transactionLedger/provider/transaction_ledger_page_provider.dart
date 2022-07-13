@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-07-08 15:59:58
+ * Last Modified: 2022-07-13 15:54:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,264 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/model/commonCode/is_login_model.dart';
+import 'package:medsalesportal/model/rfc/et_customer_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
+import 'package:medsalesportal/model/rfc/search_order_response_model.dart';
+import 'package:medsalesportal/service/api_service.dart';
+import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/service/hive_service.dart';
+import 'package:medsalesportal/util/date_util.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
+import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 
-class TransactionLedgerPageProvider extends ChangeNotifier {}
+class TransactionLedgerPageProvider extends ChangeNotifier {
+  bool isLoadData = false;
+  bool isTeamLeader = false;
+  bool isFirstRun = true;
+  String? staffName;
+  String? selectedStartDate;
+  String? selectedEndDate;
+  String? selectedProductsFamily;
+  String? customerName;
+  String? endCustomerName;
+  EtStaffListModel? selectedSalesPerson;
+  EtCustomerModel? selectedEndCustomerModel;
+  EtCustomerModel? selectedCustomerModel;
+  SearchOrderResponseModel? searchOrderResponseModel;
+  List<String>? processingStatusListWithCode;
+  List<String>? productsFamilyListWithCode;
+  IsLoginModel? isLoginModel;
+
+  int pos = 0;
+  int partial = 100;
+  bool hasMore = false;
+  final _api = ApiService();
+  Future<void> refresh() async {
+    pos = 0;
+    hasMore = true;
+    searchOrderResponseModel = null;
+    onSearch(true);
+  }
+
+  bool get isValidate =>
+      staffName != null && selectedStartDate != null && selectedEndDate != null;
+  Future<ResultModel?> nextPage() async {
+    if (hasMore) {
+      pos = partial + pos;
+      return onSearch(false);
+    }
+    return null;
+  }
+
+  Future<ResultModel> searchPerson() async {
+    var _api = ApiService();
+    final isLogin = CacheService.getIsLogin();
+    final esLogin = CacheService.getEsLogin();
+    Map<String, dynamic>? body;
+    body = {
+      "methodName": RequestType.SEARCH_STAFF.serverMethod,
+      "methodParamMap": {
+        "IV_SALESM": "",
+        "IV_SNAME": '',
+        "IV_DPTNM": esLogin!.dptnm,
+        "IS_LOGIN": isLogin,
+        "resultTables": RequestType.SEARCH_STAFF.resultTable,
+        "functionName": RequestType.SEARCH_STAFF.serverMethod,
+      }
+    };
+    _api.init(RequestType.SEARCH_STAFF);
+    final result = await _api.request(body: body);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false);
+    }
+    if (result.statusCode == 200 && result.body['data'] != null) {
+      var temp = EtStaffListResponseModel.fromJson(result.body['data']);
+      var staffList =
+          temp.staffList!.where((model) => model.sname == staffName).toList();
+      selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
+      // return ResultModel(true);
+    }
+    return ResultModel(false);
+  }
+
+  Future<void> initPageData() async {
+    setIsLoginModel();
+    searchPerson();
+    selectedStartDate = DateUtil.prevWeek();
+    selectedEndDate = DateUtil.now();
+    isFirstRun = false;
+  }
+
+  void setIsLoginModel() async {
+    var isLogin = CacheService.getIsLogin();
+    isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
+    isTeamLeader = isLoginModel!.xtm == 'X';
+
+    if (isTeamLeader) {
+      staffName = tr('all');
+    } else {
+      staffName = isLoginModel!.ename;
+    }
+  }
+
+  void setStartDate(BuildContext context, String? str) {
+    DateUtil.checkDateIsBefore(context, str, selectedEndDate).then((before) {
+      if (before) {
+        this.selectedStartDate = str;
+        notifyListeners();
+      }
+    });
+  }
+
+  void setCustomerName(String? str) {
+    customerName = str;
+    if (str == null) {
+      selectedCustomerModel = null;
+      selectedEndCustomerModel = null;
+    }
+    notifyListeners();
+  }
+
+  void setEndCustomerName(String? str) {
+    endCustomerName = str;
+    if (str == null) {
+      selectedEndCustomerModel = null;
+    }
+    notifyListeners();
+  }
+
+  void setStaffName(String? str) {
+    pr(str);
+    staffName = str;
+    notifyListeners();
+  }
+
+  void setSalesPerson(dynamic str) {
+    str as EtStaffListModel;
+    selectedSalesPerson = str;
+    staffName = selectedSalesPerson!.sname;
+    pr(staffName);
+    notifyListeners();
+  }
+
+  void setCustomerModel(dynamic map) {
+    map as Map<String, dynamic>;
+    var productsFamily = map['product_family'] as String?;
+    var staff = map['staff'] as String?;
+    selectedProductsFamily = productsFamily;
+    staffName = staff;
+    searchPerson();
+    var model = map['model'] as EtCustomerModel?;
+    selectedCustomerModel = model;
+    customerName = selectedCustomerModel?.kunnrNm;
+
+    notifyListeners();
+  }
+
+  void setProductsFamily(String? str) {
+    selectedProductsFamily = str;
+    notifyListeners();
+  }
+
+  void setEndDate(BuildContext context, String? str) {
+    DateUtil.checkDateIsBefore(context, selectedStartDate, str).then((before) {
+      if (before) {
+        this.selectedEndDate = str;
+        notifyListeners();
+      }
+    });
+  }
+
+  Future<List<String>?> getProcessingStatus() async {
+    if (processingStatusListWithCode == null) {
+      processingStatusListWithCode = await HiveService.getProcessingStatus();
+    }
+    return List.generate(
+        processingStatusListWithCode!.length,
+        (index) => processingStatusListWithCode![index]
+            .substring(0, processingStatusListWithCode![index].indexOf('-')));
+  }
+
+  Future<List<String>?> getProductsFamily() async {
+    if (productsFamilyListWithCode == null) {
+      productsFamilyListWithCode = await HiveService.getProductFamily();
+    }
+    return List.generate(
+        productsFamilyListWithCode!.length,
+        (index) => productsFamilyListWithCode![index]
+            .substring(0, productsFamilyListWithCode![index].indexOf('-')));
+  }
+
+  Future<ResultModel> onSearch(bool isMouted) async {
+    isLoadData = true;
+    if (isMouted) {
+      notifyListeners();
+    }
+    final isLogin = CacheService.getIsLogin();
+    var spart =
+        productsFamilyListWithCode != null && selectedProductsFamily != null
+            ? productsFamilyListWithCode!
+                .where((str) => str.contains(selectedProductsFamily ?? ''))
+                .toList()
+            : <String>[];
+
+    var ptype = 'R';
+    var vtweg = '10';
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.SEARCH_TRANSACTION_LEDGER.serverMethod,
+      "methodParamMap": {
+        "IV_ENDCU": "",
+        "IV_KUNNR":
+            selectedCustomerModel != null ? selectedCustomerModel!.kunnr : '',
+        "IV_VKGRP": "",
+        "IV_VTWEG": vtweg, //
+        "pos": pos,
+        "partial": partial,
+        "IV_PERNR": staffName == tr('all') ? '' : selectedSalesPerson!.pernr, //
+        "IV_SPART": spart.isNotEmpty //
+            ? spart.first.substring(spart.first.indexOf('-') + 1)
+            : '',
+        "IV_SPMON_S": FormatUtil.removeDash(selectedStartDate!),
+        "IV_SPMON_E": FormatUtil.removeDash(selectedEndDate!),
+        "IS_LOGIN": isLogin,
+        "functionName": RequestType.SEARCH_TRANSACTION_LEDGER.serverMethod,
+        "resultTables": RequestType.SEARCH_TRANSACTION_LEDGER.resultTable,
+      }
+    };
+    _api.init(RequestType.SEARCH_TRANSACTION_LEDGER);
+    final result = await _api.request(body: _body);
+    if (result != null && result.statusCode != 200) {
+      isLoadData = false;
+      notifyListeners();
+      return ResultModel(false);
+    }
+    if (result != null && result.statusCode == 200) {
+      var temp = SearchOrderResponseModel.fromJson(result.body['data']);
+      pr(temp.toJson());
+      if (temp.tList!.length != partial) {
+        hasMore = false;
+      }
+      if (searchOrderResponseModel == null) {
+        searchOrderResponseModel = temp;
+      } else {
+        searchOrderResponseModel!.tList!.addAll(temp.tList!);
+      }
+      if (searchOrderResponseModel != null &&
+          (searchOrderResponseModel!.tList == null ||
+              searchOrderResponseModel!.tList!.isEmpty)) {
+        searchOrderResponseModel = null;
+      }
+      isLoadData = false;
+      notifyListeners();
+      return ResultModel(true);
+    }
+    return ResultModel(false);
+  }
+}

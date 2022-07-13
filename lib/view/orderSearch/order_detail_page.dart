@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_detail_page.dart
  * Created Date: 2022-07-12 15:20:28
- * Last Modified: 2022-07-13 14:32:18
+ * Last Modified: 2022-07-13 17:12:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -142,7 +142,7 @@ class OrderDetailPage extends StatelessWidget {
     var isShowCancel = false;
     modelList.forEach((model) {
       totalPrice += (model.netpr! * model.kwmeng!).toInt();
-      if (model.zstatus == 'a') {
+      if (model.zstatus == 'A') {
         isShowCancel = true;
       }
     });
@@ -162,16 +162,13 @@ class OrderDetailPage extends StatelessWidget {
                         final result =
                             await p.orderCancel(modelList.first.vbeln!);
                         if (result.isSuccessful) {
-                          AppToast().show(
-                              context,
-                              tr('successful_for_something',
-                                  args: ['order_cancel']));
+                          AppToast().show(context, result.message!);
                           Navigator.pop(context, modelList);
                         } else {
                           AppToast().show(
                               context,
                               tr('faild_for_something',
-                                  args: ['order_cancel']));
+                                  args: ['${tr('order_cancel')}']));
                         }
                       },
                       child: Container(

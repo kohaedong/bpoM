@@ -469,6 +469,6 @@
     "order_detail_description":"총{}건 / 총 금액(공급가):{}원",
     "order_cancel":"주문취소",
     "successful_for_something":"{}가 정상적으로 처리되였습니다.",
-    "faild_for_something":"{}가 실패하였습니다."
+    "faild_for_something":"{} 실패하였습니다."
 
 }
