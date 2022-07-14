@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-07-14 09:55:37
+ * Last Modified: 2022-07-14 15:11:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
@@ -20,6 +21,7 @@ import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 import 'package:medsalesportal/model/rfc/search_order_response_model.dart';
+import 'package:medsalesportal/model/rfc/trans_ledger_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
@@ -41,7 +43,8 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   EtStaffListModel? selectedSalesPerson;
   EtCustomerModel? selectedEndCustomerModel;
   EtCustomerModel? selectedCustomerModel;
-  SearchOrderResponseModel? searchOrderResponseModel;
+  TransLedgerResponseModel? transLedgerResponseModel;
+
   List<String>? processingStatusListWithCode;
   List<String>? productsFamilyListWithCode;
   IsLoginModel? isLoginModel;
@@ -53,7 +56,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   Future<void> refresh() async {
     pos = 0;
     hasMore = true;
-    searchOrderResponseModel = null;
+    transLedgerResponseModel = null;
     onSearch(true);
   }
 
@@ -93,7 +96,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
       var staffList =
           temp.staffList!.where((model) => model.sname == staffName).toList();
       selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
-      // return ResultModel(true);
+      return ResultModel(true);
     }
     return ResultModel(false);
   }
@@ -207,6 +210,10 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> onSearch(bool isMouted) async {
+    if (selectedCustomerModel == null) {
+      return ResultModel(false);
+    }
+    assert(selectedCustomerModel != null);
     isLoadData = true;
     if (isMouted) {
       notifyListeners();
@@ -227,15 +234,13 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
         "IV_KUNNR":
             selectedCustomerModel != null ? selectedCustomerModel!.kunnr : '',
         "IV_VKGRP": "",
-        "IV_VTWEG": vtweg, //
-        "pos": pos,
-        "partial": partial,
-        "IV_PERNR": staffName == tr('all') ? '' : selectedSalesPerson!.pernr, //
-        "IV_SPART": spart.isNotEmpty //
+        "IV_VTWEG": vtweg,
+        "IV_PERNR": staffName == tr('all') ? '' : selectedSalesPerson!.pernr,
+        "IV_SPART": spart.isNotEmpty
             ? spart.first.substring(spart.first.indexOf('-') + 1)
             : '',
-        "IV_SPMON_S": FormatUtil.removeDash(selectedStartDate!),
-        "IV_SPMON_E": FormatUtil.removeDash(selectedEndDate!),
+        "IV_SPMON_S": FormatUtil.monthStr(selectedStartDate!),
+        "IV_SPMON_E": FormatUtil.monthStr(selectedEndDate!),
         "IS_LOGIN": isLogin,
         "functionName": RequestType.SEARCH_TRANSACTION_LEDGER.serverMethod,
         "resultTables": RequestType.SEARCH_TRANSACTION_LEDGER.resultTable,
@@ -249,20 +254,27 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
-      var temp = SearchOrderResponseModel.fromJson(result.body['data']);
+      var temp = TransLedgerResponseModel.fromJson(result.body['data']);
       pr(temp.toJson());
       if (temp.tList!.length != partial) {
         hasMore = false;
       }
-      if (searchOrderResponseModel == null) {
-        searchOrderResponseModel = temp;
+      if (transLedgerResponseModel == null) {
+        transLedgerResponseModel = temp;
       } else {
-        searchOrderResponseModel!.tList!.addAll(temp.tList!);
+        transLedgerResponseModel!.tList!.addAll(temp.tList!);
       }
-      if (searchOrderResponseModel != null &&
-          (searchOrderResponseModel!.tList == null ||
-              searchOrderResponseModel!.tList!.isEmpty)) {
-        searchOrderResponseModel = null;
+      if (transLedgerResponseModel != null &&
+          (transLedgerResponseModel!.tList == null ||
+              transLedgerResponseModel!.tList!.isEmpty)) {
+        transLedgerResponseModel = null;
+      }
+      if (transLedgerResponseModel != null) {
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ]);
       }
       isLoadData = false;
       notifyListeners();

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/list_group_type.dart
  * Created Date: 2021-09-10 09:52:32
- * Last Modified: 2022-07-12 17:37:47
+ * Last Modified: 2022-07-14 15:23:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -25,6 +25,7 @@ enum OneCellType {
   SEARCH_PRODUCTS_CATEGORY,
   SEARCH_PROCESS_STATUS,
   SEARCH_SALLER,
+  SEARCH_END_CUSTOMER,
   // -------------
   SEARCH_CUSTOMER_CONDITION,
   SEARCH_CUSOMER_TYPE,

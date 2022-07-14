@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-14 11:45:26
+ * Last Modified: 2022-07-14 13:17:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
  */
 
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -713,6 +714,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
 
   Widget _buildSallerContentsItem(BuildContext context, EtCustomerModel model,
       int index, bool isShowLastPageText) {
+    pr(model.toJson());
     final p = context.read<BasePopupSearchProvider>();
     return InkWell(
       onTap: () {

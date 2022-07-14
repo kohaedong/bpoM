@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/trans_ledger_t_list_model.dart
  * Created Date: 2022-07-13 15:56:14
- * Last Modified: 2022-07-13 16:12:37
+ * Last Modified: 2022-07-14 14:06:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -59,15 +59,15 @@ class TransLedgerTListModel {
   @JsonKey(name: 'ATWRT')
   String? atwrt;
   @JsonKey(name: 'FKIMG')
-  String? fkimg;
+  double? fkimg;
   @JsonKey(name: 'FREE_QTY')
-  String? freeQty;
+  double? freeQty;
   @JsonKey(name: 'VRKME')
   String? vrkme;
   @JsonKey(name: 'NETWR')
-  String? netwr;
+  double? netwr;
   @JsonKey(name: 'DMBTR')
-  String? dmbtr;
+  double? dmbtr;
   @JsonKey(name: 'WAERK')
   String? waerk;
   @JsonKey(name: 'VBELN')
@@ -103,11 +103,11 @@ class TransLedgerTListModel {
   @JsonKey(name: 'DELETE')
   String? delete;
   @JsonKey(name: 'MWSBP')
-  String? mwsbp;
+  double? mwsbp;
   @JsonKey(name: 'NETWR_T')
-  String? netwrT;
+  double? netwrT;
   @JsonKey(name: 'OTHER')
-  String? other;
+  double? other;
   @JsonKey(name: 'ZNOTE_DIV')
   String? znoteDiv;
   @JsonKey(name: 'ZNOTE_KIND')
@@ -121,13 +121,17 @@ class TransLedgerTListModel {
   @JsonKey(name: 'ATWRT2')
   String? atwrt2;
   @JsonKey(name: 'HWBAS')
-  String? hwbas;
+  double? hwbas;
   @JsonKey(name: 'FWSTE')
-  String? fwste;
+  double? fwste;
   @JsonKey(name: 'HWBAS_C')
   String? hwbasC;
   @JsonKey(name: 'FWSTE_C')
   String? fwsteC;
+  @JsonKey(name: 'ZBALANCE')
+  double? zbalance;
+  @JsonKey(name: 'ZBALANCE_C')
+  String? zbalanceC;
 
   TransLedgerTListModel(
       this.arktx,
@@ -185,7 +189,9 @@ class TransLedgerTListModel {
       this.znoteKind,
       this.zonteNo,
       this.zonteType,
-      this.ztadesc);
+      this.ztadesc,
+      this.zbalance,
+      this.zbalanceC);
   factory TransLedgerTListModel.fromJson(Object? json) =>
       _$TransLedgerTListModelFromJson(json as Map<String, dynamic>);
 
