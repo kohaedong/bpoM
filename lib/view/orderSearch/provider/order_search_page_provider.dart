@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-07-14 09:08:33
+ * Last Modified: 2022-07-14 11:25:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -45,7 +45,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
   List<String>? processingStatusListWithCode;
   List<String>? productsFamilyListWithCode;
   IsLoginModel? isLoginModel;
-  Map<String, List<TlistSearchOrderModel>> orderSet = {};
+  Map<String, List<TlistSearchOrderModel>> orderSetRef = {};
 
   int pos = 0;
   int partial = 100;
@@ -55,7 +55,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
     pos = 0;
     hasMore = true;
     searchOrderResponseModel = null;
-    orderSet = {};
+    orderSetRef = {};
     onSearch(true);
   }
 
@@ -71,7 +71,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
 
   Future<void> removeListitem(List<TlistSearchOrderModel>? tList) async {
     searchOrderResponseModel!.tList!
-        .removeWhere((item) => item.vbeln == tList!.first.vbeln);
+        .removeWhere((item) => item.zreqno == tList!.first.zreqno);
     var temp = searchOrderResponseModel;
     searchOrderResponseModel =
         SearchOrderResponseModel.fromJson(temp!.toJson());
@@ -301,36 +301,41 @@ class OrderSearchPageProvider extends ChangeNotifier {
       SearchOrderResponseModel temp) async {
     var tempList = temp.tList!;
     var indexList = <int>[];
+    var orderSet = <String, List<TlistSearchOrderModel>>{};
     List.generate(temp.tList!.length, (index) {
       if (index < tempList.length - 1) {
         var current = tempList[index];
         var next = tempList[index + 1];
-        var currentOrderNumber = current.vbeln!;
-        var nextOrderNumber = next.vbeln!;
+        var currentOrderNumber = current.zreqno!;
+        var nextOrderNumber = next.zreqno!;
         if (currentOrderNumber == nextOrderNumber) {
+          pr('${current.vbeln} ${next.vbeln}');
           if (orderSet.keys.contains(currentOrderNumber)) {
             orderSet[currentOrderNumber]!.add(next);
           } else {
-            orderSet.putIfAbsent(currentOrderNumber, () => [current]);
+            orderSet.putIfAbsent(currentOrderNumber, () => [current, next]);
           }
         }
       }
     });
-    // 모두 삭제.
+    pr(orderSet.values);
+    // 삭제.
     tempList.removeWhere((order) {
+      if (orderSet.keys.contains(order.zreqno)) {}
       indexList.add(tempList.indexWhere((element) => element == order));
-      return orderSet.keys.contains(order.vbeln);
+      return orderSet.keys.contains(order.zreqno);
     });
 
     TlistSearchOrderModel? newModel;
-
+    orderSetRef.addAll(orderSet);
     orderSet.forEach((key, value) {
-      newModel = value.first;
+      newModel = TlistSearchOrderModel.fromJson(value.first.toJson());
       List.generate(value.length, (index) {
-        if (index <= value.length - 1) {
-          newModel!.maktx = '${newModel!.maktx},${value[index].maktx}';
-          newModel!.netwr = newModel!.netwr! + value[index].netwr!;
-          newModel!.mwsbp = newModel!.mwsbp! + value[index].mwsbp!;
+        if (index < value.length - 1) {
+          newModel!.maktx = newModel!.maktx! + ',${value[index + 1].maktx}';
+          newModel!.netwr = newModel!.netwr! + value[index + 1].netwr!;
+          newModel!.mwsbp = newModel!.mwsbp! + value[index + 1].mwsbp!;
+          pr('first maktx $index ::${value.first.maktx}');
         }
       });
       tempList.insert(tempList.length - 1, newModel!);

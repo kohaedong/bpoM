@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_detail_page.dart
  * Created Date: 2022-07-12 15:20:28
- * Last Modified: 2022-07-13 17:12:23
+ * Last Modified: 2022-07-14 10:44:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
@@ -114,7 +113,7 @@ class OrderDetailPage extends StatelessWidget {
   }
 
   Widget _buildContents(BuildContext context,
-      List<TlistSearchOrderModel> modelList, int totalPrice) {
+      List<TlistSearchOrderModel> modelList, double totalPrice) {
     return ListView(
       children: [
         defaultSpacing(),
@@ -138,10 +137,10 @@ class OrderDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final modelList = ModalRoute.of(context)?.settings.arguments
         as List<TlistSearchOrderModel>;
-    var totalPrice = 0;
+    var totalPrice = 0.0;
     var isShowCancel = false;
     modelList.forEach((model) {
-      totalPrice += (model.netpr! * model.kwmeng!).toInt();
+      totalPrice += (model.netpr! * model.kwmeng!);
       if (model.zstatus == 'A') {
         isShowCancel = true;
       }
