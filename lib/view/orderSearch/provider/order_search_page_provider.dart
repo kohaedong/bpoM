@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-07-13 13:45:46
+ * Last Modified: 2022-07-14 09:08:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -45,6 +45,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
   List<String>? processingStatusListWithCode;
   List<String>? productsFamilyListWithCode;
   IsLoginModel? isLoginModel;
+  Map<String, List<TlistSearchOrderModel>> orderSet = {};
 
   int pos = 0;
   int partial = 100;
@@ -54,6 +55,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
     pos = 0;
     hasMore = true;
     searchOrderResponseModel = null;
+    orderSet = {};
     onSearch(true);
   }
 
@@ -276,8 +278,12 @@ class OrderSearchPageProvider extends ChangeNotifier {
       }
       if (searchOrderResponseModel == null) {
         searchOrderResponseModel = temp;
+        searchOrderResponseModel!.tList =
+            await splitModel(SearchOrderResponseModel.fromJson(temp.toJson()));
       } else {
-        searchOrderResponseModel!.tList!.addAll(temp.tList!);
+        var tempResult =
+            await splitModel(SearchOrderResponseModel.fromJson(temp.toJson()));
+        searchOrderResponseModel!.tList!.addAll(tempResult!);
       }
       if (searchOrderResponseModel != null &&
           (searchOrderResponseModel!.tList == null ||
@@ -289,5 +295,46 @@ class OrderSearchPageProvider extends ChangeNotifier {
       return ResultModel(true);
     }
     return ResultModel(false);
+  }
+
+  Future<List<TlistSearchOrderModel>?> splitModel(
+      SearchOrderResponseModel temp) async {
+    var tempList = temp.tList!;
+    var indexList = <int>[];
+    List.generate(temp.tList!.length, (index) {
+      if (index < tempList.length - 1) {
+        var current = tempList[index];
+        var next = tempList[index + 1];
+        var currentOrderNumber = current.vbeln!;
+        var nextOrderNumber = next.vbeln!;
+        if (currentOrderNumber == nextOrderNumber) {
+          if (orderSet.keys.contains(currentOrderNumber)) {
+            orderSet[currentOrderNumber]!.add(next);
+          } else {
+            orderSet.putIfAbsent(currentOrderNumber, () => [current]);
+          }
+        }
+      }
+    });
+    // 모두 삭제.
+    tempList.removeWhere((order) {
+      indexList.add(tempList.indexWhere((element) => element == order));
+      return orderSet.keys.contains(order.vbeln);
+    });
+
+    TlistSearchOrderModel? newModel;
+
+    orderSet.forEach((key, value) {
+      newModel = value.first;
+      List.generate(value.length, (index) {
+        if (index <= value.length - 1) {
+          newModel!.maktx = '${newModel!.maktx},${value[index].maktx}';
+          newModel!.netwr = newModel!.netwr! + value[index].netwr!;
+          newModel!.mwsbp = newModel!.mwsbp! + value[index].mwsbp!;
+        }
+      });
+      tempList.insert(tempList.length - 1, newModel!);
+    });
+    return tempList;
   }
 }

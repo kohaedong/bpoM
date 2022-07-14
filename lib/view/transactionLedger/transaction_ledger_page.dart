@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-13 15:17:37
+ * Last Modified: 2022-07-13 17:15:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -187,7 +187,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: tuple.item2 ??
-                                          '${tr('plz_select_something', args: [
+                                          '${tr('plz_select_something_1', args: [
                                                 tr('manager')
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
@@ -227,7 +227,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: status ??
-                                          '${tr('plz_select_something', args: [
+                                          '${tr('plz_select_something_1', args: [
                                                 tr('product_process_status')
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
@@ -261,7 +261,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: family ??
-                                          '${tr('plz_select_something', args: [
+                                          '${tr('plz_select_something_1', args: [
                                                 tr('product_family')
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
@@ -295,7 +295,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                           ? () {
                                               AppToast().show(
                                                   context,
-                                                  tr('plz_select_something',
+                                                  tr('plz_select_something_1',
                                                       args: [
                                                         tr('product_family')
                                                       ]));
@@ -309,7 +309,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                       deleteIconCallback: () =>
                                           p.setCustomerName(null),
                                       hintText: customerName ??
-                                          '${tr('plz_select_something', args: [
+                                          '${tr('plz_select_something_1', args: [
                                                 tr('sales_office')
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.

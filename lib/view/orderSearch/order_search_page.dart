@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-07-13 15:12:57
+ * Last Modified: 2022-07-13 19:39:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -181,7 +181,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: tuple.item2 ??
-                                          '${tr('plz_select_something', args: [
+                                          '${tr('plz_select_something_1', args: [
                                                 tr('manager')
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
@@ -221,7 +221,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: status ??
-                                          '${tr('plz_select_something', args: [
+                                          '${tr('plz_select_something_2', args: [
                                                 tr('product_process_status')
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
@@ -255,7 +255,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: family ??
-                                          '${tr('plz_select_something', args: [
+                                          '${tr('plz_select_something_1', args: [
                                                 tr('product_family')
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
@@ -289,7 +289,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           ? () {
                                               AppToast().show(
                                                   context,
-                                                  tr('plz_select_something',
+                                                  tr('plz_select_something_1',
                                                       args: [
                                                         tr('product_family')
                                                       ]));
@@ -303,7 +303,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                       deleteIconCallback: () =>
                                           p.setCustomerName(null),
                                       hintText: customerName ??
-                                          '${tr('plz_select_something', args: [
+                                          '${tr('plz_select_something_2', args: [
                                                 tr('sales_office')
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
@@ -377,27 +377,15 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
               ],
             ),
             defaultSpacing(),
-            CheckOverflowUtil.hasTextOverflow(
-                    '${model.kunnrNm!}${model.maktx!}',
-                    KeyService.baseAppKey.currentContext!
-                        .read<AppThemeProvider>()
-                        .themeData
-                        .textTheme
-                        .headline4!,
-                    AppSize.defaultContentsWidth * .7,
-                    AppSize.defaultContentsWidth * .7,
-                    1)
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppText.listViewText(model.kunnrNm!,
-                          textAlign: TextAlign.start),
-                      AppText.listViewText(' - ${model.maktx!}',
-                          textAlign: TextAlign.start),
-                    ],
-                  )
-                : AppText.listViewText('${model.kunnrNm!} - ${model.maktx!}',
-                    maxLines: 1),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppText.listViewText(model.kunnrNm!,
+                    textAlign: TextAlign.start),
+                AppText.listViewText('${model.maktx!}',
+                    textAlign: TextAlign.start),
+              ],
+            ),
             defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
             Row(
               children: [

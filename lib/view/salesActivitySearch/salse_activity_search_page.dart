@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-13 11:15:07
+ * Last Modified: 2022-07-13 17:15:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -226,7 +226,7 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                                       deleteIconCallback: () =>
                                           p.setCustomerName(null),
                                       hintText: customerName ??
-                                          '${tr('plz_select_something', args: [
+                                          '${tr('plz_select_something_1', args: [
                                                 tr('customer_name')
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
