@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_detail_page.dart
  * Created Date: 2022-07-12 15:20:28
- * Last Modified: 2022-07-14 10:44:54
+ * Last Modified: 2022-07-14 12:48:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -21,6 +21,7 @@ import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/model/rfc/t_list_search_order_model.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/orderSearch/provider/order_detail_page_provider.dart';
@@ -32,6 +33,7 @@ class OrderDetailPage extends StatelessWidget {
 
   Widget _buildContentsItem(
       BuildContext context, TlistSearchOrderModel model, int index) {
+    pr(model.toJson());
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -61,6 +63,8 @@ class OrderDetailPage extends StatelessWidget {
                   tr('quantity'), model.kwmeng!.toInt().toString()),
               BaseInfoRowByKeyAndValue.build(tr('salse_reason_quantity'),
                   model.zfreeQty!.toInt().toString()),
+              BaseInfoRowByKeyAndValue.build(tr('salse_reason_quantity_option'),
+                  model.zfreeQtyIn!.toInt().toString()),
               FutureBuilder<String?>(
                   future: Future.delayed(Duration.zero, () async {
                     final result = await HiveService.getSalesGroup();
@@ -103,7 +107,7 @@ class OrderDetailPage extends StatelessWidget {
               BaseInfoRowByKeyAndValue.build(
                   tr('posnr_number'), '${model.posnr}'), // 품목번호
               BaseInfoRowByKeyAndValue.build(
-                  tr('massage'), '${model.zreqmsg}'), // 메시지
+                  tr('massage'), '${model.zmessage}'), // 메시지
               defaultSpacing()
             ],
           ),

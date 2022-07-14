@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-13 17:25:28
+ * Last Modified: 2022-07-14 11:45:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -375,19 +375,24 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   context: context,
                   width: (AppSize.defaultContentsWidth - AppSize.padding * 2),
                   enable: false,
-                  // hintTextStyleCallBack: salesGroup != null
-                  //     ? () => AppTextStyle.default_16
-                  //     : () => AppTextStyle.hint_16,
-                  hintTextStyleCallBack: () => AppTextStyle.hint_16,
-                  // iconType: InputIconType.SELECT,
-                  iconType: null,
+                  hintTextStyleCallBack: p.isTeamLeader
+                      ? () => AppTextStyle.default_16
+                      : () => AppTextStyle.hint_16,
+                  // hintTextStyleCallBack: () => AppTextStyle.hint_16,
+                  iconType: p.isTeamLeader ? InputIconType.SELECT : null,
+                  // iconType: null,
                   iconColor: salesGroup == null
                       ? AppColors.textFieldUnfoucsColor
                       : null,
-                  // commononeCellDataCallback: p.getSalesGroup,
-                  // oneCellType: OneCellType.SEARCH_BUSINESS_GROUP,
-                  oneCellType: OneCellType.DO_NOTHING,
-                  // isSelectedStrCallBack: (str) => p.setSalesGroup(str),
+                  isShowDeleteForHintText:
+                      p.isTeamLeader && salesGroup != null ? true : false,
+                  deleteIconCallback: () => p.setSalesGroup(null),
+                  commononeCellDataCallback: p.getSalesGroup,
+                  oneCellType: p.isTeamLeader
+                      ? OneCellType.SEARCH_BUSINESS_GROUP
+                      : OneCellType.DO_NOTHING,
+                  // oneCellType: OneCellType.DO_NOTHING,
+                  isSelectedStrCallBack: (str) => p.setSalesGroup(str),
                   hintText: salesGroup != null
                       ? salesGroup
                       : '${tr('plz_select_something_1', args: [
@@ -734,17 +739,19 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AppText.listViewText('${model.kunnrNm ?? ''} '),
+                        AppText.listViewText(
+                            '${model.kunnrNm!} (${model.kunnr})'),
                         AppText.listViewText('${model.ort01} ${model.stras}',
                             isSubTitle: true),
                         Row(
                           children: [
-                            AppText.listViewText('${model.telf1}',
-                                isSubTitle: true),
-                            AppStyles.buildPipe(),
-                            AppText.listViewText('${model.j1kfrepre}',
-                                isSubTitle: true),
-                            AppStyles.buildPipe(),
+                            model.telf1 != null && model.telf1!.isNotEmpty
+                                ? AppText.listViewText('${model.telf1}',
+                                    isSubTitle: true)
+                                : Container(),
+                            model.telf1 != null && model.telf1!.isNotEmpty
+                                ? AppStyles.buildPipe()
+                                : Container(),
                             AppText.listViewText('${model.stcd2}',
                                 isSubTitle: true),
                           ],

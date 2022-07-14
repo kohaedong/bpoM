@@ -459,6 +459,7 @@
     "processing_status":"처리상태",
     "reason_for_not_request_order":"주문미생성사유",
     "salse_reason_quantity":"할증수량",
+    "salse_reason_quantity_option":"할증(추가입력)",
     "supply_price":"공급가",
     "unit_price":"단가",
     "discount_rate":"할인율(%)",

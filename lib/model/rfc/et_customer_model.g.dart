@@ -1,16 +1,3 @@
-/*
- * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/et_customer_model.g.dart
- * Created Date: 2022-07-11 11:19:21
- * Last Modified: 2022-07-11 12:33:26
- * Author: bakbeom
- * Modified By: bakbeom
- * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
- * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
- * 												Discription													
- * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
- */
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'et_customer_model.dart';

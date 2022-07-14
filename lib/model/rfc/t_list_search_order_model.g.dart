@@ -42,6 +42,7 @@ TlistSearchOrderModel _$TlistSearchOrderModelFromJson(
       json['ZSTATUS_NM'] as String?,
       json['ZZKUNNR_END'] as String?,
       json['ZZKUNNR_END_NM'] as String?,
+      (json['ZFREE_QTY_IN'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$TlistSearchOrderModelToJson(
@@ -65,6 +66,7 @@ Map<String, dynamic> _$TlistSearchOrderModelToJson(
       'NETPR': instance.netpr,
       'ZDIS_PRICE': instance.zdisPrice,
       'ZFREE_QTY': instance.zfreeQty,
+      'ZFREE_QTY_IN': instance.zfreeQtyIn,
       'VRKME': instance.vrkme,
       'NETWR': instance.netwr,
       'MWSBP': instance.mwsbp,

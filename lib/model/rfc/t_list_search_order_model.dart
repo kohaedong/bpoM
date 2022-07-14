@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/t_list_search_order_model.dart
  * Created Date: 2022-07-11 12:35:31
- * Last Modified: 2022-07-13 10:07:54
+ * Last Modified: 2022-07-14 12:45:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -52,6 +52,8 @@ class TlistSearchOrderModel {
   double? zdisPrice;
   @JsonKey(name: 'ZFREE_QTY')
   double? zfreeQty;
+  @JsonKey(name: 'ZFREE_QTY_IN')
+  double? zfreeQtyIn;
   @JsonKey(name: 'VRKME')
   String? vrkme;
   @JsonKey(name: 'NETWR')
@@ -116,7 +118,8 @@ class TlistSearchOrderModel {
       this.zstatus,
       this.zstatusNm,
       this.zzkunnrEnd,
-      this.zzkunnrEndNm);
+      this.zzkunnrEndNm,
+      this.zfreeQtyIn);
   factory TlistSearchOrderModel.fromJson(Object? json) =>
       _$TlistSearchOrderModelFromJson(json as Map<String, dynamic>);
 
