@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-14 21:22:21
+ * Last Modified: 2022-07-14 23:41:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,7 +11,10 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/view/common/widget_of_offset_animation_components.dart';
+import 'package:medsalesportal/view/common/widget_of_rotation_animation_components.dart';
 import 'package:tuple/tuple.dart';
+
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +56,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   DateTime selectedDate = DateTime.now();
   var _scrollSwich = ValueNotifier<bool>(false);
   var _panelSwich = ValueNotifier<bool>(true);
+  var _bottomPanelSwich = ValueNotifier<bool>(true);
   @override
   void initState() {
     _scrollController = ScrollController();
@@ -64,6 +68,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   void dispose() {
     _scrollSwich.dispose();
     _panelSwich.dispose();
+    _bottomPanelSwich.dispose();
     _scrollController.dispose();
     _scrollController2.dispose();
     SystemChrome.setPreferredOrientations([
@@ -444,6 +449,75 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     });
   }
 
+  Widget _buildBottomAnimationBox(BuildContext context) {
+    return Selector<TransactionLedgerPageProvider, bool>(
+      selector: (context, provider) => provider.isOpenBottomSheet,
+      builder: (context, isOpenBottomSheet, _) {
+        return WidgetOfOffSetAnimationWidget(
+          animationCallBack: () => isOpenBottomSheet,
+          height: AppSize.realHeight * .4,
+        );
+      },
+    );
+  }
+
+  Widget _buildBottomTitleBar(BuildContext context) {
+    return Selector<TransactionLedgerPageProvider, TransLedgerResponseModel?>(
+      selector: (context, provider) => provider.transLedgerResponseModel,
+      builder: (context, responseModel, _) {
+        return responseModel != null &&
+                responseModel.tList != null &&
+                responseModel.tList!.isNotEmpty
+            ? Positioned(
+                bottom: 0,
+                right: 0,
+                child: Selector<TransactionLedgerPageProvider, bool>(
+                  selector: (context, provider) => provider.isShowShadow,
+                  builder: (context, isShowShadow, _) {
+                    return InkWell(
+                      onTap: () {
+                        context
+                            .read<TransactionLedgerPageProvider>()
+                            .setIsOpenBottomSheet();
+                      },
+                      child: Container(
+                        height: AppSize.buttonHeight,
+                        width: AppSize.realWidth,
+                        decoration: BoxDecoration(
+                          color: AppColors.whiteText,
+                          boxShadow: isShowShadow
+                              ? [
+                                  BoxShadow(
+                                    color: AppColors.textGrey.withOpacity(0.5),
+                                    blurRadius: AppSize.radius5,
+                                    offset: Offset(0, -3),
+                                  ),
+                                ]
+                              : [],
+                        ),
+                        child: Padding(
+                          padding: AppSize.defaultSidePadding,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              AppText.text(tr('balance_status'),
+                                  style: AppTextStyle.default_14
+                                      .copyWith(fontWeight: FontWeight.bold)),
+                              WidgetOfRotationAnimationComponents(
+                                animationCallBack: () => isShowShadow,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ))
+            : Container();
+      },
+    );
+  }
+
   Widget _buildPortraitView(BuildContext context) {
     final p = context.watch<TransactionLedgerPageProvider>();
     if (p.isFirstRun) {
@@ -455,7 +529,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             titleText: AppText.text('${tr('transaction_ledger')}',
                 style: AppTextStyle.w500_22)),
         child: Stack(
-          fit: StackFit.expand,
+          fit: StackFit.loose,
           children: [
             RefreshIndicator(
                 child: ListView(
@@ -499,7 +573,9 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   _panelSwich.value = false;
                   return p.refresh();
                 }),
-            _buildScrollToTop(context)
+            // _buildScrollToTop(context)
+            _buildBottomAnimationBox(context),
+            _buildBottomTitleBar(context)
           ],
         ));
   }

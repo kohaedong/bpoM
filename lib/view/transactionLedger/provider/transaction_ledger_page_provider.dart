@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-07-14 21:22:12
+ * Last Modified: 2022-07-14 22:59:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -34,6 +34,8 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isTeamLeader = false;
   bool isFirstRun = true;
+  bool isOpenBottomSheet = true;
+  bool isShowShadow = true;
   String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
@@ -68,6 +70,19 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
       return onSearch(false);
     }
     return null;
+  }
+
+  void setIsOpenBottomSheet() {
+    isOpenBottomSheet = !isOpenBottomSheet;
+    Future.delayed(Duration(milliseconds: isOpenBottomSheet ? 300 : 0), () {
+      setShhowShadow();
+    });
+    notifyListeners();
+  }
+
+  void setShhowShadow() {
+    isShowShadow = !isShowShadow;
+    notifyListeners();
   }
 
   Future<ResultModel> searchPerson() async {
