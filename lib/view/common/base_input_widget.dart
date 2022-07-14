@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-07-11 23:38:45
+ * Last Modified: 2022-07-14 16:23:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -221,6 +221,7 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
         final result = await BasePopupSearch(
                 type: widget.popupSearchType, bodyMap: widget.bodyMap)
             .show(context);
+
         if (result != null && result.runtimeType != bool) {
           widget.isSelectedStrCallBack!.call(result);
         }

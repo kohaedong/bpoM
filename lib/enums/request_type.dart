@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-07-13 15:41:50
+ * Last Modified: 2022-07-14 17:26:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -38,6 +38,7 @@ enum RequestType {
   SEARCH_SALSE_ACTIVITY,
   SALSE_ACTIVITY_DETAIL,
   SEARCH_SALLER,
+  SEARCH_END_OR_DELIVERY_CUSTOMER,
   SEARCH_ORDER,
   ORDER_CANCEL,
   SEARCH_TRANSACTION_LEDGER
@@ -84,6 +85,8 @@ extension RequestTypeExtension on RequestType {
   String url({String? params}) {
     switch (this) {
       case RequestType.SEARCH_STAFF:
+        return '$rfcURL/common';
+      case RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER:
         return '$rfcURL/common';
       case RequestType.SEARCH_TRANSACTION_LEDGER:
         return '$rfcURL/common';
@@ -145,6 +148,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SEARCH_STAFF:
         return 'ES_RETURN,ET_STAFFLIST';
+      case RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER:
+        return 'ES_RETURN,ET_CUSTLIST';
       case RequestType.SEARCH_TRANSACTION_LEDGER:
         return 'ES_RETURN,ES_HEAD,T_LIST,T_REPORT';
       case RequestType.ORDER_CANCEL:
@@ -213,6 +218,8 @@ extension RequestTypeExtension on RequestType {
       // --------------------
       case RequestType.SEARCH_STAFF:
         return 'Z_LTS_IFS0068';
+      case RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER:
+        return 'Z_LTS_IFS6002';
       case RequestType.SEARCH_CUSTOMER:
         return 'Z_LTSP_IF0030';
       case RequestType.SEARCH_SALSE_ACTIVITY:

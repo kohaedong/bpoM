@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-14 13:17:54
+ * Last Modified: 2022-07-14 17:58:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -44,15 +44,7 @@ class BasePopupSearch {
 
   Future<dynamic> show(BuildContext context) async {
     final result = await AppDialog.showPopup(
-        context,
-        type == PopupSearchType.SEARCH_SALSE_PERSON ||
-                type == PopupSearchType.SEARCH_CUSTOMER ||
-                type == PopupSearchType.SEARCH_SALLER
-            ? PopupSearchOneRowContents(type!, bodyMap: bodyMap)
-            : PopupSearchThreeRowContents(
-                type!,
-                bodyMap: bodyMap,
-              ));
+        context, PopupSearchOneRowContents(type!, bodyMap: bodyMap));
     if (result != null) return result;
   }
 }
@@ -71,82 +63,6 @@ Widget shimmer() {
       ));
 }
 
-class PopupSearchThreeRowContents extends StatefulWidget {
-  PopupSearchThreeRowContents(this.type, {Key? key, this.bodyMap})
-      : super(key: key);
-  final PopupSearchType type;
-  final Map<String, dynamic>? bodyMap;
-  @override
-  _PopupSearchThreeRowContentsState createState() =>
-      _PopupSearchThreeRowContentsState();
-}
-
-class _PopupSearchThreeRowContentsState
-    extends State<PopupSearchThreeRowContents> {
-  TextEditingController? _plantCodeController;
-  @override
-  void initState() {
-    super.initState();
-    _plantCodeController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _plantCodeController!.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => BasePopupSearchProvider(),
-      builder: (context, _) {
-        return Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(AppSize.radius8))),
-          width: AppSize.updatePopupWidth,
-          height: widget.type.height,
-          child: Stack(
-            children: [
-              Container(
-                  height: widget.type.height - AppSize.buttonHeight,
-                  child: Column(
-                    children: [
-                      // buildPlantSearchBar(context),
-                      Expanded(
-                          child:
-
-                              // buildPlantListViewContents(context)
-                              Container() // ?????
-                          )
-                    ],
-                  )),
-              Positioned(
-                  left: 0,
-                  bottom: 0,
-                  child: Container(
-                    width: AppSize.defaultContentsWidth,
-                    decoration: BoxDecoration(
-                        border: Border(
-                            top: BorderSide(
-                                width: .7, color: AppColors.textGrey))),
-                    child: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Center(
-                          child: AppText.text(widget.type.buttonText,
-                              style: AppTextStyle.color_16(AppColors.primary)),
-                        )),
-                  ))
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
 class PopupSearchOneRowContents extends StatefulWidget {
   PopupSearchOneRowContents(
     this.type, {
@@ -163,6 +79,7 @@ class PopupSearchOneRowContents extends StatefulWidget {
 class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
   late TextEditingController _personInputController;
   late TextEditingController _customerInputController;
+  late TextEditingController _endCustomerInputController;
   late ScrollController _scrollController;
   @override
   void initState() {
@@ -170,12 +87,14 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     _scrollController = ScrollController();
     _personInputController = TextEditingController();
     _customerInputController = TextEditingController();
+    _endCustomerInputController = TextEditingController();
   }
 
   @override
   void dispose() {
     _personInputController.dispose();
     _customerInputController.dispose();
+    _endCustomerInputController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -475,7 +394,49 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     ));
   }
 
+  Widget _buildEndCustomerBar(BuildContext context) {
+    final p = context.read<BasePopupSearchProvider>();
+    return Column(
+      children: [
+        defaultSpacing(),
+        Selector<BasePopupSearchProvider, String?>(
+            selector: (context, provider) => provider.endCustomerInputText,
+            builder: (context, endCustomer, _) {
+              return BaseInputWidget(
+                  context: context,
+                  width: AppSize.defaultContentsWidth - AppSize.padding * 2,
+                  enable: true,
+                  hintTextStyleCallBack:
+                      endCustomer != null ? null : () => AppTextStyle.hint_16,
+                  iconType: endCustomer != null
+                      ? InputIconType.DELETE_AND_SEARCH
+                      : InputIconType.SEARCH,
+                  onChangeCallBack: (e) => p.setEndCustomerInputText(e),
+                  iconColor: endCustomer == null
+                      ? AppColors.textFieldUnfoucsColor
+                      : null,
+                  defaultIconCallback: () {
+                    hideKeyboard(context);
+                    p.refresh();
+                  },
+                  textEditingController: _personInputController,
+                  otherIconcallback: () {
+                    p.setEndCustomerInputText(null);
+                    _personInputController.text = '';
+                  },
+                  hintText: endCustomer != null
+                      ? null
+                      : '${tr('plz_enter_search_key_for_something_1', args: [
+                              '${tr('end_customer')}',
+                              ''
+                            ])}');
+            })
+      ],
+    );
+  }
+
   Widget _buildSearchBar(BuildContext context) {
+    pr(widget.type);
     return Container(
       height: widget.type.appBarHeight,
       child: Column(
@@ -504,7 +465,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   ? _buildCustomerSearchBar(context)
                   : widget.type == PopupSearchType.SEARCH_SALLER
                       ? _buildSallerSearchBar(context)
-                      : Container(),
+                      : widget.type == PopupSearchType.SEARCH_END_CUSTOMER
+                          ? _buildEndCustomerBar(context)
+                          : Container(),
         ],
       ),
     );
@@ -512,7 +475,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
 
   Widget _buildListViewContents(BuildContext context) {
     final p = context.read<BasePopupSearchProvider>();
-
     return FutureBuilder<BasePoupSearchResult>(
         future: p.onSearch(widget.type.popupStrListType[0], false,
             bodyMaps: widget.bodyMap),

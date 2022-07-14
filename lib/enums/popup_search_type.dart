@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/popup_search_type.dart
  * Created Date: 2021-09-10 21:38:04
- * Last Modified: 2022-07-14 15:24:12
+ * Last Modified: 2022-07-14 15:59:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -103,6 +103,8 @@ extension PopupSearchTypeExtension on PopupSearchType {
         return AppSize.realHeight * .8;
       case PopupSearchType.SEARCH_SALLER:
         return AppSize.realHeight * .85;
+      case PopupSearchType.SEARCH_END_CUSTOMER:
+        return AppSize.realHeight * .6;
       default:
         return AppSize.popupHeightWidthOneRowSearchBar;
     }
@@ -118,6 +120,11 @@ extension PopupSearchTypeExtension on PopupSearchType {
       case PopupSearchType.SEARCH_SALLER:
         return AppSize.defaultTextFieldHeight * 4 +
             AppSize.defaultListItemSpacing * 6 +
+            AppSize.appBarHeight +
+            AppSize.secondButtonHeight; // 영업사원
+      case PopupSearchType.SEARCH_END_CUSTOMER:
+        return AppSize.defaultTextFieldHeight * 2 +
+            AppSize.defaultListItemSpacing * 3 +
             AppSize.appBarHeight +
             AppSize.secondButtonHeight; // 영업사원
       default:

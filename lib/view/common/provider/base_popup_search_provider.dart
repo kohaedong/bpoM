@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-14 12:39:56
+ * Last Modified: 2022-07-14 18:03:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/model/rfc/et_end_customer_response_model.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
@@ -26,12 +27,14 @@ import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class BasePopupSearchProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirestRun = true;
   String? personInputText;
   String? customerInputText;
+  String? endCustomerInputText;
   String? selectedProductCategory;
   String? selectedProductFamily;
   String? selectedSalesGroup;
@@ -44,6 +47,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   EtStaffListResponseModel? staList;
   EtKunnrResponseModel? etKunnrResponseModel;
   EtCustomerResponseModel? etCustomerResponseModel;
+  EtEndCustomerResponseModel? etEndCustomerResponseModel;
   OneCellType? type;
   Map<String, dynamic>? bodyMap;
 
@@ -62,6 +66,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     pos = 0;
     etKunnrResponseModel = null;
     etCustomerResponseModel = null;
+    etEndCustomerResponseModel = null;
     staList = null;
     hasMore = true;
     onSearch(type!, true);
@@ -123,6 +128,13 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   void setCustomerInputText(String? value) {
     this.customerInputText = value;
+    if (value == null || (value.length == 1) || value == '') {
+      notifyListeners();
+    }
+  }
+
+  void setEndCustomerInputText(String? value) {
+    endCustomerInputText = value;
     if (value == null || (value.length == 1) || value == '') {
       notifyListeners();
     }
@@ -340,7 +352,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return BasePoupSearchResult(false);
   }
 
-  Future<BasePoupSearchResult> searchSaller(bool isMounted) async {
+  Future<BasePoupSearchResult> searchSallerCustomer(bool isMounted) async {
     // 검색 하기 전에 popup body 에는  '조회결관가 없습니다.' 문구만 보여주기 위해.
     // 첫 진입시 data 초기화 작업만 해주고 BasePoupSearchResult(false) 로 return 한다;
     if (isFirestRun) {
@@ -414,6 +426,66 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return BasePoupSearchResult(false);
   }
 
+  Future<BasePoupSearchResult> searchEndOrDeliveryCustomer(bool isMounted,
+      {bool? isDeliveryCustomer}) async {
+    isLoadData = true;
+    if (isMounted) {
+      notifyListeners();
+    }
+    var _api = ApiService();
+    final isLogin = CacheService.getIsLogin();
+    final isloginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
+    isloginModel.kunag = '${bodyMap!['kunnr']}';
+
+    var newIslogin = await EncodingUtils.base64Convert(isloginModel.toJson());
+    pr(newIslogin);
+    Map<String, dynamic>? _body;
+    _body = {
+      "methodName": RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER.serverMethod,
+      "methodParamMap": {
+        "IV_VTWEG": "10",
+        "IV_KEYWORD": "",
+        "IS_LOGIN": newIslogin,
+        "pos": "0",
+        "IV_PARVW": "Z1",
+        "IV_KFM2": "",
+        "groupid": "",
+        "functionName":
+            RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER.serverMethod,
+        "resultTables": RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER.resultTable,
+      }
+    };
+    _api.init(RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER);
+    final result = await _api.request(body: _body);
+    if (result == null || result.statusCode != 200) {
+      isLoadData = false;
+      etEndCustomerResponseModel = null;
+      notifyListeners();
+      return BasePoupSearchResult(false);
+    }
+    if (result.statusCode == 200 && result.body['data'] != null) {
+      var temp = EtEndCustomerResponseModel.fromJson(result.body['data']);
+      pr(temp.toJson());
+      if (temp.etCustList!.length != partial) {
+        hasMore = false;
+      }
+      if (etEndCustomerResponseModel == null) {
+        etEndCustomerResponseModel = temp;
+      } else {
+        etEndCustomerResponseModel!.etCustList!.addAll(temp.etCustList!);
+      }
+      if (etEndCustomerResponseModel != null &&
+          etEndCustomerResponseModel!.etCustList == null) {
+        etEndCustomerResponseModel = null;
+      }
+      isLoadData = false;
+      notifyListeners();
+      return BasePoupSearchResult(true);
+    }
+    isLoadData = false;
+    return BasePoupSearchResult(false);
+  }
+
   void setIsLoginModel() async {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
@@ -433,7 +505,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
       case OneCellType.SEARCH_CUSTOMER:
         return await searchCustomer(isMounted);
       case OneCellType.SEARCH_SALLER:
-        return await searchSaller(isMounted);
+        return await searchSallerCustomer(isMounted);
+      case OneCellType.SEARCH_END_CUSTOMER:
+        return await searchEndOrDeliveryCustomer(isMounted);
       default:
         return BasePoupSearchResult(false);
     }
