@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-14 17:58:30
+ * Last Modified: 2022-07-14 20:26:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
  */
 
+import 'package:medsalesportal/model/rfc/et_end_customer_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
@@ -490,7 +491,12 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     (provider.etCustomerResponseModel != null &&
                         provider.etCustomerResponseModel!.etCustomer != null &&
                         provider
-                            .etCustomerResponseModel!.etCustomer!.isNotEmpty)
+                            .etCustomerResponseModel!.etCustomer!.isNotEmpty) ||
+                    (provider.etEndCustomerResponseModel != null &&
+                        provider.etEndCustomerResponseModel!.etCustList !=
+                            null &&
+                        provider
+                            .etEndCustomerResponseModel!.etCustList!.isNotEmpty)
                 ? Padding(
                     padding: AppSize.defaultSearchPopupSidePadding,
                     child: Container(
@@ -525,7 +531,14 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                               PopupSearchType.SEARCH_SALLER
                                           ? provider.etCustomerResponseModel!
                                               .etCustomer!.length
-                                          : 0,
+                                          : widget.type ==
+                                                  PopupSearchType
+                                                      .SEARCH_END_CUSTOMER
+                                              ? provider
+                                                  .etEndCustomerResponseModel!
+                                                  .etCustList!
+                                                  .length
+                                              : 0,
                               itemBuilder: (BuildContext context, int index) {
                                 return widget.type ==
                                         PopupSearchType.SEARCH_SALSE_PERSON
@@ -535,8 +548,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                         index,
                                         !provider.hasMore &&
                                             index ==
-                                                provider.staList!.staffList!
-                                                        .length -
+                                                provider.staList!.staffList!.length -
                                                     1)
                                     : widget.type ==
                                             PopupSearchType.SEARCH_CUSTOMER
@@ -565,7 +577,19 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                                 .etCustomer!
                                                                 .length -
                                                             1)
-                                            : Container();
+                                            : widget.type ==
+                                                    PopupSearchType
+                                                        .SEARCH_END_CUSTOMER
+                                                ? _buildEndCustomerContentsItem(
+                                                    context,
+                                                    provider
+                                                        .etEndCustomerResponseModel!
+                                                        .etCustList![index],
+                                                    index,
+                                                    !provider.hasMore &&
+                                                        index ==
+                                                            provider.etEndCustomerResponseModel!.etCustList!.length - 1)
+                                                : Container();
                               },
                             ),
                             // 수정 ! nextPage ->  refresh
@@ -717,6 +741,63 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                 ? AppStyles.buildPipe()
                                 : Container(),
                             AppText.listViewText('${model.stcd2}',
+                                isSubTitle: true),
+                          ],
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              isShowLastPageText ? lastPageText() : Container()
+            ],
+          )),
+    );
+  }
+
+  Widget _buildEndCustomerContentsItem(BuildContext context,
+      EtEndCustomerModel model, int index, bool isShowLastPageText) {
+    pr(model.toJson());
+    final p = context.read<BasePopupSearchProvider>();
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context, model);
+      },
+      child: Padding(
+          padding:
+              index == 0 ? EdgeInsets.all(0) : AppSize.searchPopupListPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Selector<BasePopupSearchProvider, bool?>(
+                  selector: (context, provider) => provider.isSingleData,
+                  builder: (context, isSingleData, _) {
+                    isSingleData != null && isSingleData
+                        ? Navigator.pop(context,
+                            p.etEndCustomerResponseModel!.etCustList!.single)
+                        : DoNothingAction();
+                    return Container();
+                  }),
+              _horizontalRow(
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText.listViewText(
+                            '${model.kunnrNm!} (${model.kunnr})'),
+                        AppText.listViewText('${model.ort01} ${model.stras}',
+                            isSubTitle: true),
+                        Row(
+                          children: [
+                            model.telf1 != null && model.telf1!.isNotEmpty
+                                ? AppText.listViewText('${model.telf1}',
+                                    isSubTitle: true)
+                                : Container(),
+                            model.telf1 != null && model.telf1!.isNotEmpty
+                                ? AppStyles.buildPipe()
+                                : Container(),
+                            AppText.listViewText('${model.ort01}',
                                 isSubTitle: true),
                           ],
                         )

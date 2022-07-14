@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:medsalesportal/view/common/function_of_print.dart';
+
 import './home_icon_map.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -328,10 +330,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         final p = context.read<NoticeProvider>();
         if (!_isNoticeCheckDone) {
           checkNoticeWhenLogedin().then((value) {
-            p.getNoticeList(true);
+            p.homeNoticeResponseModel == null
+                ? p.getNoticeList(true)
+                : DoNothingAction();
           });
         } else {
-          p.getNoticeList(true);
+          p.homeNoticeResponseModel == null
+              ? p.getNoticeList(true)
+              : DoNothingAction();
         }
 
         return WillPopScope(

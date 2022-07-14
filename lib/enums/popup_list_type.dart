@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/list_group_type.dart
  * Created Date: 2021-09-10 09:52:32
- * Last Modified: 2022-07-14 16:01:13
+ * Last Modified: 2022-07-14 20:14:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -360,8 +360,6 @@ extension OneCellTypeExtension on OneCellType {
         return AppSize.approvalPopupHeight;
       case OneCellType.SEARCH_CUSTOMER:
         return AppSize.realHeight * .7;
-      case OneCellType.SEARCH_END_CUSTOMER:
-        return AppSize.realHeight * .6;
       case OneCellType.CUSTOMER_APPROVAL_RESERVE:
         return AppSize.approvalPopupHeight;
       case OneCellType.CUSTOMER_APPROVAL_APPROVAL:

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-14 17:59:16
+ * Last Modified: 2022-07-14 21:00:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,8 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/model/rfc/et_end_customer_response_model.dart';
+import 'package:medsalesportal/model/rfc/trans_ledger_response_model.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -315,7 +317,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                             ? AppColors.defaultText
                                             : AppColors.textFieldUnfoucsColor,
                                         deleteIconCallback: () =>
-                                            p.setEndCustomerName(null),
+                                            p.setEndCustomerModel(null),
                                         hintText: endCustomerName ??
                                             '${tr('plz_select_something_1', args: [
                                                   tr('end_customer')
@@ -333,11 +335,12 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                         popupSearchType:
                                             PopupSearchType.SEARCH_END_CUSTOMER,
                                         isSelectedStrCallBack: (customer) {
-                                          return p.setEndCustomerName(customer);
+                                          return p
+                                              .setEndCustomerModel(customer);
                                         },
                                         bodyMap: {
                                           'kunnr':
-                                              p.selectedCustomerModel!.kunnr
+                                              p.selectedCustomerModel?.kunnr
                                         },
                                         enable: false,
                                       ),
@@ -506,7 +509,15 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     return BaseLayout(
         hasForm: false,
         appBar: null,
-        child: Center(child: AppText.text('가로모드')));
+        child:
+            Selector<TransactionLedgerPageProvider, TransLedgerResponseModel?>(
+          selector: (context, provider) => provider.transLedgerResponseModel,
+          builder: (context, model, _) {
+            return Container(
+              child: Text('${model?.tList?.first.mwsbp}'),
+            );
+          },
+        ));
   }
 
   @override

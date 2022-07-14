@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-07-14 15:11:31
+ * Last Modified: 2022-07-14 21:15:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,6 +18,7 @@ import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
+import 'package:medsalesportal/model/rfc/et_end_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 import 'package:medsalesportal/model/rfc/search_order_response_model.dart';
@@ -41,7 +42,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   String? customerName;
   String? endCustomerName;
   EtStaffListModel? selectedSalesPerson;
-  EtCustomerModel? selectedEndCustomerModel;
+  EtEndCustomerModel? selectedEndCustomerModel;
   EtCustomerModel? selectedCustomerModel;
   TransLedgerResponseModel? transLedgerResponseModel;
 
@@ -134,16 +135,16 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     customerName = str;
     if (str == null) {
       selectedCustomerModel = null;
-      selectedEndCustomerModel = null;
     }
+    selectedEndCustomerModel = null;
+    endCustomerName = null;
     notifyListeners();
   }
 
-  void setEndCustomerName(String? str) {
-    endCustomerName = str;
-    if (str == null) {
-      selectedEndCustomerModel = null;
-    }
+  void setEndCustomerModel(dynamic data) {
+    data as EtEndCustomerModel?;
+    selectedEndCustomerModel = data;
+    endCustomerName = selectedEndCustomerModel?.kunnrNm!;
     notifyListeners();
   }
 
@@ -170,7 +171,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     searchPerson();
     var model = map['model'] as EtCustomerModel?;
     selectedCustomerModel = model;
-    customerName = selectedCustomerModel?.kunnrNm;
+    setCustomerName(selectedCustomerModel?.kunnrNm);
 
     notifyListeners();
   }
@@ -273,7 +274,6 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
         SystemChrome.setPreferredOrientations([
           DeviceOrientation.portraitUp,
           DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight,
         ]);
       }
       isLoadData = false;

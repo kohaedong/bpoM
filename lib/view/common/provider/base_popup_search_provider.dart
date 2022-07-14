@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-14 18:03:48
+ * Last Modified: 2022-07-14 20:19:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -32,6 +32,7 @@ import 'package:medsalesportal/view/common/function_of_print.dart';
 class BasePopupSearchProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirestRun = true;
+  bool isSingleData = false;
   String? personInputText;
   String? customerInputText;
   String? endCustomerInputText;
@@ -438,7 +439,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
     isloginModel.kunag = '${bodyMap!['kunnr']}';
 
     var newIslogin = await EncodingUtils.base64Convert(isloginModel.toJson());
-    pr(newIslogin);
     Map<String, dynamic>? _body;
     _body = {
       "methodName": RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER.serverMethod,
@@ -471,6 +471,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
       }
       if (etEndCustomerResponseModel == null) {
         etEndCustomerResponseModel = temp;
+        if (etEndCustomerResponseModel!.etCustList!.length == 1) {
+          isSingleData = true;
+        }
       } else {
         etEndCustomerResponseModel!.etCustList!.addAll(temp.etCustList!);
       }
@@ -478,6 +481,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
           etEndCustomerResponseModel!.etCustList == null) {
         etEndCustomerResponseModel = null;
       }
+
       isLoadData = false;
       notifyListeners();
       return BasePoupSearchResult(true);
