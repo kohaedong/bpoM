@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_animation_components.dart
  * Created Date: 2022-07-14 21:54:05
- * Last Modified: 2022-07-14 23:06:01
+ * Last Modified: 2022-07-15 14:38:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -95,8 +95,7 @@ class _WidgetOfOffSetAnimationWidgetState
                               color: AppColors.whiteText),
                       alignment: Alignment.bottomCenter,
                       width: AppSize.realWidth,
-                      // 최대 2개 노출.
-                      child: AppText.text('test')));
+                      child: widget.body));
             }));
   }
 }

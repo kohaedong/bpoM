@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_rotation_animation_components.dart
  * Created Date: 2022-07-14 23:02:16
- * Last Modified: 2022-07-14 23:28:20
+ * Last Modified: 2022-07-15 14:34:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -55,12 +55,12 @@ class _WidgetOfRotationAnimationComponentsState
         animation: _animationController,
         builder: (context, _) {
           return Transform.rotate(
-              //旋转90度
               angle: math.pi * _animationController.value,
               child: Container(
                 height: AppSize.defaultIconWidth,
                 width: AppSize.defaultIconWidth,
-                child: AppImage.getImage(ImageType.SELECT),
+                child: AppImage.getImage(ImageType.SELECT,
+                    color: AppColors.subText),
               ));
         });
   }

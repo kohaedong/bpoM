@@ -480,6 +480,13 @@
     "date_1":"일자",
     "collection_amount":"수금액",
     "other_amount":"기타금액",
-    "total_count":"총 계"
+    "total_count":"총 계",
+    "start_date":"시작년월",
+    "end_date":"종료월",
+    "card_balance":"카드잔액",
+    "real_balance":"실잔액",
+    "supply_price_and_tex":"공급가/부가세포함금액",
+    "return_amount":"반품액",
+    "":""
 
 }

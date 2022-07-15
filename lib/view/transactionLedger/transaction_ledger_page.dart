@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-15 14:26:13
+ * Last Modified: 2022-07-15 17:36:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,10 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:medsalesportal/util/date_util.dart';
+import 'package:medsalesportal/view/common/base_shimmer.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -514,12 +518,16 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   }
 
   Widget _buildTotalCount(TransactionLedgerPageProvider provider) {
+    var list = provider.transLedgerResponseModel!.tList!;
+    var length = list.length;
+    var totalRow =
+        list.where((element) => element.spmon!.contains('<')).toList();
+    var totalCount = length - totalRow.length;
     return Padding(
         padding: EdgeInsets.only(left: AppSize.padding),
         child: Row(children: [
           AppText.text('총'),
-          AppText.text('${provider.transLedgerResponseModel!.tList!.length}',
-              style: AppTextStyle.blod_16),
+          AppText.text('$totalCount', style: AppTextStyle.blod_16),
           AppText.text('건')
         ]));
   }
@@ -600,13 +608,140 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     });
   }
 
+  Widget _buildTitleRow(String t1, String t2, String t3,
+      {TextStyle? style1, TextStyle? style2, TextStyle? style3}) {
+    var width = AppSize.realWidth - AppSize.padding * 2;
+    return Padding(
+        padding: AppSize.defaultSidePadding,
+        child: Row(
+          children: [
+            SizedBox(
+              width: width * .3,
+              child:
+                  AppText.text(t1, textAlign: TextAlign.start, style: style1),
+            ),
+            SizedBox(
+              width: width * .3,
+              child: AppText.text(t2, textAlign: TextAlign.end, style: style2),
+            ),
+            SizedBox(
+              width: width * .4,
+              child: AppText.text(t3, textAlign: TextAlign.end, style: style3),
+            ),
+          ],
+        ));
+  }
+
+  Widget _buildAmountRow(String t1, String t2,
+      {TextStyle? style1, TextStyle? style2}) {
+    var width = AppSize.realWidth - AppSize.padding * 2;
+    return Padding(
+        padding: AppSize.defaultSidePadding,
+        child: Row(
+          children: [
+            SizedBox(
+              width: width * .4,
+              child:
+                  AppText.text(t1, textAlign: TextAlign.start, style: style1),
+            ),
+            SizedBox(
+              width: width * .6,
+              child: AppText.text(t2, textAlign: TextAlign.end, style: style2),
+            ),
+          ],
+        ));
+  }
+
+  Widget _buildAnimationBody(BuildContext context) {
+    return ListView(
+      children: [
+        Selector<TransactionLedgerPageProvider, TransLedgerResponseModel?>(
+          selector: (context, provider) => provider.transLedgerResponseModel,
+          builder: (context, model, _) {
+            var head = model?.esHead;
+            var report = model?.tReport;
+            return head != null && report != null
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      defaultSpacing(),
+                      defaultSpacing(),
+                      _buildTitleRow('', tr('start_date'), tr('end_date'),
+                          style2: AppTextStyle.default_16,
+                          style3: AppTextStyle.default_16),
+                      defaultSpacing(),
+                      defaultSpacing(),
+                      _buildTitleRow(
+                          tr('card_balance'),
+                          '${head.cardAmtS}/${head.cardDueS}',
+                          '${head.cardAmtE}/${head.cardDueE}',
+                          style1: AppTextStyle.default_14
+                              .copyWith(fontWeight: FontWeight.w600)),
+                      defaultSpacing(),
+                      defaultSpacing(),
+                      _buildTitleRow(
+                          tr('real_balance'),
+                          '${head.realAmtS}/${head.realDueS}',
+                          '${head.realAmtE}/${head.realDueE}',
+                          style1: AppTextStyle.default_14
+                              .copyWith(fontWeight: FontWeight.w600)),
+                      defaultSpacing(),
+                      defaultSpacing(),
+                      Padding(
+                          padding: AppSize.defaultSidePadding,
+                          child: Divider()),
+                      defaultSpacing(),
+                      defaultSpacing(),
+                      Padding(
+                        padding: EdgeInsets.only(right: AppSize.padding),
+                        child: AppText.text(tr('supply_price_and_tex'),
+                            style: AppTextStyle.default_16),
+                      ),
+                      defaultSpacing(),
+                      defaultSpacing(),
+                      _buildAmountRow(
+                          tr('total_sales'),
+                          head.saleAmt != null && head.saleAmt!.isNotEmpty
+                              ? '${head.saleAmt!}/${head.saleAmtT!}'
+                              : '0',
+                          style1: AppTextStyle.default_14
+                              .copyWith(fontWeight: FontWeight.w600)),
+                      defaultSpacing(),
+                      defaultSpacing(),
+                      _buildAmountRow(
+                          tr('return_amount'),
+                          head.reAmt != null && head.reAmt!.isNotEmpty
+                              ? '${head.reAmt!}/${head.reAmtT!}'
+                              : '0',
+                          style1: AppTextStyle.default_14
+                              .copyWith(fontWeight: FontWeight.w600)),
+                      defaultSpacing(),
+                      defaultSpacing(),
+                      _buildAmountRow(
+                          tr('collection_amount'),
+                          head.dmbtrD != null && head.dmbtrD!.isNotEmpty
+                              ? '${head.dmbtrD}'
+                              : '0',
+                          style1: AppTextStyle.default_14
+                              .copyWith(fontWeight: FontWeight.w600)),
+                      defaultSpacing(),
+                    ],
+                  )
+                : DefaultShimmer.buildDefaultResultShimmer();
+          },
+        )
+      ],
+    );
+  }
+
   Widget _buildBottomAnimationBox(BuildContext context) {
     return Selector<TransactionLedgerPageProvider, bool>(
       selector: (context, provider) => provider.isOpenBottomSheet,
       builder: (context, isOpenBottomSheet, _) {
         return WidgetOfOffSetAnimationWidget(
           animationCallBack: () => isOpenBottomSheet,
-          height: AppSize.realHeight * .4,
+          body: _buildAnimationBody(context),
+          height: AppSize.bottomSheetHeight,
         );
       },
     );
@@ -652,8 +787,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               AppText.text(tr('balance_status'),
-                                  style: AppTextStyle.default_14
-                                      .copyWith(fontWeight: FontWeight.bold)),
+                                  style: AppTextStyle.blod_16),
                               WidgetOfRotationAnimationComponents(
                                 animationCallBack: () => isShowShadow,
                               )

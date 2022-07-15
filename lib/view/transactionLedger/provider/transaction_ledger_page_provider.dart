@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-07-15 11:27:42
+ * Last Modified: 2022-07-15 17:17:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -63,7 +63,11 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   }
 
   bool get isValidate =>
-      staffName != null && selectedStartDate != null && selectedEndDate != null;
+      staffName != null &&
+      selectedStartDate != null &&
+      selectedEndDate != null &&
+      selectedCustomerModel != null &&
+      customerName != null;
   Future<ResultModel?> nextPage() async {
     if (hasMore) {
       pos = partial + pos;
@@ -270,10 +274,9 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     }
     if (result != null && result.statusCode == 200) {
       var temp = TransLedgerResponseModel.fromJson(result.body['data']);
-      temp.tList!.forEach((element) {
-        pr(element.toJson());
-      });
-      pr(temp.esHead?.toJson());
+
+      pr(temp.tReport?.length == temp.tList?.length);
+      pr(temp.esHead!.toJson());
       if (temp.tList!.length != partial) {
         hasMore = false;
       }
