@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-14 23:41:20
+ * Last Modified: 2022-07-15 14:26:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,10 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/view/common/widget_of_offset_animation_components.dart';
-import 'package:medsalesportal/view/common/widget_of_rotation_animation_components.dart';
 import 'package:tuple/tuple.dart';
-
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +36,8 @@ import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
 import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
+import 'package:medsalesportal/view/common/widget_of_offset_animation_components.dart';
+import 'package:medsalesportal/view/common/widget_of_rotation_animation_components.dart';
 import 'package:medsalesportal/view/transactionLedger/provider/transaction_ledger_page_provider.dart';
 
 class TransactionLedgerPage extends StatefulWidget {
@@ -366,32 +365,183 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
         });
   }
 
-  Widget _buildListViewItem(
-      BuildContext context, TransLedgerTListModel model, bool isShowLastPage) {
-    return InkWell(
-      onTap: () async {
-        //
-      },
-      child: Padding(
-        padding: AppSize.defaultSidePadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildListViewItem(BuildContext context, TransLedgerTListModel model,
+      int index, bool isShowLastPage) {
+    final isTotalRow = model.spmon!.contains('<');
+    return Column(
+      children: [
+        Table(
+          border: index == 0
+              ? null
+              : TableBorder(
+                  top: BorderSide(
+                      color: AppColors.unReadyButtonBorderColor, width: .4)),
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          columnWidths: {
+            0: FlexColumnWidth(.25),
+            1: FlexColumnWidth(.5),
+            2: FlexColumnWidth(.25),
+          },
           children: [
-            defaultSpacing(),
-            defaultSpacing(),
-            Divider(),
+            TableRow(children: [
+              _buildTableBox(model.bschlTx!, 0,
+                  isBody: isTotalRow ? false : true, isTotalRow: isTotalRow),
+              _buildTableBox(model.arktx!.trim(), 1,
+                  isBody: true, isTotalRow: isTotalRow),
+              _buildTableBox(
+                  model.fkimgC != null &&
+                          model.fkimgC!.isNotEmpty &&
+                          model.freeQtyC != null &&
+                          model.freeQtyC!.isNotEmpty
+                      ? '${model.fkimgC!}/${model.freeQtyC!}'
+                      : model.fkimgC == null || model.fkimgC!.isEmpty
+                          ? ''
+                          : '${model.fkimgC!}/${model.freeQtyC == null || model.freeQtyC!.isEmpty ? '0' : model.freeQtyC}',
+                  2,
+                  isBody: true,
+                  alignment: Alignment.centerRight,
+                  isTotalRow: isTotalRow),
+            ]),
           ],
         ),
-      ),
+        Table(
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          columnWidths: {
+            0: FlexColumnWidth(.25),
+            1: FlexColumnWidth(.25),
+            2: FlexColumnWidth(.25),
+            3: FlexColumnWidth(.25),
+          },
+          children: [
+            TableRow(children: [
+              _buildTableBox(
+                  isTotalRow
+                      ? model.spmon!
+                          .replaceAll('<', '')
+                          .replaceAll('>', '')
+                          .trim()
+                      : FormatUtil.addDashForDateStr2(
+                          model.spmon!.replaceAll('-', '')),
+                  0,
+                  isBody: isTotalRow && model.spmon!.contains(tr('total_count'))
+                      ? false
+                      : true,
+                  isTotalRow: isTotalRow),
+              _buildTableBox(model.netwrTC!, 1,
+                  isBody: true, isTotalRow: isTotalRow),
+              _buildTableBox(model.dmbtrC!, 2,
+                  isBody: true, isTotalRow: isTotalRow),
+              _buildTableBox(model.otherC!, 3,
+                  isBody: true, isTotalRow: isTotalRow),
+            ])
+          ],
+        ),
+      ],
     );
   }
 
-  Widget _buildListView(TransactionLedgerPageProvider provider) {
+  Widget _buildTableBox(String text, int index,
+      {bool? isBody, AlignmentGeometry? alignment, bool? isTotalRow}) {
+    return Container(
+        padding: EdgeInsets.only(
+            left: index == 0 ? AppSize.padding : AppSize.defaultListItemSpacing,
+            right: alignment != null ? AppSize.padding : AppSize.zero),
+        height: AppSize.defaultTextFieldHeight * .6,
+        decoration: BoxDecoration(
+            color: isTotalRow != null && isTotalRow
+                ? AppColors.tableBorderColor.withOpacity(.2)
+                : AppColors.whiteText),
+        alignment: alignment != null ? alignment : Alignment.centerLeft,
+        child: AppText.text(text,
+            style: isBody != null && isBody
+                ? null
+                : AppTextStyle.blod_16.copyWith(fontWeight: FontWeight.w500)));
+  }
+
+  Widget _buildResultTitle(BuildContext context) {
     return Column(
       children: [
-        provider.transLedgerResponseModel != null &&
-                provider.transLedgerResponseModel!.tList != null &&
-                provider.transLedgerResponseModel!.tList!.isNotEmpty
+        Table(
+          border: TableBorder.all(
+              color: AppColors.unReadyButtonBorderColor, width: .4),
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          columnWidths: {
+            0: FlexColumnWidth(.25),
+            1: FlexColumnWidth(.5),
+            2: FlexColumnWidth(.25),
+          },
+          children: [
+            TableRow(children: [
+              _buildTableBox(tr('division'), 0,
+                  isBody: false, isTotalRow: true),
+              _buildTableBox(tr('item_name'), 1,
+                  isBody: false, isTotalRow: true),
+              _buildTableBox(tr('quantity_and_add'), 2,
+                  isBody: false, isTotalRow: true),
+            ]),
+          ],
+        ),
+        Table(
+          border: TableBorder(
+              top: BorderSide.none,
+              bottom: BorderSide(
+                  color: AppColors.unReadyButtonBorderColor, width: .4),
+              horizontalInside: BorderSide(
+                  color: AppColors.unReadyButtonBorderColor, width: .4),
+              verticalInside: BorderSide(
+                  color: AppColors.unReadyButtonBorderColor, width: .4)),
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          columnWidths: {
+            0: FlexColumnWidth(.25),
+            1: FlexColumnWidth(.25),
+            2: FlexColumnWidth(.25),
+            3: FlexColumnWidth(.25),
+          },
+          children: [
+            TableRow(children: [
+              _buildTableBox(tr('date_1'), 0, isBody: false, isTotalRow: true),
+              _buildTableBox(tr('total_sales'), 1,
+                  isBody: false, isTotalRow: true),
+              _buildTableBox(tr('collection_amount'), 2,
+                  isBody: false, isTotalRow: true),
+              _buildTableBox(tr('other_amount'), 3,
+                  isBody: false, isTotalRow: true),
+            ])
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTotalCount(TransactionLedgerPageProvider provider) {
+    return Padding(
+        padding: EdgeInsets.only(left: AppSize.padding),
+        child: Row(children: [
+          AppText.text('총'),
+          AppText.text('${provider.transLedgerResponseModel!.tList!.length}',
+              style: AppTextStyle.blod_16),
+          AppText.text('건')
+        ]));
+  }
+
+  Widget _buildListView(TransactionLedgerPageProvider provider) {
+    var isModelNotNull = provider.transLedgerResponseModel != null &&
+        provider.transLedgerResponseModel!.tList != null &&
+        provider.transLedgerResponseModel!.tList!.isNotEmpty;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        isModelNotNull
+            ? Column(
+                children: [
+                  defaultSpacing(),
+                  _buildTotalCount(provider),
+                  defaultSpacing(),
+                  _buildResultTitle(context),
+                ],
+              )
+            : Container(),
+        isModelNotNull
             ? ListView.builder(
                 shrinkWrap: true,
                 controller: _scrollController,
@@ -400,6 +550,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   return _buildListViewItem(
                       context,
                       provider.transLedgerResponseModel!.tList![index],
+                      index,
                       !provider.hasMore &&
                           index ==
                               provider.transLedgerResponseModel!.tList!.length -

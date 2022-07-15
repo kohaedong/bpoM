@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -25,6 +24,7 @@ class AppColors {
   static const Color blueTextColor = Color(0xff3a6af6);
   static const Color blueBorderColor = Color(0xffa9befc);
   static const Color showAllTextColor = Color(0xff2b65d9);
+  static const Color tableBackgroundColor = Color.fromARGB(0, 234, 232, 232);
   static const Color tableBorderColor = Color(0x66cccccc);
   static const Color unReadyButtonBorderColor = Color(0xffcccccc);
   static const Color shadowColor = Color(0x47000000);

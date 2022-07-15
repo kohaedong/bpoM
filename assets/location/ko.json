@@ -473,6 +473,13 @@
     "order_cancel":"주문취소",
     "successful_for_something":"{}가 정상적으로 처리되였습니다.",
     "faild_for_something":"{} 실패하였습니다.",
-    "balance_status":"잔고 현황"
+    "balance_status":"잔고 현황",
+    "division":"구분",
+    "item_name":"품목명",
+    "quantity_and_add":"수량/추가",
+    "date_1":"일자",
+    "collection_amount":"수금액",
+    "other_amount":"기타금액",
+    "total_count":"총 계"
 
 }
