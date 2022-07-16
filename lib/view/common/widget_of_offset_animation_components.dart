@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_animation_components.dart
  * Created Date: 2022-07-14 21:54:05
- * Last Modified: 2022-07-16 12:13:04
+ * Last Modified: 2022-07-16 16:09:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -36,6 +36,7 @@ class WidgetOfOffSetAnimationWidget extends StatefulWidget {
       this.height,
       this.animationSwich,
       this.offset,
+      this.controller,
       this.width,
       this.offsetType})
       : super(key: key);
@@ -43,6 +44,7 @@ class WidgetOfOffSetAnimationWidget extends StatefulWidget {
   final Offset? offset;
   final double? width;
   final double? height;
+  final AnimationController? controller;
   final AnimationCallBack?
       animationSwich; // true = animationController.forward()   false = animationController.reverse()
   final OffsetDirectionType? offsetType;
@@ -59,10 +61,11 @@ class _WidgetOfOffSetAnimationWidgetState
 
   @override
   void initState() {
-    animationController = AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 300),
-        reverseDuration: Duration(milliseconds: 300));
+    animationController = widget.controller ??
+        AnimationController(
+            vsync: this,
+            duration: Duration(milliseconds: 300),
+            reverseDuration: Duration(milliseconds: 300));
     super.initState();
   }
 
@@ -115,8 +118,8 @@ class _WidgetOfOffSetAnimationWidgetState
                   child: Container(
                       height: widget.height,
                       width: widget.width ?? AppSize.realWidth,
-                      decoration: animationController.status ==
-                              AnimationStatus.completed
+                      decoration: widget.offsetType != OffsetDirectionType.UP &&
+                              widget.offsetType != OffsetDirectionType.DOWN
                           ? BoxDecoration(
                               boxShadow: [
                                   BoxShadow(
@@ -125,24 +128,27 @@ class _WidgetOfOffSetAnimationWidgetState
                                     offset: Offset(0, -3),
                                   ),
                                 ],
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(AppSize.radius15),
-                                bottomRight: Radius.circular(AppSize.radius15),
-                              ),
+                              border: Border(
+                                  top: BorderSide(
+                                      width: .3,
+                                      color: AppColors.textFieldUnfoucsColor)),
                               color: AppColors.whiteText)
-                          : BoxDecoration(
-                              boxShadow: [
+                          : animationController.status ==
+                                  AnimationStatus.completed
+                              ? BoxDecoration(boxShadow: [
                                   BoxShadow(
                                     color: AppColors.textGrey.withOpacity(0.5),
                                     blurRadius: AppSize.radius5,
                                     offset: Offset(0, -3),
                                   ),
-                                ],
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(AppSize.radius15),
-                                bottomRight: Radius.circular(AppSize.radius15),
-                              ),
-                              color: AppColors.whiteText),
+                                ], color: AppColors.whiteText)
+                              : BoxDecoration(boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.textGrey.withOpacity(0.5),
+                                    blurRadius: AppSize.radius5,
+                                    offset: Offset(0, -3),
+                                  ),
+                                ], color: AppColors.whiteText),
                       alignment: Alignment.bottomCenter,
                       child: widget.body));
             }));

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-16 12:45:17
+ * Last Modified: 2022-07-16 16:29:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,9 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/enums/offset_direction_type.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/view/common/widget_of_offset_animation_components_2.dart';
+import 'package:medsalesportal/view/transactionLedger/drawer_button_animation_widget.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +26,7 @@ import 'package:medsalesportal/enums/popup_search_type.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
+import 'package:medsalesportal/enums/offset_direction_type.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/model/rfc/trans_ledger_t_list_model.dart';
@@ -53,6 +52,7 @@ class TransactionLedgerPage extends StatefulWidget {
 class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   late ScrollController _scrollController;
   late ScrollController _scrollController2;
+  late Key key;
   bool upLock = true;
   bool downLock = true;
   DateTime selectedDate = DateTime.now();
@@ -61,6 +61,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   var _bottomPanelSwich = ValueNotifier<bool>(true);
   @override
   void initState() {
+    key = Key('last');
     _scrollController = ScrollController();
     _scrollController2 = ScrollController();
 
@@ -593,8 +594,10 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   foregroundColor: AppColors.primary,
                   onPressed: () {
                     SystemChrome.setPreferredOrientations([
-                      DeviceOrientation.landscapeRight,
+                      DeviceOrientation.landscapeLeft,
                     ]);
+                    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+                        overlays: []);
                   },
                   child: AppImage.getImage(ImageType.SCREEN_ROTATION),
                 ))
@@ -809,6 +812,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     }
     return BaseLayout(
         hasForm: true,
+        isResizeToAvoidBottomInset: true,
         appBar: MainAppBar(context,
             titleText: AppText.text('${tr('transaction_ledger')}',
                 style: AppTextStyle.w500_22)),
@@ -875,30 +879,63 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   Widget _buildTable(BuildContext context) {
     return Stack(
       children: [
+        Container(
+          height: AppSize.realHeight,
+          width: AppSize.realWidth,
+          child: ListView(
+            children: [
+              InkWell(
+                onTap: () {
+                  final p = context.read<TransactionLedgerPageProvider>();
+                  if (!p.isOpenBottomSheet) {
+                    p.setIsOpenBottomSheet();
+                  }
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.portraitUp,
+                  ]);
+                  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+                      overlays: [SystemUiOverlay.top]);
+                },
+                child: Container(
+                    padding: EdgeInsets.only(left: AppSize.padding),
+                    alignment: Alignment.centerLeft,
+                    width: AppSize.realWidth,
+                    height: AppSize.appBarHeight,
+                    child: Icon(Icons.arrow_back_ios_rounded)),
+              )
+            ],
+          ),
+        ),
         Selector<TransactionLedgerPageProvider, Tuple2<bool, bool>>(
           selector: (context, provider) =>
               Tuple2(provider.isOpenBottomSheet, provider.isAnimationNotReady),
           builder: (context, tuple, _) {
-            return WidgetOfOffSetAnimationWidget2(
-                key: Key('last'),
+            return WidgetOfOffSetAnimationWidget(
+                key: key,
                 animationSwich: tuple.item2 ? null : () => tuple.item1,
                 body: _buildLandSpaceAnimationBody(context),
-                height: 400,
-                width: 400,
-                offset: Offset(-500, 0),
+                height: AppSize.realHeight + 20,
+                width: AppSize.bottomSheetWidth,
+                offset: Offset(-AppSize.bottomSheetWidth, 0),
                 offsetType: OffsetDirectionType.RIGHT);
           },
         ),
-        Positioned(
-            bottom: AppSize.padding,
-            right: AppSize.realWidth - 400,
-            child: InkWell(
-              onTap: () {
-                final p = context.read<TransactionLedgerPageProvider>();
-                p.setIsOpenBottomSheet();
-              },
-              child: AppImage.getImage(ImageType.SCREEN_ROTATION),
-            ))
+        Selector<TransactionLedgerPageProvider, bool>(
+          selector: (context, provider) =>
+              provider.isOpenBottomSheetForLandSpace,
+          builder: (context, isOpen, _) {
+            return DrawerButtonAnimationWidget(
+              animationSwich: () => isOpen,
+              body: InkWell(
+                onTap: () {
+                  final p = context.read<TransactionLedgerPageProvider>();
+                  p.setIsOpenBottomSheet();
+                },
+                child: AppImage.getImage(ImageType.SCREEN_ROTATION),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
@@ -907,15 +944,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     return BaseLayout(
         hasForm: false,
         isWithWillPopScope: true,
-        appBar: MainAppBar(
-          context,
-          titleText: AppText.text(''),
-          callback: () {
-            SystemChrome.setPreferredOrientations([
-              DeviceOrientation.portraitUp,
-            ]);
-          },
-        ),
+        appBar: null,
         child:
             Selector<TransactionLedgerPageProvider, TransLedgerResponseModel?>(
           selector: (context, provider) => provider.transLedgerResponseModel,
@@ -943,9 +972,10 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
       child: OrientationBuilder(builder: (context, orientation) {
         if (orientation == Orientation.portrait) {
           return _buildPortraitView(context);
-        } else {
+        } else if (orientation == Orientation.landscape) {
           return _buildLandSpaceView(context);
         }
+        return Container();
       }),
     );
   }

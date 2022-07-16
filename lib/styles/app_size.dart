@@ -30,6 +30,7 @@ class AppSize {
   static double get dangerPopHeight => 157.h;
   static double get appBarHeight => 56.h;
   static double get bottomSheetHeight => 350;
+  static double get bottomSheetWidth => 400;
   static double get downLoadPopupHeight => 100.w;
   static double get statusBarHeight => 24.h;
   static double get splashIconWidth => 56.h;
