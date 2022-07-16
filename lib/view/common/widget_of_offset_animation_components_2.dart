@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_animation_components.dart
  * Created Date: 2022-07-14 21:54:05
- * Last Modified: 2022-07-16 12:13:04
+ * Last Modified: 2022-07-16 12:38:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -29,8 +29,8 @@ typedef AnimationCallBack = bool Function();
 //                            |
 //
 // 애니메이션  =  이동하려는 방향의 축의 값 * animationController.value
-class WidgetOfOffSetAnimationWidget extends StatefulWidget {
-  const WidgetOfOffSetAnimationWidget(
+class WidgetOfOffSetAnimationWidget2 extends StatefulWidget {
+  const WidgetOfOffSetAnimationWidget2(
       {Key? key,
       this.body,
       this.height,
@@ -47,12 +47,12 @@ class WidgetOfOffSetAnimationWidget extends StatefulWidget {
       animationSwich; // true = animationController.forward()   false = animationController.reverse()
   final OffsetDirectionType? offsetType;
   @override
-  State<WidgetOfOffSetAnimationWidget> createState() =>
+  State<WidgetOfOffSetAnimationWidget2> createState() =>
       _WidgetOfOffSetAnimationWidgetState();
 }
 
 class _WidgetOfOffSetAnimationWidgetState
-    extends State<WidgetOfOffSetAnimationWidget>
+    extends State<WidgetOfOffSetAnimationWidget2>
     with SingleTickerProviderStateMixin {
   late AnimationController animationController;
   double? startPoint;
@@ -77,13 +77,13 @@ class _WidgetOfOffSetAnimationWidgetState
     if (mounted &&
         widget.animationSwich != null &&
         widget.animationSwich!.call()) {
-      pr('forward');
+      pr('forward2');
       animationController.forward();
     } else if (mounted &&
         widget.animationSwich != null &&
         !widget.animationSwich!.call()) {
       // log가 2번 찍히는 것은 animation 이 SetState() 를 작동 하였기 때문입니다.
-      pr('reverse');
+      pr('reverse2');
       animationController.reverse();
     }
     return Positioned(

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_rotation_animation_components.dart
  * Created Date: 2022-07-14 23:02:16
- * Last Modified: 2022-07-15 14:34:52
+ * Last Modified: 2022-07-16 09:34:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,9 +18,9 @@ import 'package:medsalesportal/styles/export_common.dart';
 typedef AnimationCallBack = bool Function();
 
 class WidgetOfRotationAnimationComponents extends StatefulWidget {
-  const WidgetOfRotationAnimationComponents({Key? key, this.animationCallBack})
+  const WidgetOfRotationAnimationComponents({Key? key, this.animationSwich})
       : super(key: key);
-  final AnimationCallBack? animationCallBack;
+  final AnimationCallBack? animationSwich;
   @override
   State<WidgetOfRotationAnimationComponents> createState() =>
       _WidgetOfRotationAnimationComponentsState();
@@ -46,9 +46,9 @@ class _WidgetOfRotationAnimationComponentsState
 
   @override
   Widget build(BuildContext context) {
-    if (mounted && widget.animationCallBack!.call()) {
+    if (mounted && widget.animationSwich!.call()) {
       _animationController.forward();
-    } else if (mounted && !widget.animationCallBack!.call()) {
+    } else if (mounted && !widget.animationSwich!.call()) {
       _animationController.reverse();
     }
     return AnimatedBuilder(

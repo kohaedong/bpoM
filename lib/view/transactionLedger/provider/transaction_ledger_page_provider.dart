@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-07-15 17:17:19
+ * Last Modified: 2022-07-16 12:39:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
@@ -34,6 +33,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isTeamLeader = false;
   bool isFirstRun = true;
+  bool isAnimationNotReady = true;
   bool isOpenBottomSheet = true;
   bool isShowShadow = true;
   String? staffName;
@@ -78,7 +78,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
 
   void setIsOpenBottomSheet() {
     isOpenBottomSheet = !isOpenBottomSheet;
-    Future.delayed(Duration(milliseconds: isOpenBottomSheet ? 300 : 0), () {
+    Future.delayed(Duration(milliseconds: isOpenBottomSheet ? 274 : 0), () {
       setShhowShadow();
     });
     notifyListeners();
@@ -86,6 +86,11 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
 
   void setShhowShadow() {
     isShowShadow = !isShowShadow;
+    notifyListeners();
+  }
+
+  void setIsReadyForAnimation() {
+    isAnimationNotReady = !isAnimationNotReady;
     notifyListeners();
   }
 
@@ -121,11 +126,13 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   }
 
   Future<void> initPageData() async {
+    pr('init');
     setIsLoginModel();
     searchPerson();
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
     isFirstRun = false;
+    isAnimationNotReady = false;
   }
 
   void setIsLoginModel() async {
@@ -290,12 +297,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
               transLedgerResponseModel!.tList!.isEmpty)) {
         transLedgerResponseModel = null;
       }
-      if (transLedgerResponseModel != null) {
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.landscapeLeft,
-        ]);
-      }
+      if (transLedgerResponseModel != null) {}
       isLoadData = false;
       notifyListeners();
       return ResultModel(true);

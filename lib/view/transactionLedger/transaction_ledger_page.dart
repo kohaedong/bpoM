@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-15 17:36:51
+ * Last Modified: 2022-07-16 12:45:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,10 +11,9 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:medsalesportal/util/date_util.dart';
-import 'package:medsalesportal/view/common/base_shimmer.dart';
+import 'package:medsalesportal/enums/offset_direction_type.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/view/common/widget_of_offset_animation_components_2.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +63,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   void initState() {
     _scrollController = ScrollController();
     _scrollController2 = ScrollController();
+
     super.initState();
   }
 
@@ -574,31 +574,33 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           padding: AppSize.nullValueWidgetPadding,
                           child: BaseNullDataWidget.build())
                     ],
-                  )
+                  ),
+        Padding(padding: EdgeInsets.only(top: AppSize.buttonHeight))
       ],
     );
   }
 
   Widget _buildScrollToTop(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-        valueListenable: _scrollSwich,
-        builder: (context, isCanScroll, _) {
-          return isCanScroll
-              ? Positioned(
-                  right: AppSize.padding,
-                  bottom: AppSize.padding,
-                  child: FloatingActionButton(
-                    backgroundColor: AppColors.whiteText,
-                    foregroundColor: AppColors.primary,
-                    onPressed: () {
-                      _scrollController2.animateTo(0,
-                          duration: Duration(milliseconds: 400),
-                          curve: Curves.easeIn);
-                    },
-                    child: AppImage.getImage(ImageType.SCROLL_TO_TOP),
-                  ))
-              : Container();
-        });
+    return Selector<TransactionLedgerPageProvider, TransLedgerResponseModel?>(
+      selector: (context, provider) => provider.transLedgerResponseModel,
+      builder: (context, model, _) {
+        return model != null && model.tList != null && model.tList!.isNotEmpty
+            ? Positioned(
+                right: AppSize.padding,
+                bottom: AppSize.padding + AppSize.buttonHeight,
+                child: FloatingActionButton(
+                  backgroundColor: AppColors.whiteText,
+                  foregroundColor: AppColors.primary,
+                  onPressed: () {
+                    SystemChrome.setPreferredOrientations([
+                      DeviceOrientation.landscapeRight,
+                    ]);
+                  },
+                  child: AppImage.getImage(ImageType.SCREEN_ROTATION),
+                ))
+            : Container();
+      },
+    );
   }
 
   Widget _buildResult(BuildContext context) {
@@ -670,14 +672,12 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           style2: AppTextStyle.default_16,
                           style3: AppTextStyle.default_16),
                       defaultSpacing(),
-                      defaultSpacing(),
                       _buildTitleRow(
                           tr('card_balance'),
                           '${head.cardAmtS}/${head.cardDueS}',
                           '${head.cardAmtE}/${head.cardDueE}',
                           style1: AppTextStyle.default_14
                               .copyWith(fontWeight: FontWeight.w600)),
-                      defaultSpacing(),
                       defaultSpacing(),
                       _buildTitleRow(
                           tr('real_balance'),
@@ -686,18 +686,15 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           style1: AppTextStyle.default_14
                               .copyWith(fontWeight: FontWeight.w600)),
                       defaultSpacing(),
-                      defaultSpacing(),
                       Padding(
                           padding: AppSize.defaultSidePadding,
                           child: Divider()),
-                      defaultSpacing(),
                       defaultSpacing(),
                       Padding(
                         padding: EdgeInsets.only(right: AppSize.padding),
                         child: AppText.text(tr('supply_price_and_tex'),
                             style: AppTextStyle.default_16),
                       ),
-                      defaultSpacing(),
                       defaultSpacing(),
                       _buildAmountRow(
                           tr('total_sales'),
@@ -707,7 +704,6 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           style1: AppTextStyle.default_14
                               .copyWith(fontWeight: FontWeight.w600)),
                       defaultSpacing(),
-                      defaultSpacing(),
                       _buildAmountRow(
                           tr('return_amount'),
                           head.reAmt != null && head.reAmt!.isNotEmpty
@@ -716,7 +712,6 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           style1: AppTextStyle.default_14
                               .copyWith(fontWeight: FontWeight.w600)),
                       defaultSpacing(),
-                      defaultSpacing(),
                       _buildAmountRow(
                           tr('collection_amount'),
                           head.dmbtrD != null && head.dmbtrD!.isNotEmpty
@@ -724,6 +719,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                               : '0',
                           style1: AppTextStyle.default_14
                               .copyWith(fontWeight: FontWeight.w600)),
+                      defaultSpacing(),
                       defaultSpacing(),
                     ],
                   )
@@ -735,14 +731,17 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   }
 
   Widget _buildBottomAnimationBox(BuildContext context) {
-    return Selector<TransactionLedgerPageProvider, bool>(
-      selector: (context, provider) => provider.isOpenBottomSheet,
-      builder: (context, isOpenBottomSheet, _) {
+    return Selector<TransactionLedgerPageProvider, Tuple2<bool, bool>>(
+      selector: (context, provider) =>
+          Tuple2(provider.isOpenBottomSheet, provider.isAnimationNotReady),
+      builder: (context, tuple, _) {
         return WidgetOfOffSetAnimationWidget(
-          animationCallBack: () => isOpenBottomSheet,
-          body: _buildAnimationBody(context),
-          height: AppSize.bottomSheetHeight,
-        );
+            key: Key('first'),
+            animationSwich: tuple.item2 ? null : () => tuple.item1,
+            body: _buildAnimationBody(context),
+            height: AppSize.bottomSheetHeight,
+            offset: Offset(0, (AppSize.bottomSheetHeight)),
+            offsetType: OffsetDirectionType.UP);
       },
     );
   }
@@ -789,7 +788,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                               AppText.text(tr('balance_status'),
                                   style: AppTextStyle.blod_16),
                               WidgetOfRotationAnimationComponents(
-                                animationCallBack: () => isShowShadow,
+                                animationSwich: () => isShowShadow,
                               )
                             ],
                           ),
@@ -858,24 +857,77 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   _panelSwich.value = false;
                   return p.refresh();
                 }),
-            // _buildScrollToTop(context)
+            _buildScrollToTop(context),
             _buildBottomAnimationBox(context),
             _buildBottomTitleBar(context)
           ],
         ));
   }
 
+  Widget _buildLandSpaceAnimationBody(BuildContext context) {
+    return Container(
+      child: Center(
+        child: AppText.text('data'),
+      ),
+    );
+  }
+
+  Widget _buildTable(BuildContext context) {
+    return Stack(
+      children: [
+        Selector<TransactionLedgerPageProvider, Tuple2<bool, bool>>(
+          selector: (context, provider) =>
+              Tuple2(provider.isOpenBottomSheet, provider.isAnimationNotReady),
+          builder: (context, tuple, _) {
+            return WidgetOfOffSetAnimationWidget2(
+                key: Key('last'),
+                animationSwich: tuple.item2 ? null : () => tuple.item1,
+                body: _buildLandSpaceAnimationBody(context),
+                height: 400,
+                width: 400,
+                offset: Offset(-500, 0),
+                offsetType: OffsetDirectionType.RIGHT);
+          },
+        ),
+        Positioned(
+            bottom: AppSize.padding,
+            right: AppSize.realWidth - 400,
+            child: InkWell(
+              onTap: () {
+                final p = context.read<TransactionLedgerPageProvider>();
+                p.setIsOpenBottomSheet();
+              },
+              child: AppImage.getImage(ImageType.SCREEN_ROTATION),
+            ))
+      ],
+    );
+  }
+
   Widget _buildLandSpaceView(BuildContext context) {
     return BaseLayout(
         hasForm: false,
-        appBar: null,
+        isWithWillPopScope: true,
+        appBar: MainAppBar(
+          context,
+          titleText: AppText.text(''),
+          callback: () {
+            SystemChrome.setPreferredOrientations([
+              DeviceOrientation.portraitUp,
+            ]);
+          },
+        ),
         child:
             Selector<TransactionLedgerPageProvider, TransLedgerResponseModel?>(
           selector: (context, provider) => provider.transLedgerResponseModel,
           builder: (context, model, _) {
-            return Container(
-              child: Text('${model?.tList?.first.mwsbp}'),
-            );
+            return model != null &&
+                    model.tList != null &&
+                    model.tList!.isNotEmpty &&
+                    model.esHead != null &&
+                    model.tReport != null &&
+                    mounted
+                ? _buildTable(context)
+                : Container();
           },
         ));
   }
