@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-16 16:29:55
+ * Last Modified: 2022-07-17 10:18:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/transactionLedger/drawer_button_animation_widget.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
@@ -518,8 +519,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     );
   }
 
-  Widget _buildTotalCount(TransactionLedgerPageProvider provider) {
-    var list = provider.transLedgerResponseModel!.tList!;
+  Widget _buildTotalCount(TransLedgerResponseModel model) {
+    var list = model.tList!;
     var length = list.length;
     var totalRow =
         list.where((element) => element.spmon!.contains('<')).toList();
@@ -531,54 +532,6 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
           AppText.text('$totalCount', style: AppTextStyle.blod_16),
           AppText.text('건')
         ]));
-  }
-
-  Widget _buildListView(TransactionLedgerPageProvider provider) {
-    var isModelNotNull = provider.transLedgerResponseModel != null &&
-        provider.transLedgerResponseModel!.tList != null &&
-        provider.transLedgerResponseModel!.tList!.isNotEmpty;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        isModelNotNull
-            ? Column(
-                children: [
-                  defaultSpacing(),
-                  _buildTotalCount(provider),
-                  defaultSpacing(),
-                  _buildResultTitle(context),
-                ],
-              )
-            : Container(),
-        isModelNotNull
-            ? ListView.builder(
-                shrinkWrap: true,
-                controller: _scrollController,
-                itemCount: provider.transLedgerResponseModel!.tList!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _buildListViewItem(
-                      context,
-                      provider.transLedgerResponseModel!.tList![index],
-                      index,
-                      !provider.hasMore &&
-                          index ==
-                              provider.transLedgerResponseModel!.tList!.length -
-                                  1);
-                },
-              )
-            : provider.isLoadData
-                ? DefaultShimmer.buildDefaultResultShimmer()
-                : ListView(
-                    shrinkWrap: true,
-                    children: [
-                      Padding(
-                          padding: AppSize.nullValueWidgetPadding,
-                          child: BaseNullDataWidget.build())
-                    ],
-                  ),
-        Padding(padding: EdgeInsets.only(top: AppSize.buttonHeight))
-      ],
-    );
   }
 
   Widget _buildScrollToTop(BuildContext context) {
@@ -607,10 +560,56 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   }
 
   Widget _buildResult(BuildContext context) {
-    return Consumer<TransactionLedgerPageProvider>(
-        builder: (context, provider, _) {
-      return _buildListView(provider);
-    });
+    final p = context.read<TransactionLedgerPageProvider>();
+    return Selector<TransactionLedgerPageProvider, TransLedgerResponseModel?>(
+      selector: (context, provider) => provider.transLedgerResponseModel,
+      builder: (context, model, _) {
+        var isModelNotNull =
+            model != null && model.tList != null && model.tList!.isNotEmpty;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            isModelNotNull
+                ? Column(
+                    children: [
+                      defaultSpacing(),
+                      _buildTotalCount(model),
+                      defaultSpacing(),
+                      _buildResultTitle(context),
+                    ],
+                  )
+                : Container(),
+            isModelNotNull
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    controller: _scrollController,
+                    itemCount: model.tList!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _buildListViewItem(
+                          context,
+                          model.tList![index],
+                          index,
+                          !p.hasMore &&
+                              index ==
+                                  p.transLedgerResponseModel!.tList!.length -
+                                      1);
+                    },
+                  )
+                : p.isLoadData
+                    ? DefaultShimmer.buildDefaultResultShimmer()
+                    : ListView(
+                        shrinkWrap: true,
+                        children: [
+                          Padding(
+                              padding: AppSize.nullValueWidgetPadding,
+                              child: BaseNullDataWidget.build())
+                        ],
+                      ),
+            Padding(padding: EdgeInsets.only(top: AppSize.buttonHeight))
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildTitleRow(String t1, String t2, String t3,
@@ -806,18 +805,18 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   }
 
   Widget _buildPortraitView(BuildContext context) {
+    pr('build');
     final p = context.watch<TransactionLedgerPageProvider>();
     if (p.isFirstRun) {
       p.initPageData();
     }
     return BaseLayout(
         hasForm: true,
-        isResizeToAvoidBottomInset: true,
+        isResizeToAvoidBottomInset: false,
         appBar: MainAppBar(context,
             titleText: AppText.text('${tr('transaction_ledger')}',
                 style: AppTextStyle.w500_22)),
         child: Stack(
-          fit: StackFit.loose,
           children: [
             RefreshIndicator(
                 child: ListView(
@@ -969,14 +968,17 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             create: (context) => TransactionLedgerPageProvider()),
         ChangeNotifierProvider(create: (context) => NextPageLoadingProvider()),
       ],
-      child: OrientationBuilder(builder: (context, orientation) {
-        if (orientation == Orientation.portrait) {
-          return _buildPortraitView(context);
-        } else if (orientation == Orientation.landscape) {
-          return _buildLandSpaceView(context);
-        }
-        return Container();
-      }),
+      builder: (context, _) {
+        return OrientationBuilder(builder: (context, orientation) {
+          if (orientation == Orientation.portrait &&
+              orientation != Orientation.landscape) {
+            return _buildPortraitView(context);
+          } else if (orientation == Orientation.landscape) {
+            return _buildLandSpaceView(context);
+          }
+          return Container();
+        });
+      },
     );
   }
 }
