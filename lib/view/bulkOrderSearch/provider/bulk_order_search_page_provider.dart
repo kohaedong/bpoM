@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-07-17 22:18:38
+ * Last Modified: 2022-07-17 22:19:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -27,9 +27,7 @@ import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
-import 'package:medsalesportal/model/rfc/t_list_search_order_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
-import 'package:medsalesportal/model/rfc/search_order_response_model.dart';
 
 class BulkOrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
@@ -222,7 +220,6 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
       notifyListeners();
     }
     final isLogin = CacheService.getIsLogin();
-    final esLogin = CacheService.getEsLogin();
     var spart =
         productsFamilyListWithCode != null && selectedProductsFamily != null
             ? productsFamilyListWithCode!
