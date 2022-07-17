@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-17 10:18:45
+ * Last Modified: 2022-07-17 11:47:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,8 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/model/rfc/et_customer_model.dart';
+import 'package:medsalesportal/view/common/base_shimmer.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/transactionLedger/drawer_button_animation_widget.dart';
 import 'package:tuple/tuple.dart';
@@ -60,6 +62,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   var _scrollSwich = ValueNotifier<bool>(false);
   var _panelSwich = ValueNotifier<bool>(true);
   var _bottomPanelSwich = ValueNotifier<bool>(true);
+  var _appBarSwich = ValueNotifier<bool>(true);
   @override
   void initState() {
     key = Key('last');
@@ -172,15 +175,18 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                 ],
                               ),
                             ),
-                            Selector<TransactionLedgerPageProvider, String?>(
-                                selector: (context, provider) =>
+                            Selector<TransactionLedgerPageProvider,
+                                    Tuple3<String?, String?, String?>>(
+                                selector: (context, provider) => Tuple3(
                                     provider.customerName,
-                                builder: (context, customerName, _) {
+                                    provider.selectedProductsFamily,
+                                    provider.staffName),
+                                builder: (context, tuple, _) {
                                   return BaseColumWithTitleAndTextFiled.build(
                                     '${tr('sales_office')}',
                                     BaseInputWidget(
                                       context: context,
-                                      onTap: p.selectedProductsFamily == null
+                                      onTap: tuple.item2 == null
                                           ? () {
                                               AppToast().show(
                                                   context,
@@ -192,21 +198,21 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                             }
                                           : null,
                                       iconType: InputIconType.SEARCH,
-                                      iconColor: customerName != null
+                                      iconColor: tuple.item1 != null
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
                                       deleteIconCallback: () =>
                                           p.setCustomerName(null),
-                                      hintText: customerName ??
+                                      hintText: tuple.item1 ??
                                           '${tr('plz_select_something_2', args: [
                                                 tr('sales_office')
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       isShowDeleteForHintText:
-                                          customerName != null ? true : false,
+                                          tuple.item1 != null ? true : false,
                                       width: AppSize.defaultContentsWidth,
                                       hintTextStyleCallBack: () =>
-                                          customerName != null
+                                          tuple.item1 != null
                                               ? AppTextStyle.default_16
                                               : AppTextStyle.hint_16,
                                       popupSearchType:
@@ -215,9 +221,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                         return p.setCustomerModel(customer);
                                       },
                                       bodyMap: {
-                                        'product_family':
-                                            p.selectedProductsFamily,
-                                        'staff': p.staffName
+                                        'product_family': tuple.item2,
+                                        'staff': tuple.item3
                                       },
                                       enable: false,
                                     ),
@@ -302,15 +307,18 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                     isNotShowStar: true);
                               },
                             ),
-                            Selector<TransactionLedgerPageProvider, String?>(
-                                selector: (context, provider) =>
+                            Selector<TransactionLedgerPageProvider,
+                                    Tuple3<String?, String?, EtCustomerModel?>>(
+                                selector: (context, provider) => Tuple3(
                                     provider.endCustomerName,
-                                builder: (context, endCustomerName, _) {
+                                    provider.customerName,
+                                    provider.selectedCustomerModel),
+                                builder: (context, tuple, _) {
                                   return BaseColumWithTitleAndTextFiled.build(
                                       '${tr('end_customer')}',
                                       BaseInputWidget(
                                         context: context,
-                                        onTap: p.selectedCustomerModel == null
+                                        onTap: tuple.item2 == null
                                             ? () {
                                                 AppToast().show(
                                                     context,
@@ -322,23 +330,21 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                               }
                                             : null,
                                         iconType: InputIconType.SEARCH,
-                                        iconColor: endCustomerName != null
+                                        iconColor: tuple.item1 != null
                                             ? AppColors.defaultText
                                             : AppColors.textFieldUnfoucsColor,
                                         deleteIconCallback: () =>
                                             p.setEndCustomerModel(null),
-                                        hintText: endCustomerName ??
+                                        hintText: tuple.item1 ??
                                             '${tr('plz_select_something_1', args: [
                                                   tr('end_customer')
                                                 ])}',
                                         // 팀장 일때 만 팀원선택후 삭제가능.
                                         isShowDeleteForHintText:
-                                            endCustomerName != null
-                                                ? true
-                                                : false,
+                                            tuple.item1 != null ? true : false,
                                         width: AppSize.defaultContentsWidth,
                                         hintTextStyleCallBack: () =>
-                                            endCustomerName != null
+                                            tuple.item1 != null
                                                 ? AppTextStyle.default_16
                                                 : AppTextStyle.hint_16,
                                         popupSearchType:
@@ -347,23 +353,23 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                           return p
                                               .setEndCustomerModel(customer);
                                         },
-                                        bodyMap: {
-                                          'kunnr':
-                                              p.selectedCustomerModel?.kunnr
-                                        },
+                                        bodyMap: {'kunnr': tuple.item3?.kunnr},
                                         enable: false,
                                       ),
                                       isNotShowStar: true);
                                 }),
-                            AppStyles.buildSearchButton(
-                                context, '${tr('search')}', () {
-                              if (p.isValidate) {
-                                _panelSwich.value = false;
-                                p.refresh();
-                              } else {
-                                AppToast().show(context,
-                                    '${tr('essential_option')}${tr('selecte_first')}');
-                              }
+                            Consumer<TransactionLedgerPageProvider>(
+                                builder: (context, provider, _) {
+                              return AppStyles.buildSearchButton(
+                                  context, '${tr('search')}', () {
+                                if (provider.isValidate) {
+                                  _panelSwich.value = false;
+                                  provider.refresh();
+                                } else {
+                                  AppToast().show(context,
+                                      '${tr('essential_option')}${tr('selecte_first')}');
+                                }
+                              });
                             })
                           ])))
             ],
@@ -534,7 +540,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
         ]));
   }
 
-  Widget _buildScrollToTop(BuildContext context) {
+  Widget _buildChangeOrientationButton(BuildContext context) {
     return Selector<TransactionLedgerPageProvider, TransLedgerResponseModel?>(
       selector: (context, provider) => provider.transLedgerResponseModel,
       builder: (context, model, _) {
@@ -546,6 +552,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   backgroundColor: AppColors.whiteText,
                   foregroundColor: AppColors.primary,
                   onPressed: () {
+                    final p = context.read<TransactionLedgerPageProvider>();
+                    p.setIsShowAppBar();
                     SystemChrome.setPreferredOrientations([
                       DeviceOrientation.landscapeLeft,
                     ]);
@@ -561,11 +569,14 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
 
   Widget _buildResult(BuildContext context) {
     final p = context.read<TransactionLedgerPageProvider>();
-    return Selector<TransactionLedgerPageProvider, TransLedgerResponseModel?>(
-      selector: (context, provider) => provider.transLedgerResponseModel,
-      builder: (context, model, _) {
-        var isModelNotNull =
-            model != null && model.tList != null && model.tList!.isNotEmpty;
+    return Selector<TransactionLedgerPageProvider,
+        Tuple2<TransLedgerResponseModel?, bool>>(
+      selector: (context, provider) =>
+          Tuple2(provider.transLedgerResponseModel, provider.isLoadData),
+      builder: (context, tuple, _) {
+        var isModelNotNull = tuple.item1 != null &&
+            tuple.item1!.tList != null &&
+            tuple.item1!.tList!.isNotEmpty;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -573,7 +584,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                 ? Column(
                     children: [
                       defaultSpacing(),
-                      _buildTotalCount(model),
+                      _buildTotalCount(tuple.item1!),
                       defaultSpacing(),
                       _buildResultTitle(context),
                     ],
@@ -583,11 +594,11 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                 ? ListView.builder(
                     shrinkWrap: true,
                     controller: _scrollController,
-                    itemCount: model.tList!.length,
+                    itemCount: tuple.item1!.tList!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return _buildListViewItem(
                           context,
-                          model.tList![index],
+                          tuple.item1!.tList![index],
                           index,
                           !p.hasMore &&
                               index ==
@@ -595,7 +606,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                       1);
                     },
                   )
-                : p.isLoadData
+                : tuple.item2
                     ? DefaultShimmer.buildDefaultResultShimmer()
                     : ListView(
                         shrinkWrap: true,
@@ -860,7 +871,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   _panelSwich.value = false;
                   return p.refresh();
                 }),
-            _buildScrollToTop(context),
+            _buildChangeOrientationButton(context),
             _buildBottomAnimationBox(context),
             _buildBottomTitleBar(context)
           ],
@@ -889,6 +900,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   if (!p.isOpenBottomSheet) {
                     p.setIsOpenBottomSheet();
                   }
+                  p.setIsShowAppBar();
                   SystemChrome.setPreferredOrientations([
                     DeviceOrientation.portraitUp,
                   ]);
@@ -940,45 +952,123 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   }
 
   Widget _buildLandSpaceView(BuildContext context) {
-    return BaseLayout(
-        hasForm: false,
-        isWithWillPopScope: true,
-        appBar: null,
-        child:
-            Selector<TransactionLedgerPageProvider, TransLedgerResponseModel?>(
-          selector: (context, provider) => provider.transLedgerResponseModel,
-          builder: (context, model, _) {
-            return model != null &&
-                    model.tList != null &&
-                    model.tList!.isNotEmpty &&
-                    model.esHead != null &&
-                    model.tReport != null &&
-                    mounted
-                ? _buildTable(context)
-                : Container();
-          },
-        ));
+    return Selector<TransactionLedgerPageProvider, TransLedgerResponseModel?>(
+      selector: (context, provider) => provider.transLedgerResponseModel,
+      builder: (context, model, _) {
+        return model != null &&
+                model.tList != null &&
+                model.tList!.isNotEmpty &&
+                model.esHead != null &&
+                model.tReport != null &&
+                mounted
+            ? _buildTable(context)
+            : Container();
+      },
+    );
+  }
+
+  Widget _buildContents(BuildContext context) {
+    final p = context.read<TransactionLedgerPageProvider>();
+    pr('contents');
+    return OrientationBuilder(builder: (context, orientation) {
+      if (orientation == Orientation.portrait) {
+        return Stack(
+          children: [
+            RefreshIndicator(
+              onRefresh: () {
+                _panelSwich.value = false;
+                return p.refresh();
+              },
+              child: ListView(
+                controller: _scrollController2
+                  ..addListener(() {
+                    if (_scrollController2.offset > AppSize.realHeight) {
+                      if (downLock == true) {
+                        downLock = false;
+                        upLock = true;
+                        _scrollSwich.value = true;
+                      }
+                    } else {
+                      if (upLock == true) {
+                        upLock = false;
+                        downLock = true;
+                        _scrollSwich.value = false;
+                      }
+                    }
+                    if (_scrollController2.offset ==
+                            _scrollController2.position.maxScrollExtent &&
+                        !p.isLoadData &&
+                        p.hasMore) {
+                      final nextPageProvider =
+                          context.read<NextPageLoadingProvider>();
+                      nextPageProvider.show();
+                      p.nextPage().then((_) => nextPageProvider.stop());
+                    }
+                  }),
+                children: [
+                  CustomerinfoWidget.buildDividingLine(),
+                  _buildPanel(context),
+                  CustomerinfoWidget.buildDividingLine(),
+                  _buildResult(context),
+                  Padding(
+                      padding:
+                          EdgeInsets.only(bottom: AppSize.appBarHeight / 2),
+                      child: NextPageLoadingWdiget.build(context))
+                ],
+              ),
+            ),
+            _buildChangeOrientationButton(context),
+            _buildBottomAnimationBox(context),
+            _buildBottomTitleBar(context)
+          ],
+        );
+      }
+      return _buildLandSpaceView(context);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-            create: (context) => TransactionLedgerPageProvider()),
-        ChangeNotifierProvider(create: (context) => NextPageLoadingProvider()),
-      ],
-      builder: (context, _) {
-        return OrientationBuilder(builder: (context, orientation) {
-          if (orientation == Orientation.portrait &&
-              orientation != Orientation.landscape) {
-            return _buildPortraitView(context);
-          } else if (orientation == Orientation.landscape) {
-            return _buildLandSpaceView(context);
-          }
-          return Container();
+        providers: [
+          ChangeNotifierProvider(
+              create: (context) => TransactionLedgerPageProvider()),
+          ChangeNotifierProvider(
+              create: (context) => NextPageLoadingProvider()),
+        ],
+        builder: (context, _) {
+          pr('build');
+          final p = context.read<TransactionLedgerPageProvider>();
+          return Selector<TransactionLedgerPageProvider, bool>(
+            selector: (context, provider) => provider.isShowAppBar,
+            builder: (context, isShowAppBar, _) {
+              return BaseLayout(
+                  hasForm: true,
+                  isResizeToAvoidBottomInset: false,
+                  isWithWillPopScope: isShowAppBar ? true : false,
+                  appBar: !isShowAppBar
+                      ? null
+                      : MainAppBar(
+                          context,
+                          titleText: AppText.text(
+                            '${tr('transaction_ledger')}',
+                            style: AppTextStyle.w500_22,
+                          ),
+                        ),
+                  child: FutureBuilder(
+                      future: p.isShowAppBar
+                          ? p.initPageData()
+                          : Future.delayed(Duration.zero, () {
+                              return;
+                            }),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return _buildContents(context);
+                        }
+                        return DefaultShimmer.buildDefaultPageShimmer(20);
+                      }));
+            },
+          );
         });
-      },
-    );
   }
 }

@@ -42,6 +42,8 @@ void setSystemOverlay() {
   SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top]);
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
 }
 
