@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-07-14 17:26:03
+ * Last Modified: 2022-07-17 21:19:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -41,7 +41,8 @@ enum RequestType {
   SEARCH_END_OR_DELIVERY_CUSTOMER,
   SEARCH_ORDER,
   ORDER_CANCEL,
-  SEARCH_TRANSACTION_LEDGER
+  SEARCH_TRANSACTION_LEDGER,
+  SEARCH_BULK_ORDER
 }
 
 // [KolonBuildConfig] 빌드 옵션에 따라 url가 변한다.
@@ -85,6 +86,8 @@ extension RequestTypeExtension on RequestType {
   String url({String? params}) {
     switch (this) {
       case RequestType.SEARCH_STAFF:
+        return '$rfcURL/common';
+      case RequestType.SEARCH_BULK_ORDER:
         return '$rfcURL/common';
       case RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER:
         return '$rfcURL/common';
@@ -148,6 +151,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SEARCH_STAFF:
         return 'ES_RETURN,ET_STAFFLIST';
+      case RequestType.SEARCH_BULK_ORDER:
+        return 'ES_RETURN,T_LIST';
       case RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER:
         return 'ES_RETURN,ET_CUSTLIST';
       case RequestType.SEARCH_TRANSACTION_LEDGER:
@@ -232,6 +237,8 @@ extension RequestTypeExtension on RequestType {
         return 'Z_LTSP_IF0088';
       case RequestType.SEARCH_TRANSACTION_LEDGER:
         return 'Z_LTSP_IF0350';
+      case RequestType.SEARCH_BULK_ORDER:
+        return 'Z_LTSP_IF0914';
       default:
         throw NullThrownError();
     }
