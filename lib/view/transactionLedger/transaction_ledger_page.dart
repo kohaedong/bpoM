@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-17 11:51:13
+ * Last Modified: 2022-07-17 21:00:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -10,10 +10,7 @@
  * 												Discription													
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
-
-import 'package:medsalesportal/model/rfc/et_customer_model.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/view/transactionLedger/drawer_button_animation_widget.dart';
+import 'dart:math' as math;
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +26,9 @@ import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/enums/offset_direction_type.dart';
+import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/model/rfc/trans_ledger_t_list_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
@@ -42,6 +41,7 @@ import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
 import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
 import 'package:medsalesportal/view/common/widget_of_offset_animation_components.dart';
 import 'package:medsalesportal/view/common/widget_of_rotation_animation_components.dart';
+import 'package:medsalesportal/view/transactionLedger/drawer_button_animation_widget.dart';
 import 'package:medsalesportal/view/transactionLedger/provider/transaction_ledger_page_provider.dart';
 
 class TransactionLedgerPage extends StatefulWidget {
@@ -450,13 +450,92 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     );
   }
 
+  Widget _buildListViewItemForLandSpace(BuildContext context,
+      TransLedgerTListModel model, int index, bool isShowLastPage) {
+    final isTotalRow = model.spmon!.contains('<');
+    return Column(
+      children: [
+        Table(
+          border: TableBorder(
+              top: BorderSide.none,
+              bottom: BorderSide(
+                  color: AppColors.unReadyButtonBorderColor, width: .4),
+              horizontalInside: BorderSide(
+                  color: AppColors.unReadyButtonBorderColor, width: .4),
+              verticalInside: BorderSide(
+                  color: AppColors.unReadyButtonBorderColor, width: .4)),
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          columnWidths: {
+            0: FlexColumnWidth(.12),
+            1: FlexColumnWidth(.12),
+            2: FlexColumnWidth(.24),
+            3: FlexColumnWidth(.12),
+            4: FlexColumnWidth(.133),
+            5: FlexColumnWidth(.133),
+            6: FlexColumnWidth(.133),
+          },
+          children: [
+            TableRow(children: [
+              _buildTableBox(model.bschlTx!, 0,
+                  isBody: true, isLandSpace: true, isTotalRow: isTotalRow),
+              _buildTableBox(
+                  isTotalRow
+                      ? model.spmon!
+                          .replaceAll('<', '')
+                          .replaceAll('>', '')
+                          .trim()
+                      : FormatUtil.addDashForDateStr2(
+                          model.spmon!.replaceAll('-', '')),
+                  1,
+                  isBody: true,
+                  isLandSpace: true,
+                  isTotalRow: isTotalRow),
+              _buildTableBox(model.arktx!.trim(), 2,
+                  isBody: true, isLandSpace: true, isTotalRow: isTotalRow),
+              _buildTableBox(
+                  model.fkimgC != null &&
+                          model.fkimgC!.isNotEmpty &&
+                          model.freeQtyC != null &&
+                          model.freeQtyC!.isNotEmpty
+                      ? '${model.fkimgC!}/${model.freeQtyC!}'
+                      : model.fkimgC == null || model.fkimgC!.isEmpty
+                          ? ''
+                          : '${model.fkimgC!}/${model.freeQtyC == null || model.freeQtyC!.isEmpty ? '0' : model.freeQtyC}',
+                  3,
+                  isBody: true,
+                  isLandSpace: true,
+                  isTotalRow: isTotalRow),
+              _buildTableBox(model.netwrTC!, 4,
+                  isBody: true, isLandSpace: true, isTotalRow: isTotalRow),
+              _buildTableBox(model.dmbtrC!, 5,
+                  isBody: true, isLandSpace: true, isTotalRow: isTotalRow),
+              _buildTableBox(model.otherC!, 6,
+                  isBody: true, isLandSpace: true, isTotalRow: isTotalRow),
+            ])
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildTableBox(String text, int index,
-      {bool? isBody, AlignmentGeometry? alignment, bool? isTotalRow}) {
+      {bool? isBody,
+      AlignmentGeometry? alignment,
+      bool? isTotalRow,
+      bool? isLandSpace}) {
     return Container(
         padding: EdgeInsets.only(
-            left: index == 0 ? AppSize.padding : AppSize.defaultListItemSpacing,
+            left: index == 0
+                ? isLandSpace != null && isLandSpace
+                    ? AppSize.padding / 2
+                    : AppSize.padding
+                : isLandSpace != null && isLandSpace
+                    ? AppSize.defaultListItemSpacing / 2
+                    : AppSize.defaultListItemSpacing,
             right: alignment != null ? AppSize.padding : AppSize.zero),
-        height: AppSize.defaultTextFieldHeight * .6,
+        height: isLandSpace != null && isLandSpace
+            ? AppSize.defaultTextFieldHeight * .4
+            : AppSize.defaultTextFieldHeight * .6,
         decoration: BoxDecoration(
             color: isTotalRow != null && isTotalRow
                 ? AppColors.tableBorderColor.withOpacity(.2)
@@ -622,23 +701,28 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   }
 
   Widget _buildTitleRow(String t1, String t2, String t3,
-      {TextStyle? style1, TextStyle? style2, TextStyle? style3}) {
-    var width = AppSize.realWidth - AppSize.padding * 2;
+      {TextStyle? style1,
+      TextStyle? style2,
+      TextStyle? style3,
+      double? width}) {
+    var widthSize = width ?? AppSize.realWidth - AppSize.padding * 2;
     return Padding(
-        padding: AppSize.defaultSidePadding,
+        padding: width != null
+            ? EdgeInsets.symmetric(horizontal: AppSize.padding / 2)
+            : AppSize.defaultSidePadding,
         child: Row(
           children: [
             SizedBox(
-              width: width * .3,
+              width: widthSize * .3,
               child:
                   AppText.text(t1, textAlign: TextAlign.start, style: style1),
             ),
             SizedBox(
-              width: width * .3,
+              width: widthSize * .3,
               child: AppText.text(t2, textAlign: TextAlign.end, style: style2),
             ),
             SizedBox(
-              width: width * .4,
+              width: widthSize * .4,
               child: AppText.text(t3, textAlign: TextAlign.end, style: style3),
             ),
           ],
@@ -646,26 +730,28 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   }
 
   Widget _buildAmountRow(String t1, String t2,
-      {TextStyle? style1, TextStyle? style2}) {
-    var width = AppSize.realWidth - AppSize.padding * 2;
+      {TextStyle? style1, TextStyle? style2, double? width}) {
+    var widthSize = width ?? AppSize.realWidth - AppSize.padding * 2;
     return Padding(
-        padding: AppSize.defaultSidePadding,
+        padding: width != null
+            ? EdgeInsets.symmetric(horizontal: AppSize.padding / 2)
+            : AppSize.defaultSidePadding,
         child: Row(
           children: [
             SizedBox(
-              width: width * .4,
+              width: widthSize * .4,
               child:
                   AppText.text(t1, textAlign: TextAlign.start, style: style1),
             ),
             SizedBox(
-              width: width * .6,
+              width: widthSize * .6,
               child: AppText.text(t2, textAlign: TextAlign.end, style: style2),
             ),
           ],
         ));
   }
 
-  Widget _buildAnimationBody(BuildContext context) {
+  Widget _buildAnimationBody(BuildContext context, {bool? isLandSpace}) {
     return ListView(
       children: [
         Selector<TransactionLedgerPageProvider, TransLedgerResponseModel?>(
@@ -673,65 +759,101 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
           builder: (context, model, _) {
             var head = model?.esHead;
             var report = model?.tReport;
+            var defaultSpacingWidget = isLandSpace != null
+                ? defaultSpacing(height: AppSize.defaultListItemSpacing * .8)
+                : defaultSpacing();
             return head != null && report != null
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      defaultSpacing(),
-                      defaultSpacing(),
+                      isLandSpace != null ? defaultSpacingWidget : Container(),
+                      isLandSpace != null
+                          ? Container(
+                              padding:
+                                  EdgeInsets.only(left: AppSize.padding / 2),
+                              alignment: Alignment.centerLeft,
+                              child: AppText.text(tr('balance_status'),
+                                  style: AppTextStyle.default_14
+                                      .copyWith(fontWeight: FontWeight.w600)))
+                          : defaultSpacingWidget,
+                      defaultSpacingWidget,
                       _buildTitleRow('', tr('start_date'), tr('end_date'),
                           style2: AppTextStyle.default_16,
-                          style3: AppTextStyle.default_16),
-                      defaultSpacing(),
+                          style3: AppTextStyle.default_16,
+                          width: isLandSpace != null
+                              ? AppSize.bottomSheetWidth - AppSize.padding
+                              : null),
+                      defaultSpacingWidget,
                       _buildTitleRow(
                           tr('card_balance'),
                           '${head.cardAmtS}/${head.cardDueS}',
                           '${head.cardAmtE}/${head.cardDueE}',
                           style1: AppTextStyle.default_14
-                              .copyWith(fontWeight: FontWeight.w600)),
-                      defaultSpacing(),
+                              .copyWith(fontWeight: FontWeight.w600),
+                          width: isLandSpace != null
+                              ? AppSize.bottomSheetWidth - AppSize.padding
+                              : null),
+                      defaultSpacingWidget,
                       _buildTitleRow(
                           tr('real_balance'),
                           '${head.realAmtS}/${head.realDueS}',
                           '${head.realAmtE}/${head.realDueE}',
                           style1: AppTextStyle.default_14
-                              .copyWith(fontWeight: FontWeight.w600)),
-                      defaultSpacing(),
+                              .copyWith(fontWeight: FontWeight.w600),
+                          width: isLandSpace != null
+                              ? AppSize.bottomSheetWidth - AppSize.padding
+                              : null),
+                      defaultSpacingWidget,
                       Padding(
-                          padding: AppSize.defaultSidePadding,
+                          padding: isLandSpace != null
+                              ? EdgeInsets.zero
+                              : AppSize.defaultSidePadding,
                           child: Divider()),
-                      defaultSpacing(),
+                      defaultSpacingWidget,
                       Padding(
-                        padding: EdgeInsets.only(right: AppSize.padding),
+                        padding: EdgeInsets.only(
+                            right: isLandSpace != null
+                                ? AppSize.padding / 2
+                                : AppSize.padding),
                         child: AppText.text(tr('supply_price_and_tex'),
                             style: AppTextStyle.default_16),
                       ),
-                      defaultSpacing(),
+                      defaultSpacingWidget,
                       _buildAmountRow(
                           tr('total_sales'),
                           head.saleAmt != null && head.saleAmt!.isNotEmpty
                               ? '${head.saleAmt!}/${head.saleAmtT!}'
                               : '0',
                           style1: AppTextStyle.default_14
-                              .copyWith(fontWeight: FontWeight.w600)),
-                      defaultSpacing(),
+                              .copyWith(fontWeight: FontWeight.w600),
+                          width: isLandSpace != null
+                              ? AppSize.bottomSheetWidth - AppSize.padding
+                              : null),
+                      defaultSpacingWidget,
                       _buildAmountRow(
                           tr('return_amount'),
                           head.reAmt != null && head.reAmt!.isNotEmpty
                               ? '${head.reAmt!}/${head.reAmtT!}'
                               : '0',
                           style1: AppTextStyle.default_14
-                              .copyWith(fontWeight: FontWeight.w600)),
-                      defaultSpacing(),
+                              .copyWith(fontWeight: FontWeight.w600),
+                          width: isLandSpace != null
+                              ? AppSize.bottomSheetWidth - AppSize.padding
+                              : null),
+                      defaultSpacingWidget,
                       _buildAmountRow(
                           tr('collection_amount'),
                           head.dmbtrD != null && head.dmbtrD!.isNotEmpty
                               ? '${head.dmbtrD}'
                               : '0',
                           style1: AppTextStyle.default_14
-                              .copyWith(fontWeight: FontWeight.w600)),
-                      defaultSpacing(),
-                      defaultSpacing(),
+                              .copyWith(fontWeight: FontWeight.w600),
+                          width: isLandSpace != null
+                              ? AppSize.bottomSheetWidth - AppSize.padding
+                              : null),
+                      defaultSpacingWidget,
+                      isLandSpace != null ? Container() : defaultSpacing(),
                     ],
                   )
                 : DefaultShimmer.buildDefaultResultShimmer();
@@ -800,6 +922,13 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                   style: AppTextStyle.blod_16),
                               WidgetOfRotationAnimationComponents(
                                 animationSwich: () => isShowShadow,
+                                rotationValue: math.pi,
+                                body: Container(
+                                  height: AppSize.defaultIconWidth,
+                                  width: AppSize.defaultIconWidth,
+                                  child: AppImage.getImage(ImageType.SELECT,
+                                      color: AppColors.subText),
+                                ),
                               )
                             ],
                           ),
@@ -814,41 +943,126 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   }
 
   Widget _buildLandSpaceAnimationBody(BuildContext context) {
-    return Container(
-      child: Center(
-        child: AppText.text('data'),
-      ),
+    return _buildAnimationBody(context, isLandSpace: true);
+  }
+
+  Widget _buildResultTitleWithLandSpaceScrren(BuildContext context) {
+    return Column(
+      children: [
+        Table(
+          border: TableBorder.all(
+              color: AppColors.unReadyButtonBorderColor, width: .4),
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          columnWidths: {
+            0: FlexColumnWidth(.12),
+            1: FlexColumnWidth(.12),
+            2: FlexColumnWidth(.24),
+            3: FlexColumnWidth(.12),
+            4: FlexColumnWidth(.133),
+            5: FlexColumnWidth(.133),
+            6: FlexColumnWidth(.133),
+          },
+          children: [
+            TableRow(children: [
+              _buildTableBox(tr('division'), 0,
+                  isBody: false, isTotalRow: true, isLandSpace: true),
+              _buildTableBox(tr('date_1'), 1,
+                  isBody: false, isTotalRow: true, isLandSpace: true),
+              _buildTableBox(tr('item_name'), 2,
+                  isBody: false, isTotalRow: true, isLandSpace: true),
+              _buildTableBox(tr('quantity_and_add'), 3,
+                  isBody: false, isTotalRow: true, isLandSpace: true),
+              _buildTableBox(tr('total_sales'), 4,
+                  isBody: false, isTotalRow: true, isLandSpace: true),
+              _buildTableBox(tr('collection_amount'), 5,
+                  isBody: false, isTotalRow: true, isLandSpace: true),
+              _buildTableBox(tr('other_amount'), 6,
+                  isBody: false, isTotalRow: true, isLandSpace: true),
+            ]),
+          ],
+        ),
+      ],
     );
   }
 
-  Widget _buildTable(BuildContext context) {
+  Widget _buildResultForLandSpace(BuildContext context) {
+    final p = context.read<TransactionLedgerPageProvider>();
+    return Expanded(
+        child: Selector<TransactionLedgerPageProvider,
+            Tuple2<TransLedgerResponseModel?, bool>>(
+      selector: (context, provider) =>
+          Tuple2(provider.transLedgerResponseModel, provider.isLoadData),
+      builder: (context, tuple, _) {
+        var isModelNotNull = tuple.item1 != null &&
+            tuple.item1!.tList != null &&
+            tuple.item1!.tList!.isNotEmpty;
+        return isModelNotNull
+            ? ListView.builder(
+                shrinkWrap: true,
+                controller: _scrollController,
+                itemCount: tuple.item1!.tList!.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return _buildListViewItemForLandSpace(
+                      context,
+                      tuple.item1!.tList![index],
+                      index,
+                      !p.hasMore &&
+                          index ==
+                              p.transLedgerResponseModel!.tList!.length - 1);
+                },
+              )
+            : tuple.item2
+                ? DefaultShimmer.buildDefaultResultShimmer()
+                : ListView(
+                    shrinkWrap: true,
+                    children: [
+                      Padding(
+                          padding: AppSize.nullValueWidgetPadding,
+                          child: BaseNullDataWidget.build())
+                    ],
+                  );
+      },
+    ));
+  }
+
+  Widget _buildAppBar(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        final p = context.read<TransactionLedgerPageProvider>();
+        if (!p.isOpenBottomSheet) {
+          p.setIsOpenBottomSheet();
+        }
+        p.setIsShowAppBar();
+        SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+        ]);
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+            overlays: [SystemUiOverlay.top]);
+      },
+      child: Container(
+          padding: EdgeInsets.only(left: AppSize.padding),
+          alignment: Alignment.centerLeft,
+          width: AppSize.realWidth,
+          height: AppSize.appBarHeight,
+          child: AppImage.getImage(ImageType.LAND_SPACE_PAGE_APPBAR_ICON)),
+    );
+  }
+
+  Widget _buildLandSpaceView(BuildContext context) {
     return Stack(
       children: [
         Container(
           height: AppSize.realHeight,
           width: AppSize.realWidth,
-          child: ListView(
+          child: Column(
             children: [
-              InkWell(
-                onTap: () {
-                  final p = context.read<TransactionLedgerPageProvider>();
-                  if (!p.isOpenBottomSheet) {
-                    p.setIsOpenBottomSheet();
-                  }
-                  p.setIsShowAppBar();
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.portraitUp,
-                  ]);
-                  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-                      overlays: [SystemUiOverlay.top]);
-                },
-                child: Container(
-                    padding: EdgeInsets.only(left: AppSize.padding),
-                    alignment: Alignment.centerLeft,
-                    width: AppSize.realWidth,
-                    height: AppSize.appBarHeight,
-                    child: Icon(Icons.arrow_back_ios_rounded)),
-              )
+              defaultSpacing(height: AppSize.defaultListItemSpacing / 4),
+              _buildAppBar(context),
+              defaultSpacing(height: AppSize.defaultListItemSpacing / 4),
+              _buildResultTitleWithLandSpaceScrren(context),
+              _buildResultForLandSpace(context),
+              defaultSpacing(),
+              defaultSpacing(),
             ],
           ),
         ),
@@ -860,7 +1074,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                 key: key,
                 animationSwich: tuple.item2 ? null : () => tuple.item1,
                 body: _buildLandSpaceAnimationBody(context),
-                height: AppSize.realHeight + 20,
+                height: AppSize.realHeight,
                 width: AppSize.bottomSheetWidth,
                 offset: Offset(-AppSize.bottomSheetWidth, 0),
                 offsetType: OffsetDirectionType.RIGHT);
@@ -873,12 +1087,18 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             return DrawerButtonAnimationWidget(
               animationSwich: () => isOpen,
               body: InkWell(
-                onTap: () {
-                  final p = context.read<TransactionLedgerPageProvider>();
-                  p.setIsOpenBottomSheet();
-                },
-                child: AppImage.getImage(ImageType.SCREEN_ROTATION),
-              ),
+                  onTap: () {
+                    final p = context.read<TransactionLedgerPageProvider>();
+                    p.setIsOpenBottomSheet();
+                    p.setIsOpenBottomSheetForLandSpace();
+                  },
+                  child: WidgetOfRotationAnimationComponents(
+                    animationSwich: () => isOpen,
+                    rotationValue: math.pi,
+                    body: Container(
+                        child:
+                            AppImage.getImage(ImageType.LAND_SPACE_PAGE_ICON)),
+                  )),
             );
           },
         ),
@@ -886,79 +1106,42 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     );
   }
 
-  Widget _buildLandSpaceView(BuildContext context) {
-    return Selector<TransactionLedgerPageProvider, TransLedgerResponseModel?>(
-      selector: (context, provider) => provider.transLedgerResponseModel,
-      builder: (context, model, _) {
-        return model != null &&
-                model.tList != null &&
-                model.tList!.isNotEmpty &&
-                model.esHead != null &&
-                model.tReport != null &&
-                mounted
-            ? _buildTable(context)
-            : Container();
-      },
+  Widget _buildPortraitView(BuildContext context) {
+    final p = context.read<TransactionLedgerPageProvider>();
+    return Stack(
+      children: [
+        RefreshIndicator(
+          onRefresh: () {
+            _panelSwich.value = false;
+            return p.refresh();
+          },
+          child: ListView(
+            controller: _scrollController2,
+            children: [
+              CustomerinfoWidget.buildDividingLine(),
+              _buildPanel(context),
+              CustomerinfoWidget.buildDividingLine(),
+              _buildResult(context),
+              Padding(
+                  padding: EdgeInsets.only(bottom: AppSize.appBarHeight / 2),
+                  child: NextPageLoadingWdiget.build(context))
+            ],
+          ),
+        ),
+        _buildChangeOrientationButton(context),
+        _buildBottomAnimationBox(context),
+        _buildBottomTitleBar(context)
+      ],
     );
   }
 
   Widget _buildContents(BuildContext context) {
-    final p = context.read<TransactionLedgerPageProvider>();
-    pr('contents');
     return OrientationBuilder(builder: (context, orientation) {
       if (orientation == Orientation.portrait) {
-        return Stack(
-          children: [
-            RefreshIndicator(
-              onRefresh: () {
-                _panelSwich.value = false;
-                return p.refresh();
-              },
-              child: ListView(
-                controller: _scrollController2
-                  ..addListener(() {
-                    if (_scrollController2.offset > AppSize.realHeight) {
-                      if (downLock == true) {
-                        downLock = false;
-                        upLock = true;
-                        _scrollSwich.value = true;
-                      }
-                    } else {
-                      if (upLock == true) {
-                        upLock = false;
-                        downLock = true;
-                        _scrollSwich.value = false;
-                      }
-                    }
-                    if (_scrollController2.offset ==
-                            _scrollController2.position.maxScrollExtent &&
-                        !p.isLoadData &&
-                        p.hasMore) {
-                      final nextPageProvider =
-                          context.read<NextPageLoadingProvider>();
-                      nextPageProvider.show();
-                      p.nextPage().then((_) => nextPageProvider.stop());
-                    }
-                  }),
-                children: [
-                  CustomerinfoWidget.buildDividingLine(),
-                  _buildPanel(context),
-                  CustomerinfoWidget.buildDividingLine(),
-                  _buildResult(context),
-                  Padding(
-                      padding:
-                          EdgeInsets.only(bottom: AppSize.appBarHeight / 2),
-                      child: NextPageLoadingWdiget.build(context))
-                ],
-              ),
-            ),
-            _buildChangeOrientationButton(context),
-            _buildBottomAnimationBox(context),
-            _buildBottomTitleBar(context)
-          ],
-        );
+        return _buildPortraitView(context);
+      } else {
+        return _buildLandSpaceView(context);
       }
-      return _buildLandSpaceView(context);
     });
   }
 

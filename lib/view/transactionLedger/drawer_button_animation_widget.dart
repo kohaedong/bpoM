@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/transactionLedger/drawer_button_animation_widget.dart
  * Created Date: 2022-07-16 13:32:45
- * Last Modified: 2022-07-16 14:42:29
+ * Last Modified: 2022-07-17 18:22:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -66,8 +66,8 @@ class _DrawerButtonAnimationWidgetState
             ? _animationController.forward()
             : DoNothingAction();
     return Positioned(
-      bottom: AppSize.padding,
-      right: AppSize.bottomSheetWidth + AppSize.padding,
+      bottom: AppSize.padding / 4,
+      right: AppSize.bottomSheetWidth + AppSize.padding / 1.5,
       child: AnimatedBuilder(
           animation: _animationController,
           builder: (context, _) {

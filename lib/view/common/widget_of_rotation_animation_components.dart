@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_rotation_animation_components.dart
  * Created Date: 2022-07-14 23:02:16
- * Last Modified: 2022-07-16 09:34:16
+ * Last Modified: 2022-07-17 17:56:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -10,17 +10,18 @@
  * 												Discription													
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
-import 'dart:math' as math;
+
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/styles/export_common.dart';
 
 typedef AnimationCallBack = bool Function();
 
 class WidgetOfRotationAnimationComponents extends StatefulWidget {
-  const WidgetOfRotationAnimationComponents({Key? key, this.animationSwich})
+  const WidgetOfRotationAnimationComponents(
+      {Key? key, this.animationSwich, this.body, this.rotationValue})
       : super(key: key);
   final AnimationCallBack? animationSwich;
+  final Widget? body;
+  final double? rotationValue;
   @override
   State<WidgetOfRotationAnimationComponents> createState() =>
       _WidgetOfRotationAnimationComponentsState();
@@ -55,13 +56,8 @@ class _WidgetOfRotationAnimationComponentsState
         animation: _animationController,
         builder: (context, _) {
           return Transform.rotate(
-              angle: math.pi * _animationController.value,
-              child: Container(
-                height: AppSize.defaultIconWidth,
-                width: AppSize.defaultIconWidth,
-                child: AppImage.getImage(ImageType.SELECT,
-                    color: AppColors.subText),
-              ));
+              angle: widget.rotationValue! * _animationController.value,
+              child: widget.body);
         });
   }
 }
