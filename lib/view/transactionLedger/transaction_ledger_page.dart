@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-17 11:47:33
+ * Last Modified: 2022-07-17 11:51:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,6 @@
  */
 
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
-import 'package:medsalesportal/view/common/base_shimmer.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/transactionLedger/drawer_button_animation_widget.dart';
 import 'package:tuple/tuple.dart';
@@ -62,7 +61,6 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   var _scrollSwich = ValueNotifier<bool>(false);
   var _panelSwich = ValueNotifier<bool>(true);
   var _bottomPanelSwich = ValueNotifier<bool>(true);
-  var _appBarSwich = ValueNotifier<bool>(true);
   @override
   void initState() {
     key = Key('last');
@@ -815,69 +813,6 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     );
   }
 
-  Widget _buildPortraitView(BuildContext context) {
-    pr('build');
-    final p = context.watch<TransactionLedgerPageProvider>();
-    if (p.isFirstRun) {
-      p.initPageData();
-    }
-    return BaseLayout(
-        hasForm: true,
-        isResizeToAvoidBottomInset: false,
-        appBar: MainAppBar(context,
-            titleText: AppText.text('${tr('transaction_ledger')}',
-                style: AppTextStyle.w500_22)),
-        child: Stack(
-          children: [
-            RefreshIndicator(
-                child: ListView(
-                  controller: _scrollController2
-                    ..addListener(() {
-                      if (_scrollController2.offset > AppSize.realHeight) {
-                        if (downLock == true) {
-                          downLock = false;
-                          upLock = true;
-                          _scrollSwich.value = true;
-                        }
-                      } else {
-                        if (upLock == true) {
-                          upLock = false;
-                          downLock = true;
-                          _scrollSwich.value = false;
-                        }
-                      }
-                      if (_scrollController2.offset ==
-                              _scrollController2.position.maxScrollExtent &&
-                          !p.isLoadData &&
-                          p.hasMore) {
-                        final nextPageProvider =
-                            context.read<NextPageLoadingProvider>();
-                        nextPageProvider.show();
-                        p.nextPage().then((_) => nextPageProvider.stop());
-                      }
-                    }),
-                  children: [
-                    CustomerinfoWidget.buildDividingLine(),
-                    _buildPanel(context),
-                    CustomerinfoWidget.buildDividingLine(),
-                    _buildResult(context),
-                    Padding(
-                        padding:
-                            EdgeInsets.only(bottom: AppSize.appBarHeight / 2),
-                        child: NextPageLoadingWdiget.build(context))
-                  ],
-                ),
-                onRefresh: () {
-                  _panelSwich.value = false;
-                  return p.refresh();
-                }),
-            _buildChangeOrientationButton(context),
-            _buildBottomAnimationBox(context),
-            _buildBottomTitleBar(context)
-          ],
-        ));
-  }
-
   Widget _buildLandSpaceAnimationBody(BuildContext context) {
     return Container(
       child: Center(
@@ -1056,7 +991,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           ),
                         ),
                   child: FutureBuilder(
-                      future: p.isShowAppBar
+                      future: isShowAppBar
                           ? p.initPageData()
                           : Future.delayed(Duration.zero, () {
                               return;
