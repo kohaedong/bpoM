@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-07-17 22:08:57
+ * Last Modified: 2022-07-18 16:30:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -164,9 +164,11 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                               );
                             }),
                             Selector<OrderSearchPageProvider,
-                                Tuple2<bool, String?>>(
-                              selector: (context, provider) => Tuple2(
-                                  provider.isTeamLeader, provider.staffName),
+                                Tuple3<bool, String?, bool>>(
+                              selector: (context, provider) => Tuple3(
+                                  provider.isTeamLeader,
+                                  provider.staffName,
+                                  provider.isSuperAccount),
                               builder: (context, tuple, _) {
                                 return BaseColumWithTitleAndTextFiled.build(
                                     '${tr('manager')}',
@@ -202,6 +204,13 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                       isSelectedStrCallBack: (persion) {
                                         return p.setSalesPerson(persion);
                                       },
+                                      // 멀티계정 전부 조회.
+                                      // 팀장계정 조속팀 조회.
+                                      bodyMap: tuple.item3
+                                          ? {'dptnm': ''}
+                                          : tuple.item1
+                                              ? {'dptnm': p.dptnm}
+                                              : null,
                                       enable: false,
                                     ));
                               },

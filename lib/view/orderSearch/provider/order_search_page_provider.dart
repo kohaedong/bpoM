@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-07-14 11:33:05
+ * Last Modified: 2022-07-18 16:27:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -32,6 +32,7 @@ import 'package:medsalesportal/model/rfc/search_order_response_model.dart';
 class OrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isTeamLeader = false;
+  bool isSuperAccount = false;
   bool isFirstRun = true;
   String? staffName;
   String? selectedStartDate;
@@ -69,6 +70,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
     return null;
   }
 
+  String get dptnm => CacheService.getEsLogin()!.dptnm!;
   Future<void> removeListitem(List<TlistSearchOrderModel>? tList) async {
     searchOrderResponseModel!.tList!
         .removeWhere((item) => item.zreqno == tList!.first.zreqno);
@@ -122,7 +124,8 @@ class OrderSearchPageProvider extends ChangeNotifier {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
     isTeamLeader = isLoginModel!.xtm == 'X';
-
+    isTeamLeader = true;
+    isSuperAccount = true;
     if (isTeamLeader) {
       staffName = tr('all');
     } else {

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-18 11:35:22
+ * Last Modified: 2022-07-18 16:47:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -52,6 +52,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   Map<String, dynamic>? bodyMap;
 
   bool isTeamLeader = false;
+  bool isSuperAccount = false;
   String? staffName;
 //--------------- plant Code----------
   String? selectedOrganizationCode;
@@ -123,6 +124,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   void setSalesGroup(String? value) {
     selectedSalesGroup = value;
+
     notifyListeners();
   }
 
@@ -150,17 +152,18 @@ class BasePopupSearchProvider extends ChangeNotifier {
   }
 
   Future<List<String>?> getSalesGroup({bool? isFirstRun}) async {
+    // isSuperAccount.
     productBusinessDataList = await HiveService.getSalesGroup();
     if (isFirestRun) {
       //------ default data ------
       final esLogin = CacheService.getEsLogin();
-      var temp = productBusinessDataList
-          ?.where((str) => str.contains(esLogin!.dptnm!))
-          .toList();
+      var temp = productBusinessDataList?.where((str) => true).toList();
       pr(temp);
       pr(esLogin!.dptnm!);
       if (temp != null && temp.isNotEmpty) {
-        selectedSalesGroup = temp.first.substring(0, temp.first.indexOf('-'));
+        selectedSalesGroup = staffName != tr('all')
+            ? temp.first.substring(0, temp.first.indexOf('-'))
+            : tr('all');
         notifyListeners();
       }
       //------ default data ------
@@ -201,6 +204,15 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return resultList.strList;
   }
 
+  String getSalseGroupCode() {
+    var temp = productBusinessDataList
+        ?.where((str) => str.contains(selectedSalesGroup!))
+        .toList();
+    return temp != null && temp.isNotEmpty
+        ? temp.first.substring(temp.first.indexOf('-') + 1)
+        : '';
+  }
+
   Future<BasePoupSearchResult> searchPerson(bool isMounted,
       {bool? isFromSearchSaller}) async {
     if (isFromSearchSaller == null) {
@@ -212,13 +224,14 @@ class BasePopupSearchProvider extends ChangeNotifier {
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();
     final esLogin = CacheService.getEsLogin();
+    var dmtnm = bodyMap?['dptnm']; //슈퍼계정 판단.
     Map<String, dynamic>? body;
     body = {
       "methodName": RequestType.SEARCH_STAFF.serverMethod,
       "methodParamMap": {
         "IV_SALESM": "",
         "IV_SNAME": personInputText ?? '',
-        "IV_DPTNM": esLogin!.dptnm, // 슈퍼계정 = ''?????
+        "IV_DPTNM": dmtnm ?? esLogin!.dptnm, // 슈퍼계정 = ''?????
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SEARCH_STAFF.resultTable,
         "functionName": RequestType.SEARCH_STAFF.serverMethod,
@@ -495,6 +508,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
     isTeamLeader = isLoginModel!.xtm == 'X';
+    isTeamLeader = true;
   }
 
   Future<BasePoupSearchResult> onSearch(OneCellType type, bool isMounted,

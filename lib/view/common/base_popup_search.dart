@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-14 20:26:20
+ * Last Modified: 2022-07-18 16:39:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -297,7 +297,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   width: (AppSize.defaultContentsWidth - AppSize.padding * 2),
                   enable: false,
                   hintTextStyleCallBack: p.isTeamLeader
-                      ? () => AppTextStyle.default_16
+                      ? salesGroup != null
+                          ? () => AppTextStyle.default_16
+                          : () => AppTextStyle.hint_16
                       : () => AppTextStyle.hint_16,
                   // hintTextStyleCallBack: () => AppTextStyle.hint_16,
                   iconType: p.isTeamLeader ? InputIconType.SELECT : null,
@@ -321,9 +323,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                             ])}');
             }),
         defaultSpacing(),
-        Selector<BasePopupSearchProvider, Tuple2<bool, String?>>(
-            selector: (context, provider) =>
-                Tuple2(provider.isTeamLeader, provider.staffName),
+        Selector<BasePopupSearchProvider, Tuple3<bool, String?, String?>>(
+            selector: (context, provider) => Tuple3(provider.isTeamLeader,
+                provider.staffName, provider.selectedSalesGroup),
             builder: (context, tuple, _) {
               return BaseInputWidget(
                 context: context,
@@ -350,6 +352,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                 isSelectedStrCallBack: (persion) {
                   return p.setSalesPerson(persion);
                 },
+                bodyMap: tuple.item3 != null
+                    ? {'dptnm': tuple.item3 == tr('all') ? '' : tuple.item3}
+                    : null,
                 enable: false,
               );
             }),
