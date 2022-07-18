@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_widget.dart
  * Created Date: 2021-08-19 11:37:50
- * Last Modified: 2022-07-17 11:20:22
+ * Last Modified: 2022-07-18 14:17:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -52,6 +52,7 @@ class BaseLayout extends StatelessWidget {
           ? WillPopScope(
               child: SafeArea(
                   bottom: isWithBottomSafeArea ?? false,
+                  right: isWithBottomSafeArea ?? false,
                   child: GestureDetector(
                       onTap: () {
                         hasForm ? hideKeyboard(context) : DoNothingAction();

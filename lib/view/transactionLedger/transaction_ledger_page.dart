@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-17 21:00:56
+ * Last Modified: 2022-07-18 14:32:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -10,6 +10,7 @@
  * 												Discription													
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
+import 'dart:io';
 import 'dart:math' as math;
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
@@ -458,6 +459,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
         Table(
           border: TableBorder(
               top: BorderSide.none,
+              left: BorderSide(
+                  color: AppColors.unReadyButtonBorderColor, width: .4),
               bottom: BorderSide(
                   color: AppColors.unReadyButtonBorderColor, width: .4),
               horizontalInside: BorderSide(
@@ -632,7 +635,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                     final p = context.read<TransactionLedgerPageProvider>();
                     p.setIsShowAppBar();
                     SystemChrome.setPreferredOrientations([
-                      DeviceOrientation.landscapeLeft,
+                      DeviceOrientation.landscapeRight,
                     ]);
                     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
                         overlays: []);
@@ -762,6 +765,11 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             var defaultSpacingWidget = isLandSpace != null
                 ? defaultSpacing(height: AppSize.defaultListItemSpacing * .8)
                 : defaultSpacing();
+            var width = Platform.isAndroid
+                ? AppSize.bottomSheetWidth - AppSize.padding
+                : AppSize.bottomSheetWidth -
+                    AppSize.padding -
+                    MediaQuery.of(context).padding.top;
             return head != null && report != null
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -781,9 +789,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                       _buildTitleRow('', tr('start_date'), tr('end_date'),
                           style2: AppTextStyle.default_16,
                           style3: AppTextStyle.default_16,
-                          width: isLandSpace != null
-                              ? AppSize.bottomSheetWidth - AppSize.padding
-                              : null),
+                          width: isLandSpace != null ? width : null),
                       defaultSpacingWidget,
                       _buildTitleRow(
                           tr('card_balance'),
@@ -791,9 +797,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           '${head.cardAmtE}/${head.cardDueE}',
                           style1: AppTextStyle.default_14
                               .copyWith(fontWeight: FontWeight.w600),
-                          width: isLandSpace != null
-                              ? AppSize.bottomSheetWidth - AppSize.padding
-                              : null),
+                          width: isLandSpace != null ? width : null),
                       defaultSpacingWidget,
                       _buildTitleRow(
                           tr('real_balance'),
@@ -801,9 +805,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           '${head.realAmtE}/${head.realDueE}',
                           style1: AppTextStyle.default_14
                               .copyWith(fontWeight: FontWeight.w600),
-                          width: isLandSpace != null
-                              ? AppSize.bottomSheetWidth - AppSize.padding
-                              : null),
+                          width: isLandSpace != null ? width : null),
                       defaultSpacingWidget,
                       Padding(
                           padding: isLandSpace != null
@@ -827,9 +829,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                               : '0',
                           style1: AppTextStyle.default_14
                               .copyWith(fontWeight: FontWeight.w600),
-                          width: isLandSpace != null
-                              ? AppSize.bottomSheetWidth - AppSize.padding
-                              : null),
+                          width: isLandSpace != null ? width : null),
                       defaultSpacingWidget,
                       _buildAmountRow(
                           tr('return_amount'),
@@ -838,9 +838,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                               : '0',
                           style1: AppTextStyle.default_14
                               .copyWith(fontWeight: FontWeight.w600),
-                          width: isLandSpace != null
-                              ? AppSize.bottomSheetWidth - AppSize.padding
-                              : null),
+                          width: isLandSpace != null ? width : null),
                       defaultSpacingWidget,
                       _buildAmountRow(
                           tr('collection_amount'),
@@ -849,9 +847,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                               : '0',
                           style1: AppTextStyle.default_14
                               .copyWith(fontWeight: FontWeight.w600),
-                          width: isLandSpace != null
-                              ? AppSize.bottomSheetWidth - AppSize.padding
-                              : null),
+                          width: isLandSpace != null ? width : null),
                       defaultSpacingWidget,
                       isLandSpace != null ? Container() : defaultSpacing(),
                     ],
@@ -1040,7 +1036,9 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             overlays: [SystemUiOverlay.top]);
       },
       child: Container(
-          padding: EdgeInsets.only(left: AppSize.padding),
+          padding: Platform.isIOS
+              ? EdgeInsets.zero
+              : EdgeInsets.only(left: AppSize.padding),
           alignment: Alignment.centerLeft,
           width: AppSize.realWidth,
           height: AppSize.appBarHeight,
