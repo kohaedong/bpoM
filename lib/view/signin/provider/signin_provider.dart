@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:medsalesportal/enums/account_type.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/model/user/user.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
@@ -370,9 +371,19 @@ class SigninProvider extends ChangeNotifier {
           .then((sapResult) async {
         if (sapResult.isSuccessful) {
           pr('ok successful');
-          CacheService.saveEsLogin(sapLoginInfoResponseModel!.data!.esLogin!);
-          CacheService.saveIsLogin(sapLoginInfoResponseModel!.data!.isLogin!);
+          var esLogin = sapLoginInfoResponseModel!.data!.esLogin!;
+          var isLogin = sapLoginInfoResponseModel!.data!.isLogin!;
+          var isTeamLeader = esLogin.xtm == 'X';
+          var isMultiAccount =
+              esLogin.xtm == '' && esLogin.vkgrp != '' && esLogin.salem == '';
+          CacheService.saveEsLogin(esLogin);
+          CacheService.saveIsLogin(isLogin);
           CacheService.saveUser(user!);
+          CacheService.saveAccountType(isMultiAccount
+              ? AccountType.MULTI
+              : isTeamLeader
+                  ? AccountType.LEADER
+                  : AccountType.NORMAL);
 
           await saveTcode();
           final deviceInfoResult =

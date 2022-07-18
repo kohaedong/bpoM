@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/cache_service.dart
  * Created Date: 2021-08-22 19:45:10
- * Last Modified: 2022-07-11 22:36:19
+ * Last Modified: 2022-07-18 17:39:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'dart:convert';
+import 'package:medsalesportal/enums/account_type.dart';
 import 'package:medsalesportal/model/rfc/es_login_model.dart';
 import 'package:medsalesportal/model/user/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -143,6 +144,15 @@ class CacheService {
 
   static void saveUser(User? user) {
     saveData('user', user != null ? jsonEncode(user.toJson()) : null);
+  }
+
+  static void saveAccountType(AccountType type) {
+    saveData('accountType', type.name);
+  }
+
+  static AccountType getAccountType() {
+    var temp = getData('accountType');
+    return AccountType.values.where((type) => type.name == temp).single;
   }
 
   static User? getUser() {
