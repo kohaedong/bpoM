@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-17 22:19:20
+ * Last Modified: 2022-07-18 11:35:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -43,7 +43,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
   List<String>? productBusinessDataList;
   List<String>? productFamilyDataList;
   IsLoginModel? isLoginModel;
-
   EtStaffListModel? selectedSalesPerson;
   EtStaffListResponseModel? staList;
   EtKunnrResponseModel? etKunnrResponseModel;
@@ -158,6 +157,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
       var temp = productBusinessDataList
           ?.where((str) => str.contains(esLogin!.dptnm!))
           .toList();
+      pr(temp);
+      pr(esLogin!.dptnm!);
       if (temp != null && temp.isNotEmpty) {
         selectedSalesGroup = temp.first.substring(0, temp.first.indexOf('-'));
         notifyListeners();
@@ -217,7 +218,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
       "methodParamMap": {
         "IV_SALESM": "",
         "IV_SNAME": personInputText ?? '',
-        "IV_DPTNM": esLogin!.dptnm,
+        "IV_DPTNM": esLogin!.dptnm, // 슈퍼계정 = ''?????
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SEARCH_STAFF.resultTable,
         "functionName": RequestType.SEARCH_STAFF.serverMethod,

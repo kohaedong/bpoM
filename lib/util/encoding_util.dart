@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/util/encoding_util.dart
  * Created Date: 2021-08-21 16:38:26
- * Last Modified: 2022-07-02 13:54:29
+ * Last Modified: 2022-07-18 13:19:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'dart:convert';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
+import 'package:medsalesportal/model/commonCode/is_login_simple_model.dart';
 import 'package:medsalesportal/util/regular.dart';
 
 // 인코딩 도구.
@@ -65,6 +66,11 @@ class EncodingUtils {
         key.length, (index) => map.putIfAbsent(key[index], () => value[index]));
 
     return IsLoginModel.fromJson(map);
+  }
+
+  static Future<String> getSimpleIsLogin(IsLoginModel isLoginModel) async {
+    var temp = IsLoginSimpleModel.fromJson(isLoginModel.toJson());
+    return EncodingUtils.base64Convert(temp.toJson());
   }
 
   static String ascToStr(List<int> uint8list) {

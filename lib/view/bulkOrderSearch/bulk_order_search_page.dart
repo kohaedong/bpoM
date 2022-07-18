@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-07-17 22:19:32
+ * Last Modified: 2022-07-18 09:18:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -473,7 +473,7 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
     return BaseLayout(
         hasForm: true,
         appBar: MainAppBar(context,
-            titleText: AppText.text('${tr('salse_order_search')}',
+            titleText: AppText.text('${tr('buld_order_search')}',
                 style: AppTextStyle.w500_22)),
         child: MultiProvider(
           providers: [

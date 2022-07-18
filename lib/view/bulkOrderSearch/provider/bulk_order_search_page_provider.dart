@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-07-17 22:19:38
+ * Last Modified: 2022-07-18 13:19:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -236,9 +236,8 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     var vtweg = '10';
     final isloginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
     pr(isloginModel.toJson());
-    // isloginModel.kunag = '${bodyMap!['kunnr']}';
-    // isloginModel.vkgrp = esLogin!.vkgrp;
-    // var newIslogin = await EncodingUtils.base64Convert(isloginModel.toJson());
+
+    var newIslogin = await EncodingUtils.getSimpleIsLogin(isloginModel);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SEARCH_BULK_ORDER.serverMethod,
       "methodParamMap": {
@@ -263,7 +262,7 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
         "IV_ZDMSTATUS": status.isNotEmpty
             ? status.first.substring(status.first.indexOf('-') + 1)
             : '',
-        "IS_LOGIN": isLogin,
+        "IS_LOGIN": newIslogin,
         "functionName": RequestType.SEARCH_BULK_ORDER.serverMethod,
         "resultTables": RequestType.SEARCH_BULK_ORDER.resultTable,
       }
