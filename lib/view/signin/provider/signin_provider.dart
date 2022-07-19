@@ -375,7 +375,10 @@ class SigninProvider extends ChangeNotifier {
           var isLogin = sapLoginInfoResponseModel!.data!.isLogin!;
           var isTeamLeader = esLogin.xtm == 'X';
           var isMultiAccount =
-              esLogin.xtm == '' && esLogin.vkgrp != '' && esLogin.salem == '';
+              esLogin.xtm == '' && esLogin.vkgrp == '' && esLogin.salem == '';
+          pr('xtm ::${esLogin.xtm}\n');
+          pr('vkgrp ::${esLogin.vkgrp}\n');
+          pr('salem ::${esLogin.salem}\n');
           CacheService.saveEsLogin(esLogin);
           CacheService.saveIsLogin(isLogin);
           CacheService.saveUser(user!);
@@ -384,7 +387,6 @@ class SigninProvider extends ChangeNotifier {
               : isTeamLeader
                   ? AccountType.LEADER
                   : AccountType.NORMAL);
-
           await saveTcode();
           final deviceInfoResult =
               await getDeviceInfo(signBody!['userAccount']);

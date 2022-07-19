@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-07-12 09:06:12
+ * Last Modified: 2022-07-19 11:08:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -24,11 +24,11 @@ import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
-  bool isTeamLeader = false;
   String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
@@ -67,8 +67,7 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   void setIsLoginModel() async {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-    isTeamLeader = isLoginModel!.xtm == 'X';
-    if (isTeamLeader) {
+    if (CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
       staffName = tr('all');
     } else {
       staffName = isLoginModel!.ename;
@@ -128,7 +127,7 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
     Map<String, dynamic> _body = {
       "methodName": RequestType.SEARCH_SALSE_ACTIVITY.serverMethod,
       "methodParamMap": {
-        "IV_SANUM": isTeamLeader
+        "IV_SANUM": CheckSuperAccount.isMultiAccountOrLeaderAccount()
             ? staffName == tr('all')
                 ? ''
                 : selectedSalesPerson!.logid

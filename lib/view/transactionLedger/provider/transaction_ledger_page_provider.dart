@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-07-18 15:15:19
+ * Last Modified: 2022-07-19 11:10:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,6 +22,7 @@ import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_end_customer_model.dart';
@@ -31,7 +32,6 @@ import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 
 class TransactionLedgerPageProvider extends ChangeNotifier {
   bool isLoadData = false;
-  bool isTeamLeader = false;
   bool isFirstRun = true;
   bool isAnimationNotReady = true;
   bool isOpenBottomSheet = true;
@@ -151,9 +151,8 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   void setIsLoginModel() async {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-    isTeamLeader = isLoginModel!.xtm == 'X';
 
-    if (isTeamLeader) {
+    if (CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
       staffName = tr('all');
     } else {
       staffName = isLoginModel!.ename;

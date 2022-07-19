@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-18 16:39:32
+ * Last Modified: 2022-07-19 16:06:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,7 +11,10 @@
  * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
  */
 
+import 'package:medsalesportal/enums/account_type.dart';
 import 'package:medsalesportal/model/rfc/et_end_customer_model.dart';
+import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
@@ -296,22 +299,22 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   context: context,
                   width: (AppSize.defaultContentsWidth - AppSize.padding * 2),
                   enable: false,
-                  hintTextStyleCallBack: p.isTeamLeader
-                      ? salesGroup != null
-                          ? () => AppTextStyle.default_16
-                          : () => AppTextStyle.hint_16
-                      : () => AppTextStyle.hint_16,
+                  hintTextStyleCallBack:
+                      CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                          ? salesGroup != null
+                              ? () => AppTextStyle.default_16
+                              : () => AppTextStyle.hint_16
+                          : () => AppTextStyle.hint_16,
                   // hintTextStyleCallBack: () => AppTextStyle.hint_16,
-                  iconType: p.isTeamLeader ? InputIconType.SELECT : null,
+                  iconType: CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                      ? InputIconType.SELECT
+                      : null,
                   // iconType: null,
                   iconColor: salesGroup == null
                       ? AppColors.textFieldUnfoucsColor
                       : null,
-                  isShowDeleteForHintText:
-                      p.isTeamLeader && salesGroup != null ? true : false,
-                  deleteIconCallback: () => p.setSalesGroup(null),
                   commononeCellDataCallback: p.getSalesGroup,
-                  oneCellType: p.isTeamLeader
+                  oneCellType: CheckSuperAccount.isMultiAccountOrLeaderAccount()
                       ? OneCellType.SEARCH_BUSINESS_GROUP
                       : OneCellType.DO_NOTHING,
                   // oneCellType: OneCellType.DO_NOTHING,
@@ -323,37 +326,49 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                             ])}');
             }),
         defaultSpacing(),
-        Selector<BasePopupSearchProvider, Tuple3<bool, String?, String?>>(
-            selector: (context, provider) => Tuple3(provider.isTeamLeader,
-                provider.staffName, provider.selectedSalesGroup),
+        Selector<BasePopupSearchProvider, Tuple2<String?, String?>>(
+            selector: (context, provider) =>
+                Tuple2(provider.staffName, provider.selectedSalesGroup),
             builder: (context, tuple, _) {
               return BaseInputWidget(
                 context: context,
                 width: (AppSize.defaultContentsWidth - AppSize.padding * 2),
-                iconType: tuple.item1 ? InputIconType.SEARCH : null,
-                iconColor: tuple.item2 != null
+                iconType: CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                    ? InputIconType.SEARCH
+                    : null,
+                iconColor: tuple.item1 != null
                     ? AppColors.defaultText
                     : AppColors.textFieldUnfoucsColor,
-                hintText: tuple.item2 ?? tr('plz_select'),
+                hintText: tuple.item1 ?? tr('plz_select'),
                 // 팀장 일때 만 팀원선택후 삭제가능.
-                isShowDeleteForHintText: tuple.item1 &&
-                        tuple.item2 != null &&
-                        tuple.item2 != tr('all')
-                    ? true
-                    : false,
-                deleteIconCallback: () => tuple.item1
-                    ? p.setStaffName(tr('all'))
-                    : p.setStaffName(null),
-                hintTextStyleCallBack: () => tuple.item1 && tuple.item2 != null
-                    ? AppTextStyle.default_16
-                    : AppTextStyle.hint_16,
+                isShowDeleteForHintText:
+                    CheckSuperAccount.isMultiAccountOrLeaderAccount() &&
+                            tuple.item1 != null &&
+                            tuple.item1 != tr('all')
+                        ? true
+                        : false,
+                deleteIconCallback: () =>
+                    CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                        ? p.setStaffName(tr('all'))
+                        : p.setStaffName(null),
+                hintTextStyleCallBack: () =>
+                    CheckSuperAccount.isMultiAccountOrLeaderAccount() &&
+                            tuple.item1 != null
+                        ? AppTextStyle.default_16
+                        : AppTextStyle.hint_16,
                 popupSearchType:
-                    tuple.item1 ? PopupSearchType.SEARCH_SALSE_PERSON : null,
+                    CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                        ? PopupSearchType.SEARCH_SALSE_PERSON
+                        : null,
                 isSelectedStrCallBack: (persion) {
                   return p.setSalesPerson(persion);
                 },
-                bodyMap: tuple.item3 != null
-                    ? {'dptnm': tuple.item3 == tr('all') ? '' : tuple.item3}
+                bodyMap: CheckSuperAccount.isMultiAccount()
+                    ? {
+                        'dptnm': tuple.item2 != null && tuple.item2 != tr('all')
+                            ? tuple.item2
+                            : ''
+                      }
                     : null,
                 enable: false,
               );
@@ -442,7 +457,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
   }
 
   Widget _buildSearchBar(BuildContext context) {
-    pr(widget.type);
     return Container(
       height: widget.type.appBarHeight,
       child: Column(
@@ -705,7 +719,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
 
   Widget _buildSallerContentsItem(BuildContext context, EtCustomerModel model,
       int index, bool isShowLastPageText) {
-    pr(model.toJson());
     final p = context.read<BasePopupSearchProvider>();
     return InkWell(
       onTap: () {
@@ -762,7 +775,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
 
   Widget _buildEndCustomerContentsItem(BuildContext context,
       EtEndCustomerModel model, int index, bool isShowLastPageText) {
-    pr(model.toJson());
     final p = context.read<BasePopupSearchProvider>();
     return InkWell(
       onTap: () {

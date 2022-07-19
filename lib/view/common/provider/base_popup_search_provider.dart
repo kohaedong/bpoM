@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-18 16:47:08
+ * Last Modified: 2022-07-19 16:02:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -27,6 +27,7 @@ import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class BasePopupSearchProvider extends ChangeNotifier {
@@ -51,8 +52,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
   OneCellType? type;
   Map<String, dynamic>? bodyMap;
 
-  bool isTeamLeader = false;
-  bool isSuperAccount = false;
   String? staffName;
 //--------------- plant Code----------
   String? selectedOrganizationCode;
@@ -155,15 +154,24 @@ class BasePopupSearchProvider extends ChangeNotifier {
     // isSuperAccount.
     productBusinessDataList = await HiveService.getSalesGroup();
     if (isFirestRun) {
+      var dptnm = bodyMap?['dptnm'];
+      pr('dptnm:::${dptnm}');
       //------ default data ------
       final esLogin = CacheService.getEsLogin();
-      var temp = productBusinessDataList?.where((str) => true).toList();
-      pr(temp);
-      pr(esLogin!.dptnm!);
+      var temp = productBusinessDataList
+          ?.where((str) => dptnm != null
+              ? str.contains(dptnm)
+              : str.contains(esLogin!.dptnm!))
+          .toList();
       if (temp != null && temp.isNotEmpty) {
+        pr(temp.first);
         selectedSalesGroup = staffName != tr('all')
             ? temp.first.substring(0, temp.first.indexOf('-'))
             : tr('all');
+        notifyListeners();
+      } else {
+        pr('all');
+        selectedSalesGroup = tr('all');
         notifyListeners();
       }
       //------ default data ------
@@ -224,14 +232,19 @@ class BasePopupSearchProvider extends ChangeNotifier {
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();
     final esLogin = CacheService.getEsLogin();
-    var dmtnm = bodyMap?['dptnm']; //슈퍼계정 판단.
     Map<String, dynamic>? body;
+    var dptnm = bodyMap?['dptnm'];
+    pr('person dptnm:::$dptnm');
     body = {
       "methodName": RequestType.SEARCH_STAFF.serverMethod,
       "methodParamMap": {
         "IV_SALESM": "",
         "IV_SNAME": personInputText ?? '',
-        "IV_DPTNM": dmtnm ?? esLogin!.dptnm, // 슈퍼계정 = ''?????
+        "IV_DPTNM": CheckSuperAccount.isMultiAccount()
+            ? dptnm != null
+                ? dptnm
+                : ''
+            : esLogin!.dptnm,
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SEARCH_STAFF.resultTable,
         "functionName": RequestType.SEARCH_STAFF.serverMethod,
@@ -507,8 +520,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
   void setIsLoginModel() async {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-    isTeamLeader = isLoginModel!.xtm == 'X';
-    isTeamLeader = true;
   }
 
   Future<BasePoupSearchResult> onSearch(OneCellType type, bool isMounted,

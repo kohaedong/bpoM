@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/hive_service.dart
  * Created Date: 2021-08-17 13:17:07
- * Last Modified: 2022-07-18 15:18:46
+ * Last Modified: 2022-07-19 15:10:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,6 +18,7 @@ import 'package:medsalesportal/model/commonCode/t_code_model.dart';
 import 'package:medsalesportal/model/commonCode/t_values_model.dart';
 import 'package:medsalesportal/model/commonCode/et_dd07v_customer_category_model.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
 typedef SearchEtDd07vCustomerConditional = bool Function(TCustomerCustomsModel);
@@ -311,14 +312,14 @@ class HiveService {
 // 사업
   static Future<List<String>?> getBusinessCategory() async {
     var a = await getDataFromTCode('KPC_BIZ', cdcls: 'LTS', isWithCode: true);
-    pr(a);
     return a;
   }
 
 // 영업그룹
-  static Future<List<String>?> getSalesGroup({bool? isSupperAccount}) async {
+  static Future<List<String>?> getSalesGroup() async {
     return await getDataFromTCode('VKGRP',
-        cdcls: isSupperAccount != null ? '' : 'LTS', isWithCode: true);
+        cdcls: CheckSuperAccount.isMultiAccount() ? '' : 'LTS',
+        isWithCode: true);
   }
 
 // 처리상태

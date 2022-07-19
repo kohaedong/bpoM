@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-07-18 16:30:21
+ * Last Modified: 2022-07-19 16:28:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,9 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -163,42 +166,44 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                 ),
                               );
                             }),
-                            Selector<OrderSearchPageProvider,
-                                Tuple3<bool, String?, bool>>(
-                              selector: (context, provider) => Tuple3(
-                                  provider.isTeamLeader,
+                            Selector<OrderSearchPageProvider, String?>(
+                              selector: (context, provider) =>
                                   provider.staffName,
-                                  provider.isSuperAccount),
-                              builder: (context, tuple, _) {
+                              builder: (context, staffName, _) {
                                 return BaseColumWithTitleAndTextFiled.build(
                                     '${tr('manager')}',
                                     BaseInputWidget(
                                       context: context,
-                                      iconType: tuple.item1
+                                      iconType: CheckSuperAccount
+                                              .isMultiAccountOrLeaderAccount()
                                           ? InputIconType.SEARCH
                                           : null,
-                                      iconColor: tuple.item2 != null
+                                      iconColor: staffName != null
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
-                                      hintText: tuple.item2 ??
+                                      hintText: staffName ??
                                           '${tr('plz_select_something_1', args: [
                                                 tr('manager')
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
-                                      isShowDeleteForHintText: tuple.item1 &&
-                                              tuple.item2 != null &&
-                                              tuple.item2 != tr('all')
+                                      isShowDeleteForHintText: CheckSuperAccount
+                                                  .isMultiAccountOrLeaderAccount() &&
+                                              staffName != null &&
+                                              staffName != tr('all')
                                           ? true
                                           : false,
-                                      deleteIconCallback: () => tuple.item1
+                                      deleteIconCallback: () => CheckSuperAccount
+                                              .isMultiAccountOrLeaderAccount()
                                           ? p.setStaffName(tr('all'))
                                           : p.setStaffName(null),
                                       width: AppSize.defaultContentsWidth,
-                                      hintTextStyleCallBack: () =>
-                                          tuple.item1 && tuple.item2 != null
-                                              ? AppTextStyle.default_16
-                                              : AppTextStyle.hint_16,
-                                      popupSearchType: tuple.item1
+                                      hintTextStyleCallBack: () => CheckSuperAccount
+                                                  .isMultiAccountOrLeaderAccount() &&
+                                              staffName != null
+                                          ? AppTextStyle.default_16
+                                          : AppTextStyle.hint_16,
+                                      popupSearchType: CheckSuperAccount
+                                              .isMultiAccountOrLeaderAccount()
                                           ? PopupSearchType.SEARCH_SALSE_PERSON
                                           : null,
                                       isSelectedStrCallBack: (persion) {
@@ -206,9 +211,10 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                       },
                                       // 멀티계정 전부 조회.
                                       // 팀장계정 조속팀 조회.
-                                      bodyMap: tuple.item3
+                                      bodyMap: CheckSuperAccount
+                                              .isMultiAccount()
                                           ? {'dptnm': ''}
-                                          : tuple.item1
+                                          : CheckSuperAccount.isLeaderAccount()
                                               ? {'dptnm': p.dptnm}
                                               : null,
                                       enable: false,
@@ -284,10 +290,13 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                     isNotShowStar: true);
                               },
                             ),
-                            Selector<OrderSearchPageProvider, String?>(
-                              selector: (context, provider) =>
+                            Selector<OrderSearchPageProvider,
+                                Tuple3<String?, String?, EtStaffListModel?>>(
+                              selector: (context, provider) => Tuple3(
                                   provider.customerName,
-                              builder: (context, customerName, _) {
+                                  provider.selectedProductsFamily,
+                                  provider.selectedSalesPerson),
+                              builder: (context, tuple, _) {
                                 return BaseColumWithTitleAndTextFiled.build(
                                     '${tr('sales_office')}',
                                     BaseInputWidget(
@@ -304,21 +313,21 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                             }
                                           : null,
                                       iconType: InputIconType.SEARCH,
-                                      iconColor: customerName != null
+                                      iconColor: tuple.item1 != null
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
                                       deleteIconCallback: () =>
                                           p.setCustomerName(null),
-                                      hintText: customerName ??
+                                      hintText: tuple.item1 ??
                                           '${tr('plz_select_something_2', args: [
                                                 tr('sales_office')
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       isShowDeleteForHintText:
-                                          customerName != null ? true : false,
+                                          tuple.item1 != null ? true : false,
                                       width: AppSize.defaultContentsWidth,
                                       hintTextStyleCallBack: () =>
-                                          customerName != null
+                                          tuple.item1 != null
                                               ? AppTextStyle.default_16
                                               : AppTextStyle.hint_16,
                                       popupSearchType:
@@ -327,9 +336,21 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                         return p.setCustomerModel(customer);
                                       },
                                       bodyMap: {
-                                        'product_family':
-                                            p.selectedProductsFamily,
-                                        'staff': p.staffName
+                                        'product_family': tuple.item2,
+                                        'staff': CheckSuperAccount
+                                                .isMultiAccountOrLeaderAccount()
+                                            ? tuple.item3 != null
+                                                ? tuple.item3!.sname
+                                                : tr('all')
+                                            : CacheService.getEsLogin()!.ename,
+                                        'dptnm':
+                                            CheckSuperAccount.isMultiAccount()
+                                                ? tuple.item3 != null
+                                                    ? tuple.item3!.dptnm
+                                                    : CacheService.getEsLogin()!
+                                                        .dptnm
+                                                : CacheService.getEsLogin()!
+                                                    .dptnm
                                       },
                                       enable: false,
                                     ),

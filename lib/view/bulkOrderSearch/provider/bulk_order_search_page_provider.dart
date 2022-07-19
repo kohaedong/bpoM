@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-07-18 13:19:57
+ * Last Modified: 2022-07-19 10:27:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/enums/account_type.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_et_t_list_model.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_response_model.dart';
 import 'package:medsalesportal/util/date_util.dart';
@@ -31,7 +32,6 @@ import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 
 class BulkOrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
-  bool isTeamLeader = false;
   bool isFirstRun = true;
   String? staffName;
   String? selectedStartDate;
@@ -120,9 +120,9 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
   void setIsLoginModel() async {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-    isTeamLeader = isLoginModel!.xtm == 'X';
 
-    if (isTeamLeader) {
+    if (CacheService.getAccountType() == AccountType.MULTI ||
+        CacheService.getAccountType() == AccountType.LEADER) {
       staffName = tr('all');
     } else {
       staffName = isLoginModel!.ename;

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-07-18 09:18:09
+ * Last Modified: 2022-07-19 10:39:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,7 +11,9 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/enums/account_type.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_et_t_list_model.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -164,40 +166,44 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                 ),
                               );
                             }),
-                            Selector<BulkOrderSearchPageProvider,
-                                Tuple2<bool, String?>>(
-                              selector: (context, provider) => Tuple2(
-                                  provider.isTeamLeader, provider.staffName),
-                              builder: (context, tuple, _) {
+                            Selector<BulkOrderSearchPageProvider, String?>(
+                              selector: (context, provider) =>
+                                  provider.staffName,
+                              builder: (context, staffName, _) {
+                                var isSuperAccount =
+                                    CacheService.getAccountType() ==
+                                            AccountType.MULTI ||
+                                        CacheService.getAccountType() ==
+                                            AccountType.LEADER;
                                 return BaseColumWithTitleAndTextFiled.build(
                                     '${tr('manager')}',
                                     BaseInputWidget(
                                       context: context,
-                                      iconType: tuple.item1
+                                      iconType: staffName != null
                                           ? InputIconType.SEARCH
                                           : null,
-                                      iconColor: tuple.item2 != null
+                                      iconColor: staffName != null
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
-                                      hintText: tuple.item2 ??
+                                      hintText: staffName ??
                                           '${tr('plz_select_something_1', args: [
                                                 tr('manager')
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
-                                      isShowDeleteForHintText: tuple.item1 &&
-                                              tuple.item2 != null &&
-                                              tuple.item2 != tr('all')
+                                      isShowDeleteForHintText: isSuperAccount &&
+                                              staffName != null &&
+                                              staffName != tr('all')
                                           ? true
                                           : false,
-                                      deleteIconCallback: () => tuple.item1
+                                      deleteIconCallback: () => isSuperAccount
                                           ? p.setStaffName(tr('all'))
                                           : p.setStaffName(null),
                                       width: AppSize.defaultContentsWidth,
                                       hintTextStyleCallBack: () =>
-                                          tuple.item1 && tuple.item2 != null
+                                          isSuperAccount && staffName != null
                                               ? AppTextStyle.default_16
                                               : AppTextStyle.hint_16,
-                                      popupSearchType: tuple.item1
+                                      popupSearchType: isSuperAccount
                                           ? PopupSearchType.SEARCH_SALSE_PERSON
                                           : null,
                                       isSelectedStrCallBack: (persion) {

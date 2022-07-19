@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-07-18 16:27:25
+ * Last Modified: 2022-07-19 16:22:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -24,6 +24,7 @@ import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
@@ -31,8 +32,6 @@ import 'package:medsalesportal/model/rfc/search_order_response_model.dart';
 
 class OrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
-  bool isTeamLeader = false;
-  bool isSuperAccount = false;
   bool isFirstRun = true;
   String? staffName;
   String? selectedStartDate;
@@ -80,7 +79,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<ResultModel> searchPerson() async {
+  Future<ResultModel> searchPerson({String? dptnm}) async {
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();
     final esLogin = CacheService.getEsLogin();
@@ -90,7 +89,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
       "methodParamMap": {
         "IV_SALESM": "",
         "IV_SNAME": '',
-        "IV_DPTNM": esLogin!.dptnm,
+        "IV_DPTNM": dptnm != null ? dptnm : esLogin!.dptnm,
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SEARCH_STAFF.resultTable,
         "functionName": RequestType.SEARCH_STAFF.serverMethod,
@@ -113,7 +112,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
 
   Future<void> initPageData() async {
     setIsLoginModel();
-    searchPerson();
+    searchPerson(dptnm: CheckSuperAccount.isMultiAccount() ? '' : null);
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
     selectedProductsFamily = selectedProcessingStatus = tr('all');
@@ -123,10 +122,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
   void setIsLoginModel() async {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-    isTeamLeader = isLoginModel!.xtm == 'X';
-    isTeamLeader = true;
-    isSuperAccount = true;
-    if (isTeamLeader) {
+    if (CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
       staffName = tr('all');
     } else {
       staffName = isLoginModel!.ename;
@@ -169,9 +165,13 @@ class OrderSearchPageProvider extends ChangeNotifier {
     map as Map<String, dynamic>;
     var productsFamily = map['product_family'] as String?;
     var staff = map['staff'] as String?;
+    var dptnm = '';
+    if (map['dptnm'] != null) {
+      dptnm = map['dptnm'];
+    }
     selectedProductsFamily = productsFamily;
     staffName = staff;
-    searchPerson();
+    searchPerson(dptnm: dptnm);
     var model = map['model'] as EtCustomerModel?;
     selectedCustomerModel = model;
     customerName = selectedCustomerModel?.kunnrNm;

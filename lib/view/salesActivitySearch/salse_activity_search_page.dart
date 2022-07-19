@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-07-14 09:55:32
+ * Last Modified: 2022-07-19 11:10:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -170,42 +171,48 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                               );
                             }),
                             Selector<SalseSalseActivitySearchPageProvider,
-                                Tuple2<bool, String?>>(
-                              selector: (context, provider) => Tuple2(
-                                  provider.isTeamLeader, provider.staffName),
-                              builder: (context, tuple, _) {
+                                String?>(
+                              selector: (context, provider) =>
+                                  provider.staffName,
+                              builder: (context, staffName, _) {
                                 return BaseColumWithTitleAndTextFiled.build(
                                     '${tr('salse_person')}',
                                     BaseInputWidget(
                                       context: context,
-                                      iconType: tuple.item1
+                                      iconType: CheckSuperAccount
+                                              .isMultiAccountOrLeaderAccount()
                                           ? InputIconType.SEARCH
                                           : null,
-                                      iconColor: tuple.item2 != null
+                                      iconColor: staffName != null
                                           ? AppColors.defaultText
                                           : AppColors.textFieldUnfoucsColor,
-                                      hintText: tuple.item2 ?? tr('plz_select'),
+                                      hintText: staffName ?? tr('plz_select'),
                                       // 팀장 일때 만 팀원선택후 삭제가능.
-                                      isShowDeleteForHintText: tuple.item1 &&
-                                              tuple.item2 != null &&
-                                              tuple.item2 != tr('all')
+                                      isShowDeleteForHintText: CheckSuperAccount
+                                                  .isMultiAccountOrLeaderAccount() &&
+                                              staffName != null &&
+                                              staffName != tr('all')
                                           ? true
                                           : false,
-                                      deleteIconCallback: () => tuple.item1
+                                      deleteIconCallback: () => CheckSuperAccount
+                                              .isMultiAccountOrLeaderAccount()
                                           ? p.setStaffName(tr('all'))
                                           : p.setStaffName(null),
                                       width: AppSize.defaultContentsWidth,
-                                      hintTextStyleCallBack: () =>
-                                          tuple.item1 && tuple.item2 != null
-                                              ? AppTextStyle.default_16
-                                              : AppTextStyle.hint_16,
-                                      popupSearchType: tuple.item1
+                                      hintTextStyleCallBack: () => CheckSuperAccount
+                                                  .isMultiAccountOrLeaderAccount() &&
+                                              staffName != null
+                                          ? AppTextStyle.default_16
+                                          : AppTextStyle.hint_16,
+                                      popupSearchType: CheckSuperAccount
+                                              .isMultiAccountOrLeaderAccount()
                                           ? PopupSearchType.SEARCH_SALSE_PERSON
                                           : null,
                                       isSelectedStrCallBack: (persion) {
                                         return p.setSalesPerson(persion);
                                       },
                                       enable: false,
+                                      bodyMap: {}, //! addd!!!!
                                     ));
                               },
                             ),
