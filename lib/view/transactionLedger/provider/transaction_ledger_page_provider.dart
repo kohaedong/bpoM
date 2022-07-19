@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-07-19 11:10:44
+ * Last Modified: 2022-07-19 16:39:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -64,6 +64,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     onSearch(true);
   }
 
+  String get dptnm => CacheService.getEsLogin()!.dptnm!;
   bool get isValidate =>
       staffName != null &&
       selectedStartDate != null &&
@@ -106,7 +107,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<ResultModel> searchPerson() async {
+  Future<ResultModel> searchPerson({String? dptnm}) async {
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();
     final esLogin = CacheService.getEsLogin();
@@ -116,7 +117,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
       "methodParamMap": {
         "IV_SALESM": "",
         "IV_SNAME": '',
-        "IV_DPTNM": esLogin!.dptnm,
+        "IV_DPTNM": dptnm != null ? dptnm : esLogin!.dptnm,
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SEARCH_STAFF.resultTable,
         "functionName": RequestType.SEARCH_STAFF.serverMethod,
@@ -132,13 +133,12 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
       var staffList =
           temp.staffList!.where((model) => model.sname == staffName).toList();
       selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
-      return ResultModel(true);
+      // return ResultModel(true);
     }
     return ResultModel(false);
   }
 
   Future<void> initPageData() async {
-    pr('init');
     setIsLoginModel();
     searchPerson();
     selectedStartDate = DateUtil.prevWeek();
@@ -203,12 +203,16 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     map as Map<String, dynamic>;
     var productsFamily = map['product_family'] as String?;
     var staff = map['staff'] as String?;
+    var dptnm = '';
+    if (map['dptnm'] != null) {
+      dptnm = map['dptnm'];
+    }
     selectedProductsFamily = productsFamily;
     staffName = staff;
-    searchPerson();
+    searchPerson(dptnm: dptnm);
     var model = map['model'] as EtCustomerModel?;
     selectedCustomerModel = model;
-    setCustomerName(selectedCustomerModel?.kunnrNm);
+    customerName = selectedCustomerModel?.kunnrNm;
 
     notifyListeners();
   }

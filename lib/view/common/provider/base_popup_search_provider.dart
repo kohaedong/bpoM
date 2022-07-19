@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-19 16:02:24
+ * Last Modified: 2022-07-19 17:05:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -155,7 +155,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
     productBusinessDataList = await HiveService.getSalesGroup();
     if (isFirestRun) {
       var dptnm = bodyMap?['dptnm'];
-      pr('dptnm:::${dptnm}');
       //------ default data ------
       final esLogin = CacheService.getEsLogin();
       var temp = productBusinessDataList

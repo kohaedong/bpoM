@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-19 16:06:01
+ * Last Modified: 2022-07-19 17:05:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,11 +11,9 @@
  * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
  */
 
-import 'package:medsalesportal/enums/account_type.dart';
 import 'package:medsalesportal/model/rfc/et_end_customer_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -299,12 +297,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   context: context,
                   width: (AppSize.defaultContentsWidth - AppSize.padding * 2),
                   enable: false,
-                  hintTextStyleCallBack:
-                      CheckSuperAccount.isMultiAccountOrLeaderAccount()
-                          ? salesGroup != null
-                              ? () => AppTextStyle.default_16
-                              : () => AppTextStyle.hint_16
-                          : () => AppTextStyle.hint_16,
+                  hintTextStyleCallBack: CheckSuperAccount.isMultiAccount()
+                      ? salesGroup != null
+                          ? () => AppTextStyle.default_16
+                          : () => AppTextStyle.hint_16
+                      : () => AppTextStyle.hint_16,
                   // hintTextStyleCallBack: () => AppTextStyle.hint_16,
                   iconType: CheckSuperAccount.isMultiAccountOrLeaderAccount()
                       ? InputIconType.SELECT
@@ -314,16 +311,18 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? AppColors.textFieldUnfoucsColor
                       : null,
                   commononeCellDataCallback: p.getSalesGroup,
-                  oneCellType: CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                  oneCellType: CheckSuperAccount.isMultiAccount()
                       ? OneCellType.SEARCH_BUSINESS_GROUP
                       : OneCellType.DO_NOTHING,
                   // oneCellType: OneCellType.DO_NOTHING,
                   isSelectedStrCallBack: (str) => p.setSalesGroup(str),
-                  hintText: salesGroup != null
-                      ? salesGroup
-                      : '${tr('plz_select_something_1', args: [
-                              tr('salse_group')
-                            ])}');
+                  hintText: CheckSuperAccount.isMultiAccount()
+                      ? salesGroup != null
+                          ? salesGroup
+                          : '${tr('plz_select_something_1', args: [
+                                  tr('salse_group')
+                                ])}'
+                      : CacheService.getEsLogin()!.dptnm);
             }),
         defaultSpacing(),
         Selector<BasePopupSearchProvider, Tuple2<String?, String?>>(

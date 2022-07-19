@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/util/number_format.dart
  * Created Date: 2021-09-08 09:34:02
- * Last Modified: 2022-07-14 13:43:56
+ * Last Modified: 2022-07-19 16:46:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -230,9 +230,11 @@ class FormatUtil {
     return str.replaceAll('-', '');
   }
 
-  static String monthStr(String str) {
+  static String monthStr(String str, {bool? isWithDash}) {
     var temp = str.replaceAll('-', '');
-    return temp.substring(0, temp.length - 2);
+    return isWithDash != null && isWithDash
+        ? str.substring(0, str.length - 3)
+        : temp.substring(0, temp.length - 2);
   }
 
   static String profitConversion(String saler) {

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-19 11:13:04
+ * Last Modified: 2022-07-19 16:48:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,8 @@
  */
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
@@ -136,7 +138,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                                     ? AppTextStyle.default_16
                                                     : AppTextStyle.hint_16,
                                             hintText: startDate != null
-                                                ? startDate
+                                                ? FormatUtil.monthStr(startDate,
+                                                    isWithDash: true)
                                                 : '${tr('plz_enter_date')}',
                                             iconType: InputIconType.DATA_PICKER,
                                             isSelectedStrCallBack: (str) =>
@@ -164,7 +167,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                                     ? AppTextStyle.default_16
                                                     : AppTextStyle.hint_16,
                                             hintText: endDate != null
-                                                ? endDate
+                                                ? FormatUtil.monthStr(endDate,
+                                                    isWithDash: true)
                                                 : '${tr('plz_enter_date')}',
                                             iconType: InputIconType.DATA_PICKER,
                                             isSelectedStrCallBack: (str) =>
@@ -176,58 +180,71 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                               ),
                             ),
                             Selector<TransactionLedgerPageProvider,
-                                    Tuple3<String?, String?, String?>>(
-                                selector: (context, provider) => Tuple3(
-                                    provider.customerName,
-                                    provider.selectedProductsFamily,
-                                    provider.staffName),
-                                builder: (context, tuple, _) {
-                                  return BaseColumWithTitleAndTextFiled.build(
-                                    '${tr('sales_office')}',
-                                    BaseInputWidget(
-                                      context: context,
-                                      onTap: tuple.item2 == null
-                                          ? () {
-                                              AppToast().show(
-                                                  context,
-                                                  tr('plz_select_something_1',
-                                                      args: [
-                                                        tr('product_family')
-                                                      ]));
-                                              return 'continue';
-                                            }
-                                          : null,
-                                      iconType: InputIconType.SEARCH,
-                                      iconColor: tuple.item1 != null
-                                          ? AppColors.defaultText
-                                          : AppColors.textFieldUnfoucsColor,
-                                      deleteIconCallback: () =>
-                                          p.setCustomerName(null),
-                                      hintText: tuple.item1 ??
-                                          '${tr('plz_select_something_2', args: [
-                                                tr('sales_office')
-                                              ])}',
-                                      // 팀장 일때 만 팀원선택후 삭제가능.
-                                      isShowDeleteForHintText:
-                                          tuple.item1 != null ? true : false,
-                                      width: AppSize.defaultContentsWidth,
-                                      hintTextStyleCallBack: () =>
-                                          tuple.item1 != null
-                                              ? AppTextStyle.default_16
-                                              : AppTextStyle.hint_16,
-                                      popupSearchType:
-                                          PopupSearchType.SEARCH_SALLER,
-                                      isSelectedStrCallBack: (customer) {
-                                        return p.setCustomerModel(customer);
-                                      },
-                                      bodyMap: {
-                                        'product_family': tuple.item2,
-                                        'staff': tuple.item3
-                                      },
-                                      enable: false,
-                                    ),
-                                  );
-                                }),
+                                Tuple3<String?, String?, EtStaffListModel?>>(
+                              selector: (context, provider) => Tuple3(
+                                  provider.customerName,
+                                  provider.selectedProductsFamily,
+                                  provider.selectedSalesPerson),
+                              builder: (context, tuple, _) {
+                                return BaseColumWithTitleAndTextFiled.build(
+                                  '${tr('sales_office')}',
+                                  BaseInputWidget(
+                                    context: context,
+                                    onTap: p.selectedProductsFamily == null
+                                        ? () {
+                                            AppToast().show(
+                                                context,
+                                                tr('plz_select_something_1',
+                                                    args: [
+                                                      tr('product_family')
+                                                    ]));
+                                            return 'continue';
+                                          }
+                                        : null,
+                                    iconType: InputIconType.SEARCH,
+                                    iconColor: tuple.item1 != null
+                                        ? AppColors.defaultText
+                                        : AppColors.textFieldUnfoucsColor,
+                                    deleteIconCallback: () =>
+                                        p.setCustomerName(null),
+                                    hintText: tuple.item1 ??
+                                        '${tr('plz_select_something_2', args: [
+                                              tr('sales_office')
+                                            ])}',
+                                    // 팀장 일때 만 팀원선택후 삭제가능.
+                                    isShowDeleteForHintText:
+                                        tuple.item1 != null ? true : false,
+                                    width: AppSize.defaultContentsWidth,
+                                    hintTextStyleCallBack: () =>
+                                        tuple.item1 != null
+                                            ? AppTextStyle.default_16
+                                            : AppTextStyle.hint_16,
+                                    popupSearchType:
+                                        PopupSearchType.SEARCH_SALLER,
+                                    isSelectedStrCallBack: (customer) {
+                                      return p.setCustomerModel(customer);
+                                    },
+                                    bodyMap: {
+                                      'product_family': tuple.item2,
+                                      'staff': CheckSuperAccount
+                                              .isMultiAccountOrLeaderAccount()
+                                          ? tuple.item3 != null
+                                              ? tuple.item3!.sname
+                                              : tr('all')
+                                          : CacheService.getEsLogin()!.ename,
+                                      'dptnm':
+                                          CheckSuperAccount.isMultiAccount()
+                                              ? tuple.item3 != null
+                                                  ? tuple.item3!.dptnm
+                                                  : CacheService.getEsLogin()!
+                                                      .dptnm
+                                              : CacheService.getEsLogin()!.dptnm
+                                    },
+                                    enable: false,
+                                  ),
+                                );
+                              },
+                            ),
                             Selector<TransactionLedgerPageProvider, String?>(
                               selector: (context, provider) =>
                                   provider.selectedProductsFamily,
@@ -306,8 +323,15 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                       isSelectedStrCallBack: (persion) {
                                         return p.setSalesPerson(persion);
                                       },
+                                      // 멀티계정 전부 조회.
+                                      // 팀장계정 조속팀 조회.
+                                      bodyMap: CheckSuperAccount
+                                              .isMultiAccount()
+                                          ? {'dptnm': ''}
+                                          : CheckSuperAccount.isLeaderAccount()
+                                              ? {'dptnm': p.dptnm}
+                                              : null,
                                       enable: false,
-                                      bodyMap: {}, //! added!!!
                                     ),
                                     isNotShowStar: true);
                               },
