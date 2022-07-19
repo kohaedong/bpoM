@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-19 17:13:59
+ * Last Modified: 2022-07-19 18:10:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -179,72 +179,6 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                 ],
                               ),
                             ),
-                            Selector<TransactionLedgerPageProvider,
-                                Tuple3<String?, String?, EtStaffListModel?>>(
-                              selector: (context, provider) => Tuple3(
-                                  provider.customerName,
-                                  provider.selectedProductsFamily,
-                                  provider.selectedSalesPerson),
-                              builder: (context, tuple, _) {
-                                return BaseColumWithTitleAndTextFiled.build(
-                                  '${tr('sales_office')}',
-                                  BaseInputWidget(
-                                    context: context,
-                                    onTap: p.selectedProductsFamily == null
-                                        ? () {
-                                            AppToast().show(
-                                                context,
-                                                tr('plz_select_something_1',
-                                                    args: [
-                                                      tr('product_family')
-                                                    ]));
-                                            return 'continue';
-                                          }
-                                        : null,
-                                    iconType: InputIconType.SEARCH,
-                                    iconColor: tuple.item1 != null
-                                        ? AppColors.defaultText
-                                        : AppColors.textFieldUnfoucsColor,
-                                    deleteIconCallback: () =>
-                                        p.setCustomerName(null),
-                                    hintText: tuple.item1 ??
-                                        '${tr('plz_select_something_2', args: [
-                                              tr('sales_office')
-                                            ])}',
-                                    // 팀장 일때 만 팀원선택후 삭제가능.
-                                    isShowDeleteForHintText:
-                                        tuple.item1 != null ? true : false,
-                                    width: AppSize.defaultContentsWidth,
-                                    hintTextStyleCallBack: () =>
-                                        tuple.item1 != null
-                                            ? AppTextStyle.default_16
-                                            : AppTextStyle.hint_16,
-                                    popupSearchType:
-                                        PopupSearchType.SEARCH_SALLER,
-                                    isSelectedStrCallBack: (customer) {
-                                      return p.setCustomerModel(customer);
-                                    },
-                                    bodyMap: {
-                                      'product_family': tuple.item2,
-                                      'staff': CheckSuperAccount
-                                              .isMultiAccountOrLeaderAccount()
-                                          ? tuple.item3 != null
-                                              ? tuple.item3!.sname
-                                              : tr('all')
-                                          : CacheService.getEsLogin()!.ename,
-                                      'dptnm':
-                                          CheckSuperAccount.isMultiAccount()
-                                              ? tuple.item3 != null
-                                                  ? tuple.item3!.dptnm
-                                                  : CacheService.getEsLogin()!
-                                                      .dptnm
-                                              : CacheService.getEsLogin()!.dptnm
-                                    },
-                                    enable: false,
-                                  ),
-                                );
-                              },
-                            ),
                             Selector<TransactionLedgerPageProvider, String?>(
                               selector: (context, provider) =>
                                   provider.selectedProductsFamily,
@@ -337,6 +271,72 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                               },
                             ),
                             Selector<TransactionLedgerPageProvider,
+                                Tuple3<String?, String?, EtStaffListModel?>>(
+                              selector: (context, provider) => Tuple3(
+                                  provider.customerName,
+                                  provider.selectedProductsFamily,
+                                  provider.selectedSalesPerson),
+                              builder: (context, tuple, _) {
+                                return BaseColumWithTitleAndTextFiled.build(
+                                  '${tr('sales_office')}',
+                                  BaseInputWidget(
+                                    context: context,
+                                    onTap: p.selectedProductsFamily == null
+                                        ? () {
+                                            AppToast().show(
+                                                context,
+                                                tr('plz_select_something_1',
+                                                    args: [
+                                                      tr('product_family')
+                                                    ]));
+                                            return 'continue';
+                                          }
+                                        : null,
+                                    iconType: InputIconType.SEARCH,
+                                    iconColor: tuple.item1 != null
+                                        ? AppColors.defaultText
+                                        : AppColors.textFieldUnfoucsColor,
+                                    deleteIconCallback: () =>
+                                        p.setCustomerName(null),
+                                    hintText: tuple.item1 ??
+                                        '${tr('plz_select_something_2', args: [
+                                              tr('sales_office')
+                                            ])}',
+                                    // 팀장 일때 만 팀원선택후 삭제가능.
+                                    isShowDeleteForHintText:
+                                        tuple.item1 != null ? true : false,
+                                    width: AppSize.defaultContentsWidth,
+                                    hintTextStyleCallBack: () =>
+                                        tuple.item1 != null
+                                            ? AppTextStyle.default_16
+                                            : AppTextStyle.hint_16,
+                                    popupSearchType:
+                                        PopupSearchType.SEARCH_SALLER,
+                                    isSelectedStrCallBack: (customer) {
+                                      return p.setCustomerModel(customer);
+                                    },
+                                    bodyMap: {
+                                      'product_family': tuple.item2,
+                                      'staff': CheckSuperAccount
+                                              .isMultiAccountOrLeaderAccount()
+                                          ? tuple.item3 != null
+                                              ? tuple.item3!.sname
+                                              : tr('all')
+                                          : CacheService.getEsLogin()!.ename,
+                                      'dptnm':
+                                          CheckSuperAccount.isMultiAccount()
+                                              ? tuple.item3 != null
+                                                  ? tuple.item3!.dptnm
+                                                  : CacheService.getEsLogin()!
+                                                      .dptnm
+                                              : CacheService.getEsLogin()!.dptnm
+                                    },
+                                    enable: false,
+                                  ),
+                                );
+                              },
+                            ),
+                            Selector<TransactionLedgerPageProvider,
                                     Tuple3<String?, String?, EtCustomerModel?>>(
                                 selector: (context, provider) => Tuple3(
                                     provider.endCustomerName,
@@ -426,7 +426,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
           children: [
             TableRow(children: [
               _buildTableBox(model.bschlTx!, 0,
-                  isBody: isTotalRow ? false : true, isTotalRow: isTotalRow),
+                  isBody: true, isTotalRow: isTotalRow),
               _buildTableBox(model.arktx!.trim(), 1,
                   isBody: true, isTotalRow: isTotalRow),
               _buildTableBox(
@@ -458,15 +458,10 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
               _buildTableBox(
                   isTotalRow
                       ? model.spmon!
-                          .replaceAll('<', '')
-                          .replaceAll('>', '')
-                          .trim()
                       : FormatUtil.addDashForDateStr2(
                           model.spmon!.replaceAll('-', '')),
                   0,
-                  isBody: isTotalRow && model.spmon!.contains(tr('total_count'))
-                      ? false
-                      : true,
+                  isBody: true,
                   isTotalRow: isTotalRow),
               _buildTableBox(model.netwrTC!, 1,
                   isBody: true, isTotalRow: isTotalRow),
@@ -514,9 +509,6 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
               _buildTableBox(
                   isTotalRow
                       ? model.spmon!
-                          .replaceAll('<', '')
-                          .replaceAll('>', '')
-                          .trim()
                       : FormatUtil.addDashForDateStr2(
                           model.spmon!.replaceAll('-', '')),
                   1,
@@ -570,14 +562,16 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             ? AppSize.defaultTextFieldHeight * .4
             : AppSize.defaultTextFieldHeight * .6,
         decoration: BoxDecoration(
-            color: isTotalRow != null && isTotalRow
-                ? AppColors.tableBorderColor.withOpacity(.2)
-                : AppColors.whiteText),
+            color: isBody != null && isBody
+                ? AppColors.whiteText
+                : AppColors.tableBorderColor.withOpacity(.2)),
         alignment: alignment != null ? alignment : Alignment.centerLeft,
         child: AppText.text(text,
             style: isBody != null && isBody
-                ? null
-                : AppTextStyle.blod_16.copyWith(fontWeight: FontWeight.w500)));
+                ? isTotalRow != null && isTotalRow && text.contains('계')
+                    ? AppTextStyle.blod_16
+                    : null
+                : AppTextStyle.blod_16.copyWith(fontWeight: FontWeight.w600)));
   }
 
   Widget _buildResultTitle(BuildContext context) {
@@ -597,7 +591,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
               _buildTableBox(tr('division'), 0,
                   isBody: false, isTotalRow: true),
               _buildTableBox(tr('item_name'), 1,
-                  isBody: false, isTotalRow: true),
+                  isBody: false, isTotalRow: true, alignment: Alignment.center),
               _buildTableBox(tr('quantity_and_add'), 2,
                   isBody: false, isTotalRow: true),
             ]),
@@ -633,21 +627,6 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
         ),
       ],
     );
-  }
-
-  Widget _buildTotalCount(TransLedgerResponseModel model) {
-    var list = model.tList!;
-    var length = list.length;
-    var totalRow =
-        list.where((element) => element.spmon!.contains('<')).toList();
-    var totalCount = length - totalRow.length;
-    return Padding(
-        padding: EdgeInsets.only(left: AppSize.padding),
-        child: Row(children: [
-          AppText.text('총'),
-          AppText.text('$totalCount', style: AppTextStyle.blod_16),
-          AppText.text('건')
-        ]));
   }
 
   Widget _buildChangeOrientationButton(BuildContext context) {
@@ -694,7 +673,6 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                 ? Column(
                     children: [
                       defaultSpacing(),
-                      _buildTotalCount(tuple.item1!),
                       defaultSpacing(),
                       _buildResultTitle(context),
                     ],
@@ -995,7 +973,10 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
               _buildTableBox(tr('date_1'), 1,
                   isBody: false, isTotalRow: true, isLandSpace: true),
               _buildTableBox(tr('item_name'), 2,
-                  isBody: false, isTotalRow: true, isLandSpace: true),
+                  isBody: false,
+                  isTotalRow: true,
+                  isLandSpace: true,
+                  alignment: Alignment.center),
               _buildTableBox(tr('quantity_and_add'), 3,
                   isBody: false, isTotalRow: true, isLandSpace: true),
               _buildTableBox(tr('total_sales'), 4,
