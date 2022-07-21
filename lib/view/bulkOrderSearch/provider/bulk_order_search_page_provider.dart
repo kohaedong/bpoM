@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-07-21 10:10:06
+ * Last Modified: 2022-07-21 11:21:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -26,6 +26,7 @@ import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
@@ -36,13 +37,13 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
   String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
-  String? selectedProcessingStatus;
+  String? selectedOrderStatus;
   String? selectedProductsFamily;
   String? customerName;
   EtStaffListModel? selectedSalesPerson;
   EtCustomerModel? selectedCustomerModel;
   BulkOrderResponseModel? bulkOrderResponseModel;
-  List<String>? processingStatusListWithCode;
+  List<String>? orderStatusListWithCode;
   List<String>? productsFamilyListWithCode;
   IsLoginModel? isLoginModel;
   Map<String, List<BulkOrderEtTListModel>> orderSetRef = {};
@@ -105,7 +106,7 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     searchPerson();
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
-    selectedProductsFamily = selectedProcessingStatus = tr('all');
+    selectedProductsFamily = selectedOrderStatus = tr('all');
     isFirstRun = false;
   }
 
@@ -167,8 +168,8 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setProcessingStatus(String? str) {
-    selectedProcessingStatus = str;
+  void setOrderStatus(String? str) {
+    selectedOrderStatus = str;
     notifyListeners();
   }
 
@@ -186,14 +187,14 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     });
   }
 
-  Future<List<String>?> getProcessingStatus() async {
-    if (processingStatusListWithCode == null) {
-      processingStatusListWithCode = await HiveService.getProcessingStatus();
+  Future<List<String>?> getOrderStatus() async {
+    if (orderStatusListWithCode == null) {
+      orderStatusListWithCode = await HiveService.getOrderStatus();
     }
     return List.generate(
-        processingStatusListWithCode!.length,
-        (index) => processingStatusListWithCode![index]
-            .substring(0, processingStatusListWithCode![index].indexOf('-')));
+        orderStatusListWithCode!.length,
+        (index) => orderStatusListWithCode![index]
+            .substring(0, orderStatusListWithCode![index].indexOf('-')));
   }
 
   Future<List<String>?> getProductsFamily() async {
@@ -211,50 +212,57 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     if (isMouted) {
       notifyListeners();
     }
-    final isLogin = CacheService.getIsLogin();
     var spart =
         productsFamilyListWithCode != null && selectedProductsFamily != null
             ? productsFamilyListWithCode!
                 .where((str) => str.contains(selectedProductsFamily ?? ''))
                 .toList()
             : <String>[];
-    var status =
-        processingStatusListWithCode != null && selectedProcessingStatus != null
-            ? processingStatusListWithCode!
-                .where((str) => str.contains(selectedProcessingStatus!))
-                .toList()
-            : <String>[];
+    var status = orderStatusListWithCode != null && selectedOrderStatus != null
+        ? orderStatusListWithCode!
+            .where((str) => str.contains(selectedOrderStatus!))
+            .toList()
+        : <String>[];
+
     var ptype = 'R';
     var vtweg = '10';
-    final isloginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-    pr(isloginModel.toJson());
-
-    var newIslogin = await EncodingUtils.getSimpleIsLogin(isloginModel);
+    var isLogin = '';
+    var vkorg = '';
+    var vkgrp = '';
+    if (CheckSuperAccount.isMultiAccount()) {
+      final isloginModel =
+          EncodingUtils.decodeBase64ForIsLogin(CacheService.getIsLogin()!);
+      isLogin = await EncodingUtils.getSimpleIsLogin(isloginModel);
+    } else {
+      var esLogin = CacheService.getEsLogin();
+      isLogin = CacheService.getIsLogin()!;
+      vkorg = esLogin!.vkorg!;
+      vkgrp = esLogin.vkgrp!;
+    }
     Map<String, dynamic> _body = {
       "methodName": RequestType.SEARCH_BULK_ORDER.serverMethod,
       "methodParamMap": {
+        "IV_ZZKUNNR_END": "",
+        "IV_ZREQNOSAP": "",
+        "IV_ZREQNO": "",
+        "pos": pos,
+        "partial": partial,
         "IV_PTYPE": ptype,
-        "IV_VKORG": "",
+        "IV_VKORG": vkorg,
+        "IV_VKGRP": vkgrp,
         "IV_VTWEG": vtweg,
+        "IS_LOGIN": isLogin,
+        "IV_PERNR": staffName == tr('all') ? '' : selectedSalesPerson!.pernr,
         "IV_SPART": spart.isNotEmpty
             ? spart.first.substring(spart.first.indexOf('-') + 1)
             : '',
-        "pos": pos,
-        "partial": partial,
-        "IV_VKGRP": "",
-        "IV_PERNR": staffName == tr('all') ? '' : selectedSalesPerson!.pernr,
-        // "IV_PERNR": '',
-        "IV_KUNNR":
-            selectedCustomerModel != null ? selectedCustomerModel!.kunnr : '',
-        "IV_ZZKUNNR_END": "",
-        "IV_ZREQNO": "",
-        "IV_ZREQ_DATE_FR": FormatUtil.removeDash(selectedStartDate!),
-        "IV_ZREQ_DATE_TO": FormatUtil.removeDash(selectedEndDate!),
-        "IV_ZREQNOSAP": "",
         "IV_ZDMSTATUS": status.isNotEmpty
             ? status.first.substring(status.first.indexOf('-') + 1)
             : '',
-        "IS_LOGIN": newIslogin,
+        "IV_KUNNR":
+            selectedCustomerModel != null ? selectedCustomerModel!.kunnr : '',
+        "IV_ZREQ_DATE_FR": FormatUtil.removeDash(selectedStartDate!),
+        "IV_ZREQ_DATE_TO": FormatUtil.removeDash(selectedEndDate!),
         "functionName": RequestType.SEARCH_BULK_ORDER.serverMethod,
         "resultTables": RequestType.SEARCH_BULK_ORDER.resultTable,
       }
