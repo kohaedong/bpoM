@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-07-19 10:27:16
+ * Last Modified: 2022-07-21 10:10:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -67,14 +67,6 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
       return onSearch(false);
     }
     return null;
-  }
-
-  Future<void> removeListitem(List<BulkOrderEtTListModel>? tList) async {
-    bulkOrderResponseModel!.tList!
-        .removeWhere((item) => item.zreqno == tList!.first.zreqno);
-    var temp = bulkOrderResponseModel;
-    bulkOrderResponseModel = BulkOrderResponseModel.fromJson(temp!.toJson());
-    notifyListeners();
   }
 
   Future<ResultModel> searchPerson() async {
@@ -250,8 +242,8 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
         "pos": pos,
         "partial": partial,
         "IV_VKGRP": "",
-        // "IV_PERNR": staffName == tr('all') ? '' : selectedSalesPerson!.pernr,
-        "IV_PERNR": '',
+        "IV_PERNR": staffName == tr('all') ? '' : selectedSalesPerson!.pernr,
+        // "IV_PERNR": '',
         "IV_KUNNR":
             selectedCustomerModel != null ? selectedCustomerModel!.kunnr : '',
         "IV_ZZKUNNR_END": "",

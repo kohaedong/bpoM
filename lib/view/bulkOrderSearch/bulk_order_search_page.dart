@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-07-19 17:06:43
+ * Last Modified: 2022-07-21 10:09:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -354,20 +354,6 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
     return InkWell(
       onTap: () async {
         final p = context.read<BulkOrderSearchPageProvider>();
-        List<BulkOrderEtTListModel> result = [];
-        if (p.orderSetRef.keys.contains(model.zreqno)) {
-          result.addAll(p.orderSetRef[model.zreqno]!);
-        } else {
-          result.add(model);
-        }
-
-        final routeResult = await Navigator.pushNamed(
-            context, OrderDetailPage.routeName,
-            arguments: result);
-        if (routeResult != null) {
-          routeResult as List<BulkOrderEtTListModel>;
-          p.removeListitem(routeResult);
-        }
       },
       child: Padding(
         padding: AppSize.defaultSidePadding,
