@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-07-21 16:20:23
+ * Last Modified: 2022-07-24 16:28:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -34,6 +34,7 @@ import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 class BulkOrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirstRun = true;
+
   String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;

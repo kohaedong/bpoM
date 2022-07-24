@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-07-21 18:10:11
+ * Last Modified: 2022-07-24 18:40:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -10,21 +10,27 @@
  * 												Discription													
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
-
-import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/model/rfc/bulk_order_detail_t_header_model.dart';
-import 'package:medsalesportal/model/rfc/bulk_order_detail_t_item_model.dart';
+import 'dart:math' as math;
+import 'package:tuple/tuple.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/enums/image_type.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/enums/offset_direction_type.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_et_t_list_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_t_item_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_t_header_model.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_detail_response_model.dart';
 import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
+import 'package:medsalesportal/view/common/widget_of_offset_animation_components.dart';
+import 'package:medsalesportal/view/common/widget_of_rotation_animation_components.dart';
 import 'package:medsalesportal/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart';
 
 class BulkOrderDetailPage extends StatefulWidget {
@@ -35,11 +41,167 @@ class BulkOrderDetailPage extends StatefulWidget {
 }
 
 class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
+  var _animationSwich = ValueNotifier<bool>(true);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationSwich.dispose();
+    super.dispose();
+  }
+
+  Widget _buildAnimationTitleBar(BuildContext context) {
+    return Selector<BulkOrderDetailProvider, Tuple2<bool, double>>(
+      selector: (context, provider) =>
+          Tuple2(provider.isShowShadow, provider.orderTotal),
+      builder: (context, tuple, _) {
+        return InkWell(
+          onTap: () {
+            final p = context.read<BulkOrderDetailProvider>();
+            p.setIsOpenBottomSheet();
+            _animationSwich.value = !_animationSwich.value;
+          },
+          child: Container(
+            width: AppSize.realWidth,
+            height: AppSize.buttonHeight,
+            decoration: BoxDecoration(
+                color: AppColors.whiteText,
+                boxShadow: tuple.item1
+                    ? [
+                        BoxShadow(
+                          color: AppColors.textGrey.withOpacity(0.5),
+                          blurRadius: AppSize.radius5,
+                          offset: Offset(0, -3),
+                        ),
+                      ]
+                    : []),
+            child: Padding(
+              padding: AppSize.defaultSidePadding,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AppText.text('${tr('order_total')}',
+                      style: AppTextStyle.blod_16),
+                  Row(
+                    children: [
+                      AppText.text('${FormatUtil.addComma('${tuple.item2}')}',
+                          style: AppTextStyle.blod_16
+                              .copyWith(color: AppColors.primary)),
+                      Padding(
+                          padding: EdgeInsets.only(
+                              right: AppSize.defaultListItemSpacing)),
+                      ValueListenableBuilder<bool>(
+                          valueListenable: _animationSwich,
+                          builder: (context, swich, _) {
+                            return WidgetOfRotationAnimationComponents(
+                              animationSwich: () => swich,
+                              rotationValue: math.pi,
+                              body: Container(
+                                height: AppSize.defaultIconWidth,
+                                width: AppSize.defaultIconWidth,
+                                child: AppImage.getImage(ImageType.SELECT,
+                                    color: AppColors.subText),
+                              ),
+                            );
+                          })
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCancelButtonAndSaveButton(BuildContext context) {
+    return Row(
+      children: [
+        AppStyles.buildButton(
+            context,
+            '${tr('order_cancel')}',
+            AppSize.realWidth / 2,
+            AppColors.lightBlueColor,
+            AppTextStyle.default_18.copyWith(color: AppColors.primary),
+            AppSize.zero,
+            () {}),
+        AppStyles.buildButton(
+            context,
+            '${tr('order_save')}',
+            AppSize.realWidth / 2,
+            AppColors.primary,
+            AppTextStyle.default_18.copyWith(color: AppColors.whiteText),
+            AppSize.zero,
+            () {})
+      ],
+    );
+  }
+
+  Widget _buildAnimationBody(BuildContext context) {
+    return Selector<BulkOrderDetailProvider, String>(
+      selector: (context, provider) => provider.amountAvailable,
+      builder: (context, amountAvailable, _) {
+        return Container(
+            padding: AppSize.defaultSidePadding,
+            alignment: Alignment.topLeft,
+            child: Column(
+              children: [
+                defaultSpacing(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AppText.text('${tr('amount_available_for_order_entry')}',
+                        style: AppTextStyle.blod_16),
+                    Padding(
+                      padding: EdgeInsets.only(right: AppSize.padding * 2),
+                      child: AppText.text(
+                          '${FormatUtil.addComma('$amountAvailable', isReturnZero: true)}',
+                          style: AppTextStyle.blod_16),
+                    )
+                  ],
+                )
+              ],
+            ));
+      },
+    );
+  }
+
+  Widget _buildBottomAnimationBox(BuildContext context) {
+    return Selector<BulkOrderDetailProvider, Tuple2<bool, bool>>(
+      selector: (context, provider) =>
+          Tuple2(provider.isOpenBottomSheet, provider.isAnimationNotReady),
+      builder: (context, tuple, _) {
+        return WidgetOfOffSetAnimationWidget(
+            key: Key('first'),
+            animationSwich: tuple.item2 ? null : () => tuple.item1,
+            body: _buildAnimationBody(context),
+            height: AppSize.buttonHeight * 2.5,
+            offset: Offset(0, (AppSize.buttonHeight * 2.5)),
+            offsetType: OffsetDirectionType.UP);
+      },
+    );
+  }
+
   Widget _buildBottomAnimationStatusBar(BuildContext context) {
-    return Container();
+    return Positioned(
+        bottom: 0,
+        left: 0,
+        child: Column(
+          children: [
+            _buildAnimationTitleBar(context),
+            _buildCancelButtonAndSaveButton(context)
+          ],
+        ));
   }
 
   Widget _buildOrderInfo(BulkOrderDetailResponseModel? model) {
+    final argumentsModel =
+        ModalRoute.of(context)!.settings.arguments as BulkOrderEtTListModel;
     return model != null && model.tHead != null
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,18 +213,20 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                 child: Column(
                   children: [
                     BaseInfoRowByKeyAndValue.build(tr('order_request_date'),
-                        '${model.tHead!.single.mwsbpSum}'),
+                        '${FormatUtil.addDashForDateStr(model.tHead!.single.zreqDate!)}'),
                     BaseInfoRowByKeyAndValue.build(tr('salse_order_number'),
-                        '${model.tHead!.single.mwsbpSum}'),
+                        '${model.tHead!.single.zreqno}'),
                     BaseInfoRowByKeyAndValue.build(tr('request_order_number'),
-                        '${model.tHead!.single.mwsbpSum}'),
+                        '${model.tHead!.single.vbeln!.isEmpty ? '-' : model.tHead!.single.vbeln!}'),
                     BaseInfoRowByKeyAndValue.build(tr('processing_status'),
-                        '${model.tHead!.single.mwsbpSum}'),
+                        '${model.tHead!.single.zdmstatusNm}'),
                     BaseInfoRowByKeyAndValue.build(tr('saller_name_and_code'),
-                        '${model.tHead!.single.mwsbpSum}'),
+                        '${argumentsModel.kunnrNm!}/${argumentsModel.kunnr}',
+                        maxLine: 2),
                     BaseInfoRowByKeyAndValue.build(
                         tr('end_saller_name_and_code'),
-                        '${model.tHead!.single.mwsbpSum}'),
+                        '${argumentsModel.zzkunnrEndNm}/${argumentsModel.zzkunnrEnd}',
+                        maxLine: 2),
                     defaultSpacing()
                   ],
                 ),
@@ -91,12 +255,14 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                           .entries
                           .map((map) => _buildItem(
                               map.value, map.key, model.tHead!.single))
-                          .toList()
+                          .toList(),
+                      defaultSpacing(height: AppSize.appBarHeight * 3),
                     ],
                   )
                 : Container();
           },
         ),
+        _buildBottomAnimationBox(context),
         _buildBottomAnimationStatusBar(context)
       ],
     );

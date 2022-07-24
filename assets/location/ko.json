@@ -495,6 +495,9 @@
     "processing_quantity":"처리 수량",
     "order_request_date":"주문요청일",
     "saller_name_and_code":"판매처명/코드",
-    "end_saller_name_and_code":"end고객명/코드"
+    "end_saller_name_and_code":"end고객명/코드",
+    "order_save":"저장",
+    "order_total":"주문 합계",
+    "amount_available_for_order_entry":"주문 입력 가능 액"
 
 }
