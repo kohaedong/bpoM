@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-07-21 11:17:31
+ * Last Modified: 2022-07-24 14:24:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,6 +15,8 @@ import 'package:medsalesportal/enums/account_type.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_et_t_list_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/view/bulkOrderSearch/bulk_order_detail_page.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/image_type.dart';
@@ -29,7 +31,6 @@ import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/common/widget_of_tag_button.dart';
-import 'package:medsalesportal/view/orderSearch/order_detail_page.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/widget_of_next_page_loading.dart';
@@ -318,8 +319,8 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                           customerName != null
                                               ? AppTextStyle.default_16
                                               : AppTextStyle.hint_16,
-                                      popupSearchType:
-                                          PopupSearchType.SEARCH_SALLER,
+                                      popupSearchType: PopupSearchType
+                                          .SEARCH_SALLER_FOR_BULK_ORDER,
                                       isSelectedStrCallBack: (customer) {
                                         return p.setCustomerModel(customer);
                                       },
@@ -351,9 +352,21 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
 
   Widget _buildListViewItem(
       BuildContext context, BulkOrderEtTListModel model, bool isShowLastPage) {
+    final p = context.read<BulkOrderSearchPageProvider>();
+    var temp = p.orderStatusListWithCode
+        ?.where((item) {
+          return item.contains(model.zdmstatus!);
+        })
+        .toList()
+        .first;
+    var status = p.orderStatusListWithCode != null
+        ? temp!.substring(0, temp.indexOf('-'))
+        : '';
+
     return InkWell(
       onTap: () async {
-        final p = context.read<BulkOrderSearchPageProvider>();
+        Navigator.pushNamed(context, BulkOrderDetailPage.routeName,
+            arguments: model);
       },
       child: Padding(
         padding: AppSize.defaultSidePadding,
@@ -367,26 +380,52 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                 AppText.listViewText(
                     FormatUtil.addDashForDateStr2(model.zreqDate ?? ''),
                     isSubTitle: true),
-                BaseTagButton.build(model.zdmstatus ?? '')
+                BaseTagButton.build(status)
               ],
             ),
             defaultSpacing(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
                 AppText.listViewText(model.kunnrNm!,
                     textAlign: TextAlign.start),
-                AppText.listViewText('${model.vkgrpNm!}',
+                AppText.listViewText('(${model.kunnr!})',
+                    textAlign: TextAlign.start),
+              ],
+            ),
+            // model.kunnrNm != model.zzkunnrEndNm!
+            //     ? Row(
+            //         children: [
+            //           AppText.listViewText(model.zzkunnrEndNm!,
+            //               textAlign: TextAlign.start),
+            //           AppText.listViewText('(${model.zzkunnrEnd!})',
+            //               textAlign: TextAlign.start),
+            //         ],
+            //       )
+            //     : Container(),
+            Row(
+              children: [
+                AppText.listViewText(model.zzkunnrEndNm!,
+                    textAlign: TextAlign.start),
+                AppText.listViewText('(${model.zzkunnrEnd!})',
                     textAlign: TextAlign.start),
               ],
             ),
             defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
-            Row(
-              children: [
-                AppText.listViewText('???', isSubTitle: true),
-                AppStyles.buildPipe(),
-                AppText.listViewText('???', isSubTitle: true),
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  AppText.text('${tr('salse_order_number')}:${model.zreqno!}',
+                      maxLines: 1),
+                  model.zdmstatus == 'A' ? Container() : AppStyles.buildPipe(),
+                  AppText.text(
+                      // 주문요청상태시 주문번호 없음.
+                      model.zdmstatus == 'A'
+                          ? ''
+                          : '${tr('request_order_number')}:${model.vbeln!}',
+                      maxLines: 1),
+                ],
+              ),
             ),
             defaultSpacing(),
             Divider(),

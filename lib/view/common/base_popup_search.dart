@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-07-19 17:05:23
+ * Last Modified: 2022-07-24 15:00:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -266,6 +266,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     return Expanded(
         child: Column(
       children: [
+        defaultSpacing(),
         Selector<BasePopupSearchProvider, String?>(
             selector: (context, provider) => provider.selectedProductFamily,
             builder: (context, selectedProductFamily, _) {
@@ -482,7 +483,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
               ? _buildPersonSearchBar(context)
               : widget.type == PopupSearchType.SEARCH_CUSTOMER
                   ? _buildCustomerSearchBar(context)
-                  : widget.type == PopupSearchType.SEARCH_SALLER
+                  : widget.type == PopupSearchType.SEARCH_SALLER ||
+                          widget.type ==
+                              PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER
                       ? _buildSallerSearchBar(context)
                       : widget.type == PopupSearchType.SEARCH_END_CUSTOMER
                           ? _buildEndCustomerBar(context)
@@ -546,7 +549,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                       ? provider
                                           .etKunnrResponseModel!.etKunnr!.length
                                       : widget.type ==
-                                              PopupSearchType.SEARCH_SALLER
+                                                  PopupSearchType
+                                                      .SEARCH_SALLER ||
+                                              widget.type ==
+                                                  PopupSearchType
+                                                      .SEARCH_SALLER_FOR_BULK_ORDER
                                           ? provider.etCustomerResponseModel!
                                               .etCustomer!.length
                                           : widget.type ==
@@ -580,8 +587,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                     provider.etKunnrResponseModel!
                                                             .etKunnr!.length -
                                                         1)
-                                        : widget.type ==
-                                                PopupSearchType.SEARCH_SALLER
+                                        : widget.type == PopupSearchType.SEARCH_SALLER ||
+                                                widget.type ==
+                                                    PopupSearchType
+                                                        .SEARCH_SALLER_FOR_BULK_ORDER
                                             ? _buildSallerContentsItem(
                                                 context,
                                                 provider
@@ -605,8 +614,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                         .etCustList![index],
                                                     index,
                                                     !provider.hasMore &&
-                                                        index ==
-                                                            provider.etEndCustomerResponseModel!.etCustList!.length - 1)
+                                                        index == provider.etEndCustomerResponseModel!.etCustList!.length - 1)
                                                 : Container();
                               },
                             ),
@@ -723,7 +731,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
       onTap: () {
         Navigator.pop(
           context,
-          widget.type == PopupSearchType.SEARCH_SALLER
+          widget.type == PopupSearchType.SEARCH_SALLER ||
+                  widget.type == PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER
               ? {
                   'model': model,
                   'staff': p.staffName,

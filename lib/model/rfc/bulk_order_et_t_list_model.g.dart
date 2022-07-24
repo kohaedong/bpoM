@@ -1,16 +1,3 @@
-/*
- * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/bulk_order_et_t_list_model.g.dart
- * Created Date: 2022-07-17 21:40:53
- * Last Modified: 2022-07-17 21:50:45
- * Author: bakbeom
- * Modified By: bakbeom
- * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
- * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
- * 												Discription													
- * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
- */
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'bulk_order_et_t_list_model.dart';

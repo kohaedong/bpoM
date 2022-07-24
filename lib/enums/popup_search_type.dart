@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/popup_search_type.dart
  * Created Date: 2021-09-10 21:38:04
- * Last Modified: 2022-07-14 20:15:32
+ * Last Modified: 2022-07-24 14:37:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -21,6 +21,7 @@ enum PopupSearchType {
   SEARCH_SALSE_PERSON, // 영업사원조회 화면
   SEARCH_CUSTOMER,
   SEARCH_SALLER,
+  SEARCH_SALLER_FOR_BULK_ORDER,
   SEARCH_END_CUSTOMER,
   SEARCH_PLANT, // 플랜트 조회 화면
 }
@@ -85,6 +86,8 @@ extension PopupSearchTypeExtension on PopupSearchType {
         return [OneCellType.SEARCH_END_CUSTOMER];
       case PopupSearchType.SEARCH_SALLER:
         return [OneCellType.SEARCH_SALLER]; // 영업사원
+      case PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER:
+        return [OneCellType.SEARCH_SALLER_FOR_BULK_ORDER]; // 영업사원
       case PopupSearchType.SEARCH_CUSTOMER:
         return [OneCellType.SEARCH_CUSTOMER]; // 영업사원
       case PopupSearchType.SEARCH_PLANT:
@@ -102,6 +105,8 @@ extension PopupSearchTypeExtension on PopupSearchType {
       case PopupSearchType.SEARCH_CUSTOMER:
         return AppSize.realHeight * .8;
       case PopupSearchType.SEARCH_SALLER:
+        return AppSize.realHeight * .85;
+      case PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER:
         return AppSize.realHeight * .85;
       case PopupSearchType.SEARCH_END_CUSTOMER:
         return AppSize.realHeight * .6;
@@ -122,7 +127,11 @@ extension PopupSearchTypeExtension on PopupSearchType {
             AppSize.defaultListItemSpacing * 6 +
             AppSize.appBarHeight +
             AppSize.secondButtonHeight; // 영업사원
-
+      case PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER:
+        return AppSize.defaultTextFieldHeight * 4 +
+            AppSize.defaultListItemSpacing * 6 +
+            AppSize.appBarHeight +
+            AppSize.secondButtonHeight; // 영업사원
       default:
         return AppSize.popupAppbarHeight + AppSize.secondButtonHeight;
     }

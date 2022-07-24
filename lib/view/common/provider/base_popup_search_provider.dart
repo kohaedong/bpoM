@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-07-19 17:05:17
+ * Last Modified: 2022-07-24 14:54:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -379,7 +379,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return BasePoupSearchResult(false);
   }
 
-  Future<BasePoupSearchResult> searchSallerCustomer(bool isMounted) async {
+  Future<BasePoupSearchResult> searchSallerCustomer(bool isMounted,
+      {bool? isBulkOrder}) async {
     // 검색 하기 전에 popup body 에는  '조회결관가 없습니다.' 문구만 보여주기 위해.
     // 첫 진입시 data 초기화 작업만 해주고 BasePoupSearchResult(false) 로 return 한다;
     if (isFirestRun) {
@@ -403,7 +404,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
         ?.where((str) => str.contains(selectedSalesGroup!))
         .toList();
     _body = {
-      "methodName": RequestType.SEARCH_SALLER.serverMethod,
+      "methodName": isBulkOrder != null && isBulkOrder
+          ? RequestType.SEARCH_SALLER_FOR_BULK_ORDER.serverMethod
+          : RequestType.SEARCH_SALLER.serverMethod,
       "methodParamMap": {
         "IV_VTWEG": "10",
         "IV_VKORG": esLogin!.vkorg,
@@ -419,11 +422,17 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "IV_KUNNR": "",
         "IV_KEYWORD": customerInputText ?? '',
         "IS_LOGIN": isLogin,
-        "functionName": RequestType.SEARCH_SALLER.serverMethod,
-        "resultTables": RequestType.SEARCH_SALLER.resultTable
+        "functionName": isBulkOrder != null && isBulkOrder
+            ? RequestType.SEARCH_SALLER_FOR_BULK_ORDER.serverMethod
+            : RequestType.SEARCH_SALLER.serverMethod,
+        "resultTables": isBulkOrder != null && isBulkOrder
+            ? RequestType.SEARCH_SALLER_FOR_BULK_ORDER.resultTable
+            : RequestType.SEARCH_SALLER.resultTable
       }
     };
-    _api.init(RequestType.SEARCH_SALLER);
+    _api.init(isBulkOrder != null && isBulkOrder
+        ? RequestType.SEARCH_SALLER_FOR_BULK_ORDER
+        : RequestType.SEARCH_SALLER);
     final result = await _api.request(body: _body);
     if (result == null || result.statusCode != 200) {
       isLoadData = false;
@@ -535,6 +544,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
         return await searchCustomer(isMounted);
       case OneCellType.SEARCH_SALLER:
         return await searchSallerCustomer(isMounted);
+      case OneCellType.SEARCH_SALLER_FOR_BULK_ORDER:
+        return await searchSallerCustomer(isMounted, isBulkOrder: true);
       case OneCellType.SEARCH_END_CUSTOMER:
         return await searchEndOrDeliveryCustomer(isMounted);
       default:
