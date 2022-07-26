@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart
  * Created Date: 2022-07-21 14:21:16
- * Last Modified: 2022-07-24 18:35:34
+ * Last Modified: 2022-07-26 16:14:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,10 +13,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_detail_amount_response_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_search_meta_price_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_search_meta_price_response_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_t_item_model.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
@@ -26,6 +30,8 @@ import 'package:medsalesportal/model/rfc/bulk_order_detail_response_model.dart';
 class BulkOrderDetailProvider extends ChangeNotifier {
   BulkOrderDetailResponseModel? bulkOrderDetailResponseModel;
   BulkOrderDetailAmountResponseModel? bulkOrderDetailAmountResponseModel;
+  BulkOrderDetailSearchMetaPriceResponseModel? searchMetaPriceResponseModel;
+  List<BulkOrderDetailTItemModel> editItemList = [];
   final _api = ApiService();
   bool isShowShadow = true;
   bool isAnimationNotReady = true;
@@ -50,16 +56,59 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<ResultModel> checkMetaPriceAndStock(int index) async {
+    _api.init(RequestType.CHECK_META_PRICE_AND_STOCK);
+    var temp = BulkOrderDetailSearchMetaPriceModel();
+    pr(temp.toJson());
+    temp.matnr = editItemList[index].matnr;
+    temp.kwmeng = editItemList[index].kwmeng;
+    temp.zfreeQtyIn = editItemList[index].zfreeQtyIn;
+    var base64 = await EncodingUtils.base64Convert(temp.toJson());
+    pr(base64);
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.CHECK_META_PRICE_AND_STOCK.serverMethod,
+      "methodParamMap": {
+        // input에서 요청수량 변경시 editItemList[index].kwmeng의 값이 변경 됨.
+        "IV_KWMENG": editItemList[index].kwmeng,
+        "IV_MATNR": editItemList[index].matnr,
+        "IV_ZZKUNNR_END":
+            bulkOrderDetailResponseModel!.tHead!.single.zzkunnrEnd,
+        "IV_VKORG": bulkOrderDetailResponseModel!.tHead!.single.vkorg,
+        "IV_VTWEG": bulkOrderDetailResponseModel!.tHead!.single.vtweg,
+        "IV_SPART": bulkOrderDetailResponseModel!.tHead!.single.spart,
+        "IV_KUNNR": bulkOrderDetailResponseModel!.tHead!.single.kunnr,
+        "IV_PRSDT": FormatUtil.removeDash(DateTime.now().toIso8601String()),
+        "T_LIST": base64,
+        "IS_LOGIN": CacheService.getIsLogin(),
+        "functionName": RequestType.CHECK_META_PRICE_AND_STOCK.serverMethod,
+        "resultTables": RequestType.CHECK_META_PRICE_AND_STOCK.resultTable,
+      }
+    };
+    final result = await _api.request(body: _body);
+    if (result != null && result.statusCode != 200) {
+      return ResultModel(false);
+    }
+    if (result != null && result.statusCode == 200) {
+      searchMetaPriceResponseModel =
+          BulkOrderDetailSearchMetaPriceResponseModel.fromJson(
+              result.body['data']);
+      pr(searchMetaPriceResponseModel?.toJson());
+      notifyListeners();
+      return ResultModel(true);
+    }
+    return ResultModel(false);
+  }
+
   Future<ResultModel> getAmountAvailableForOrderEntry() async {
     assert(bulkOrderDetailResponseModel != null);
     _api.init(RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY);
     Map<String, dynamic> _body = {
       "methodName": RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY.serverMethod,
       "methodParamMap": {
-        "IV_VKORG": bulkOrderDetailResponseModel!.tHead!.first.vkorg,
-        "IV_VTWEG": bulkOrderDetailResponseModel!.tHead!.first.vtweg,
-        "IV_SPART": bulkOrderDetailResponseModel!.tHead!.first.spart,
-        "IV_KUNNR": bulkOrderDetailResponseModel!.tHead!.first.kunnr,
+        "IV_VKORG": bulkOrderDetailResponseModel!.tHead!.single.vkorg,
+        "IV_VTWEG": bulkOrderDetailResponseModel!.tHead!.single.vtweg,
+        "IV_SPART": bulkOrderDetailResponseModel!.tHead!.single.spart,
+        "IV_KUNNR": bulkOrderDetailResponseModel!.tHead!.single.kunnr,
         "IS_LOGIN": CacheService.getIsLogin(),
         "functionName":
             RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY.serverMethod,
@@ -73,10 +122,10 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       bulkOrderDetailAmountResponseModel =
           BulkOrderDetailAmountResponseModel.fromJson(result.body['data']);
-      pr(bulkOrderDetailAmountResponseModel?.tCreditLimit?.single.toJson());
       amountAvailable =
           bulkOrderDetailAmountResponseModel!.tCreditLimit!.single.amount!;
       notifyListeners();
+      checkMetaPriceAndStock(0);
       return ResultModel(true);
     }
     return ResultModel(false);
@@ -116,11 +165,14 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       bulkOrderDetailResponseModel =
           BulkOrderDetailResponseModel.fromJson(result.body['data']);
+
       pr(bulkOrderDetailResponseModel?.tItem?.first.toJson());
       pr(bulkOrderDetailResponseModel?.tHead?.first.toJson());
       isAnimationNotReady = false;
+      editItemList.clear();
       bulkOrderDetailResponseModel?.tItem?.forEach((item) {
         orderTotal += item.znetpr!;
+        editItemList.add(BulkOrderDetailTItemModel.fromJson(item.toJson()));
       });
       getAmountAvailableForOrderEntry();
       return ResultModel(true);

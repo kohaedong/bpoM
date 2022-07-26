@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-07-24 17:30:14
+ * Last Modified: 2022-07-26 15:08:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -45,7 +45,8 @@ enum RequestType {
   SEARCH_TRANSACTION_LEDGER,
   SEARCH_BULK_ORDER,
   GET_BULK_DETAIL,
-  AMOUNT_AVAILABLE_FOR_ORDER_ENTRY
+  AMOUNT_AVAILABLE_FOR_ORDER_ENTRY,
+  CHECK_META_PRICE_AND_STOCK
 }
 
 // [KolonBuildConfig] 빌드 옵션에 따라 url가 변한다.
@@ -89,6 +90,8 @@ extension RequestTypeExtension on RequestType {
   String url({String? params}) {
     switch (this) {
       case RequestType.SEARCH_STAFF:
+        return '$rfcURL/common';
+      case RequestType.CHECK_META_PRICE_AND_STOCK:
         return '$rfcURL/common';
       case RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY:
         return '$rfcURL/common';
@@ -160,6 +163,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SEARCH_STAFF:
         return 'ES_RETURN,ET_STAFFLIST';
+      case RequestType.CHECK_META_PRICE_AND_STOCK:
+        return 'ES_RETURN,T_LIST';
       case RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY:
         return 'ES_RETURN,T_CREDIT_LIMIT';
       case RequestType.GET_BULK_DETAIL:
@@ -260,6 +265,8 @@ extension RequestTypeExtension on RequestType {
         return 'Z_LTSP_IF0913';
       case RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY:
         return 'Z_LTSP_IF0086';
+      case RequestType.CHECK_META_PRICE_AND_STOCK:
+        return 'Z_LTSP_IF0082';
       default:
         throw NullThrownError();
     }

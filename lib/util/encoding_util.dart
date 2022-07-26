@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/util/encoding_util.dart
  * Created Date: 2021-08-21 16:38:26
- * Last Modified: 2022-07-18 13:19:21
+ * Last Modified: 2022-07-26 16:10:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -132,7 +132,7 @@ class EncodingUtils {
 
     mapData.forEach((key, value) {
       keyList.add(key);
-      valueList.add(value == null || value == 'null' ? '' : value);
+      valueList.add(value == null || value == 'null' ? '' : '$value');
       // valueList.add(value == 'null' ? '' : value);
     });
     final result =
