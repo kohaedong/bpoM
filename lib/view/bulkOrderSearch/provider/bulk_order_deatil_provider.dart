@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart
  * Created Date: 2022-07-21 14:21:16
- * Last Modified: 2022-07-26 16:14:05
+ * Last Modified: 2022-07-26 19:42:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -56,15 +56,21 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setQuantityAndCheckPrice(String str, int index) {
+    editItemList[index].kwmeng = double.parse(str);
+    checkMetaPriceAndStock(index);
+    notifyListeners();
+  }
+
   Future<ResultModel> checkMetaPriceAndStock(int index) async {
     _api.init(RequestType.CHECK_META_PRICE_AND_STOCK);
     var temp = BulkOrderDetailSearchMetaPriceModel();
-    pr(temp.toJson());
     temp.matnr = editItemList[index].matnr;
     temp.kwmeng = editItemList[index].kwmeng;
+    temp.vrkme = editItemList[index].vrkme;
     temp.zfreeQtyIn = editItemList[index].zfreeQtyIn;
-    var base64 = await EncodingUtils.base64Convert(temp.toJson());
-    pr(base64);
+
+    var itemBase64 = await EncodingUtils.base64Convert(temp.toJson());
     Map<String, dynamic> _body = {
       "methodName": RequestType.CHECK_META_PRICE_AND_STOCK.serverMethod,
       "methodParamMap": {
@@ -78,7 +84,7 @@ class BulkOrderDetailProvider extends ChangeNotifier {
         "IV_SPART": bulkOrderDetailResponseModel!.tHead!.single.spart,
         "IV_KUNNR": bulkOrderDetailResponseModel!.tHead!.single.kunnr,
         "IV_PRSDT": FormatUtil.removeDash(DateTime.now().toIso8601String()),
-        "T_LIST": base64,
+        "T_LIST": itemBase64,
         "IS_LOGIN": CacheService.getIsLogin(),
         "functionName": RequestType.CHECK_META_PRICE_AND_STOCK.serverMethod,
         "resultTables": RequestType.CHECK_META_PRICE_AND_STOCK.resultTable,
@@ -92,7 +98,11 @@ class BulkOrderDetailProvider extends ChangeNotifier {
       searchMetaPriceResponseModel =
           BulkOrderDetailSearchMetaPriceResponseModel.fromJson(
               result.body['data']);
-      pr(searchMetaPriceResponseModel?.toJson());
+      var temp =
+          BulkOrderDetailTItemModel.fromJson(editItemList[index].toJson());
+      temp.zmsg = searchMetaPriceResponseModel!.tList!.single.zmsg;
+      editItemList[index] = BulkOrderDetailTItemModel.fromJson(temp.toJson());
+      pr(editItemList[index].zmsg);
       notifyListeners();
       return ResultModel(true);
     }
@@ -125,7 +135,6 @@ class BulkOrderDetailProvider extends ChangeNotifier {
       amountAvailable =
           bulkOrderDetailAmountResponseModel!.tCreditLimit!.single.amount!;
       notifyListeners();
-      checkMetaPriceAndStock(0);
       return ResultModel(true);
     }
     return ResultModel(false);
@@ -168,11 +177,17 @@ class BulkOrderDetailProvider extends ChangeNotifier {
 
       pr(bulkOrderDetailResponseModel?.tItem?.first.toJson());
       pr(bulkOrderDetailResponseModel?.tHead?.first.toJson());
-      isAnimationNotReady = false;
+      isAnimationNotReady = false; // animation 준비완료(작동 가능).
       editItemList.clear();
+      var isStatusAorB =
+          bulkOrderDetailResponseModel!.tHead!.single.zdmstatus == 'A' ||
+              bulkOrderDetailResponseModel!.tHead!.single.zdmstatus == 'B';
       bulkOrderDetailResponseModel?.tItem?.forEach((item) {
         orderTotal += item.znetpr!;
-        editItemList.add(BulkOrderDetailTItemModel.fromJson(item.toJson()));
+        isStatusAorB
+            ? editItemList
+                .add(BulkOrderDetailTItemModel.fromJson(item.toJson()))
+            : DoNothingAction();
       });
       getAmountAvailableForOrderEntry();
       return ResultModel(true);

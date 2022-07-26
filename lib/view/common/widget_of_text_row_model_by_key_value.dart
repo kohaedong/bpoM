@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/text_row_model_by_key_value.dart
  * Created Date: 2021-09-06 11:46:11
- * Last Modified: 2022-07-08 17:52:49
+ * Last Modified: 2022-07-26 17:20:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 

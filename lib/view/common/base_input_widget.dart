@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-07-14 16:23:53
+ * Last Modified: 2022-07-26 17:15:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -28,6 +28,7 @@ import 'package:medsalesportal/view/common/base_popup_search.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 
 typedef OnChangeCallBack = Function(String);
+typedef OnSubmittedCallBack = Function(String);
 typedef IsSelectedStrCallBack = Function(dynamic);
 typedef IsSelectedCellCallBack = Function(CellModel);
 typedef HintTextStyleCallBack = TextStyle Function();
@@ -66,6 +67,7 @@ class BaseInputWidget extends StatefulWidget {
   final InitDataCallback? initDataCallback;
   final int? maxLine;
   final dynamic arguments;
+  final OnSubmittedCallBack? onSubmittedCallBack;
   final Map<String, dynamic>? bodyMap;
   final DiscountListCallback? discountListCallback;
   final AddressSelectedCity? selectedCity;
@@ -82,6 +84,7 @@ class BaseInputWidget extends StatefulWidget {
       this.onTap,
       this.hintText,
       this.focusNode,
+      this.onSubmittedCallBack,
       this.isShowDeleteForHintText,
       this.isSelectedStrCallBack,
       this.isSelectedCellCallBack,
@@ -264,14 +267,16 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                   widget.iconType == InputIconType.DELETE_AND_SEARCH
                       ? TextInputAction.search
                       : null,
-              onSubmitted: (str) {
-                if (widget.iconType == InputIconType.DELETE_AND_SEARCH &&
-                    widget.defaultIconCallback != null) {
-                  return widget.defaultIconCallback!.call();
-                } else {
-                  return;
-                }
-              },
+              onSubmitted: widget.onSubmittedCallBack != null
+                  ? (str) => widget.onSubmittedCallBack!.call(str)
+                  : (str) {
+                      if (widget.iconType == InputIconType.DELETE_AND_SEARCH &&
+                          widget.defaultIconCallback != null) {
+                        return widget.defaultIconCallback!.call();
+                      } else {
+                        return;
+                      }
+                    },
               inputFormatters: [LengthLimitingTextInputFormatter(200)],
               keyboardType: widget.keybordType,
               obscureText: widget.keybordType != null &&

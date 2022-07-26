@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-07-24 18:40:47
+ * Last Modified: 2022-07-26 19:45:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -29,6 +29,7 @@ import 'package:medsalesportal/model/rfc/bulk_order_detail_t_item_model.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_detail_t_header_model.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_detail_response_model.dart';
 import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
+import 'package:medsalesportal/view/bulkOrderSearch/order_item_input_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_offset_animation_components.dart';
 import 'package:medsalesportal/view/common/widget_of_rotation_animation_components.dart';
 import 'package:medsalesportal/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart';
@@ -254,7 +255,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                           .asMap()
                           .entries
                           .map((map) => _buildItem(
-                              map.value, map.key, model.tHead!.single))
+                              context, map.value, map.key, model.tHead!.single))
                           .toList(),
                       defaultSpacing(height: AppSize.appBarHeight * 3),
                     ],
@@ -268,8 +269,10 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
     );
   }
 
-  Widget _buildItem(BulkOrderDetailTItemModel model, int index,
-      BulkOrderDetailTHeaderModel head) {
+  Widget _buildItem(BuildContext context, BulkOrderDetailTItemModel model,
+      int index, BulkOrderDetailTHeaderModel head) {
+    var isStatusAorB = head.zdmstatus == 'A' || head.zdmstatus == 'B';
+    final p = context.read<BulkOrderDetailProvider>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -287,10 +290,37 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                   tr('box_i_o'), '${model.setUmrez}/${model.boxUmrez}'),
               BaseInfoRowByKeyAndValue.build(
                   tr('request_quantity'), model.zkwmeng!.toInt().toString()),
-              BaseInfoRowByKeyAndValue.build(
-                  tr('processing_quantity'), model.kwmeng!.toInt().toString()),
-              BaseInfoRowByKeyAndValue.build(
-                  tr('massage'), '${model.zmsg}'), // 메시지
+              isStatusAorB
+                  ? Row(
+                      children: [
+                        SizedBox(
+                          width: AppSize.defaultContentsWidth * .3,
+                          child: AppText.text(tr('processing_quantity'),
+                              style: AppTextStyle.sub_16,
+                              textAlign: TextAlign.left),
+                        ),
+                        OrderItemInputWidget(
+                          onSubmittedCallBack: (str) =>
+                              p.setQuantityAndCheckPrice(str, index),
+                          defaultValue: model.kwmeng!.toInt().toString(),
+                        )
+                      ],
+                    )
+                  : BaseInfoRowByKeyAndValue.build(tr('processing_quantity'),
+                      model.kwmeng!.toInt().toString()),
+              isStatusAorB
+                  ? Selector<BulkOrderDetailProvider, String?>(
+                      selector: (context, provider) =>
+                          provider.editItemList[index].zmsg,
+                      builder: (context, zmsg, _) {
+                        return BaseInfoRowByKeyAndValue.build(
+                            tr('massage'), '$zmsg');
+                      },
+                    )
+                  : BaseInfoRowByKeyAndValue.build(
+                      tr('massage'), '${model.zmsg}'),
+
+              // 메시지
               defaultSpacing()
             ],
           ),
@@ -304,7 +334,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
     final model =
         ModalRoute.of(context)!.settings.arguments as BulkOrderEtTListModel;
     return BaseLayout(
-        hasForm: false,
+        hasForm: true,
         appBar: MainAppBar(context,
             titleText: AppText.text('${tr('bulk_order_detail')}',
                 style: AppTextStyle.w500_22)),
