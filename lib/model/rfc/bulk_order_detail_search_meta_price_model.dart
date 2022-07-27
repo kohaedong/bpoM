@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/bulk_order_detail_search_meta_price_model.dart
  * Created Date: 2022-07-25 11:31:18
- * Last Modified: 2022-07-26 15:56:01
+ * Last Modified: 2022-07-27 10:11:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-07-26 19:46:00
+ * Last Modified: 2022-07-27 09:55:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -178,8 +178,10 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                     '${tr('manager')}',
                                     BaseInputWidget(
                                       context: context,
-                                      iconType: staffName != null
-                                          ? InputIconType.SEARCH
+                                      iconType: isSuperAccount
+                                          ? staffName != null
+                                              ? InputIconType.SEARCH
+                                              : null
                                           : null,
                                       iconColor: staffName != null
                                           ? AppColors.defaultText
@@ -383,13 +385,16 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
               ],
             ),
             defaultSpacing(),
-            Row(
-              children: [
-                AppText.listViewText(model.kunnrNm!,
-                    textAlign: TextAlign.start),
-                AppText.listViewText('(${model.kunnr!})',
-                    textAlign: TextAlign.start),
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  AppText.listViewText(model.kunnrNm!,
+                      textAlign: TextAlign.start),
+                  AppText.listViewText('(${model.kunnr!})',
+                      textAlign: TextAlign.start),
+                ],
+              ),
             ),
             // model.kunnrNm != model.zzkunnrEndNm!
             //     ? Row(
@@ -401,13 +406,16 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
             //         ],
             //       )
             //     : Container(),
-            Row(
-              children: [
-                AppText.listViewText(model.zzkunnrEndNm!,
-                    textAlign: TextAlign.start),
-                AppText.listViewText('(${model.zzkunnrEnd!})',
-                    textAlign: TextAlign.start),
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  AppText.listViewText(model.zzkunnrEndNm!,
+                      textAlign: TextAlign.start),
+                  AppText.listViewText('(${model.zzkunnrEnd!})',
+                      textAlign: TextAlign.start),
+                ],
+              ),
             ),
             defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
             SingleChildScrollView(

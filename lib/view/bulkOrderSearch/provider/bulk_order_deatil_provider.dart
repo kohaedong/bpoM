@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart
  * Created Date: 2022-07-21 14:21:16
- * Last Modified: 2022-07-26 19:42:20
+ * Last Modified: 2022-07-27 10:18:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -63,14 +63,16 @@ class BulkOrderDetailProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> checkMetaPriceAndStock(int index) async {
+    editItemList[index].isShowLoading = true;
+    notifyListeners();
     _api.init(RequestType.CHECK_META_PRICE_AND_STOCK);
     var temp = BulkOrderDetailSearchMetaPriceModel();
     temp.matnr = editItemList[index].matnr;
     temp.kwmeng = editItemList[index].kwmeng;
     temp.vrkme = editItemList[index].vrkme;
     temp.zfreeQtyIn = editItemList[index].zfreeQtyIn;
-
     var itemBase64 = await EncodingUtils.base64Convert(temp.toJson());
+    var vkorg = bulkOrderDetailResponseModel!.tHead!.single.vkorg;
     Map<String, dynamic> _body = {
       "methodName": RequestType.CHECK_META_PRICE_AND_STOCK.serverMethod,
       "methodParamMap": {
@@ -79,7 +81,9 @@ class BulkOrderDetailProvider extends ChangeNotifier {
         "IV_MATNR": editItemList[index].matnr,
         "IV_ZZKUNNR_END":
             bulkOrderDetailResponseModel!.tHead!.single.zzkunnrEnd,
-        "IV_VKORG": bulkOrderDetailResponseModel!.tHead!.single.vkorg,
+        "IV_VKORG": vkorg != null && vkorg.isNotEmpty
+            ? vkorg
+            : CacheService.getEsLogin()!.vkorg,
         "IV_VTWEG": bulkOrderDetailResponseModel!.tHead!.single.vtweg,
         "IV_SPART": bulkOrderDetailResponseModel!.tHead!.single.spart,
         "IV_KUNNR": bulkOrderDetailResponseModel!.tHead!.single.kunnr,
@@ -92,20 +96,26 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     };
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {
+      editItemList[index].isShowLoading = false;
+      notifyListeners();
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
       searchMetaPriceResponseModel =
           BulkOrderDetailSearchMetaPriceResponseModel.fromJson(
               result.body['data']);
+      pr(searchMetaPriceResponseModel?.toJson());
       var temp =
           BulkOrderDetailTItemModel.fromJson(editItemList[index].toJson());
       temp.zmsg = searchMetaPriceResponseModel!.tList!.single.zmsg;
       editItemList[index] = BulkOrderDetailTItemModel.fromJson(temp.toJson());
       pr(editItemList[index].zmsg);
+      editItemList[index].isShowLoading = false;
       notifyListeners();
       return ResultModel(true);
     }
+    editItemList[index].isShowLoading = false;
+    notifyListeners();
     return ResultModel(false);
   }
 
@@ -175,8 +185,6 @@ class BulkOrderDetailProvider extends ChangeNotifier {
       bulkOrderDetailResponseModel =
           BulkOrderDetailResponseModel.fromJson(result.body['data']);
 
-      pr(bulkOrderDetailResponseModel?.tItem?.first.toJson());
-      pr(bulkOrderDetailResponseModel?.tHead?.first.toJson());
       isAnimationNotReady = false; // animation 준비완료(작동 가능).
       editItemList.clear();
       var isStatusAorB =

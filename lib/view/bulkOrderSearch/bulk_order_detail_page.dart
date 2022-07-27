@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-07-26 19:45:27
+ * Last Modified: 2022-07-27 11:00:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -296,7 +296,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                         SizedBox(
                           width: AppSize.defaultContentsWidth * .3,
                           child: AppText.text(tr('processing_quantity'),
-                              style: AppTextStyle.sub_16,
+                              style: AppTextStyle.h6,
                               textAlign: TextAlign.left),
                         ),
                         OrderItemInputWidget(
@@ -309,12 +309,49 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                   : BaseInfoRowByKeyAndValue.build(tr('processing_quantity'),
                       model.kwmeng!.toInt().toString()),
               isStatusAorB
-                  ? Selector<BulkOrderDetailProvider, String?>(
-                      selector: (context, provider) =>
+                  ? Selector<BulkOrderDetailProvider, Tuple2<String?, bool?>>(
+                      selector: (context, provider) => Tuple2(
                           provider.editItemList[index].zmsg,
-                      builder: (context, zmsg, _) {
-                        return BaseInfoRowByKeyAndValue.build(
-                            tr('massage'), '$zmsg');
+                          provider.editItemList[index].isShowLoading),
+                      builder: (context, tuple, _) {
+                        return Row(
+                          children: [
+                            SizedBox(
+                              width: AppSize.defaultContentsWidth * .3,
+                              child: AppText.text(tr('massage'),
+                                  style: AppTextStyle.h6,
+                                  textAlign: TextAlign.left),
+                            ),
+                            Expanded(
+                                child: Container(
+                              alignment: Alignment.centerLeft,
+                              height: AppSize.defaultTextFieldHeight,
+                              child: tuple.item2 == null
+                                  ? AppText.text(tuple.item1!,
+                                      style: AppTextStyle.h4,
+                                      maxLines: 2,
+                                      textAlign: TextAlign.left)
+                                  : tuple.item2!
+                                      ? Padding(
+                                          padding: EdgeInsets.only(
+                                              left:
+                                                  AppSize.defaultContentsWidth *
+                                                      .2),
+                                          child: SizedBox(
+                                              height:
+                                                  AppSize.iconSmallDefaultWidth,
+                                              width:
+                                                  AppSize.iconSmallDefaultWidth,
+                                              child: CircularProgressIndicator(
+                                                  strokeWidth: 1.0)),
+                                        )
+                                      : AppText.text(tuple.item1!,
+                                          style: AppTextStyle.h4,
+                                          maxLines: 2,
+                                          textAlign: TextAlign.left),
+                            ))
+                          ],
+                        );
                       },
                     )
                   : BaseInfoRowByKeyAndValue.build(
