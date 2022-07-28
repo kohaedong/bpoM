@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-07-27 11:00:04
+ * Last Modified: 2022-07-28 10:50:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,12 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 import 'dart:math' as math;
+import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/view/common/base_app_toast.dart';
+import 'package:medsalesportal/view/common/base_shimmer.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
+import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
+import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -129,16 +135,72 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
             AppSize.realWidth / 2,
             AppColors.lightBlueColor,
             AppTextStyle.default_18.copyWith(color: AppColors.primary),
-            AppSize.zero,
-            () {}),
+            AppSize.zero, () async {
+          final p = context.read<BulkOrderDetailProvider>();
+          final dialogResult = await AppDialog.showPopup(
+              context,
+              buildDialogContents(
+                  context,
+                  Container(
+                      height: AppSize.singlePopupHeight - AppSize.buttonHeight,
+                      alignment: Alignment.center,
+                      child: AppText.text(tr('is_realy_cancel_order'),
+                          style: AppTextStyle.default_16)),
+                  false,
+                  AppSize.singlePopupHeight,
+                  leftButtonText: tr('cancel'),
+                  rightButtonText: tr('ok')));
+          if (dialogResult != null) {
+            dialogResult as bool;
+            if (dialogResult) {
+              await p.orderCancelOrSave(true).then((result) {
+                AppToast().show(
+                    context,
+                    result.isSuccessful
+                        ? result.message!
+                        : result.errorMassage!);
+                if (result.isSuccessful) {
+                  Navigator.pop(context, true);
+                }
+              });
+            }
+          }
+        }),
         AppStyles.buildButton(
             context,
             '${tr('order_save')}',
             AppSize.realWidth / 2,
             AppColors.primary,
             AppTextStyle.default_18.copyWith(color: AppColors.whiteText),
-            AppSize.zero,
-            () {})
+            AppSize.zero, () async {
+          final p = context.read<BulkOrderDetailProvider>();
+          var overThan = p.amountAvailable.isNotEmpty &&
+              double.parse(p.amountAvailable) > p.orderTotal;
+
+          if (overThan) {
+            await p.checkIsItemInStock().then((isInStockAll) async {
+              if (isInStockAll) {
+                await p.orderCancelOrSave(false).then((result) {
+                  AppToast().show(
+                      context,
+                      result.isSuccessful
+                          ? result.message!
+                          : result.errorMassage!);
+                });
+              } else {
+                var message = p.editItemList
+                    .where((item) => item.zmsg != '정상')
+                    .toList()
+                    .first
+                    .zmsg;
+                AppToast().show(context, message!);
+              }
+            });
+          } else {
+            AppToast()
+                .show(context, tr('amount_available_for_order_entry_is_fail'));
+          }
+        })
       ],
     );
   }
@@ -238,40 +300,55 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
   }
 
   Widget _buildContents(BuildContext context) {
-    return Stack(
-      children: [
-        Selector<BulkOrderDetailProvider, BulkOrderDetailResponseModel?>(
-          selector: (context, provider) =>
-              provider.bulkOrderDetailResponseModel,
-          builder: (context, model, _) {
-            return model != null &&
-                    model.tItem != null &&
-                    model.tItem!.isNotEmpty &&
-                    model.tHead != null
-                ? ListView(
-                    children: [
-                      _buildOrderInfo(model),
-                      ...model.tItem!
-                          .asMap()
-                          .entries
-                          .map((map) => _buildItem(
-                              context, map.value, map.key, model.tHead!.single))
-                          .toList(),
-                      defaultSpacing(height: AppSize.appBarHeight * 3),
-                    ],
-                  )
-                : Container();
-          },
-        ),
-        _buildBottomAnimationBox(context),
-        _buildBottomAnimationStatusBar(context)
-      ],
-    );
+    return Selector<BulkOrderDetailProvider, BulkOrderDetailResponseModel?>(
+        selector: (context, provider) => provider.bulkOrderDetailResponseModel,
+        builder: (context, model, _) {
+          var isStatusA = model?.tHead?.single.zdmstatus == 'A';
+          return Stack(
+            children: [
+              model != null &&
+                      model.tItem != null &&
+                      model.tItem!.isNotEmpty &&
+                      model.tHead != null
+                  ? ListView(
+                      children: [
+                        _buildOrderInfo(model),
+                        ...model.tItem!
+                            .asMap()
+                            .entries
+                            .map((map) => _buildItem(context, map.value,
+                                map.key, model.tHead!.single))
+                            .toList(),
+                        isStatusA
+                            ? defaultSpacing(height: AppSize.appBarHeight * 3)
+                            : defaultSpacing()
+                      ],
+                    )
+                  : Container(),
+              Positioned(
+                  bottom: 0,
+                  left: 0,
+                  child: Selector<BulkOrderDetailProvider, bool>(
+                    selector: (context, provider) => provider.isShowLoading,
+                    builder: (context, isShowLoading, _) {
+                      return isShowLoading
+                          ? BaseLoadingViewOnStackWidget.build(
+                              context, isShowLoading,
+                              height: AppSize.realHeight - AppSize.appBarHeight,
+                              width: AppSize.realWidth)
+                          : Container();
+                    },
+                  )),
+              isStatusA ? _buildBottomAnimationBox(context) : Container(),
+              isStatusA ? _buildBottomAnimationStatusBar(context) : Container()
+            ],
+          );
+        });
   }
 
   Widget _buildItem(BuildContext context, BulkOrderDetailTItemModel model,
       int index, BulkOrderDetailTHeaderModel head) {
-    var isStatusAorB = head.zdmstatus == 'A' || head.zdmstatus == 'B';
+    var isStatusA = head.zdmstatus == 'A';
     final p = context.read<BulkOrderDetailProvider>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,7 +367,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                   tr('box_i_o'), '${model.setUmrez}/${model.boxUmrez}'),
               BaseInfoRowByKeyAndValue.build(
                   tr('request_quantity'), model.zkwmeng!.toInt().toString()),
-              isStatusAorB
+              isStatusA
                   ? Row(
                       children: [
                         SizedBox(
@@ -308,7 +385,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                     )
                   : BaseInfoRowByKeyAndValue.build(tr('processing_quantity'),
                       model.kwmeng!.toInt().toString()),
-              isStatusAorB
+              isStatusA
                   ? Selector<BulkOrderDetailProvider, Tuple2<String?, bool?>>(
                       selector: (context, provider) => Tuple2(
                           provider.editItemList[index].zmsg,
@@ -370,26 +447,39 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
   Widget build(BuildContext context) {
     final model =
         ModalRoute.of(context)!.settings.arguments as BulkOrderEtTListModel;
-    return BaseLayout(
-        hasForm: true,
-        appBar: MainAppBar(context,
-            titleText: AppText.text('${tr('bulk_order_detail')}',
-                style: AppTextStyle.w500_22)),
-        child: ChangeNotifierProvider(
-          create: (context) => BulkOrderDetailProvider(),
-          builder: (context, _) {
-            return FutureBuilder<ResultModel>(
-                future: context
-                    .read<BulkOrderDetailProvider>()
-                    .getOrderDetail(model),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData &&
-                      snapshot.connectionState == ConnectionState.done) {
-                    return _buildContents(context);
-                  }
-                  return Container();
-                });
-          },
-        ));
+    return ChangeNotifierProvider(
+        create: (context) => BulkOrderDetailProvider(),
+        builder: (context, _) {
+          return BaseLayout(
+              hasForm: true,
+              appBar: MainAppBar(
+                context,
+                titleText: AppText.text('${tr('bulk_order_detail')}',
+                    style: AppTextStyle.w500_22),
+                callback: () {
+                  final p = context.read<BulkOrderDetailProvider>();
+                  Navigator.pop(context, p.isOrderSaved ? true : null);
+                },
+              ),
+              child: WillPopScope(
+                onWillPop: () async {
+                  final p = context.read<BulkOrderDetailProvider>();
+                  Navigator.pop(context, p.isOrderSaved ? true : null);
+                  return false;
+                },
+                child: FutureBuilder<ResultModel>(
+                    future: context
+                        .read<BulkOrderDetailProvider>()
+                        .getOrderDetail(model),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData &&
+                          snapshot.connectionState == ConnectionState.done) {
+                        return _buildContents(context);
+                      }
+                      return DefaultShimmer.buildDefaultPageShimmer(5,
+                          isWithSet: true, setLenght: 5);
+                    }),
+              ));
+        });
   }
 }

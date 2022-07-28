@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/util/encoding_util.dart
  * Created Date: 2021-08-21 16:38:26
- * Last Modified: 2022-07-26 16:10:32
+ * Last Modified: 2022-07-27 19:21:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -164,7 +164,7 @@ class EncodingUtils {
       (Map<String, dynamic> m) {
         var temp = <String>[];
         m.forEach((key, value) {
-          temp.add('${value == null ? '' : value == 'null' ? '' : value}');
+          temp.add('${value == null ? '' : value == 'null' ? '' : '$value'}');
         });
         values.add(temp);
       }(map);
@@ -191,7 +191,6 @@ class EncodingUtils {
         //
       }
     });
-    print('base64ConvertForListMap::: $tempList');
     return utf8ToBase64(tempList);
   }
 
