@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-07-28 10:50:18
+ * Last Modified: 2022-07-28 10:57:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,12 +11,6 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 import 'dart:math' as math;
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/view/common/base_app_toast.dart';
-import 'package:medsalesportal/view/common/base_shimmer.dart';
-import 'package:medsalesportal/view/common/dialog_contents.dart';
-import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
-import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +21,12 @@ import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/view/common/base_app_toast.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
+import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/enums/offset_direction_type.dart';
+import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
+import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_et_t_list_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';

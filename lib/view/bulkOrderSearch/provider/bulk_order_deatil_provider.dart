@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart
  * Created Date: 2022-07-21 14:21:16
- * Last Modified: 2022-07-28 10:19:55
+ * Last Modified: 2022-07-28 10:56:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -105,7 +105,9 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     notifyListeners();
     await Future.forEach(editItemList.asMap().entries, (map) async {
       map as MapEntry<int, BulkOrderDetailTItemModel>;
-      await checkMetaPriceAndStock(map.key);
+      if (map.value.zmsg != '정상') {
+        await checkMetaPriceAndStock(map.key);
+      }
     }).whenComplete(() {
       isShowLoading = false;
       notifyListeners();
