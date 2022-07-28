@@ -499,7 +499,7 @@
     "order_save":"저장",
     "order_total":"주문 합계",
     "amount_available_for_order_entry":"주문 입력 가능 액",
-    "amount_available_for_order_entry_is_fail":"주문입력가능 액이 부족합니다.",
+    "amount_available_for_order_entry_is_fail":"주문 입력가능액이 부족합니다.",
     "is_realy_cancel_order":"주문을 취소하시겠습니까?"
 
 }
