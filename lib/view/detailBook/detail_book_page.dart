@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-07-29 14:32:06
+ * Last Modified: 2022-07-29 16:19:50
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,8 +14,11 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/model/rfc/detail_book_response_model.dart';
+import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/view/detailBook/detail_book_web_view.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
@@ -25,6 +28,7 @@ import 'package:medsalesportal/model/rfc/detail_book_t_list_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/detailBook/provider/detail_book_page_provider.dart';
+import 'package:tuple/tuple.dart';
 
 class DetailBookPage extends StatefulWidget {
   const DetailBookPage({Key? key}) : super(key: key);
@@ -62,13 +66,27 @@ class _DetailBookPageState extends State<DetailBookPage> {
             .asMap()
             .entries
             .map(
-              (map) => Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.symmetric(
-                    horizontal: AppSize.padding,
-                    vertical: AppSize.defaultListItemSpacing),
-                child: AppText.text(map.value.itemnm!,
-                    textAlign: TextAlign.start, style: AppTextStyle.default_16),
+              (map) => GestureDetector(
+                onTap: () {
+                  final p = context.read<DetailBookPageProvider>();
+                  p.searchDetailBookFile(map.value).then((result) {
+                    if (result.isSuccessful) {
+                      Navigator.pushNamed(context, DetailBookWebView.routeName,
+                          arguments: result.data);
+                    } else {
+                      AppToast().show(context, result.errorMassage!);
+                    }
+                  });
+                },
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: AppSize.padding,
+                      vertical: AppSize.defaultListItemSpacing),
+                  child: AppText.text(map.value.itemnm!,
+                      textAlign: TextAlign.start,
+                      style: AppTextStyle.default_16),
+                ),
               ),
             )
             .toList(),
@@ -148,10 +166,11 @@ class _DetailBookPageState extends State<DetailBookPage> {
   }
 
   Widget _buildListViewItem(BuildContext context, DetailBookTListModel? model) {
-    return Selector<DetailBookPageProvider, String?>(
-      selector: (context, provider) => provider.searchKeyStr,
-      builder: (context, searchKey, _) {
-        return searchKey == null || searchKey.isEmpty || model == null
+    return Selector<DetailBookPageProvider, Tuple2<String?, String?>>(
+      selector: (context, provider) =>
+          Tuple2(provider.searchKeyInputStr, provider.searchKey),
+      builder: (context, tuple, _) {
+        return tuple.item1 == null || tuple.item1!.isEmpty || model == null
             ? Container()
             : Column(
                 children: [
@@ -170,22 +189,24 @@ class _DetailBookPageState extends State<DetailBookPage> {
                               padding: EdgeInsets.only(
                                   right: AppSize.defaultListItemSpacing)),
                           AppText.text(
-                              model.itemnm!.substring(0,
-                                          (model.itemnm!.indexOf(searchKey))) !=
-                                      searchKey
+                              model.itemnm!.substring(
+                                          0,
+                                          (model.itemnm!
+                                              .indexOf(tuple.item2!))) !=
+                                      tuple.item2!
                                   ? model.itemnm!.substring(
-                                      0, (model.itemnm!.indexOf(searchKey)))
+                                      0, (model.itemnm!.indexOf(tuple.item2!)))
                                   : '',
                               style: AppTextStyle.default_14
                                   .copyWith(fontWeight: FontWeight.bold)),
-                          AppText.text(searchKey,
+                          AppText.text(tuple.item2!,
                               style: AppTextStyle.default_14.copyWith(
                                   color: AppColors.primary,
                                   fontWeight: FontWeight.bold)),
                           AppText.text(
                               model.itemnm!.substring(
-                                  (model.itemnm!.indexOf(searchKey) +
-                                      searchKey.length)),
+                                  (model.itemnm!.indexOf(tuple.item2!) +
+                                      tuple.item2!.length)),
                               style: AppTextStyle.default_14
                                   .copyWith(fontWeight: FontWeight.bold))
                         ],
@@ -239,24 +260,23 @@ class _DetailBookPageState extends State<DetailBookPage> {
   Widget _buildSearchBar(BuildContext context) {
     final p = context.read<DetailBookPageProvider>();
     return Selector<DetailBookPageProvider, String?>(
-      selector: (context, provider) => provider.searchKeyStr,
-      builder: (contetx, searchKeyStr, _) {
+      selector: (context, provider) => provider.searchKeyInputStr,
+      builder: (contetx, inputStr, _) {
         return BaseInputWidget(
           context: context,
           textEditingController: _textEditingController,
           width: AppSize.defaultContentsWidth,
-          iconType: searchKeyStr != null && searchKeyStr.isNotEmpty
+          iconType: inputStr != null && inputStr.isNotEmpty
               ? InputIconType.DELETE_AND_SEARCH
               : null,
           onChangeCallBack: (str) => p.setSerachKeyStr(str),
-          defaultIconCallback: () =>
-              p.searchDetailBook(searchKey: searchKeyStr),
+          defaultIconCallback: () => p.searchDetailBook(inputStr: inputStr),
           otherIconcallback: () {
             _textEditingController.text = '';
             p.setSerachKeyStr(null);
             p.resetResultModel();
           },
-          onSubmittedCallBack: (str) => p.searchDetailBook(searchKey: str),
+          onSubmittedCallBack: (str) => p.searchDetailBook(inputStr: str),
           enable: true,
         );
       },

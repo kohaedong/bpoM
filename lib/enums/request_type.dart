@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-07-28 12:35:11
+ * Last Modified: 2022-07-29 14:47:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -48,7 +48,8 @@ enum RequestType {
   AMOUNT_AVAILABLE_FOR_ORDER_ENTRY,
   CHECK_META_PRICE_AND_STOCK,
   ORDER_CANCEL_AND_SAVE,
-  SEARCH_DETAIL_BOOK
+  SEARCH_DETAIL_BOOK,
+  DETAIL_BOOK_SEARCH_FILE
 }
 
 // [KolonBuildConfig] 빌드 옵션에 따라 url가 변한다.
@@ -58,7 +59,6 @@ extension RequestTypeExtension on RequestType {
   String get signURL => '$baseURL/common/v2/api/basiclogin/auth';
   String get rfcURL => '$baseURL/sales-group/rfc';
   String get medical => '$baseURL/sales-group/med';
-
   // api 에 header 추가 필요시 사전 등록.
   Future<Map<String, String>> get anotherHeader async {
     final deviceInfo = await DeviceInfoService.getDeviceInfo();
@@ -92,6 +92,8 @@ extension RequestTypeExtension on RequestType {
   String url({String? params}) {
     switch (this) {
       case RequestType.SEARCH_STAFF:
+        return '$rfcURL/common';
+      case RequestType.DETAIL_BOOK_SEARCH_FILE:
         return '$rfcURL/common';
       case RequestType.SEARCH_DETAIL_BOOK:
         return '$rfcURL/common';
@@ -169,6 +171,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SEARCH_STAFF:
         return 'ES_RETURN,ET_STAFFLIST';
+      case RequestType.DETAIL_BOOK_SEARCH_FILE:
+        return 'ES_RETURN,ES_FILEINFO,ET_DRAO,ET_URL,ATTACH_INFO';
       case RequestType.SEARCH_DETAIL_BOOK:
         return 'ES_RETURN,T_LIST';
       case RequestType.ORDER_CANCEL_AND_SAVE:
@@ -228,6 +232,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.CHECK_NOTICE:
         return "noticeAll";
+      case RequestType.DETAIL_BOOK_SEARCH_FILE:
+        return "Z_LTSP_IF0893";
       case RequestType.SEND_IMAGE_TO_SERVER:
         return 'screenCapture';
       case RequestType.NOTICE_DONT_SHOW_AGAIN:
