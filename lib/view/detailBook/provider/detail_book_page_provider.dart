@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/provider/detail_book_page_provider.dart
  * Created Date: 2022-07-05 09:55:29
- * Last Modified: 2022-07-29 16:15:39
+ * Last Modified: 2022-07-29 17:06:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -27,8 +27,7 @@ class DetailBookPageProvider extends ChangeNotifier {
   final _api = ApiService();
   List<bool> isOpenList = [];
   List<List<DetailBookTListModel>?> pannelGroup = [];
-  String? searchKey;
-  String? searchKeyInputStr;
+  String? searchKeyStr;
 
   void setIsOpen(int index) {
     isOpenList[index] = !isOpenList[index];
@@ -36,7 +35,7 @@ class DetailBookPageProvider extends ChangeNotifier {
   }
 
   void setSerachKeyStr(String? str) {
-    searchKeyInputStr = str;
+    searchKeyStr = str;
     if (str == null || str.length < 2) {
       notifyListeners();
     }
@@ -51,6 +50,8 @@ class DetailBookPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> searchDetailBookFile(DetailBookTListModel model) async {
+    isLoadData = true;
+    notifyListeners();
     _api.init(RequestType.DETAIL_BOOK_SEARCH_FILE);
     Map<String, dynamic> _body = {
       "methodName": RequestType.DETAIL_BOOK_SEARCH_FILE.serverMethod,
@@ -64,18 +65,24 @@ class DetailBookPageProvider extends ChangeNotifier {
     };
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {
+      isLoadData = false;
+      notifyListeners();
       return ResultModel(false, errorMassage: result.errorMessage);
     }
     if (result != null && result.statusCode == 200) {
       pr('attach_info api 개발중.');
       pr(result.body);
-      return ResultModel(true, data: 'key');
+      final key = 'a9df3f55b57e4f838e5e868e31e13496';
+      isLoadData = false;
+      notifyListeners();
+      return ResultModel(true, data: '$key');
     }
+    isLoadData = false;
+    notifyListeners();
     return ResultModel(false, errorMassage: result!.errorMessage);
   }
 
-  Future<ResultModel> searchDetailBook({String? inputStr}) async {
-    searchKey = inputStr;
+  Future<ResultModel> searchDetailBook({String? searchKey}) async {
     _api.init(RequestType.SEARCH_DETAIL_BOOK);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SEARCH_DETAIL_BOOK.serverMethod,

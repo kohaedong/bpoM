@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-07-29 16:19:50
+ * Last Modified: 2022-07-29 17:33:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,6 +18,7 @@ import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/detailBook/detail_book_web_view.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -59,7 +60,8 @@ class _DetailBookPageState extends State<DetailBookPage> {
     );
   }
 
-  Widget _buildPannelBody(List<DetailBookTListModel> model) {
+  Widget _buildPannelBody(
+      BuildContext context, List<DetailBookTListModel> model) {
     return Column(
       children: [
         ...model
@@ -129,7 +131,8 @@ class _DetailBookPageState extends State<DetailBookPage> {
                                       },
                                       canTapOnHeader: true,
                                       isExpanded: isOpen,
-                                      body: _buildPannelBody(map.value!))
+                                      body:
+                                          _buildPannelBody(context, map.value!))
                                 ],
                               );
                             },
@@ -150,109 +153,144 @@ class _DetailBookPageState extends State<DetailBookPage> {
     );
   }
 
-  Widget _buildTotalCount(DetailBookResponseModel? model) {
-    var listLength =
-        model != null && model.tList != null ? model.tList!.length : '';
-    return Padding(
-      padding: AppSize.defaultSidePadding,
-      child: Row(
-        children: [
-          AppText.text('총', style: AppTextStyle.default_14),
-          AppText.text('$listLength', style: AppTextStyle.blod_16),
-          AppText.text('건', style: AppTextStyle.default_14),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildListViewItem(BuildContext context, DetailBookTListModel? model) {
-    return Selector<DetailBookPageProvider, Tuple2<String?, String?>>(
-      selector: (context, provider) =>
-          Tuple2(provider.searchKeyInputStr, provider.searchKey),
-      builder: (context, tuple, _) {
-        return tuple.item1 == null || tuple.item1!.isEmpty || model == null
-            ? Container()
-            : Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        vertical: AppSize.defaultListItemSpacing),
-                    width: AppSize.defaultContentsWidth,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          AppText.text(model.iclsnm!,
-                              style: AppTextStyle.blod_16),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  right: AppSize.defaultListItemSpacing)),
-                          AppText.text(
-                              model.itemnm!.substring(
-                                          0,
-                                          (model.itemnm!
-                                              .indexOf(tuple.item2!))) !=
-                                      tuple.item2!
-                                  ? model.itemnm!.substring(
-                                      0, (model.itemnm!.indexOf(tuple.item2!)))
-                                  : '',
-                              style: AppTextStyle.default_14
-                                  .copyWith(fontWeight: FontWeight.bold)),
-                          AppText.text(tuple.item2!,
-                              style: AppTextStyle.default_14.copyWith(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.bold)),
-                          AppText.text(
-                              model.itemnm!.substring(
-                                  (model.itemnm!.indexOf(tuple.item2!) +
-                                      tuple.item2!.length)),
-                              style: AppTextStyle.default_14
-                                  .copyWith(fontWeight: FontWeight.bold))
-                        ],
-                      ),
-                    ),
-                  ),
-                  Divider()
-                ],
-              );
+  Widget _buildTotalCount(BuildContext context) {
+    return Selector<DetailBookPageProvider, DetailBookResponseModel?>(
+      selector: (context, provider) => provider.searchResultModel,
+      builder: (context, model, _) {
+        var listLength =
+            model != null && model.tList != null ? model.tList!.length : '';
+        return Padding(
+          padding: AppSize.defaultSidePadding,
+          child: Row(
+            children: [
+              AppText.text('총', style: AppTextStyle.default_14),
+              AppText.text('$listLength', style: AppTextStyle.blod_16),
+              AppText.text('건', style: AppTextStyle.default_14),
+            ],
+          ),
+        );
       },
     );
   }
 
-  Widget _buildResultListView(
-      BuildContext context, DetailBookResponseModel model) {
-    return Padding(
-        padding: AppSize.defaultSidePadding,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          ...model.tList!
-              .asMap()
-              .entries
-              .map((map) => _buildListViewItem(context, map.value))
-              .toList()
-        ]));
+  Widget _buildListViewItem(BuildContext context, int index) {
+    final p = context.read<DetailBookPageProvider>();
+    return Selector<DetailBookPageProvider, DetailBookResponseModel?>(
+      selector: (context, provider) => provider.searchResultModel!,
+      builder: (context, model, _) {
+        return model != null && model.tList != null && model.tList!.isNotEmpty
+            ? GestureDetector(
+                onTap: () {
+                  p.searchDetailBookFile(model.tList![index]).then((result) {
+                    if (result.isSuccessful) {
+                      Navigator.pushNamed(context, DetailBookWebView.routeName,
+                          arguments: result.data);
+                    } else {
+                      AppToast().show(context, result.errorMassage!);
+                    }
+                  });
+                },
+                child: Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: AppSize.defaultListItemSpacing),
+                      width: AppSize.defaultContentsWidth,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            AppText.text(model.tList![index].iclsnm!,
+                                style: AppTextStyle.blod_16),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    right: AppSize.defaultListItemSpacing)),
+                            AppText.text(
+                                model.tList![index].itemnm!.substring(
+                                            0,
+                                            (model.tList![index].itemnm!
+                                                .indexOf(p.searchKeyStr!))) !=
+                                        p.searchKeyStr!
+                                    ? model.tList![index].itemnm!.substring(
+                                        0,
+                                        (model.tList![index].itemnm!
+                                            .indexOf(p.searchKeyStr!)))
+                                    : '',
+                                style: AppTextStyle.default_14
+                                    .copyWith(fontWeight: FontWeight.bold)),
+                            AppText.text(p.searchKeyStr!,
+                                style: AppTextStyle.default_14.copyWith(
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.bold)),
+                            AppText.text(
+                                model.tList![index].itemnm!.substring((model
+                                        .tList![index].itemnm!
+                                        .indexOf(p.searchKeyStr!) +
+                                    p.searchKeyStr!.length)),
+                                style: AppTextStyle.default_14
+                                    .copyWith(fontWeight: FontWeight.bold))
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider()
+                  ],
+                ),
+              )
+            : Container();
+      },
+    );
   }
 
-  Widget _buildSearchResult(
-      BuildContext context, DetailBookResponseModel model) {
+  Widget _buildResultListView(BuildContext context) {
+    return Selector<DetailBookPageProvider, DetailBookResponseModel?>(
+      selector: (context, provider) => provider.searchResultModel,
+      builder: (context, model, _) {
+        return model != null && model.tList != null && model.tList!.isNotEmpty
+            ? Padding(
+                padding: AppSize.defaultSidePadding,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...model.tList!
+                          .asMap()
+                          .entries
+                          .map((map) => _buildListViewItem(context, map.key))
+                          .toList()
+                    ]))
+            : model!.tList != null && model.tList!.isEmpty
+                ? BaseNullDataWidget.build()
+                : Container();
+      },
+    );
+  }
+
+  Widget _buildSearchResult(BuildContext context) {
     return Column(
       children: [
         defaultSpacing(),
-        _buildTotalCount(model),
+        _buildTotalCount(context),
         Divider(),
         defaultSpacing(),
-        _buildResultListView(context, model)
+        _buildResultListView(context)
       ],
     );
   }
 
   Widget _buildContents(BuildContext context) {
-    return Selector<DetailBookPageProvider, DetailBookResponseModel?>(
-      selector: (context, provider) => provider.searchResultModel,
-      builder: (context, searchResultModel, _) {
-        return searchResultModel != null
-            ? _buildSearchResult(context, searchResultModel)
-            : _buildPannelView(context);
+    return Selector<DetailBookPageProvider,
+        Tuple2<DetailBookResponseModel?, DetailBookResponseModel?>>(
+      selector: (context, provider) =>
+          Tuple2(provider.searchResultModel, provider.detailBookResponseModel),
+      builder: (context, tuple, _) {
+        return tuple.item1 != null && tuple.item1!.tList != null
+            ? _buildSearchResult(context)
+            : tuple.item2 != null &&
+                    tuple.item2!.tList != null &&
+                    tuple.item2!.tList!.isNotEmpty
+                ? _buildPannelView(context)
+                : Container();
       },
     );
   }
@@ -260,23 +298,24 @@ class _DetailBookPageState extends State<DetailBookPage> {
   Widget _buildSearchBar(BuildContext context) {
     final p = context.read<DetailBookPageProvider>();
     return Selector<DetailBookPageProvider, String?>(
-      selector: (context, provider) => provider.searchKeyInputStr,
-      builder: (contetx, inputStr, _) {
+      selector: (context, provider) => provider.searchKeyStr,
+      builder: (contetx, searchKeyStr, _) {
         return BaseInputWidget(
           context: context,
           textEditingController: _textEditingController,
           width: AppSize.defaultContentsWidth,
-          iconType: inputStr != null && inputStr.isNotEmpty
+          iconType: searchKeyStr != null && searchKeyStr.isNotEmpty
               ? InputIconType.DELETE_AND_SEARCH
               : null,
           onChangeCallBack: (str) => p.setSerachKeyStr(str),
-          defaultIconCallback: () => p.searchDetailBook(inputStr: inputStr),
+          defaultIconCallback: () =>
+              p.searchDetailBook(searchKey: searchKeyStr),
           otherIconcallback: () {
             _textEditingController.text = '';
             p.setSerachKeyStr(null);
             p.resetResultModel();
           },
-          onSubmittedCallBack: (str) => p.searchDetailBook(inputStr: str),
+          onSubmittedCallBack: (str) => p.searchDetailBook(searchKey: str),
           enable: true,
         );
       },
