@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/provider/detail_book_page_provider.dart
  * Created Date: 2022-07-05 09:55:29
- * Last Modified: 2022-07-28 18:58:55
+ * Last Modified: 2022-07-29 13:44:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,13 +22,30 @@ import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class DetailBookPageProvider extends ChangeNotifier {
   DetailBookResponseModel? detailBookResponseModel;
+  DetailBookResponseModel? searchResultModel;
   bool isLoadData = false;
   final _api = ApiService();
   List<bool> isOpenList = [];
   List<List<DetailBookTListModel>?> pannelGroup = [];
+  String? searchKeyStr;
 
   void setIsOpen(int index) {
     isOpenList[index] = !isOpenList[index];
+    notifyListeners();
+  }
+
+  void setSerachKeyStr(String? str) {
+    searchKeyStr = str;
+    if (str == null || str.length < 3) {
+      notifyListeners();
+    }
+    if (str != null && str.isEmpty) {
+      resetResultModel();
+    }
+  }
+
+  void resetResultModel() {
+    searchResultModel = null;
     notifyListeners();
   }
 
@@ -45,37 +62,41 @@ class DetailBookPageProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-
     if (result != null && result.statusCode != 200) {
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
-      detailBookResponseModel =
-          DetailBookResponseModel.fromJson(result.body['data']);
-      var currentGroup = detailBookResponseModel!.tList!.first.iclsnm;
-      var temp = <DetailBookTListModel>[];
-      pannelGroup.clear();
-      isOpenList.clear();
-      for (var i = 0; i < detailBookResponseModel!.tList!.length; i++) {
-        if (detailBookResponseModel!.tList![i].iclsnm == currentGroup) {
-          temp.add(detailBookResponseModel!.tList![i]);
-          pr(detailBookResponseModel!.tList![i].iclsnm);
-        } else {
-          currentGroup = detailBookResponseModel!.tList![i].iclsnm;
-          var groupList = temp.toList();
-          pannelGroup.add(groupList);
-          temp.clear();
-          temp.add(detailBookResponseModel!.tList![i]);
-          pr(detailBookResponseModel!.tList![i].iclsnm);
+      if (detailBookResponseModel == null && searchKey == null) {
+        detailBookResponseModel =
+            DetailBookResponseModel.fromJson(result.body['data']);
+        var currentGroup = detailBookResponseModel!.tList!.first.iclsnm;
+        var temp = <DetailBookTListModel>[];
+        pannelGroup.clear();
+        for (var i = 0; i < detailBookResponseModel!.tList!.length; i++) {
+          if (detailBookResponseModel!.tList![i].iclsnm == currentGroup) {
+            temp.add(detailBookResponseModel!.tList![i]);
+            pr(detailBookResponseModel!.tList![i].iclsnm);
+          } else {
+            currentGroup = detailBookResponseModel!.tList![i].iclsnm;
+            var groupList = temp.toList();
+            pannelGroup.add(groupList);
+            temp.clear();
+            temp.add(detailBookResponseModel!.tList![i]);
+            pr(detailBookResponseModel!.tList![i].iclsnm);
+          }
+          if (i == detailBookResponseModel!.tList!.length - 1) {
+            var groupList = temp.toList();
+            pannelGroup.add(groupList);
+          }
         }
-        if (i == detailBookResponseModel!.tList!.length - 1) {
-          var groupList = temp.toList();
-          pannelGroup.add(groupList);
-        }
+        pr(pannelGroup.length);
+        isOpenList.clear();
+        List.generate(pannelGroup.length, (_) => isOpenList.add(false));
+      } else {
+        searchResultModel =
+            DetailBookResponseModel.fromJson(result.body['data']);
       }
-
-      pr(pannelGroup.length);
-      List.generate(pannelGroup.length, (_) => isOpenList.add(false));
+      notifyListeners();
       return ResultModel(true);
     }
 
