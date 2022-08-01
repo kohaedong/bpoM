@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-08-01 11:02:33
+ * Last Modified: 2022-08-01 16:42:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -71,10 +71,14 @@ class _DetailBookPageState extends State<DetailBookPage> {
               (map) => GestureDetector(
                 onTap: () {
                   final p = context.read<DetailBookPageProvider>();
-                  p.searchDetailBookFile(map.value).then((result) {
+                  p.searchDetailBookFile(map.value).then((result) async {
                     if (result.isSuccessful) {
-                      Navigator.pushNamed(context, DetailBookWebView.routeName,
+                      final routeResult = await Navigator.pushNamed(
+                          context, DetailBookWebView.routeName,
                           arguments: result.data);
+                      if (routeResult != null) {
+                        p.resetResultModel();
+                      }
                     } else {
                       AppToast().show(context, result.errorMassage!);
                     }
@@ -181,10 +185,16 @@ class _DetailBookPageState extends State<DetailBookPage> {
         return model != null && model.tList != null && model.tList!.isNotEmpty
             ? GestureDetector(
                 onTap: () {
-                  p.searchDetailBookFile(model.tList![index]).then((result) {
+                  p
+                      .searchDetailBookFile(model.tList![index])
+                      .then((result) async {
                     if (result.isSuccessful) {
-                      Navigator.pushNamed(context, DetailBookWebView.routeName,
+                      final routeResult = await Navigator.pushNamed(
+                          context, DetailBookWebView.routeName,
                           arguments: result.data);
+                      if (routeResult != null) {
+                        p.resetResultModel();
+                      }
                     } else {
                       AppToast().show(context, result.errorMassage!);
                     }
@@ -210,24 +220,26 @@ class _DetailBookPageState extends State<DetailBookPage> {
                                 model.tList![index].itemnm!.substring(
                                             0,
                                             (model.tList![index].itemnm!
-                                                .indexOf(p.searchKeyStr!))) !=
-                                        p.searchKeyStr!
+                                                .indexOf(
+                                                    p.searchKeyStr ?? ''))) !=
+                                        p.searchKeyStr
                                     ? model.tList![index].itemnm!.substring(
                                         0,
                                         (model.tList![index].itemnm!
-                                            .indexOf(p.searchKeyStr!)))
+                                            .indexOf(p.searchKeyStr ?? '')))
                                     : '',
                                 style: AppTextStyle.default_14
                                     .copyWith(fontWeight: FontWeight.bold)),
-                            AppText.text(p.searchKeyStr!,
+                            AppText.text(p.searchKeyStr ?? '',
                                 style: AppTextStyle.default_14.copyWith(
                                     color: AppColors.primary,
                                     fontWeight: FontWeight.bold)),
                             AppText.text(
                                 model.tList![index].itemnm!.substring((model
                                         .tList![index].itemnm!
-                                        .indexOf(p.searchKeyStr!) +
-                                    p.searchKeyStr!.length)),
+                                        .indexOf(p.searchKeyStr ?? '') +
+                                    int.parse(
+                                        '${p.searchKeyStr == null ? '0' : p.searchKeyStr!.length}'))),
                                 style: AppTextStyle.default_14
                                     .copyWith(fontWeight: FontWeight.bold))
                           ],
@@ -305,13 +317,14 @@ class _DetailBookPageState extends State<DetailBookPage> {
               : null,
           onChangeCallBack: (str) => p.setSerachKeyStr(str),
           defaultIconCallback: () =>
-              p.searchDetailBook(searchKey: searchKeyStr),
+              p.searchDetailBook(false, searchKey: searchKeyStr),
           otherIconcallback: () {
             _textEditingController.text = '';
             p.setSerachKeyStr(null);
             p.resetResultModel();
           },
-          onSubmittedCallBack: (str) => p.searchDetailBook(searchKey: str),
+          onSubmittedCallBack: (str) =>
+              p.searchDetailBook(false, searchKey: str),
           enable: true,
         );
       },
@@ -329,8 +342,9 @@ class _DetailBookPageState extends State<DetailBookPage> {
           create: (context) => DetailBookPageProvider(),
           builder: (context, _) {
             return FutureBuilder(
-                future:
-                    context.read<DetailBookPageProvider>().searchDetailBook(),
+                future: context
+                    .read<DetailBookPageProvider>()
+                    .searchDetailBook(true),
                 builder: (context, snapshot) {
                   if (snapshot.hasData &&
                       snapshot.connectionState == ConnectionState.done) {

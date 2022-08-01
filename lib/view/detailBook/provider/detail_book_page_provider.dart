@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/provider/detail_book_page_provider.dart
  * Created Date: 2022-07-05 09:55:29
- * Last Modified: 2022-08-01 09:31:54
+ * Last Modified: 2022-08-01 16:46:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -87,7 +87,12 @@ class DetailBookPageProvider extends ChangeNotifier {
     return ResultModel(false, errorMassage: result!.errorMessage);
   }
 
-  Future<ResultModel> searchDetailBook({String? searchKey}) async {
+  Future<ResultModel> searchDetailBook(bool isFirstRun,
+      {String? searchKey}) async {
+    pr('??????$isFirstRun');
+    if (!isFirstRun) {
+      resetResultModel();
+    }
     _api.init(RequestType.SEARCH_DETAIL_BOOK);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SEARCH_DETAIL_BOOK.serverMethod,
@@ -131,8 +136,10 @@ class DetailBookPageProvider extends ChangeNotifier {
         isOpenList.clear();
         List.generate(pannelGroup.length, (_) => isOpenList.add(false));
       } else {
-        searchResultModel =
-            DetailBookResponseModel.fromJson(result.body['data']);
+        if (!isFirstRun) {
+          searchResultModel =
+              DetailBookResponseModel.fromJson(result.body['data']);
+        }
       }
       notifyListeners();
       return ResultModel(true);

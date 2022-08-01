@@ -1,5 +1,8 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:medsalesportal/enums/account_type.dart';
+import 'package:medsalesportal/view/salesActivityManager/sales_activity_manager_page.dart';
+
 import './home_icon_map.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -115,7 +118,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   if (map.value == ImageType.EMPTY) {
                     DoNothingAction();
                   } else {
-                    Navigator.pushNamed(context, map.value.routeName);
+                    if (map.value.routeName ==
+                        SalseActivityManagerPage.routeName) {
+                      if (CacheService.getAccountType() == AccountType.MULTI) {
+                        AppToast().show(context, '${tr('permission_denied')}');
+                      } else {
+                        Navigator.pushNamed(context, map.value.routeName);
+                      }
+                    } else {
+                      Navigator.pushNamed(context, map.value.routeName);
+                    }
                   }
                 },
                 child: Column(

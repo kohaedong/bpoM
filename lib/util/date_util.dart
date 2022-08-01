@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/date_util.dart
  * Created Date: 2021-11-23 07:56:54
- * Last Modified: 2022-07-15 15:39:58
+ * Last Modified: 2022-08-01 15:14:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -36,6 +36,10 @@ class DateUtil {
     var formatter = new DateFormat('yyyy-MM-dd');
     var temp = date.millisecondsSinceEpoch - (24 * 60 * 60 * 1000) * 7;
     return formatter.format(DateTime.fromMillisecondsSinceEpoch(temp));
+  }
+
+  static String getMonthStr(DateTime date) {
+    return '${date.year}${date.month < 10 ? '0${date.month}' : '${date.month}'}';
   }
 
   static toKrWeekDateStr(DateTime date, {bool? isWithMonth}) {

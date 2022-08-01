@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-07-29 14:47:36
+ * Last Modified: 2022-08-01 14:40:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -49,7 +49,9 @@ enum RequestType {
   CHECK_META_PRICE_AND_STOCK,
   ORDER_CANCEL_AND_SAVE,
   SEARCH_DETAIL_BOOK,
-  DETAIL_BOOK_SEARCH_FILE
+  DETAIL_BOOK_SEARCH_FILE,
+  SALESE_ACTIVITY_MONTH_DATA,
+  SEARCH_PARTMENT_KEY_ZIBI
 }
 
 // [KolonBuildConfig] 빌드 옵션에 따라 url가 변한다.
@@ -92,6 +94,10 @@ extension RequestTypeExtension on RequestType {
   String url({String? params}) {
     switch (this) {
       case RequestType.SEARCH_STAFF:
+        return '$rfcURL/common';
+      case RequestType.SEARCH_PARTMENT_KEY_ZIBI:
+        return '$rfcURL/common';
+      case RequestType.SALESE_ACTIVITY_MONTH_DATA:
         return '$rfcURL/common';
       case RequestType.DETAIL_BOOK_SEARCH_FILE:
         return '$rfcURL/common';
@@ -171,6 +177,10 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SEARCH_STAFF:
         return 'ES_RETURN,ET_STAFFLIST';
+      case RequestType.SEARCH_PARTMENT_KEY_ZIBI:
+        return 'ES_RETURN,T_LIST,T_LIST2';
+      case RequestType.SALESE_ACTIVITY_MONTH_DATA:
+        return 'ES_RETURN,T_LIST';
       case RequestType.DETAIL_BOOK_SEARCH_FILE:
         return 'ES_RETURN,ES_FILEINFO,ET_DRAO,ET_URL,ATTACH_INFO';
       case RequestType.SEARCH_DETAIL_BOOK:
@@ -232,6 +242,10 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.CHECK_NOTICE:
         return "noticeAll";
+      case RequestType.SEARCH_PARTMENT_KEY_ZIBI:
+        return "Z_LTSP_IF0331";
+      case RequestType.SALESE_ACTIVITY_MONTH_DATA:
+        return "Z_LTSP_IF0332";
       case RequestType.DETAIL_BOOK_SEARCH_FILE:
         return "Z_LTSP_IF0893";
       case RequestType.SEND_IMAGE_TO_SERVER:

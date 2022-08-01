@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/util/number_format.dart
  * Created Date: 2021-09-08 09:34:02
- * Last Modified: 2022-07-19 16:46:37
+ * Last Modified: 2022-08-01 15:08:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -230,7 +230,10 @@ class FormatUtil {
     return str.replaceAll('-', '');
   }
 
-  static String monthStr(String str, {bool? isWithDash}) {
+  static String monthStr(
+    String str, {
+    bool? isWithDash,
+  }) {
     var temp = str.replaceAll('-', '');
     return isWithDash != null && isWithDash
         ? str.substring(0, str.length - 3)
