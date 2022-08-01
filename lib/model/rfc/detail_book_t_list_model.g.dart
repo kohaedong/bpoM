@@ -1,3 +1,16 @@
+/*
+ * Project Name:  [mKolon3.0] - MedicalSalesPortal
+ * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/detail_book_t_list_model.g.dart
+ * Created Date: 2022-07-28 12:30:24
+ * Last Modified: 2022-08-01 11:02:24
+ * Author: bakbeom
+ * Modified By: bakbeom
+ * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
+ * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
+ * 												Discription													
+ * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
+ */
+
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'detail_book_t_list_model.dart';

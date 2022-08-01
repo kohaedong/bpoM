@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-08-01 10:55:19
+ * Last Modified: 2022-08-01 11:02:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -299,6 +299,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
           context: context,
           textEditingController: _textEditingController,
           width: AppSize.defaultContentsWidth,
+          hintText: searchKeyStr ?? '${tr('keyword_must_not_null')}',
           iconType: searchKeyStr != null && searchKeyStr.isNotEmpty
               ? InputIconType.DELETE_AND_SEARCH
               : null,
