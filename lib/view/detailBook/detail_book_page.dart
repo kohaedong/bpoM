@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-08-01 16:42:13
+ * Last Modified: 2022-08-01 16:48:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -185,16 +185,10 @@ class _DetailBookPageState extends State<DetailBookPage> {
         return model != null && model.tList != null && model.tList!.isNotEmpty
             ? GestureDetector(
                 onTap: () {
-                  p
-                      .searchDetailBookFile(model.tList![index])
-                      .then((result) async {
+                  p.searchDetailBookFile(model.tList![index]).then((result) {
                     if (result.isSuccessful) {
-                      final routeResult = await Navigator.pushNamed(
-                          context, DetailBookWebView.routeName,
+                      Navigator.pushNamed(context, DetailBookWebView.routeName,
                           arguments: result.data);
-                      if (routeResult != null) {
-                        p.resetResultModel();
-                      }
                     } else {
                       AppToast().show(context, result.errorMassage!);
                     }
