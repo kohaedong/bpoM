@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-07-29 17:33:05
+ * Last Modified: 2022-08-01 10:55:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -17,7 +17,7 @@ import 'package:medsalesportal/model/rfc/detail_book_response_model.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/detailBook/detail_book_web_view.dart';
 import 'package:provider/provider.dart';
@@ -193,9 +193,9 @@ class _DetailBookPageState extends State<DetailBookPage> {
                 child: Column(
                   children: [
                     Container(
+                      width: AppSize.defaultContentsWidth,
                       padding: EdgeInsets.symmetric(
                           vertical: AppSize.defaultListItemSpacing),
-                      width: AppSize.defaultContentsWidth,
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
@@ -248,17 +248,13 @@ class _DetailBookPageState extends State<DetailBookPage> {
       selector: (context, provider) => provider.searchResultModel,
       builder: (context, model, _) {
         return model != null && model.tList != null && model.tList!.isNotEmpty
-            ? Padding(
-                padding: AppSize.defaultSidePadding,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ...model.tList!
-                          .asMap()
-                          .entries
-                          .map((map) => _buildListViewItem(context, map.key))
-                          .toList()
-                    ]))
+            ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                ...model.tList!
+                    .asMap()
+                    .entries
+                    .map((map) => _buildListViewItem(context, map.key))
+                    .toList()
+              ])
             : model!.tList != null && model.tList!.isEmpty
                 ? BaseNullDataWidget.build()
                 : Container();
@@ -272,7 +268,6 @@ class _DetailBookPageState extends State<DetailBookPage> {
         defaultSpacing(),
         _buildTotalCount(context),
         Divider(),
-        defaultSpacing(),
         _buildResultListView(context)
       ],
     );
@@ -338,11 +333,22 @@ class _DetailBookPageState extends State<DetailBookPage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData &&
                       snapshot.connectionState == ConnectionState.done) {
-                    return ListView(
-                      physics: ClampingScrollPhysics(),
+                    return Stack(
                       children: [
-                        _buildSearchBar(context),
-                        _buildContents(context),
+                        ListView(
+                          physics: ClampingScrollPhysics(),
+                          children: [
+                            _buildSearchBar(context),
+                            _buildContents(context),
+                          ],
+                        ),
+                        Selector<DetailBookPageProvider, bool>(
+                          selector: (context, provider) => provider.isLoadData,
+                          builder: (context, isLoadData, _) {
+                            return BaseLoadingViewOnStackWidget.build(
+                                context, isLoadData);
+                          },
+                        )
                       ],
                     );
                   }

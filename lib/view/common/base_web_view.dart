@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_web_view.dart
  * Created Date: 2021-10-01 16:35:01
- * Last Modified: 2022-07-06 10:33:13
+ * Last Modified: 2022-08-01 09:48:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -107,8 +107,7 @@ class _BaseWebViewState extends State<BaseWebView> {
                                   child: Container(
                                     width: AppSize.realWidth,
                                     height: AppSize.realHeight -
-                                        AppSize.appBarHeight -
-                                        AppSize.buttonHeight,
+                                        AppSize.appBarHeight,
                                     child: InAppWebView(
                                       gestureRecognizers: Set()
                                         ..add(Factory<
