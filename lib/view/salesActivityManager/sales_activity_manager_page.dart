@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-02 16:45:20
+ * Last Modified: 2022-08-02 17:24:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -66,20 +66,34 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildWeekDayBox(SalesActivitySingleDateModel(
-              model.day0, model.day01, model.day02, model.day03, model.day04)),
-          _buildWeekDayBox(SalesActivitySingleDateModel(
-              model.day1, model.day11, model.day12, model.day13, model.day14)),
-          _buildWeekDayBox(SalesActivitySingleDateModel(
-              model.day2, model.day21, model.day22, model.day23, model.day24)),
-          _buildWeekDayBox(SalesActivitySingleDateModel(
-              model.day3, model.day31, model.day32, model.day33, model.day34)),
-          _buildWeekDayBox(SalesActivitySingleDateModel(
-              model.day4, model.day41, model.day42, model.day43, model.day44)),
-          _buildWeekDayBox(SalesActivitySingleDateModel(
-              model.day5, model.day51, model.day52, model.day53, model.day54)),
-          _buildWeekDayBox(SalesActivitySingleDateModel(
-              model.day6, model.day61, model.day62, model.day63, model.day64)),
+          _buildWeekDayBox(
+              context,
+              SalesActivitySingleDateModel(model.day0, model.day01, model.day02,
+                  model.day03, model.day04)),
+          _buildWeekDayBox(
+              context,
+              SalesActivitySingleDateModel(model.day1, model.day11, model.day12,
+                  model.day13, model.day14)),
+          _buildWeekDayBox(
+              context,
+              SalesActivitySingleDateModel(model.day2, model.day21, model.day22,
+                  model.day23, model.day24)),
+          _buildWeekDayBox(
+              context,
+              SalesActivitySingleDateModel(model.day3, model.day31, model.day32,
+                  model.day33, model.day34)),
+          _buildWeekDayBox(
+              context,
+              SalesActivitySingleDateModel(model.day4, model.day41, model.day42,
+                  model.day43, model.day44)),
+          _buildWeekDayBox(
+              context,
+              SalesActivitySingleDateModel(model.day5, model.day51, model.day52,
+                  model.day53, model.day54)),
+          _buildWeekDayBox(
+              context,
+              SalesActivitySingleDateModel(model.day6, model.day61, model.day62,
+                  model.day63, model.day64))
         ],
       ),
     );
@@ -93,7 +107,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     );
   }
 
-  Widget _buildWeekDayBox(SalesActivitySingleDateModel model) {
+  Widget _buildWeekDayBox(
+      BuildContext context, SalesActivitySingleDateModel model) {
     var isWorkDay = (int.parse(
             model.column1 != null && model.column1!.isNotEmpty
                 ? model.column1!.trim()
@@ -103,6 +118,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             : '0'));
     return InkWell(
       onTap: () {
+        final p = context.read<SalseActivityManagerPageProvider>();
+        p.setSelectedDate(DateUtil.getDate(model.dateStr!));
         _tabController.animateTo(1);
       },
       child: SizedBox(
@@ -196,13 +213,18 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     );
   }
 
-  Widget _buildLeftAndRightIcons(BuildContext context, {bool? isLeft}) {
+  Widget _buildLeftAndRightIcons(BuildContext context,
+      {bool? isLeft, bool? isMonth}) {
     return GestureDetector(
         onTap: () {
           final p = context.read<SalseActivityManagerPageProvider>();
-          isLeft != null && isLeft
-              ? p.getLastMonthData()
-              : p.getNextMonthData();
+          if (isMonth != null && isMonth) {
+            isLeft != null && isLeft
+                ? p.getLastMonthData()
+                : p.getNextMonthData();
+          } else {
+            isLeft != null && isLeft ? p.getLastDayData() : p.getNextDayData();
+          }
         },
         child: Container(
           width: 100,
@@ -218,7 +240,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         ));
   }
 
-  Widget _buildMonthText(BuildContext context) {
+  Widget _buildDateText(BuildContext context, {bool? isMonth}) {
     return InkWell(
       onTap: () async {
         final p = context.read<SalseActivityManagerPageProvider>();
@@ -229,31 +251,46 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     dt: p.selectedMonth ?? DateTime.now()));
 
         if (result != null) {
-          p.getSelectedMonthData(DateUtil.getDate(result));
+          isMonth != null && isMonth
+              ? p.getSelectedMonthData(DateUtil.getDate(result))
+              : p.getSelectedDayData(DateUtil.getDate(result));
         }
       },
-      child: Selector<SalseActivityManagerPageProvider, DateTime?>(
-        selector: (context, provider) => provider.selectedMonth,
-        builder: (context, month, _) {
-          return Container(
-            child: AppText.text(month != null
-                ? DateUtil.getMonthStrForKR(month)
-                : '${DateUtil.getMonthStrForKR(DateTime.now())}'),
-          );
-        },
-      ),
+      child: isMonth != null && isMonth
+          ? Selector<SalseActivityManagerPageProvider, DateTime?>(
+              selector: (context, provider) => provider.selectedMonth,
+              builder: (context, month, _) {
+                return Container(
+                  child: AppText.text(month != null
+                      ? DateUtil.getMonthStrForKR(month)
+                      : '${DateUtil.getMonthStrForKR(DateTime.now())}'),
+                );
+              },
+            )
+          : Selector<SalseActivityManagerPageProvider, DateTime?>(
+              selector: (context, provider) => provider.selectedDay,
+              builder: (context, day, _) {
+                return Container(
+                  child: AppText.text(day != null
+                      ? DateUtil.getDateStrForKR(day)
+                      : '${DateUtil.getMonthStrForKR(DateTime.now())}'),
+                );
+              },
+            ),
     );
   }
 
-  Widget _buildMonthSelector(BuildContext context) {
+  Widget _buildDateSelector(BuildContext context, {bool? isMonthSelector}) {
     return SizedBox(
       width: AppSize.calendarWidth,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildLeftAndRightIcons(context, isLeft: true),
-          _buildMonthText(context),
-          _buildLeftAndRightIcons(context, isLeft: false),
+          _buildLeftAndRightIcons(context,
+              isLeft: true, isMonth: isMonthSelector),
+          _buildDateText(context, isMonth: isMonthSelector),
+          _buildLeftAndRightIcons(context,
+              isLeft: false, isMonth: isMonthSelector),
         ],
       ),
     );
@@ -272,7 +309,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     physics: ClampingScrollPhysics(),
                     children: [
                       defaultSpacing(),
-                      _buildMonthSelector(context),
+                      _buildDateSelector(context, isMonthSelector: true),
                       defaultSpacing(),
                       Divider(),
                       _buildWeekTitle(),
@@ -297,7 +334,28 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   }
 
   Widget _buildDayView(BuildContext context) {
-    return Container();
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Selector<SalseActivityManagerPageProvider,
+            List<SalesActivityWeeksModel>?>(
+          selector: (context, provider) => provider.monthResponseModel?.tList,
+          builder: (context, weeks, _) {
+            return weeks != null
+                ? ListView(
+                    physics: ClampingScrollPhysics(),
+                    children: [
+                      defaultSpacing(),
+                      _buildDateSelector(context, isMonthSelector: false),
+                      defaultSpacing(),
+                      Divider(),
+                    ],
+                  )
+                : Container();
+          },
+        )
+      ],
+    );
   }
 
   Widget _buildTapView(BuildContext context) {

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-02 15:23:58
+ * Last Modified: 2022-08-02 17:24:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -19,8 +19,6 @@ import 'package:medsalesportal/model/rfc/search_key_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
-import 'package:medsalesportal/util/encoding_util.dart';
-import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class SalseActivityManagerPageProvider extends ChangeNotifier {
@@ -29,9 +27,15 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   int? tabIndex;
   DateTime? selectedMonth;
+  DateTime? selectedDay;
   final _api = ApiService();
   void setTabIndex(int index) {
     this.tabIndex = index;
+    notifyListeners();
+  }
+
+  void setSelectedDate(DateTime dt) {
+    selectedDay = dt;
     notifyListeners();
   }
 
@@ -53,6 +57,26 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     getData(isWithLoading: true);
   }
 
+  void getNextDayData() {
+    if (selectedDay == null) {
+      selectedDay = DateUtil.nextDay();
+    } else {
+      selectedDay = DateUtil.nextDay(dt: selectedDay);
+    }
+    // get day data;
+    notifyListeners();
+  }
+
+  void getLastDayData() {
+    if (selectedDay == null) {
+      selectedDay = DateUtil.lastDay();
+    } else {
+      selectedDay = DateUtil.lastDay(dt: selectedDay);
+    }
+    // get day data;
+    notifyListeners();
+  }
+
   void getSelectedMonthData(DateTime date) {
     if (selectedMonth != null &&
         selectedMonth!.month == date.month &&
@@ -61,6 +85,12 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     }
     selectedMonth = date;
     getData(isWithLoading: true);
+  }
+
+  void getSelectedDayData(DateTime date) {
+    selectedDay = date;
+    notifyListeners();
+    // get day data;
   }
 
   Future<ResultModel> searchPartmentKeyZBIZ() async {
