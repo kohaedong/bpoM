@@ -40,6 +40,9 @@ class AppSize {
   static double get splashIconHeight => 60.h;
   static double get defaultBorderWidth => 1.w;
   static double get smallButtonHeight => 32;
+  static double get weekDayHeight => 80;
+  static double get calendarWidth => defaultContentsWidth - padding * 2;
+  static double get weekDayNumberBoxHeight => 30;
 
   static double get defaultSpacingForTitleAndTextField => 5.w;
   static double get buttomPaddingForTitleAndTextField => 18.w;

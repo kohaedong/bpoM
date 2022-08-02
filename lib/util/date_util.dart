@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/date_util.dart
  * Created Date: 2021-11-23 07:56:54
- * Last Modified: 2022-08-01 15:14:24
+ * Last Modified: 2022-08-02 13:26:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,11 +18,18 @@ import 'package:medsalesportal/view/common/function_of_print.dart';
 
 // 날짜 관련 도구
 class DateUtil {
-  static String prevMonth() {
-    var date = DateTime.now();
+  static String prevMonth({DateTime? dt}) {
+    var date = dt ?? DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd');
 
     return formatter.format(DateTime(date.year, date.month - 1, date.day));
+  }
+
+  static String nextMonth({DateTime? dt}) {
+    var date = dt ?? DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+
+    return formatter.format(DateTime(date.year, date.month + 1, date.day));
   }
 
   static int diffMounth(DateTime start, DateTime end) {
@@ -49,10 +56,20 @@ class DateUtil {
     return formater.format(date);
   }
 
-  static String getDateStr(String date) {
-    var temp = getDate(date);
+  static String getDateStr(String date, {DateTime? dt}) {
+    var temp = dt ?? getDate(date);
     var formatter = DateFormat('yyyy-MM-dd');
     return formatter.format(temp);
+  }
+
+  static String getDateStrForKR(DateTime date) {
+    var formatter = DateFormat('yyyy년 MM월 dd일');
+    return formatter.format(date);
+  }
+
+  static String getMonthStrForKR(DateTime date) {
+    var formatter = DateFormat('yyyy년 MM월');
+    return formatter.format(date);
   }
 
   static String now() {

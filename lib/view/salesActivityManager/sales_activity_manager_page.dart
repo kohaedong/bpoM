@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-01 15:52:28
+ * Last Modified: 2022-08-02 16:45:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,17 +11,23 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_weeks_model.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/base_app_bar.dart';
-import 'package:medsalesportal/view/common/base_layout.dart';
-import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
-import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
-import 'package:medsalesportal/view/salesActivityManager/provider/sales_activity_manager_page_provider.dart';
+import 'package:medsalesportal/enums/input_icon_type.dart';
+import 'package:medsalesportal/enums/popup_list_type.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_single_date_model.dart';
+import 'package:medsalesportal/view/common/base_popup_list.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/util/date_util.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/styles/export_common.dart';
+import 'package:medsalesportal/view/common/base_layout.dart';
+import 'package:medsalesportal/view/common/base_app_bar.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_weeks_model.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
+import 'package:medsalesportal/view/salesActivityManager/provider/sales_activity_manager_page_provider.dart';
 
 class SalseActivityManagerPage extends StatefulWidget {
   const SalseActivityManagerPage({Key? key}) : super(key: key);
@@ -54,16 +60,228 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     );
   }
 
+  Widget _buildWeekRow(BuildContext context, SalesActivityWeeksModel model) {
+    return SizedBox(
+      width: AppSize.calendarWidth,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildWeekDayBox(SalesActivitySingleDateModel(
+              model.day0, model.day01, model.day02, model.day03, model.day04)),
+          _buildWeekDayBox(SalesActivitySingleDateModel(
+              model.day1, model.day11, model.day12, model.day13, model.day14)),
+          _buildWeekDayBox(SalesActivitySingleDateModel(
+              model.day2, model.day21, model.day22, model.day23, model.day24)),
+          _buildWeekDayBox(SalesActivitySingleDateModel(
+              model.day3, model.day31, model.day32, model.day33, model.day34)),
+          _buildWeekDayBox(SalesActivitySingleDateModel(
+              model.day4, model.day41, model.day42, model.day43, model.day44)),
+          _buildWeekDayBox(SalesActivitySingleDateModel(
+              model.day5, model.day51, model.day52, model.day53, model.day54)),
+          _buildWeekDayBox(SalesActivitySingleDateModel(
+              model.day6, model.day61, model.day62, model.day63, model.day64)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWeekDayTitleBox(String weekdayName) {
+    return SizedBox(
+      height: AppSize.weekDayHeight * .5,
+      width: AppSize.calendarWidth / 7,
+      child: AppText.text(weekdayName, style: AppTextStyle.sub_14),
+    );
+  }
+
+  Widget _buildWeekDayBox(SalesActivitySingleDateModel model) {
+    var isWorkDay = (int.parse(
+            model.column1 != null && model.column1!.isNotEmpty
+                ? model.column1!.trim()
+                : '0') !=
+        int.parse(model.column2 != null && model.column2!.isNotEmpty
+            ? model.column2!.trim()
+            : '0'));
+    return InkWell(
+      onTap: () {
+        _tabController.animateTo(1);
+      },
+      child: SizedBox(
+        height: AppSize.weekDayHeight,
+        width: AppSize.calendarWidth / 7,
+        child: model.dateStr != null
+            ? Column(
+                children: [
+                  DateUtil.getDate(model.dateStr!).year ==
+                              DateTime.now().year &&
+                          DateUtil.getDate(model.dateStr!).month ==
+                              DateTime.now().month &&
+                          DateUtil.getDate(model.dateStr!).day ==
+                              DateTime.now().day
+                      ? Container(
+                          alignment: Alignment.center,
+                          height: AppSize.weekDayNumberBoxHeight,
+                          child: CircleAvatar(
+                            backgroundColor: AppColors.primary,
+                            child: AppText.text(
+                                '${DateUtil.getDate(model.dateStr!).day}',
+                                style: AppTextStyle.default_14
+                                    .copyWith(color: AppColors.whiteText)),
+                          ),
+                        )
+                      : Container(
+                          alignment: Alignment.center,
+                          height: AppSize.weekDayNumberBoxHeight,
+                          child: AppText.text(
+                              '${DateUtil.getDate(model.dateStr!).day}',
+                              style: AppTextStyle.default_14.copyWith(
+                                  color: DateUtil.getDate(model.dateStr!)
+                                              .weekday ==
+                                          7
+                                      ? AppColors.dangerColor
+                                      : DateUtil.getDate(model.dateStr!)
+                                                  .weekday ==
+                                              6
+                                          ? AppColors.primary
+                                          : AppColors.defaultText)),
+                        ),
+                  AppText.text(
+                      model.column4 == 'C'
+                          ? '확정'
+                          : model.dateStr != null &&
+                                  model.dateStr!.isNotEmpty &&
+                                  isWorkDay &&
+                                  DateUtil.getDate(model.dateStr!)
+                                      .isBefore(DateTime.now()) &&
+                                  (DateUtil.getDate(model.dateStr!).weekday !=
+                                          7 &&
+                                      DateUtil.getDate(model.dateStr!)
+                                              .weekday !=
+                                          6)
+                              ? '미확정'
+                              : '',
+                      style: AppTextStyle.default_14.copyWith(
+                          color: model.column4 == 'C'
+                              ? AppColors.primary
+                              : AppColors.dangerColor,
+                          fontWeight: FontWeight.bold)),
+                  AppText.text(
+                      DateUtil.getDate(model.dateStr!).weekday != 7 &&
+                              DateUtil.getDate(model.dateStr!).weekday != 6 &&
+                              isWorkDay
+                          ? '${model.column1 != null && model.column1!.isNotEmpty ? model.column1!.trim() : '0'}/${model.column2 != null && model.column2!.isNotEmpty ? model.column2!.trim() : '0'}'
+                          : '',
+                      style: AppTextStyle.sub_12)
+                ],
+              )
+            : Container(),
+      ),
+    );
+  }
+
+  Widget _buildWeekTitle() {
+    return SizedBox(
+      width: AppSize.calendarWidth,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildWeekDayTitleBox(tr('sunday', args: [''])),
+          _buildWeekDayTitleBox(tr('monday', args: [''])),
+          _buildWeekDayTitleBox(tr('tuesday', args: [''])),
+          _buildWeekDayTitleBox(tr('wednesday', args: [''])),
+          _buildWeekDayTitleBox(tr('thursday', args: [''])),
+          _buildWeekDayTitleBox(tr('friday', args: [''])),
+          _buildWeekDayTitleBox(tr('saturday', args: [''])),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLeftAndRightIcons(BuildContext context, {bool? isLeft}) {
+    return GestureDetector(
+        onTap: () {
+          final p = context.read<SalseActivityManagerPageProvider>();
+          isLeft != null && isLeft
+              ? p.getLastMonthData()
+              : p.getNextMonthData();
+        },
+        child: Container(
+          width: 100,
+          height: 50,
+          color: AppColors.whiteText,
+          child: Icon(
+            isLeft != null && isLeft
+                ? Icons.arrow_back_ios
+                : Icons.arrow_forward_ios_sharp,
+            color: AppColors.subText,
+            size: AppSize.iconSmallDefaultWidth,
+          ),
+        ));
+  }
+
+  Widget _buildMonthText(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        final p = context.read<SalseActivityManagerPageProvider>();
+        final result = await BasePopupList(
+                OneCellType.DATE_PICKER, InputIconType.DATA_PICKER)
+            .show(context,
+                selectedDateStr: DateUtil.getDateStr('',
+                    dt: p.selectedMonth ?? DateTime.now()));
+
+        if (result != null) {
+          p.getSelectedMonthData(DateUtil.getDate(result));
+        }
+      },
+      child: Selector<SalseActivityManagerPageProvider, DateTime?>(
+        selector: (context, provider) => provider.selectedMonth,
+        builder: (context, month, _) {
+          return Container(
+            child: AppText.text(month != null
+                ? DateUtil.getMonthStrForKR(month)
+                : '${DateUtil.getMonthStrForKR(DateTime.now())}'),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildMonthSelector(BuildContext context) {
+    return SizedBox(
+      width: AppSize.calendarWidth,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildLeftAndRightIcons(context, isLeft: true),
+          _buildMonthText(context),
+          _buildLeftAndRightIcons(context, isLeft: false),
+        ],
+      ),
+    );
+  }
+
   Widget _buildMonthView(BuildContext context) {
     return Stack(
+      alignment: Alignment.center,
       children: [
         Selector<SalseActivityManagerPageProvider,
             List<SalesActivityWeeksModel>?>(
           selector: (context, provider) => provider.monthResponseModel?.tList,
           builder: (context, weeks, _) {
             return weeks != null
-                ? Container(
-                    child: AppText.text(weeks.first.day4!),
+                ? ListView(
+                    physics: ClampingScrollPhysics(),
+                    children: [
+                      defaultSpacing(),
+                      _buildMonthSelector(context),
+                      defaultSpacing(),
+                      Divider(),
+                      _buildWeekTitle(),
+                      ...weeks
+                          .asMap()
+                          .entries
+                          .map((map) => _buildWeekRow(context, map.value))
+                          .toList()
+                    ],
                   )
                 : Container();
           },

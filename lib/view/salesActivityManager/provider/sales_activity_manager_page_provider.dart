@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-01 15:54:03
+ * Last Modified: 2022-08-02 15:23:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -35,9 +35,32 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setMonth(DateTime dt) {
-    selectedMonth = dt;
-    notifyListeners();
+  void getNextMonthData() {
+    if (selectedMonth == null) {
+      selectedMonth = DateUtil.getDate(DateUtil.nextMonth());
+    } else {
+      selectedMonth = DateUtil.getDate(DateUtil.nextMonth(dt: selectedMonth));
+    }
+    getData(isWithLoading: true);
+  }
+
+  void getLastMonthData() {
+    if (selectedMonth == null) {
+      selectedMonth = DateUtil.getDate(DateUtil.prevMonth());
+    } else {
+      selectedMonth = DateUtil.getDate(DateUtil.prevMonth(dt: selectedMonth));
+    }
+    getData(isWithLoading: true);
+  }
+
+  void getSelectedMonthData(DateTime date) {
+    if (selectedMonth != null &&
+        selectedMonth!.month == date.month &&
+        selectedMonth!.year == date.year) {
+      return;
+    }
+    selectedMonth = date;
+    getData(isWithLoading: true);
   }
 
   Future<ResultModel> searchPartmentKeyZBIZ() async {
@@ -99,7 +122,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       monthResponseModel =
           SalesActivityMonthResponseModel.fromJson(result.body['data']);
-      pr(monthResponseModel?.toJson());
       if (isWithLoading != null && isWithLoading) {
         isLoadData = false;
       }

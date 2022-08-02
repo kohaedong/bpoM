@@ -501,6 +501,13 @@
     "amount_available_for_order_entry":"주문 입력 가능 액",
     "amount_available_for_order_entry_is_fail":"주문 입력가능액이 부족합니다.",
     "is_realy_cancel_order":"주문을 취소하시겠습니까?",
-    "permission_denied":"권한이 없습니다."
+    "permission_denied":"권한이 없습니다.",
+    "monday":"월{}",
+    "tuesday":"화{}",
+    "wednesday":"수{}",
+    "thursday":"목{}",
+    "friday":"금{}",
+    "saturday":"토{}",
+    "sunday":"일{}"
 
 }
