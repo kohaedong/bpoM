@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-07-19 18:10:36
+ * Last Modified: 2022-08-02 09:30:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -946,10 +946,6 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     );
   }
 
-  Widget _buildLandSpaceAnimationBody(BuildContext context) {
-    return _buildAnimationBody(context, isLandSpace: true);
-  }
-
   Widget _buildResultTitleWithLandSpaceScrren(BuildContext context) {
     return Column(
       children: [
@@ -1082,7 +1078,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             return WidgetOfOffSetAnimationWidget(
                 key: key,
                 animationSwich: tuple.item2 ? null : () => tuple.item1,
-                body: _buildLandSpaceAnimationBody(context),
+                body: _buildAnimationBody(context, isLandSpace: true),
                 height: AppSize.realHeight,
                 width: AppSize.bottomSheetWidth,
                 offset: Offset(-AppSize.bottomSheetWidth, 0),
@@ -1148,9 +1144,10 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     return OrientationBuilder(builder: (context, orientation) {
       if (orientation == Orientation.portrait) {
         return _buildPortraitView(context);
-      } else {
+      } else if (orientation == Orientation.landscape) {
         return _buildLandSpaceView(context);
       }
+      return Container();
     });
   }
 
