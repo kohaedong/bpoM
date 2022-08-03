@@ -29,12 +29,28 @@ class SalesActivityDayTable250 {
   String? szaddr;
   @JsonKey(name: 'FADDCAT')
   String? faddcat;
+  @JsonKey(name: 'SX_LATITUDE')
+  List<double>? sxLatitude;
+  @JsonKey(name: 'SY_LONGITUDE')
+  List<double>? sxLongitude;
+  @JsonKey(name: 'STIME')
+  String? stime;
+  @JsonKey(name: 'SCALL_TYPE')
+  String? scallType;
+  @JsonKey(name: 'FX_LATITUDE')
+  List<double>? fxLatitude;
+  @JsonKey(name: 'FY_LONGITUDE')
+  List<double>? fylongitude;
+  @JsonKey(name: 'FTIME')
+  String? ftime;
   @JsonKey(name: 'FZADDR')
   String? fzaddr;
+  @JsonKey(name: 'ACCOMPANY')
+  String? accompany;
   @JsonKey(name: 'RTN_DIST')
-  String? rtnDist;
+  double? rtnDist;
   @JsonKey(name: 'TOT_DIST')
-  String? totDist;
+  double? totDist;
   @JsonKey(name: 'BUKRS')
   String? bukrs;
   @JsonKey(name: 'VKORG')
@@ -69,8 +85,6 @@ class SalesActivityDayTable250 {
   String? sanumNm;
   @JsonKey(name: 'ZADDR1')
   String? zaddr1;
-  @JsonKey(name: 'CALL_TYPE')
-  String? callType;
   @JsonKey(name: 'UMODE')
   String? umode;
 
@@ -83,7 +97,6 @@ class SalesActivityDayTable250 {
       this.aezet,
       this.bukrs,
       this.bzactno,
-      this.callType,
       this.dptcd,
       this.erdat,
       this.ernam,
@@ -104,7 +117,15 @@ class SalesActivityDayTable250 {
       this.umode,
       this.vkorg,
       this.zaddr,
-      this.zaddr1);
+      this.zaddr1,
+      this.accompany,
+      this.ftime,
+      this.fxLatitude,
+      this.fylongitude,
+      this.scallType,
+      this.stime,
+      this.sxLatitude,
+      this.sxLongitude);
   factory SalesActivityDayTable250.fromJson(Object? json) =>
       _$SalesActivityDayTable250FromJson(json as Map<String, dynamic>);
   Map<String, dynamic> toJson() => _$SalesActivityDayTable250ToJson(this);

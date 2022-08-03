@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-02 17:33:47
+ * Last Modified: 2022-08-03 12:43:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -120,6 +120,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       onTap: () {
         final p = context.read<SalseActivityManagerPageProvider>();
         p.setSelectedDate(DateUtil.getDate(model.dateStr!));
+        p.getDayData();
         _tabController.animateTo(1);
       },
       child: SizedBox(

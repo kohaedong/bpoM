@@ -1,3 +1,16 @@
+/*
+ * Project Name:  [mKolon3.0] - MedicalSalesPortal
+ * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/sales_activity_day_table_260.g.dart
+ * Created Date: 2022-08-03 13:11:14
+ * Last Modified: 2022-08-03 13:11:24
+ * Author: bakbeom
+ * Modified By: bakbeom
+ * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
+ * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
+ * 												Discription													
+ * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
+ */
+
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'sales_activity_day_table_260.dart';
@@ -30,7 +43,7 @@ SalesActivityDayTable260 _$SalesActivityDayTable260FromJson(
       json['ERZET'] as String?,
       json['MEET_RMK'] as String?,
       json['RSLT'] as String?,
-      json['SEQNO'] as String?,
+      json['SEQNO'] as int?,
       json['STPNO'] as String?,
       json['UMODE'] as String?,
       json['VISIT_RMK'] as String?,
@@ -46,6 +59,18 @@ SalesActivityDayTable260 _$SalesActivityDayTable260FromJson(
       json['ZSKUNNR'] as String?,
       json['ZSKUNNR_NM'] as String?,
       json['ZSTATUS'] as String?,
+      json['ACCOMPANY'] as String?,
+      json['ACCP_NM'] as String?,
+      json['COMNT_M'] as String?,
+      json['ETIME'] as String?,
+      json['IS_GPS'] as String?,
+      (json['X_LATITUDE'] as List<dynamic>?)
+          ?.map((e) => (e as num).toDouble())
+          .toList(),
+      (json['Y_LONGITUDE'] as List<dynamic>?)
+          ?.map((e) => (e as num).toDouble())
+          .toList(),
+      json['SMINUTE'] as int?,
     );
 
 Map<String, dynamic> _$SalesActivityDayTable260ToJson(
@@ -55,10 +80,12 @@ Map<String, dynamic> _$SalesActivityDayTable260ToJson(
       'BZACTNO': instance.bzactno,
       'SEQNO': instance.seqno,
       'ATIME': instance.atime,
+      'ETIME': instance.etime,
       'ZSKUNNR': instance.zskunnr,
       'ZKMNO': instance.zkmno,
       'STPNO': instance.stpno,
       'XVISIT': instance.xvisit,
+      'SMINUTE': instance.sminute,
       'VISIT_RMK': instance.visitRmk,
       'XMEET': instance.xmeet,
       'MEET_RMK': instance.meetRmk,
@@ -77,7 +104,10 @@ Map<String, dynamic> _$SalesActivityDayTable260ToJson(
       'AEZET': instance.aezet,
       'AENAM': instance.aenam,
       'AEWID': instance.aewid,
+      'X_LATITUDE': instance.xLatitude,
+      'Y_LONGITUDE': instance.yLongitude,
       'ZSKUNNR_NM': instance.zskunnrNm,
+      'ACCOMPANY': instance.accompany,
       'ZKMNO_NM': instance.zkmnoNm,
       'ZADD_NAME1': instance.zaddName1,
       'ZADD_NAME2': instance.zaddName2,
@@ -85,6 +115,9 @@ Map<String, dynamic> _$SalesActivityDayTable260ToJson(
       'ZADD_NAME4': instance.zaddName4,
       'ACTCAT': instance.actcat,
       'COMNT': instance.comnt,
+      'COMNT_M': instance.comntM,
+      'IS_GPS': instance.isGps,
+      'ACCP_NM': instance.accpNm,
       'ZSTATUS': instance.zstatus,
       'CALL_TYPE': instance.callType,
       'UMODE': instance.umode,

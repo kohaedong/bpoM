@@ -21,7 +21,7 @@ SalesActivityDayTable340 _$SalesActivityDayTable340FromJson(
       json['LNDKEY'] as String?,
       json['MAKTX'] as String?,
       json['MATNR'] as String?,
-      json['PMONTH'] as String?,
+      json['PMONTH'] as int?,
       json['RMK'] as String?,
       json['STAGE'] as String?,
       json['STAT'] as String?,

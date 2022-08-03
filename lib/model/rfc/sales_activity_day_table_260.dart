@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/sales_activity_day_table_260.dart
  * Created Date: 2022-08-03 10:06:46
- * Last Modified: 2022-08-03 12:25:09
+ * Last Modified: 2022-08-03 13:10:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -21,9 +21,11 @@ class SalesActivityDayTable260 {
   @JsonKey(name: 'BZACTNO')
   String? bzactno;
   @JsonKey(name: 'SEQNO')
-  String? seqno;
+  int? seqno;
   @JsonKey(name: 'ATIME')
   String? atime;
+  @JsonKey(name: 'ETIME')
+  String? etime;
   @JsonKey(name: 'ZSKUNNR')
   String? zskunnr;
   @JsonKey(name: 'ZKMNO')
@@ -32,6 +34,8 @@ class SalesActivityDayTable260 {
   String? stpno;
   @JsonKey(name: 'XVISIT')
   String? xvisit;
+  @JsonKey(name: 'SMINUTE')
+  int? sminute;
   @JsonKey(name: 'VISIT_RMK')
   String? visitRmk;
   @JsonKey(name: 'XMEET')
@@ -68,8 +72,14 @@ class SalesActivityDayTable260 {
   String? aenam;
   @JsonKey(name: 'AEWID')
   String? aewid;
+  @JsonKey(name: 'X_LATITUDE')
+  List<double>? xLatitude;
+  @JsonKey(name: 'Y_LONGITUDE')
+  List<double>? yLongitude;
   @JsonKey(name: 'ZSKUNNR_NM')
   String? zskunnrNm;
+  @JsonKey(name: 'ACCOMPANY')
+  String? accompany;
   @JsonKey(name: 'ZKMNO_NM')
   String? zkmnoNm;
   @JsonKey(name: 'ZADD_NAME1')
@@ -84,6 +94,12 @@ class SalesActivityDayTable260 {
   String? actcat;
   @JsonKey(name: 'COMNT')
   String? comnt;
+  @JsonKey(name: 'COMNT_M')
+  String? comntM;
+  @JsonKey(name: 'IS_GPS')
+  String? isGps;
+  @JsonKey(name: 'ACCP_NM')
+  String? accpNm;
   @JsonKey(name: 'ZSTATUS')
   String? zstatus;
   @JsonKey(name: 'CALL_TYPE')
@@ -128,7 +144,15 @@ class SalesActivityDayTable260 {
       this.zkmnoNm,
       this.zskunnr,
       this.zskunnrNm,
-      this.zstatus);
+      this.zstatus,
+      this.accompany,
+      this.accpNm,
+      this.comntM,
+      this.etime,
+      this.isGps,
+      this.xLatitude,
+      this.yLongitude,
+      this.sminute);
   factory SalesActivityDayTable260.fromJson(Object? json) =>
       _$SalesActivityDayTable260FromJson(json as Map<String, dynamic>);
   Map<String, dynamic> toJson() => _$SalesActivityDayTable260ToJson(this);

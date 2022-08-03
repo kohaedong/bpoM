@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-08-02 17:40:00
+ * Last Modified: 2022-08-03 12:46:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -247,6 +247,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.CHECK_NOTICE:
         return "noticeAll";
+      case RequestType.SALESE_ACTIVITY_DAY_DATA:
+        return "Z_LTSP_IF0130";
       case RequestType.SEARCH_PARTMENT_KEY_ZIBI:
         return "Z_LTSP_IF0331";
       case RequestType.SALESE_ACTIVITY_MONTH_DATA:

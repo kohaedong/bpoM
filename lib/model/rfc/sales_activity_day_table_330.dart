@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/sales_activity_day_table_330.dart
  * Created Date: 2022-08-03 11:14:31
- * Last Modified: 2022-08-03 12:27:07
+ * Last Modified: 2022-08-03 13:16:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -19,7 +19,7 @@ class SalesActivityDayTable330 {
   @JsonKey(name: 'BZACTNO')
   String? bzactno;
   @JsonKey(name: 'SEQNO')
-  String? seqno;
+  int? seqno;
   @JsonKey(name: 'SUBCAT')
   String? subcat;
   @JsonKey(name: 'DESC_DTL')

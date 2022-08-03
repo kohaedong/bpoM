@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-02 17:38:30
+ * Last Modified: 2022-08-03 12:46:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,15 +14,18 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_month_response_model.dart';
 import 'package:medsalesportal/model/rfc/search_key_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class SalseActivityManagerPageProvider extends ChangeNotifier {
   SalesActivityMonthResponseModel? monthResponseModel;
+  SalesActivityDayResponseModel? dayResponseModel;
   SearchKeyResponseModel? searchKeyResponseModel;
   bool isLoadData = false;
   int? tabIndex;
@@ -63,7 +66,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     } else {
       selectedDay = DateUtil.nextDay(dt: selectedDay);
     }
-    // get day data;
+    getDayData(isWithLoading: true);
     notifyListeners();
   }
 
@@ -73,7 +76,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     } else {
       selectedDay = DateUtil.lastDay(dt: selectedDay);
     }
-    // get day data;
+    getDayData(isWithLoading: true);
     notifyListeners();
   }
 
@@ -90,7 +93,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   void getSelectedDayData(DateTime date) {
     selectedDay = date;
     notifyListeners();
-    // get day data;
+    getDayData(isWithLoading: true);
   }
 
   Future<ResultModel> searchPartmentKeyZBIZ() async {
@@ -170,20 +173,17 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       isLoadData = true;
       notifyListeners();
     }
-    _api.init(RequestType.SALESE_ACTIVITY_MONTH_DATA);
-    var esLogin = CacheService.getEsLogin();
+    _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
     Map<String, dynamic> _body = {
-      "methodName": RequestType.SALESE_ACTIVITY_MONTH_DATA.serverMethod,
+      "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {
-        "IV_ZBIZ": searchKeyResponseModel!.tList!.first.zbiz,
-        "IV_RESID": esLogin!.logid!.toUpperCase(),
+        "IV_PTYPE": "R",
+        "IV_ADATE": FormatUtil.removeDash(
+            DateUtil.getDateStr('', dt: selectedDay ?? DateTime.now())),
         "IS_LOGIN": isLogin,
-        "IV_VKGRP": esLogin.vkgrp,
-        "IV_SPMON": DateUtil.getMonthStr(
-            selectedMonth != null ? selectedMonth! : DateTime.now()),
-        "resultTables": RequestType.SALESE_ACTIVITY_MONTH_DATA.resultTable,
-        "functionName": RequestType.SALESE_ACTIVITY_MONTH_DATA.serverMethod
+        "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
+        "functionName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       }
     };
     final result = await _api.request(body: _body);
@@ -195,8 +195,9 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
-      monthResponseModel =
-          SalesActivityMonthResponseModel.fromJson(result.body['data']);
+      dayResponseModel =
+          SalesActivityDayResponseModel.fromJson(result.body['data']);
+      pr(dayResponseModel?.toJson());
       if (isWithLoading != null && isWithLoading) {
         isLoadData = false;
       }

@@ -28,7 +28,7 @@ SalesActivityDayTable280 _$SalesActivityDayTable280FromJson(
       json['MATNR1'] as String?,
       json['MATNR2'] as String?,
       json['MATNR3'] as String?,
-      json['SEQNO'] as String?,
+      json['SEQNO'] as int?,
       json['SUBCAT'] as String?,
       json['UMODE'] as String?,
       json['XGIFT'] as String?,

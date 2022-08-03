@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/sales_activity_day_table_340.dart
  * Created Date: 2022-08-03 11:18:00
- * Last Modified: 2022-08-03 12:27:16
+ * Last Modified: 2022-08-03 13:16:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -52,7 +52,7 @@ class SalesActivityDayTable340 {
   @JsonKey(name: 'MAKTX')
   String? maktx;
   @JsonKey(name: 'PMONTH')
-  String? pmonth;
+  int? pmonth;
   @JsonKey(name: 'UMODE')
   String? umode;
 
