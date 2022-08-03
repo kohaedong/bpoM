@@ -13,12 +13,10 @@ SearchKeyResponseModel _$SearchKeyResponseModelFromJson(
           ? null
           : EsReturnModel.fromJson(json['ES_RETURN'] as Object),
       (json['T_LIST'] as List<dynamic>?)
-          ?.map((e) =>
-              SearchKeyForPartmentModel.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => SearchKeyForPartmentModel.fromJson(e as Object))
           .toList(),
       (json['T_LIST2'] as List<dynamic>?)
-          ?.map((e) => SearchKeyForBusinessGroupModel.fromJson(
-              e as Map<String, dynamic>))
+          ?.map((e) => SearchKeyForBusinessGroupModel.fromJson(e as Object))
           .toList(),
     );
 

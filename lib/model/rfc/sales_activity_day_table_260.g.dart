@@ -1,0 +1,91 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'sales_activity_day_table_260.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+SalesActivityDayTable260 _$SalesActivityDayTable260FromJson(
+        Map<String, dynamic> json) =>
+    SalesActivityDayTable260(
+      json['ACTCAT'] as String?,
+      json['ACTCAT1'] as String?,
+      json['ACTCAT2'] as String?,
+      json['ACTCAT3'] as String?,
+      json['ACTCAT4'] as String?,
+      json['ADATE'] as String?,
+      json['AEDAT'] as String?,
+      json['AENAM'] as String?,
+      json['AEWID'] as String?,
+      json['AEZET'] as String?,
+      json['ATIME'] as String?,
+      json['BZACTNO'] as String?,
+      json['CALL_TYPE'] as String?,
+      json['COMNT'] as String?,
+      json['DIST'] as String?,
+      json['ERDAT'] as String?,
+      json['ERNAM'] as String?,
+      json['ERWID'] as String?,
+      json['ERZET'] as String?,
+      json['MEET_RMK'] as String?,
+      json['RSLT'] as String?,
+      json['SEQNO'] as String?,
+      json['STPNO'] as String?,
+      json['UMODE'] as String?,
+      json['VISIT_RMK'] as String?,
+      json['XMEET'] as String?,
+      json['XVISIT'] as String?,
+      json['ZADD_NAME1'] as String?,
+      json['ZADD_NAME2'] as String?,
+      json['ZADD_NAME3'] as String?,
+      json['ZADD_NAME4'] as String?,
+      json['ZADDR'] as String?,
+      json['ZKMNO'] as String?,
+      json['ZKMNO_NM'] as String?,
+      json['ZSKUNNR'] as String?,
+      json['ZSKUNNR_NM'] as String?,
+      json['ZSTATUS'] as String?,
+    );
+
+Map<String, dynamic> _$SalesActivityDayTable260ToJson(
+        SalesActivityDayTable260 instance) =>
+    <String, dynamic>{
+      'ADATE': instance.adate,
+      'BZACTNO': instance.bzactno,
+      'SEQNO': instance.seqno,
+      'ATIME': instance.atime,
+      'ZSKUNNR': instance.zskunnr,
+      'ZKMNO': instance.zkmno,
+      'STPNO': instance.stpno,
+      'XVISIT': instance.xvisit,
+      'VISIT_RMK': instance.visitRmk,
+      'XMEET': instance.xmeet,
+      'MEET_RMK': instance.meetRmk,
+      'ACTCAT1': instance.actcat1,
+      'ACTCAT2': instance.actcat2,
+      'ACTCAT3': instance.actcat3,
+      'ACTCAT4': instance.actcat4,
+      'ZADDR': instance.zaddr,
+      'DIST': instance.dist,
+      'RSLT': instance.rslt,
+      'ERDAT': instance.erdat,
+      'ERZET': instance.erzet,
+      'ERNAM': instance.ernam,
+      'ERWID': instance.erwid,
+      'AEDAT': instance.aedat,
+      'AEZET': instance.aezet,
+      'AENAM': instance.aenam,
+      'AEWID': instance.aewid,
+      'ZSKUNNR_NM': instance.zskunnrNm,
+      'ZKMNO_NM': instance.zkmnoNm,
+      'ZADD_NAME1': instance.zaddName1,
+      'ZADD_NAME2': instance.zaddName2,
+      'ZADD_NAME3': instance.zaddName3,
+      'ZADD_NAME4': instance.zaddName4,
+      'ACTCAT': instance.actcat,
+      'COMNT': instance.comnt,
+      'ZSTATUS': instance.zstatus,
+      'CALL_TYPE': instance.callType,
+      'UMODE': instance.umode,
+    };
