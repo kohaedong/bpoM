@@ -25,7 +25,7 @@ SalesActivityDayTable291 _$SalesActivityDayTable291FromJson(
       json['MATNR'] as String?,
       json['MEINS'] as String?,
       json['QTY'] as String?,
-      json['SEQNO'] as int?,
+      json['SEQNO'] as String?,
       json['SUBCAT'] as String?,
       json['SUBSEQ'] as String?,
       json['UMODE'] as String?,

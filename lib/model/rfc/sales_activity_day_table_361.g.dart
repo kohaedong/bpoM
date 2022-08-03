@@ -21,7 +21,7 @@ SalesActivityDayTable361 _$SalesActivityDayTable361FromJson(
       json['LOGID'] as String?,
       json['ORGHK'] as String?,
       json['ORGHK_NM'] as String?,
-      json['SEQNO'] as int?,
+      json['SEQNO'] as String?,
       json['SNAME'] as String?,
       json['SUBSEQ'] as int?,
       json['UMODE'] as String?,

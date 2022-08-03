@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-03 12:43:44
+ * Last Modified: 2022-08-03 14:55:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -169,12 +169,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                                   model.dateStr!.isNotEmpty &&
                                   isWorkDay &&
                                   DateUtil.getDate(model.dateStr!)
-                                      .isBefore(DateTime.now()) &&
-                                  (DateUtil.getDate(model.dateStr!).weekday !=
-                                          7 &&
-                                      DateUtil.getDate(model.dateStr!)
-                                              .weekday !=
-                                          6)
+                                      .isBefore(DateTime.now())
                               ? '미확정'
                               : '',
                       style: AppTextStyle.default_14.copyWith(
@@ -183,9 +178,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                               : AppColors.dangerColor,
                           fontWeight: FontWeight.bold)),
                   AppText.text(
-                      DateUtil.getDate(model.dateStr!).weekday != 7 &&
-                              DateUtil.getDate(model.dateStr!).weekday != 6 &&
-                              isWorkDay
+                      isWorkDay
                           ? '${model.column1 != null && model.column1!.isNotEmpty ? model.column1!.trim() : '0'}/${model.column2 != null && model.column2!.isNotEmpty ? model.column2!.trim() : '0'}'
                           : '',
                       style: AppTextStyle.sub_12)

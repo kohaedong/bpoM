@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/sales_activity_day_response_model.dart
  * Created Date: 2022-08-03 11:31:55
- * Last Modified: 2022-08-03 12:24:51
+ * Last Modified: 2022-08-03 13:40:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:medsalesportal/model/rfc/es_return_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_250.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_270.dart';
@@ -32,6 +33,8 @@ part 'sales_activity_day_response_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class SalesActivityDayResponseModel {
+  @JsonKey(name: 'ES_RETURN')
+  EsReturnModel? esReturn;
   @JsonKey(name: 'T_ZLTSP0250S')
   List<SalesActivityDayTable250>? table250;
   @JsonKey(name: 'T_ZLTSP0260S')
@@ -66,6 +69,7 @@ class SalesActivityDayResponseModel {
   List<SalesActivityDayTable430>? table430;
 
   SalesActivityDayResponseModel(
+      this.esReturn,
       this.table250,
       this.table260,
       this.table270,

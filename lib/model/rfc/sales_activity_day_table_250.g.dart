@@ -1,16 +1,3 @@
-/*
- * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/sales_activity_day_table_250.g.dart
- * Created Date: 2022-08-03 13:00:53
- * Last Modified: 2022-08-03 13:10:55
- * Author: bakbeom
- * Modified By: bakbeom
- * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
- * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
- * 												Discription													
- * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
- */
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'sales_activity_day_table_250.dart';
@@ -53,20 +40,12 @@ SalesActivityDayTable250 _$SalesActivityDayTable250FromJson(
       json['ZADDR1'] as String?,
       json['ACCOMPANY'] as String?,
       json['FTIME'] as String?,
-      (json['FX_LATITUDE'] as List<dynamic>?)
-          ?.map((e) => (e as num).toDouble())
-          .toList(),
-      (json['FY_LONGITUDE'] as List<dynamic>?)
-          ?.map((e) => (e as num).toDouble())
-          .toList(),
+      (json['FX_LATITUDE'] as num?)?.toDouble(),
+      (json['FY_LONGITUDE'] as num?)?.toDouble(),
       json['SCALL_TYPE'] as String?,
       json['STIME'] as String?,
-      (json['SX_LATITUDE'] as List<dynamic>?)
-          ?.map((e) => (e as num).toDouble())
-          .toList(),
-      (json['SY_LONGITUDE'] as List<dynamic>?)
-          ?.map((e) => (e as num).toDouble())
-          .toList(),
+      (json['SX_LATITUDE'] as num?)?.toDouble(),
+      (json['SY_LONGITUDE'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$SalesActivityDayTable250ToJson(

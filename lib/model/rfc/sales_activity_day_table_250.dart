@@ -30,17 +30,17 @@ class SalesActivityDayTable250 {
   @JsonKey(name: 'FADDCAT')
   String? faddcat;
   @JsonKey(name: 'SX_LATITUDE')
-  List<double>? sxLatitude;
+  double? sxLatitude;
   @JsonKey(name: 'SY_LONGITUDE')
-  List<double>? sxLongitude;
+  double? sxLongitude;
   @JsonKey(name: 'STIME')
   String? stime;
   @JsonKey(name: 'SCALL_TYPE')
   String? scallType;
   @JsonKey(name: 'FX_LATITUDE')
-  List<double>? fxLatitude;
+  double? fxLatitude;
   @JsonKey(name: 'FY_LONGITUDE')
-  List<double>? fylongitude;
+  double? fylongitude;
   @JsonKey(name: 'FTIME')
   String? ftime;
   @JsonKey(name: 'FZADDR')

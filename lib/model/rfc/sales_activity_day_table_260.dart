@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/sales_activity_day_table_260.dart
  * Created Date: 2022-08-03 10:06:46
- * Last Modified: 2022-08-03 13:10:27
+ * Last Modified: 2022-08-03 13:37:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -21,7 +21,7 @@ class SalesActivityDayTable260 {
   @JsonKey(name: 'BZACTNO')
   String? bzactno;
   @JsonKey(name: 'SEQNO')
-  int? seqno;
+  String? seqno;
   @JsonKey(name: 'ATIME')
   String? atime;
   @JsonKey(name: 'ETIME')
@@ -35,7 +35,7 @@ class SalesActivityDayTable260 {
   @JsonKey(name: 'XVISIT')
   String? xvisit;
   @JsonKey(name: 'SMINUTE')
-  int? sminute;
+  String? sminute;
   @JsonKey(name: 'VISIT_RMK')
   String? visitRmk;
   @JsonKey(name: 'XMEET')
@@ -53,7 +53,7 @@ class SalesActivityDayTable260 {
   @JsonKey(name: 'ZADDR')
   String? zaddr;
   @JsonKey(name: 'DIST')
-  String? dist;
+  double? dist;
   @JsonKey(name: 'RSLT')
   String? rslt;
   @JsonKey(name: 'ERDAT')
@@ -73,9 +73,9 @@ class SalesActivityDayTable260 {
   @JsonKey(name: 'AEWID')
   String? aewid;
   @JsonKey(name: 'X_LATITUDE')
-  List<double>? xLatitude;
+  double? xLatitude;
   @JsonKey(name: 'Y_LONGITUDE')
-  List<double>? yLongitude;
+  double? yLongitude;
   @JsonKey(name: 'ZSKUNNR_NM')
   String? zskunnrNm;
   @JsonKey(name: 'ACCOMPANY')

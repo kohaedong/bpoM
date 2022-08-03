@@ -9,6 +9,9 @@ part of 'sales_activity_day_response_model.dart';
 SalesActivityDayResponseModel _$SalesActivityDayResponseModelFromJson(
         Map<String, dynamic> json) =>
     SalesActivityDayResponseModel(
+      json['ES_RETURN'] == null
+          ? null
+          : EsReturnModel.fromJson(json['ES_RETURN'] as Object),
       (json['T_ZLTSP0250S'] as List<dynamic>?)
           ?.map((e) => SalesActivityDayTable250.fromJson(e as Object))
           .toList(),
@@ -62,6 +65,7 @@ SalesActivityDayResponseModel _$SalesActivityDayResponseModelFromJson(
 Map<String, dynamic> _$SalesActivityDayResponseModelToJson(
         SalesActivityDayResponseModel instance) =>
     <String, dynamic>{
+      'ES_RETURN': instance.esReturn?.toJson(),
       'T_ZLTSP0250S': instance.table250?.map((e) => e.toJson()).toList(),
       'T_ZLTSP0260S': instance.table260?.map((e) => e.toJson()).toList(),
       'T_ZLTSP0270S': instance.table270?.map((e) => e.toJson()).toList(),

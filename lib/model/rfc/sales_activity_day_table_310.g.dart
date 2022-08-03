@@ -19,7 +19,7 @@ SalesActivityDayTable310 _$SalesActivityDayTable310FromJson(
       json['ERNAM'] as String?,
       json['ERWID'] as String?,
       json['ERZET'] as String?,
-      json['SEQNO'] as int?,
+      json['SEQNO'] as String?,
       json['UMODE'] as String?,
     );
 

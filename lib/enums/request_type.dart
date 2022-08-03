@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-08-03 12:46:35
+ * Last Modified: 2022-08-03 15:31:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -103,7 +103,7 @@ extension RequestTypeExtension on RequestType {
       case RequestType.SALESE_ACTIVITY_MONTH_DATA:
         return '$rfcURL/common';
       case RequestType.DETAIL_BOOK_SEARCH_FILE:
-        return '$rfcURL/common';
+        return '$rfcURL/file';
       case RequestType.SEARCH_DETAIL_BOOK:
         return '$rfcURL/common';
       case RequestType.ORDER_CANCEL_AND_SAVE:
@@ -181,7 +181,7 @@ extension RequestTypeExtension on RequestType {
       case RequestType.SEARCH_STAFF:
         return 'ES_RETURN,ET_STAFFLIST';
       case RequestType.SALESE_ACTIVITY_DAY_DATA:
-        return 'T_ZLTSP0250S,T_ZLTSP0260S,T_ZLTSP0270S,T_ZLTSP0280S,T_ZLTSP0290S,T_ZLTSP0291S,T_ZLTSP0300S,T_ZLTSP0301S,T_ZLTSP0310S,T_ZLTSP0320S,T_ZLTSP0321S,T_ZLTSP0330S,T_ZLTSP0340S,T_ZLTSP0350S,T_ZLTSP0430S, T_ZLTSP0361S';
+        return 'ES_RETURN,T_ZLTSP0250S,T_ZLTSP0260S,T_ZLTSP0270S,T_ZLTSP0280S,T_ZLTSP0290S,T_ZLTSP0291S,T_ZLTSP0300S,T_ZLTSP0301S,T_ZLTSP0310S,T_ZLTSP0320S,T_ZLTSP0321S,T_ZLTSP0330S,T_ZLTSP0340S,T_ZLTSP0350S,T_ZLTSP0430S, T_ZLTSP0361S';
       case RequestType.SEARCH_PARTMENT_KEY_ZIBI:
         return 'ES_RETURN,T_LIST,T_LIST2';
       case RequestType.SALESE_ACTIVITY_MONTH_DATA:

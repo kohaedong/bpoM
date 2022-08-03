@@ -1,16 +1,3 @@
-/*
- * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/sales_activity_day_table_260.g.dart
- * Created Date: 2022-08-03 13:11:14
- * Last Modified: 2022-08-03 13:11:24
- * Author: bakbeom
- * Modified By: bakbeom
- * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
- * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
- * 												Discription													
- * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
- */
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'sales_activity_day_table_260.dart';
@@ -36,14 +23,14 @@ SalesActivityDayTable260 _$SalesActivityDayTable260FromJson(
       json['BZACTNO'] as String?,
       json['CALL_TYPE'] as String?,
       json['COMNT'] as String?,
-      json['DIST'] as String?,
+      (json['DIST'] as num?)?.toDouble(),
       json['ERDAT'] as String?,
       json['ERNAM'] as String?,
       json['ERWID'] as String?,
       json['ERZET'] as String?,
       json['MEET_RMK'] as String?,
       json['RSLT'] as String?,
-      json['SEQNO'] as int?,
+      json['SEQNO'] as String?,
       json['STPNO'] as String?,
       json['UMODE'] as String?,
       json['VISIT_RMK'] as String?,
@@ -64,13 +51,9 @@ SalesActivityDayTable260 _$SalesActivityDayTable260FromJson(
       json['COMNT_M'] as String?,
       json['ETIME'] as String?,
       json['IS_GPS'] as String?,
-      (json['X_LATITUDE'] as List<dynamic>?)
-          ?.map((e) => (e as num).toDouble())
-          .toList(),
-      (json['Y_LONGITUDE'] as List<dynamic>?)
-          ?.map((e) => (e as num).toDouble())
-          .toList(),
-      json['SMINUTE'] as int?,
+      (json['X_LATITUDE'] as num?)?.toDouble(),
+      (json['Y_LONGITUDE'] as num?)?.toDouble(),
+      json['SMINUTE'] as String?,
     );
 
 Map<String, dynamic> _$SalesActivityDayTable260ToJson(
