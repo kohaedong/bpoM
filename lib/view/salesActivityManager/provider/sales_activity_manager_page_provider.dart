@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-02 17:24:49
+ * Last Modified: 2022-08-02 17:38:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -45,7 +45,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     } else {
       selectedMonth = DateUtil.getDate(DateUtil.nextMonth(dt: selectedMonth));
     }
-    getData(isWithLoading: true);
+    getMonthData(isWithLoading: true);
   }
 
   void getLastMonthData() {
@@ -54,7 +54,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     } else {
       selectedMonth = DateUtil.getDate(DateUtil.prevMonth(dt: selectedMonth));
     }
-    getData(isWithLoading: true);
+    getMonthData(isWithLoading: true);
   }
 
   void getNextDayData() {
@@ -84,7 +84,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       return;
     }
     selectedMonth = date;
-    getData(isWithLoading: true);
+    getMonthData(isWithLoading: true);
   }
 
   void getSelectedDayData(DateTime date) {
@@ -117,13 +117,58 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  Future<ResultModel> getData({bool? isWithLoading}) async {
+  Future<ResultModel> getMonthData({bool? isWithLoading}) async {
     if (isWithLoading != null && isWithLoading) {
       isLoadData = true;
       notifyListeners();
     }
     if (searchKeyResponseModel == null) {
       await searchPartmentKeyZBIZ();
+    }
+    _api.init(RequestType.SALESE_ACTIVITY_MONTH_DATA);
+    var esLogin = CacheService.getEsLogin();
+    var isLogin = CacheService.getIsLogin();
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.SALESE_ACTIVITY_MONTH_DATA.serverMethod,
+      "methodParamMap": {
+        "IV_ZBIZ": searchKeyResponseModel!.tList!.first.zbiz,
+        "IV_RESID": esLogin!.logid!.toUpperCase(),
+        "IS_LOGIN": isLogin,
+        "IV_VKGRP": esLogin.vkgrp,
+        "IV_SPMON": DateUtil.getMonthStr(
+            selectedMonth != null ? selectedMonth! : DateTime.now()),
+        "resultTables": RequestType.SALESE_ACTIVITY_MONTH_DATA.resultTable,
+        "functionName": RequestType.SALESE_ACTIVITY_MONTH_DATA.serverMethod
+      }
+    };
+    final result = await _api.request(body: _body);
+    if (result != null && result.statusCode != 200) {
+      if (isWithLoading != null && isWithLoading) {
+        isLoadData = false;
+        notifyListeners();
+      }
+      return ResultModel(false);
+    }
+    if (result != null && result.statusCode == 200) {
+      monthResponseModel =
+          SalesActivityMonthResponseModel.fromJson(result.body['data']);
+      if (isWithLoading != null && isWithLoading) {
+        isLoadData = false;
+      }
+      notifyListeners();
+      return ResultModel(true);
+    }
+    if (isWithLoading != null && isWithLoading) {
+      isLoadData = false;
+    }
+    notifyListeners();
+    return ResultModel(true);
+  }
+
+  Future<ResultModel> getDayData({bool? isWithLoading}) async {
+    if (isWithLoading != null && isWithLoading) {
+      isLoadData = true;
+      notifyListeners();
     }
     _api.init(RequestType.SALESE_ACTIVITY_MONTH_DATA);
     var esLogin = CacheService.getEsLogin();

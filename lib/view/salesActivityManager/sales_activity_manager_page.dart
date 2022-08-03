@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-02 17:24:22
+ * Last Modified: 2022-08-02 17:33:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -248,7 +248,9 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 OneCellType.DATE_PICKER, InputIconType.DATA_PICKER)
             .show(context,
                 selectedDateStr: DateUtil.getDateStr('',
-                    dt: p.selectedMonth ?? DateTime.now()));
+                    dt: isMonth != null && isMonth
+                        ? p.selectedMonth ?? DateTime.now()
+                        : p.selectedDay ?? DateTime.now()));
 
         if (result != null) {
           isMonth != null && isMonth
@@ -362,7 +364,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     return TabBarView(controller: _tabController, children: [
       _buildMonthView(context),
       _buildDayView(context),
-      // buildFabricStockContents(context)  2022.02.14 원단재고 탭 삭제
     ]);
   }
 
@@ -378,7 +379,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           builder: (context, _) {
             final p = context.read<SalseActivityManagerPageProvider>();
             return FutureBuilder<ResultModel>(
-                future: p.getData(),
+                future: p.getMonthData(),
                 builder: (context, snapshot) {
                   return Column(
                     children: [
