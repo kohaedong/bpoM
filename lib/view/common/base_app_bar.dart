@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_bar.dart
  * Created Date: 2021-08-29 19:57:10
- * Last Modified: 2022-07-06 14:59:21
+ * Last Modified: 2022-08-04 13:56:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -92,7 +92,7 @@ class MainAppBar extends AppBar {
             centerTitle: true,
             actions: action != null
                 ? [
-                    InkWell(
+                    GestureDetector(
                       onTap: () => actionCallback!.call(),
                       child: action,
                     )

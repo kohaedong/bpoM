@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-08-03 15:31:12
+ * Last Modified: 2022-08-04 16:22:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -52,7 +52,8 @@ enum RequestType {
   DETAIL_BOOK_SEARCH_FILE,
   SALESE_ACTIVITY_MONTH_DATA,
   SALESE_ACTIVITY_DAY_DATA,
-  SEARCH_PARTMENT_KEY_ZIBI
+  SEARCH_PARTMENT_KEY_ZIBI,
+  CHECK_HOLIDAY,
 }
 
 // [KolonBuildConfig] 빌드 옵션에 따라 url가 변한다.
@@ -142,6 +143,8 @@ extension RequestTypeExtension on RequestType {
         return '$signURL';
       case RequestType.SAP_SIGNIN_INFO:
         return '$rfcURL/login';
+      case RequestType.CHECK_HOLIDAY:
+        return '$v2URL/opendata/holiday';
       case RequestType.CHECK_NOTICE:
         return '$v2URL/rest';
       case RequestType.NOTICE_DONT_SHOW_AGAIN:

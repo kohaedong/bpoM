@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-04 13:50:12
+ * Last Modified: 2022-08-04 17:20:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/model/common/holiday_response_model.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_month_response_model.dart';
@@ -27,17 +28,16 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   SalesActivityMonthResponseModel? monthResponseModel;
   SalesActivityDayResponseModel? dayResponseModel;
   SearchKeyResponseModel? searchKeyResponseModel;
+  HolidayResponseModel? holidayResponseModel;
   bool isLoadData = false;
   bool isLoadDayData = false;
+  bool isLastDayNotConfirm = false;
   bool? isShowConfirm;
-  int? tabIndex;
   DateTime? selectedMonth;
   DateTime? selectedDay;
+  DateTime? lastWorkDay;
+  List<DateTime> holidayList = [];
   final _api = ApiService();
-  void setTabIndex(int index) {
-    this.tabIndex = index;
-    notifyListeners();
-  }
 
   void setSelectedDate(DateTime dt) {
     selectedDay = dt;
@@ -113,6 +113,34 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     getDayData(isWithLoading: true);
   }
 
+  Future<void> checkHoliday(String day) async {
+    lastWorkDay = DateUtil.lastDay(dt: DateUtil.getDate(day));
+    pr('@!@!@!@!@${lastWorkDay!.weekday}');
+    while (lastWorkDay!.weekday == 7 ||
+        lastWorkDay!.weekday == 6 ||
+        holidayList.contains(lastWorkDay)) {
+      lastWorkDay = DateUtil.lastDay(dt: lastWorkDay);
+      pr(lastWorkDay!.toIso8601String());
+    }
+  }
+
+  Future<ResultModel> getHolidayListForMonth(DateTime date) async {
+    _api.init(RequestType.CHECK_HOLIDAY);
+    final result = await _api.request(body: {
+      'year': date.year,
+      'month': date.month,
+    });
+    if (result != null && result.statusCode != 200) {
+      return ResultModel(false);
+    }
+    if (result != null && result.statusCode == 200) {
+      holidayResponseModel = HolidayResponseModel.fromJson(result.body);
+      pr(holidayResponseModel?.toJson());
+      return ResultModel(true);
+    }
+    return ResultModel(false);
+  }
+
   Future<ResultModel> searchPartmentKeyZBIZ() async {
     _api.init(RequestType.SEARCH_PARTMENT_KEY_ZIBI);
     var isLogin = CacheService.getIsLogin();
@@ -170,10 +198,95 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
+      holidayList.clear();
+      await getHolidayListForMonth(selectedMonth ?? DateTime.now())
+          .whenComplete(() {
+        if (holidayResponseModel!.data != null &&
+            holidayResponseModel!.data!.isNotEmpty) {
+          holidayResponseModel!.data!.forEach((holidayModel) {
+            holidayList.add(DateUtil.getDate(holidayModel.locdate!));
+          });
+        }
+      });
       monthResponseModel =
           SalesActivityMonthResponseModel.fromJson(result.body['data']);
       if (isWithLoading != null && isWithLoading) {
         isLoadData = false;
+      }
+      var now = DateTime.now();
+      //  검색 하고자 하는 월의 2번쨰주?(data not null) data 가져와  <당월 여부> 확인.
+      var randomDayOfMonth =
+          DateUtil.getDate(monthResponseModel!.tList![2].day0!);
+      if (randomDayOfMonth.year == now.year &&
+          randomDayOfMonth.month == now.month) {
+        var tempList = monthResponseModel!.tList!;
+        for (var i = 0; i < tempList.length; i++) {
+          (int index) {
+            if (tempList[index].day0 != null &&
+                tempList[index].day0!.isNotEmpty &&
+                DateUtil.getDate(tempList[index].day0!).day == now.day) {
+              pr('$index  ${tempList[index].day0}');
+              lastWorkDay =
+                  DateUtil.lastDay(dt: DateUtil.getDate(tempList[index].day0!));
+              return;
+            }
+            if (tempList[index].day1 != null &&
+                tempList[index].day1!.isNotEmpty &&
+                DateUtil.getDate(tempList[index].day1!).day == now.day) {
+              pr('$index  ${tempList[index].day1}');
+              lastWorkDay =
+                  DateUtil.lastDay(dt: DateUtil.getDate(tempList[index].day1!));
+              checkHoliday(tempList[index].day1!);
+              return;
+            }
+            if (tempList[index].day2 != null &&
+                tempList[index].day2!.isNotEmpty &&
+                DateUtil.getDate(tempList[index].day2!).day == now.day) {
+              pr('$index  ${tempList[index].day2}');
+              lastWorkDay =
+                  DateUtil.lastDay(dt: DateUtil.getDate(tempList[index].day2!));
+              checkHoliday(tempList[index].day2!);
+              return;
+            }
+            if (tempList[index].day3 != null &&
+                tempList[index].day3!.isNotEmpty &&
+                DateUtil.getDate(tempList[index].day3!).day == now.day) {
+              pr('$index  ${tempList[index].day3}');
+              lastWorkDay =
+                  DateUtil.lastDay(dt: DateUtil.getDate(tempList[index].day3!));
+              checkHoliday(tempList[index].day3!);
+              return;
+            }
+            if (tempList[index].day4 != null &&
+                tempList[index].day4!.isNotEmpty &&
+                DateUtil.getDate(tempList[index].day4!).day == now.day) {
+              pr('$index  ${tempList[index].day4}');
+              lastWorkDay =
+                  DateUtil.lastDay(dt: DateUtil.getDate(tempList[index].day4!));
+              checkHoliday(tempList[index].day4!);
+              return;
+            }
+            if (tempList[index].day5 != null &&
+                tempList[index].day5!.isNotEmpty &&
+                DateUtil.getDate(tempList[index].day5!).day == now.day) {
+              pr('$index  ${tempList[index].day5}');
+              lastWorkDay =
+                  DateUtil.lastDay(dt: DateUtil.getDate(tempList[index].day5!));
+              checkHoliday(tempList[index].day5!);
+
+              return;
+            }
+            if (tempList[index].day6 != null &&
+                tempList[index].day6!.isNotEmpty &&
+                DateUtil.getDate(tempList[index].day6!).day == now.day) {
+              pr('$index  ${tempList[index].day6}');
+              checkHoliday(tempList[index].day6!);
+              return;
+            }
+          }(i);
+        }
+      } else {
+        isLastDayNotConfirm = false;
       }
       notifyListeners();
       return ResultModel(true);
@@ -215,7 +328,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       dayResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
-
       dayResponseModel?.table260!.forEach((element) {
         pr(element.toJson());
       });

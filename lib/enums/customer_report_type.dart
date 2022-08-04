@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/customer_report_type.dart
  * Created Date: 2021-10-17 19:01:13
- * Last Modified: 2022-08-04 12:51:41
+ * Last Modified: 2022-08-04 13:55:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -41,8 +41,15 @@ extension ConsultationReportExtension on PageType {
         );
       case PageType.SALES_ACTIVITY_MANAGER_DAY_DISIBLE:
         return Container(
-          child: AppText.text('disible'),
-        );
+            child: Container(
+          height: AppSize.appBarHeight,
+          alignment: Alignment.center,
+          padding: EdgeInsets.only(right: AppSize.padding),
+          child: AppText.text(
+            tr('confirm'),
+            style: AppTextStyle.default_16.copyWith(color: AppColors.subText),
+          ),
+        ));
       default:
         return Container();
     }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-04 13:41:10
+ * Last Modified: 2022-08-04 17:22:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -121,6 +121,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
 
   Widget _buildWeekDayBox(
       BuildContext context, SalesActivitySingleDateModel model) {
+    var holidayList =
+        context.read<SalseActivityManagerPageProvider>().holidayList;
     var isWorkDay = (int.parse(
             model.column1 != null && model.column1!.isNotEmpty
                 ? model.column1!.trim()
@@ -165,8 +167,10 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                               '${DateUtil.getDate(model.dateStr!).day}',
                               style: AppTextStyle.default_14.copyWith(
                                   color: DateUtil.getDate(model.dateStr!)
-                                              .weekday ==
-                                          7
+                                                  .weekday ==
+                                              7 ||
+                                          holidayList.contains(
+                                              DateUtil.getDate(model.dateStr!))
                                       ? AppColors.dangerColor
                                       : DateUtil.getDate(model.dateStr!)
                                                   .weekday ==
@@ -501,7 +505,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                       return _actionButton;
                     }),
                 actionCallback: () {
-                  pr('press');
+                  pr('pressed');
                   if (_pageType.value == PageType.SALES_ACTIVITY_MANAGER_DAY) {
                     _pageType.value =
                         PageType.SALES_ACTIVITY_MANAGER_DAY_DISIBLE;
