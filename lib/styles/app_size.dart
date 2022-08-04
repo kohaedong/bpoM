@@ -69,6 +69,7 @@ class AppSize {
   static double get progressHeight => 3.h;
   static double get radius8 => 8.r;
   static double get radius15 => 15.r;
+  static double get radius25 => 25.r;
   static double get cellPadding => 10.w;
   static EdgeInsets get popupPadding =>
       EdgeInsets.fromLTRB(20.w, 28.h, 20.w, 20.h);

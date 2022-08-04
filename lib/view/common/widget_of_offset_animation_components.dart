@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_animation_components.dart
  * Created Date: 2022-07-14 21:54:05
- * Last Modified: 2022-08-01 17:36:42
+ * Last Modified: 2022-08-04 22:34:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -109,8 +109,9 @@ class _WidgetOfOffSetAnimationWidgetState
                           ? Offset(widget.offset!.dx,
                               -(widget.offset!.dy) * animationController.value)
                           : widget.offsetType == OffsetDirectionType.LEFT
-                              ? Offset(widget.offset!.dx,
-                                  widget.offset!.dy * animationController.value)
+                              ? Offset(
+                                  widget.offset!.dx * animationController.value,
+                                  widget.offset!.dy)
                               : Offset(
                                   -(widget.offset!.dx) *
                                       animationController.value,

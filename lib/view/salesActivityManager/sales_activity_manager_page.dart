@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-04 18:02:18
+ * Last Modified: 2022-08-04 23:33:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,8 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/customer_report_type.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/view/salesActivityManager/provider/activity_menu_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/enums/image_type.dart';
@@ -24,7 +23,9 @@ import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/enums/customer_report_type.dart';
 import 'package:medsalesportal/view/common/base_popup_list.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/common/widget_of_tag_button.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
@@ -130,17 +131,20 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         int.parse(model.column2 != null && model.column2!.isNotEmpty
             ? model.column2!.trim()
             : '0'));
-    return InkWell(
+    return GestureDetector(
       onTap: () {
-        final p = context.read<SalseActivityManagerPageProvider>();
-        p.setSelectedDate(DateUtil.getDate(model.dateStr!));
-        p.setIsResetDay(false);
-        p.getDayData(
-          isWithLoading: true,
-        );
-        _tabController.animateTo(1);
+        if (model.dateStr != null && model.dateStr!.trim().isNotEmpty) {
+          final p = context.read<SalseActivityManagerPageProvider>();
+          p.setSelectedDate(DateUtil.getDate(model.dateStr!));
+          p.setIsResetDay(false);
+          p.getDayData(
+            isWithLoading: true,
+          );
+          _tabController.animateTo(1);
+        }
       },
-      child: SizedBox(
+      child: Container(
+        color: AppColors.whiteText,
         height: AppSize.weekDayHeight,
         width: AppSize.calendarWidth / 7,
         child: model.dateStr != null
@@ -414,6 +418,81 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         : Container();
   }
 
+  Widget _buildAnimationMenuItem(String text) {
+    return AppStyles.buildButton(
+        context,
+        '$text',
+        120,
+        AppColors.whiteText,
+        AppTextStyle.default_14.copyWith(color: AppColors.primary),
+        AppSize.radius25,
+        () {},
+        selfHeight: AppSize.smallButtonHeight * 1.2);
+  }
+
+  Widget _buildDialogContents(BuildContext ctx) {
+    return ChangeNotifierProvider(
+      create: (context) => ActivityMenuProvider(),
+      builder: (context, _) {
+        return Material(
+          type: MaterialType.transparency,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(ctx);
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                    right: AppSize.padding,
+                    bottom: AppSize.padding * 2 + AppSize.buttonHeight,
+                    child: Column(
+                      children: [
+                        _buildAnimationMenuItem('최종콜 삭제'),
+                        defaultSpacing(),
+                        defaultSpacing(),
+                        _buildAnimationMenuItem('신규활동 추가'),
+                        defaultSpacing(),
+                        defaultSpacing(),
+                        _buildAnimationMenuItem('영업활동 시작'),
+                      ],
+                    )),
+                Positioned(
+                    right: AppSize.padding,
+                    bottom: AppSize.padding,
+                    child: FloatingActionButton(
+                      backgroundColor: AppColors.primary,
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                      },
+                      child: Icon(Icons.close, color: AppColors.whiteText),
+                    ))
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMenuButton(BuildContext context) {
+    return Positioned(
+        bottom: AppSize.padding,
+        right: AppSize.padding,
+        child: FloatingActionButton(
+          backgroundColor: AppColors.primary,
+          onPressed: () async {
+            await showDialog(
+                useSafeArea: false,
+                context: context,
+                builder: (ctx) {
+                  return _buildDialogContents(ctx);
+                });
+          },
+          child: AppImage.getImage(ImageType.PLUS, color: AppColors.whiteText),
+        ));
+  }
+
   Widget _buildDayView(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
@@ -453,6 +532,14 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           },
         ),
         Selector<SalseActivityManagerPageProvider, bool>(
+          selector: (context, provider) =>
+              provider.selectedDay?.day == DateTime.now().day,
+          builder: (context, isToday, _) {
+            pr(isToday);
+            return isToday ? _buildMenuButton(context) : Container();
+          },
+        ),
+        Selector<SalseActivityManagerPageProvider, bool>(
           selector: (context, provider) => provider.isLoadDayData,
           builder: (context, isLoadDayData, _) {
             return BaseLoadingViewOnStackWidget.build(context, isLoadDayData);
@@ -462,11 +549,12 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     );
   }
 
-  Widget _buildTapView(BuildContext context) {
-    return TabBarView(controller: _tabController, children: [
+  Widget _buildTapBarView(BuildContext context) {
+    return Expanded(
+        child: TabBarView(controller: _tabController, children: [
       _buildMonthView(context),
       _buildDayView(context),
-    ]);
+    ]));
   }
 
   Widget _changeAppbarConfirmButton(BuildContext context) {
@@ -487,6 +575,60 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         return Container();
       },
     );
+  }
+
+  Widget _buildTabBar(BuildContext context) {
+    final p = context.read<SalseActivityManagerPageProvider>();
+    return Padding(
+        padding: AppSize.defaultSidePadding,
+        child: TabBar(
+            physics: ScrollPhysics(),
+            padding: EdgeInsets.zero,
+            indicatorColor: AppColors.blueTextColor,
+            labelStyle: AppTextStyle.color_16(AppColors.blueTextColor),
+            labelColor: AppColors.blueTextColor,
+            unselectedLabelStyle: AppTextStyle.default_16,
+            unselectedLabelColor: AppColors.defaultText,
+            controller: _tabController
+              ..addListener(() {
+                if (_tabController.index == 0) {
+                  // 버튼 없에기.
+                  p.setIsShowConfirm(false);
+                }
+                if (_tabController.index == 1) {
+                  final p = context.read<SalseActivityManagerPageProvider>();
+                  var isLock = false;
+                  if ((p.isResetDay == null && !p.isLoadDayData && !isLock)) {
+                    isLock = true;
+                    p.setSelectedDate(DateTime.now());
+                  }
+                  if (!p.isLoadDayData) {
+                    p
+                        .getDayData(isWithLoading: true)
+                        .whenComplete(() => isLock = false);
+                  }
+                }
+              }),
+            tabs: [
+              _buildTabs(context, '월별'),
+              _buildTabs(context, '일별'),
+            ]));
+  }
+
+  Widget _buildShimmerView(BuildContext context) {
+    return Expanded(
+        child: ListView(
+      children: [
+        defaultSpacing(),
+        _buildDateSelector(context, isMonthSelector: true),
+        defaultSpacing(),
+        Divider(),
+        _buildWeekTitle(),
+        Padding(
+            padding: AppSize.defaultSidePadding,
+            child: DefaultShimmer.buildCalindaShimmer())
+      ],
+    ));
   }
 
   @override
@@ -520,68 +662,15 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
               child: FutureBuilder<ResultModel>(
                   future: p.getMonthData(),
                   builder: (context, snapshot) {
+                    var hasData = snapshot.hasData &&
+                        snapshot.connectionState == ConnectionState.done;
                     return Column(
                       children: [
-                        Padding(
-                            padding: AppSize.defaultSidePadding,
-                            child: TabBar(
-                                physics: ScrollPhysics(),
-                                padding: EdgeInsets.zero,
-                                indicatorColor: AppColors.blueTextColor,
-                                labelStyle: AppTextStyle.color_16(
-                                    AppColors.blueTextColor),
-                                labelColor: AppColors.blueTextColor,
-                                unselectedLabelStyle: AppTextStyle.default_16,
-                                unselectedLabelColor: AppColors.defaultText,
-                                controller: _tabController
-                                  ..addListener(() {
-                                    if (_tabController.index == 0) {
-                                      // 버튼 없에기.
-                                      p.setIsShowConfirm(false);
-                                    }
-                                    if (_tabController.index == 1) {
-                                      final p = context.read<
-                                          SalseActivityManagerPageProvider>();
-                                      var isLock = false;
-                                      if ((p.isResetDay == null &&
-                                          !p.isLoadDayData &&
-                                          !isLock)) {
-                                        isLock = true;
-                                        p.setSelectedDate(DateTime.now());
-                                      }
-                                      if (!p.isLoadDayData) {
-                                        p
-                                            .getDayData(isWithLoading: true)
-                                            .whenComplete(() => isLock = false);
-                                      }
-                                    }
-                                  }),
-                                tabs: [
-                                  _buildTabs(context, '월별'),
-                                  _buildTabs(context, '일별'),
-                                ])),
-                        Divider(
-                          color: AppColors.textGrey,
-                          height: 0,
-                        ),
-                        snapshot.hasData &&
-                                snapshot.connectionState == ConnectionState.done
-                            ? Expanded(child: _buildTapView(context))
-                            : Expanded(
-                                child: ListView(
-                                children: [
-                                  defaultSpacing(),
-                                  _buildDateSelector(context,
-                                      isMonthSelector: true),
-                                  defaultSpacing(),
-                                  Divider(),
-                                  _buildWeekTitle(),
-                                  Padding(
-                                      padding: AppSize.defaultSidePadding,
-                                      child:
-                                          DefaultShimmer.buildCalindaShimmer())
-                                ],
-                              )),
+                        _buildTabBar(context),
+                        Divider(color: AppColors.textGrey, height: 0),
+                        hasData
+                            ? _buildTapBarView(context)
+                            : _buildShimmerView(context),
                       ],
                     );
                   }));
