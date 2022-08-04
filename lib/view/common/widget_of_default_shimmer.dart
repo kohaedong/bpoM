@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/default_shimmer.dart
  * Created Date: 2021-10-13 10:00:13
- * Last Modified: 2022-07-07 12:43:14
+ * Last Modified: 2022-08-03 17:54:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,6 +18,7 @@ import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_style.dart';
 import 'package:medsalesportal/styles/app_text_style.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/widget_of_divider_line.dart';
 
 import 'base_info_row_by_key_and_value.dart';
@@ -114,6 +115,42 @@ class DefaultShimmer {
               ),
               Padding(padding: EdgeInsets.only(bottom: AppSize.padding)),
               Divider(color: AppColors.textGrey)
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  static buildCalindaShimmer({bool? isNotPadding}) {
+    return BaseShimmer(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: 6,
+        itemBuilder: (BuildContext context, int index) {
+          return Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  index == 0
+                      ? Container(width: 30, height: 30)
+                      : BaseShimmer.shimmerBox(30, 30),
+                  index == 0
+                      ? Container(width: 30, height: 30)
+                      : BaseShimmer.shimmerBox(30, 30),
+                  BaseShimmer.shimmerBox(30, 30),
+                  BaseShimmer.shimmerBox(30, 30),
+                  BaseShimmer.shimmerBox(30, 30),
+                  index == 5
+                      ? Container(width: 30, height: 30)
+                      : BaseShimmer.shimmerBox(30, 30),
+                  index == 5
+                      ? Container(width: 30, height: 30)
+                      : BaseShimmer.shimmerBox(30, 30),
+                ],
+              ),
+              defaultSpacing(height: 40)
             ],
           );
         },

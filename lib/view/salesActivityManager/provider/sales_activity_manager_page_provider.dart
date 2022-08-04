@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-03 12:46:10
+ * Last Modified: 2022-08-04 12:26:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -28,6 +28,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   SalesActivityDayResponseModel? dayResponseModel;
   SearchKeyResponseModel? searchKeyResponseModel;
   bool isLoadData = false;
+  bool isLoadDayData = false;
+  bool? isShowConfirm;
   int? tabIndex;
   DateTime? selectedMonth;
   DateTime? selectedDay;
@@ -39,6 +41,16 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   void setSelectedDate(DateTime dt) {
     selectedDay = dt;
+    notifyListeners();
+  }
+
+  void setIsShowConfirm(bool val) {
+    isShowConfirm = val;
+    notifyListeners();
+  }
+
+  void resetDayData() {
+    dayResponseModel = null;
     notifyListeners();
   }
 
@@ -170,7 +182,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   Future<ResultModel> getDayData({bool? isWithLoading}) async {
     if (isWithLoading != null && isWithLoading) {
-      isLoadData = true;
+      isLoadDayData = true;
       notifyListeners();
     }
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
@@ -189,7 +201,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {
       if (isWithLoading != null && isWithLoading) {
-        isLoadData = false;
+        isLoadDayData = false;
         notifyListeners();
       }
       return ResultModel(false);
@@ -197,15 +209,19 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       dayResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
-      pr(dayResponseModel?.toJson());
+
+      dayResponseModel?.table260!.forEach((element) {
+        pr(element.toJson());
+      });
       if (isWithLoading != null && isWithLoading) {
-        isLoadData = false;
+        isLoadDayData = false;
       }
+      isShowConfirm = true;
       notifyListeners();
       return ResultModel(true);
     }
     if (isWithLoading != null && isWithLoading) {
-      isLoadData = false;
+      isLoadDayData = false;
     }
     notifyListeners();
     return ResultModel(true);

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-03 14:55:28
+ * Last Modified: 2022-08-04 12:37:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,21 +12,27 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/input_icon_type.dart';
-import 'package:medsalesportal/enums/popup_list_type.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_single_date_model.dart';
-import 'package:medsalesportal/view/common/base_popup_list.dart';
+import 'package:medsalesportal/enums/customer_report_type.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
+import 'package:medsalesportal/enums/image_type.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
+import 'package:medsalesportal/enums/input_icon_type.dart';
+import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/view/common/base_popup_list.dart';
+import 'package:medsalesportal/view/common/widget_of_null_data.dart';
+import 'package:medsalesportal/view/common/widget_of_tag_button.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_weeks_model.dart';
+import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_single_date_model.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/sales_activity_manager_page_provider.dart';
 
 class SalseActivityManagerPage extends StatefulWidget {
@@ -40,8 +46,12 @@ class SalseActivityManagerPage extends StatefulWidget {
 class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late ValueNotifier<PageType?> _pageType;
+  late ValueNotifier<Widget> _actionButton;
   @override
   void initState() {
+    _pageType = ValueNotifier<PageType?>(PageType.DEFAULT);
+    _actionButton = ValueNotifier(_pageType.value!.actionWidget);
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
@@ -49,6 +59,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   @override
   void dispose() {
     _tabController.dispose();
+    _pageType.dispose();
+    _actionButton.dispose();
     super.dispose();
   }
 
@@ -120,7 +132,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       onTap: () {
         final p = context.read<SalseActivityManagerPageProvider>();
         p.setSelectedDate(DateUtil.getDate(model.dateStr!));
-        p.getDayData();
+        p.getDayData(isWithLoading: true);
         _tabController.animateTo(1);
       },
       child: SizedBox(
@@ -190,20 +202,17 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   }
 
   Widget _buildWeekTitle() {
-    return SizedBox(
-      width: AppSize.calendarWidth,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildWeekDayTitleBox(tr('sunday', args: [''])),
-          _buildWeekDayTitleBox(tr('monday', args: [''])),
-          _buildWeekDayTitleBox(tr('tuesday', args: [''])),
-          _buildWeekDayTitleBox(tr('wednesday', args: [''])),
-          _buildWeekDayTitleBox(tr('thursday', args: [''])),
-          _buildWeekDayTitleBox(tr('friday', args: [''])),
-          _buildWeekDayTitleBox(tr('saturday', args: [''])),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildWeekDayTitleBox(tr('sunday', args: [''])),
+        _buildWeekDayTitleBox(tr('monday', args: [''])),
+        _buildWeekDayTitleBox(tr('tuesday', args: [''])),
+        _buildWeekDayTitleBox(tr('wednesday', args: [''])),
+        _buildWeekDayTitleBox(tr('thursday', args: [''])),
+        _buildWeekDayTitleBox(tr('friday', args: [''])),
+        _buildWeekDayTitleBox(tr('saturday', args: [''])),
+      ],
     );
   }
 
@@ -309,11 +318,18 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                       defaultSpacing(),
                       Divider(),
                       _buildWeekTitle(),
-                      ...weeks
-                          .asMap()
-                          .entries
-                          .map((map) => _buildWeekRow(context, map.value))
-                          .toList()
+                      Padding(
+                        padding: AppSize.defaultSidePadding,
+                        child: Column(
+                          children: [
+                            ...weeks
+                                .asMap()
+                                .entries
+                                .map((map) => _buildWeekRow(context, map.value))
+                                .toList()
+                          ],
+                        ),
+                      )
                     ],
                   )
                 : Container();
@@ -329,25 +345,110 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     );
   }
 
+  Widget _buildDayListItem(
+      BuildContext context, SalesActivityDayTable260 model) {
+    return Padding(
+      padding: AppSize.defaultSidePadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          defaultSpacing(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AppText.listViewText(model.zskunnrNm!),
+              BaseTagButton.build(
+                  tr(model.xmeet == 'S' ? 'successful' : 'faild'))
+            ],
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                model.rslt != null && model.rslt!.trim().isEmpty
+                    ? Container()
+                    : AppImage.getImage(ImageType.L_ICON),
+                SizedBox(
+                  width: AppSize.calendarWidth * .7,
+                  child: AppText.listViewText('${model.rslt!}',
+                      textAlign: TextAlign.start),
+                ),
+              ],
+            ),
+          ),
+          defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
+          Row(
+            children: [
+              AppText.text(model.zstatus!),
+              AppStyles.buildPipe(),
+              AppText.text(model.zkmnoNm!),
+              AppStyles.buildPipe(),
+              AppText.text(tr(model.xvisit == 'Y' ? 'visit' : 'not_visit')),
+            ],
+          ),
+          defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
+          Divider()
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTotalCount(int? count, {required bool? isNotEmpty}) {
+    return isNotEmpty != null && isNotEmpty
+        ? Padding(
+            padding: AppSize.defaultSidePadding,
+            child: Row(
+              children: [
+                AppText.text('총', style: AppTextStyle.default_14),
+                AppText.text('$count', style: AppTextStyle.blod_16),
+                AppText.text('건', style: AppTextStyle.default_14),
+              ],
+            ))
+        : Container();
+  }
+
   Widget _buildDayView(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
       children: [
+        _changeAppbarConfirmButton(context),
         Selector<SalseActivityManagerPageProvider,
-            List<SalesActivityWeeksModel>?>(
-          selector: (context, provider) => provider.monthResponseModel?.tList,
-          builder: (context, weeks, _) {
-            return weeks != null
-                ? ListView(
-                    physics: ClampingScrollPhysics(),
-                    children: [
-                      defaultSpacing(),
-                      _buildDateSelector(context, isMonthSelector: false),
-                      defaultSpacing(),
-                      Divider(),
-                    ],
-                  )
-                : Container();
+            List<SalesActivityDayTable260>?>(
+          selector: (context, provider) => provider.dayResponseModel?.table260,
+          builder: (context, list260, _) {
+            return ListView(
+              physics: ClampingScrollPhysics(),
+              children: [
+                defaultSpacing(),
+                _buildDateSelector(context, isMonthSelector: false),
+                defaultSpacing(),
+                Divider(),
+                defaultSpacing(),
+                _buildTotalCount(list260?.length,
+                    isNotEmpty: list260?.isNotEmpty),
+                defaultSpacing(),
+                list260 != null
+                    ? list260.isNotEmpty
+                        ? Column(
+                            children: [
+                              ...list260
+                                  .asMap()
+                                  .entries
+                                  .map((map) =>
+                                      _buildDayListItem(context, map.value))
+                                  .toList()
+                            ],
+                          )
+                        : BaseNullDataWidget.build()
+                    : Container()
+              ],
+            );
+          },
+        ),
+        Selector<SalseActivityManagerPageProvider, bool>(
+          selector: (context, provider) => provider.isLoadDayData,
+          builder: (context, isLoadDayData, _) {
+            return BaseLoadingViewOnStackWidget.build(context, isLoadDayData);
           },
         )
       ],
@@ -361,51 +462,99 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     ]);
   }
 
+  Widget _changeAppbarConfirmButton(BuildContext context) {
+    return Selector<SalseActivityManagerPageProvider, bool?>(
+      selector: (context, provider) => provider.isShowConfirm,
+      builder: (context, isShowConfirm, _) {
+        if (isShowConfirm != null && isShowConfirm) {
+          Future.delayed(Duration.zero, () {
+            _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY;
+            _actionButton.value = _pageType.value!.actionWidget;
+          });
+        }
+        return Container();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(
-        hasForm: true,
-        appBar: MainAppBar(context,
-            titleText: AppText.text('${tr('salse_activity_manager')}',
-                style: AppTextStyle.w500_22)),
-        child: ChangeNotifierProvider(
-          create: (context) => SalseActivityManagerPageProvider(),
-          builder: (context, _) {
-            final p = context.read<SalseActivityManagerPageProvider>();
-            return FutureBuilder<ResultModel>(
-                future: p.getMonthData(),
-                builder: (context, snapshot) {
-                  return Column(
-                    children: [
-                      Padding(
-                          padding: AppSize.defaultSidePadding,
-                          child: TabBar(
-                              onTap: (index) {
-                                p.setTabIndex(index);
-                                // _discriptionController!.text = '';
-                              },
-                              physics: ScrollPhysics(),
-                              padding: EdgeInsets.zero,
-                              indicatorColor: AppColors.blueTextColor,
-                              labelStyle: AppTextStyle.color_16(
-                                  AppColors.blueTextColor),
-                              labelColor: AppColors.blueTextColor,
-                              unselectedLabelStyle: AppTextStyle.default_16,
-                              unselectedLabelColor: AppColors.defaultText,
-                              controller: _tabController,
-                              tabs: [
-                                _buildTabs(context, '월별'),
-                                _buildTabs(context, '일별'),
-                              ])),
-                      Divider(
-                        color: AppColors.textGrey,
-                        height: 0,
-                      ),
-                      Expanded(child: _buildTapView(context)),
-                    ],
-                  );
-                });
-          },
-        ));
+    pr('build');
+    return ChangeNotifierProvider(
+        create: (context) => SalseActivityManagerPageProvider(),
+        builder: (context, _) {
+          final p = context.read<SalseActivityManagerPageProvider>();
+          return BaseLayout(
+              hasForm: true,
+              appBar: MainAppBar(
+                context,
+                titleText: AppText.text('${tr('salse_activity_manager')}',
+                    style: AppTextStyle.w500_22),
+                action: ValueListenableBuilder<Widget>(
+                    valueListenable: _actionButton,
+                    builder: (context, _actionButton, _) {
+                      return _actionButton;
+                    }),
+                actionCallback: () {
+                  pr('press');
+                  if (_pageType.value == PageType.SALES_ACTIVITY_MANAGER_DAY) {
+                    _pageType.value =
+                        PageType.SALES_ACTIVITY_MANAGER_DAY_DISIBLE;
+                    _actionButton.value = _pageType.value!.actionWidget;
+                    //do something
+                  }
+                },
+              ),
+              child: FutureBuilder<ResultModel>(
+                  future: p.getMonthData(),
+                  builder: (context, snapshot) {
+                    return Column(
+                      children: [
+                        Padding(
+                            padding: AppSize.defaultSidePadding,
+                            child: TabBar(
+                                onTap: (index) {
+                                  p.setTabIndex(index);
+                                  // _discriptionController!.text = '';
+                                },
+                                physics: ScrollPhysics(),
+                                padding: EdgeInsets.zero,
+                                indicatorColor: AppColors.blueTextColor,
+                                labelStyle: AppTextStyle.color_16(
+                                    AppColors.blueTextColor),
+                                labelColor: AppColors.blueTextColor,
+                                unselectedLabelStyle: AppTextStyle.default_16,
+                                unselectedLabelColor: AppColors.defaultText,
+                                controller: _tabController,
+                                tabs: [
+                                  _buildTabs(context, '월별'),
+                                  _buildTabs(context, '일별'),
+                                ])),
+                        Divider(
+                          color: AppColors.textGrey,
+                          height: 0,
+                        ),
+                        snapshot.hasData &&
+                                snapshot.connectionState == ConnectionState.done
+                            ? Expanded(child: _buildTapView(context))
+                            : Expanded(
+                                child: ListView(
+                                children: [
+                                  defaultSpacing(),
+                                  _buildDateSelector(context,
+                                      isMonthSelector: true),
+                                  defaultSpacing(),
+                                  Divider(),
+                                  _buildWeekTitle(),
+                                  Padding(
+                                      padding: AppSize.defaultSidePadding,
+                                      child:
+                                          DefaultShimmer.buildCalindaShimmer())
+                                ],
+                              )),
+                      ],
+                    );
+                  }));
+        });
   }
 }
