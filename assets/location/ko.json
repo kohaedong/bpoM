@@ -509,6 +509,7 @@
     "friday":"금{}",
     "saturday":"토{}",
     "sunday":"일{}",
-    "not_visit":"미방문"
+    "not_visit":"미방문",
+    "confirm":"확정"
 
 }

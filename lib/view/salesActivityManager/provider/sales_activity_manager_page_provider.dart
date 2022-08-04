@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-04 12:26:15
+ * Last Modified: 2022-08-04 13:26:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -61,6 +61,11 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       selectedMonth = DateUtil.getDate(DateUtil.nextMonth(dt: selectedMonth));
     }
     getMonthData(isWithLoading: true);
+  }
+
+  void checkShowConfirm() async {
+    isShowConfirm = true;
+    notifyListeners();
   }
 
   void getLastMonthData() {
@@ -181,10 +186,21 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> getDayData({bool? isWithLoading}) async {
+    if (selectedDay != null &&
+        dayResponseModel != null &&
+        dayResponseModel!.table250 != null &&
+        dayResponseModel!.table250!.isNotEmpty &&
+        dayResponseModel!.table250!.first.adate ==
+            FormatUtil.removeDash(DateUtil.getDateStr('', dt: selectedDay))) {
+      pr('back!!!');
+      return ResultModel(true);
+    }
+
     if (isWithLoading != null && isWithLoading) {
       isLoadDayData = true;
       notifyListeners();
     }
+
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
     Map<String, dynamic> _body = {
@@ -216,8 +232,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       if (isWithLoading != null && isWithLoading) {
         isLoadDayData = false;
       }
-      isShowConfirm = true;
-      notifyListeners();
+      checkShowConfirm();
       return ResultModel(true);
     }
     if (isWithLoading != null && isWithLoading) {

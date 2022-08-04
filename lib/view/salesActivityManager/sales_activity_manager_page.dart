@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-04 12:37:24
+ * Last Modified: 2022-08-04 13:33:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -471,6 +471,11 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY;
             _actionButton.value = _pageType.value!.actionWidget;
           });
+        } else {
+          Future.delayed(Duration.zero, () {
+            _pageType.value = PageType.DEFAULT;
+            _actionButton.value = _pageType.value!.actionWidget;
+          });
         }
         return Container();
       },
@@ -513,10 +518,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                         Padding(
                             padding: AppSize.defaultSidePadding,
                             child: TabBar(
-                                onTap: (index) {
-                                  p.setTabIndex(index);
-                                  // _discriptionController!.text = '';
-                                },
                                 physics: ScrollPhysics(),
                                 padding: EdgeInsets.zero,
                                 indicatorColor: AppColors.blueTextColor,
@@ -525,7 +526,22 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                                 labelColor: AppColors.blueTextColor,
                                 unselectedLabelStyle: AppTextStyle.default_16,
                                 unselectedLabelColor: AppColors.defaultText,
-                                controller: _tabController,
+                                controller: _tabController
+                                  ..addListener(() {
+                                    if (_tabController.index == 0) {
+                                      p.setIsShowConfirm(false);
+                                    }
+                                    if (_tabController.index == 1) {
+                                      final p = context.read<
+                                          SalseActivityManagerPageProvider>();
+                                      if (p.selectedDay == null) {
+                                        p.setSelectedDate(DateTime.now());
+                                      }
+                                      if (!p.isLoadDayData) {
+                                        p.getDayData(isWithLoading: true);
+                                      }
+                                    }
+                                  }),
                                 tabs: [
                                   _buildTabs(context, '월별'),
                                   _buildTabs(context, '일별'),
