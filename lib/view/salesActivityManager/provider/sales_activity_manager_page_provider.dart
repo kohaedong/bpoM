@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-04 17:20:34
+ * Last Modified: 2022-08-04 17:56:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -33,6 +33,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   bool isLoadDayData = false;
   bool isLastDayNotConfirm = false;
   bool? isShowConfirm;
+  bool? isResetDay;
   DateTime? selectedMonth;
   DateTime? selectedDay;
   DateTime? lastWorkDay;
@@ -65,6 +66,11 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   void checkShowConfirm() async {
     isShowConfirm = true;
+    notifyListeners();
+  }
+
+  void setIsResetDay(bool val) {
+    isResetDay = val;
     notifyListeners();
   }
 
@@ -334,6 +340,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       if (isWithLoading != null && isWithLoading) {
         isLoadDayData = false;
       }
+      isResetDay = null;
       checkShowConfirm();
       return ResultModel(true);
     }
