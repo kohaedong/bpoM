@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-06 19:49:24
+ * Last Modified: 2022-08-07 02:57:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,8 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/enums/activity_status.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/enums/image_type.dart';
@@ -19,7 +21,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
-import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
@@ -37,6 +38,7 @@ import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_single_date_model.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/activity_menu_provider.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/sales_activity_manager_page_provider.dart';
+import 'package:tuple/tuple.dart';
 
 class SalseActivityManagerPage extends StatefulWidget {
   const SalseActivityManagerPage({Key? key}) : super(key: key);
@@ -139,9 +141,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           final p = context.read<SalseActivityManagerPageProvider>();
           p.setSelectedDate(DateUtil.getDate(model.dateStr!));
           p.setIsResetDay(false);
-          p.getDayData(
-            isWithLoading: true,
-          );
+          p.getDayData(isWithLoading: true);
           _tabController.animateTo(1);
         }
       },
@@ -152,12 +152,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         child: model.dateStr != null
             ? Column(
                 children: [
-                  DateUtil.getDate(model.dateStr!).year ==
-                              DateTime.now().year &&
-                          DateUtil.getDate(model.dateStr!).month ==
-                              DateTime.now().month &&
-                          DateUtil.getDate(model.dateStr!).day ==
-                              DateTime.now().day
+                  DateUtil.equlse(
+                          DateUtil.getDate(model.dateStr!), DateTime.now())
                       ? Container(
                           alignment: Alignment.center,
                           height: AppSize.weekDayNumberBoxHeight,
@@ -571,26 +567,16 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             );
           },
         ),
-        Selector<SalseActivityManagerPageProvider, bool>(
-          selector: (context, provider) =>
+        Selector<SalseActivityManagerPageProvider,
+            Tuple2<bool, ActivityStatus?>>(
+          selector: (context, provider) => Tuple2(
               provider.selectedDay?.day == DateTime.now().day,
-          builder: (context, isToday, _) {
-            pr(isToday);
-            return isToday ? _buildMenuButton(context) : Container();
-          },
-        ),
-        Selector<SalseActivityManagerPageProvider, ActivityStatus?>(
-          selector: (context, provider) => provider.activityStatus,
-          builder: (context, activityStatus, _) {
-            if (activityStatus == null) {
-              Future.delayed(Duration.zero, () {
-                pr('null');
-                _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY;
-                _actionButton.value = _pageType.value!.actionWidget;
-              });
-              return Container();
-            }
-            return Container();
+              provider.activityStatus),
+          builder: (context, tuple, _) {
+            pr(tuple.item1);
+            return tuple.item1 && tuple.item2 != ActivityStatus.STOPED
+                ? _buildMenuButton(context)
+                : Container();
           },
         ),
         Selector<SalseActivityManagerPageProvider, bool>(
@@ -694,39 +680,33 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           final p = context.read<SalseActivityManagerPageProvider>();
           return BaseLayout(
               hasForm: true,
-              appBar: MainAppBar(
-                context,
-                titleText: AppText.text('${tr('salse_activity_manager')}',
-                    style: AppTextStyle.w500_22),
-                action: ValueListenableBuilder<Widget>(
-                    valueListenable: _actionButton,
-                    builder: (context, _actionButton, _) {
-                      return _actionButton;
-                    }),
-                actionCallback: () async {
-                  pr('pressed');
-                  if ((p.activityStatus == null ||
-                      p.activityStatus == ActivityStatus.ACTIVITY_START)) {
+              appBar: MainAppBar(context,
+                  titleText: AppText.text('${tr('salse_activity_manager')}',
+                      style: AppTextStyle.w500_22),
+                  action: ValueListenableBuilder<Widget>(
+                      valueListenable: _actionButton,
+                      builder: (context, _actionButton, _) {
+                        return _actionButton;
+                      }), actionCallback: () async {
+                final p = context.read<SalseActivityManagerPageProvider>();
+                pr('pressed');
+                switch (p.activityStatus!) {
+                  case ActivityStatus.STOPED:
+                    // save
+                    _pageType.value =
+                        PageType.SALES_ACTIVITY_MANAGER_DAY_DISIBLE;
+                    _actionButton.value = _pageType.value!.actionWidget;
+                    break;
+                  default:
                     AppDialog.showSimpleDialog(
                         context, null, tr('must_stop_activity_first'), () {
                       Navigator.pop(context);
-                    }, () {
-                      Navigator.pop(context);
-                    }, isSingleButton: true);
-                  } else {
-                    if (_pageType.value ==
-                        PageType.SALES_ACTIVITY_MANAGER_DAY) {
-                      final isAllConfirmed = await p.checkIsAllConfirmed();
-                      if (isAllConfirmed) {
-                        _pageType.value =
-                            PageType.SALES_ACTIVITY_MANAGER_DAY_DISIBLE;
-                        _actionButton.value = _pageType.value!.actionWidget;
-                      }
-                      //do something
-                    }
-                  }
-                },
-              ),
+                      CacheService.saveActivityStartDate(DateTime.now());
+                      CacheService.saveActivityStopedDate(DateTime.now());
+                      p.setActivityStatus(ActivityStatus.STOPED);
+                    }, () {}, isSingleButton: true);
+                }
+              }),
               child: FutureBuilder<ResultModel>(
                   future: p.getMonthData(),
                   builder: (context, snapshot) {

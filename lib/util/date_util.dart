@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/date_util.dart
  * Created Date: 2021-11-23 07:56:54
- * Last Modified: 2022-08-06 18:36:12
+ * Last Modified: 2022-08-07 02:38:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -40,6 +40,15 @@ class DateUtil {
   static DateTime nextDay({DateTime? dt}) {
     var date = dt ?? DateTime.now();
     return DateTime(date.year, date.month, date.day + 1);
+  }
+
+  static bool equlse(DateTime dt1, DateTime dt2, {bool? isForMonth}) {
+    return dt1.year == dt2.year &&
+            dt1.month == dt2.month &&
+            isForMonth != null &&
+            isForMonth
+        ? true
+        : dt1.day == dt2.day;
   }
 
   static int diffMounth(DateTime start, DateTime end) {

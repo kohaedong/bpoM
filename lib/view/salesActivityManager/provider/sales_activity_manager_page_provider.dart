@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-06 19:51:45
+ * Last Modified: 2022-08-07 03:25:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,17 +13,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
-import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/model/common/holiday_response_model.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_month_response_model.dart';
-import 'package:medsalesportal/model/rfc/search_key_response_model.dart';
-import 'package:medsalesportal/service/api_service.dart';
-import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/service/api_service.dart';
+import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/model/common/holiday_response_model.dart';
+import 'package:medsalesportal/model/rfc/search_key_response_model.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_month_response_model.dart';
 
 class SalseActivityManagerPageProvider extends ChangeNotifier {
   SalesActivityMonthResponseModel? monthResponseModel;
@@ -59,18 +59,13 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setActivityStatus(ActivityStatus? status) {
+  void setActivityStatus(ActivityStatus status) {
     activityStatus = status;
     notifyListeners();
   }
 
   void setIsShowConfirm(bool val) {
     isShowConfirm = val;
-    notifyListeners();
-  }
-
-  void resetDayData() {
-    dayResponseModel = null;
     notifyListeners();
   }
 
@@ -94,30 +89,55 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   }
 
   void checkShowConfirm() async {
-    await checkPreviousWorkingDay('', dt: DateTime.now());
-    var lastworkday = previousWorkingDay;
-    var isToday = selectedDay!.day == DateTime.now().day;
-    var seletedDayIsWorkingDayBeforeToday =
-        selectedDay!.day == lastworkday!.day;
+    await checkPreviousWorkingDay('', dt: selectedDay ?? DateTime.now());
+    var previouWorkday = previousWorkingDay;
+    var isToday = (selectedDay!.year == DateTime.now().year) &&
+        (selectedDay!.month == DateTime.now().month) &&
+        (selectedDay!.day == DateTime.now().day);
 
-    var isNotConfirmed = await checkConfiremStatus(datetime: selectedDay);
+    var seletedDayIsWorkingDayBeforeToday =
+        selectedDay!.day == previouWorkday!.day;
+    var isNotConfirmed = await checkConfiremStatus(datetime: previouWorkday);
     isShowConfirm =
-        isToday || (seletedDayIsWorkingDayBeforeToday && isNotConfirmed);
+        (isToday || (seletedDayIsWorkingDayBeforeToday && isNotConfirmed))
+            ? true
+            : null;
+    pr(' isToday? $isToday');
+    pr('seleted Day $selectedDay');
+    pr('previouDay $previouWorkday');
+    pr('seletedDayIsWorkingDayBeforeToday $seletedDayIsWorkingDayBeforeToday');
+    pr('isShowConfirm $isShowConfirm');
 
     if (seletedDayIsWorkingDayBeforeToday) {
-      setActivityStatus(ActivityStatus.ACTIVITY_STOP);
+      activityStatus = ActivityStatus.STOPED;
     } else {
-      if (isToday && CacheService.isActivityStart()) {
-        setActivityStatus(ActivityStatus.ACTIVITY_START);
+      var activityStartDate = CacheService.getActivityStartDate();
+      var activityStopDate = CacheService.getActivityStopedDate();
+      var isStarted = activityStartDate != null &&
+          (activityStartDate.year == selectedDay!.year) &&
+          (activityStartDate.month == selectedDay!.month);
+      var isStoped = activityStopDate != null &&
+          DateUtil.equlse(activityStopDate, selectedDay!);
+      if (isToday) {
+        pr('isStarted::$isStarted $activityStopDate');
+        pr('isStoped::$isStoped $activityStartDate');
+        activityStatus = isStarted && isStoped
+            ? ActivityStatus.STOPED
+            : isStarted && !isStoped
+                ? ActivityStatus.STARTED
+                : ActivityStatus.NONE;
+        pr(activityStatus);
       } else {
-        setActivityStatus(null);
+        activityStatus = ActivityStatus.NONE;
+        pr('????$activityStatus');
       }
+      notifyListeners();
     }
   }
 
   Future<bool> checkIsAllConfirmed() async {
     // 모든
-    notifyListeners();
+    // notifyListeners();
     return true;
   }
 
@@ -271,7 +291,9 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   Future<ResultModel> getHolidayListForMonth(DateTime date) async {
     pr(date.toIso8601String());
     if (holidayList.isEmpty ||
-        (holidayList.isNotEmpty && holidayList.first.month != date.month)) {
+        (holidayList.isNotEmpty &&
+            (holidayList.first.month != date.month ||
+                holidayList.first.year != date.year))) {
       _api.init(RequestType.CHECK_HOLIDAY);
       final result = await _api.request(body: {
         'year': date.year,
@@ -368,7 +390,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
           weekListForMonth
               .add([week0, week1, week2, week3, week4, week5, week6]);
         });
-        pr(weekListForMonth);
       }
       await getHolidayListForMonth(selectedMonth ?? DateTime.now());
       await checkIsShowPopup();
@@ -386,12 +407,13 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> getDayData({bool? isWithLoading}) async {
+    setIsShowConfirm(false);
     selectedMonth ??= DateTime.now();
     if (selectedDay != null &&
         (selectedDay!.year != selectedMonth!.year ||
             selectedDay!.month != selectedMonth!.month)) {
       setSelectedMonth(selectedDay!);
-      await getMonthData();
+      getMonthData();
     }
     if (isWithLoading != null && isWithLoading) {
       isLoadDayData = true;
@@ -423,13 +445,13 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       dayResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
-      checkShowConfirm();
-      checkIsAllConfirmed();
+
+      // checkIsAllConfirmed();
       if (isWithLoading != null && isWithLoading) {
         isLoadDayData = false;
       }
       isResetDay = null;
-
+      checkShowConfirm();
       return ResultModel(true);
     }
     if (isWithLoading != null && isWithLoading) {

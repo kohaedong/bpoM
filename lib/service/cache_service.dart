@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/cache_service.dart
  * Created Date: 2021-08-22 19:45:10
- * Last Modified: 2022-08-05 17:44:59
+ * Last Modified: 2022-08-07 01:34:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,6 +15,7 @@ import 'dart:convert';
 import 'package:medsalesportal/enums/account_type.dart';
 import 'package:medsalesportal/model/rfc/es_login_model.dart';
 import 'package:medsalesportal/model/user/user.dart';
+import 'package:medsalesportal/util/date_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //*  SharedPreferences Singleton
@@ -101,12 +102,22 @@ class CacheService {
     return getData('is_network_alive') ?? true;
   }
 
-  static void saveIsActivityStart(bool val) {
-    saveData('activity_status', val);
+  static void saveActivityStartDate(DateTime dt) {
+    saveData('activity_start_date', dt.toIso8601String());
   }
 
-  static bool isActivityStart() {
-    return getData('activity_status') ?? false;
+  static DateTime? getActivityStartDate() {
+    var date = getData('activity_start_date');
+    return date != null ? DateUtil.getDate(date) : null;
+  }
+
+  static void saveActivityStopedDate(DateTime dt) {
+    saveData('activity_stoped_date', dt.toIso8601String());
+  }
+
+  static DateTime? getActivityStopedDate() {
+    var date = getData('activity_stoped_date');
+    return date != null ? DateUtil.getDate(date) : null;
   }
 
 //* isLogin
