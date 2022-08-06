@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-06 19:20:34
+ * Last Modified: 2022-08-06 19:51:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -51,6 +51,11 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   void setSelectedDate(DateTime dt) {
     selectedDay = dt;
+    notifyListeners();
+  }
+
+  void setSelectedMonth(DateTime dt) {
+    selectedMonth = dt;
     notifyListeners();
   }
 
@@ -229,33 +234,36 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     await checkPreviousWorkingDay('', dt: dt);
     checkPreviousWorkingDaysNextWorkingDay =
         DateUtil.nextDay(dt: previousWorkingDay);
-    // var isConfirmed =
-    //     await checkConfiremStatus(isWithLastWorkdaysNextWorkDay: true);
-    // pr('-- not confirmed????${checkPreviousWorkingDaysNextWorkingDay?.toIso8601String()} $isConfirmed');
+    var isNotConfirmed = await checkConfiremStatus(
+        datetime: checkPreviousWorkingDaysNextWorkingDay);
+    pr('-- not confirmed????${checkPreviousWorkingDaysNextWorkingDay?.toIso8601String()} $isNotConfirmed');
     pr('-- is not holiday, ${checkPreviousWorkingDaysNextWorkingDay!.weekday}');
-    while (checkPreviousWorkingDaysNextWorkingDay!.weekday == 7 ||
-        checkPreviousWorkingDaysNextWorkingDay!.weekday == 6 ||
+    while ((checkPreviousWorkingDaysNextWorkingDay!.weekday == 7 &&
+            !isNotConfirmed) ||
+        (checkPreviousWorkingDaysNextWorkingDay!.weekday == 6 &&
+            !isNotConfirmed) ||
         holidayList.contains(checkPreviousWorkingDaysNextWorkingDay)) {
       checkPreviousWorkingDaysNextWorkingDay =
           DateUtil.nextDay(dt: checkPreviousWorkingDaysNextWorkingDay);
-      // isConfirmed =
-      // await checkConfiremStatus(isWithLastWorkdaysNextWorkDay: true);
-      // pr('-- while: not confirmed????${checkPreviousWorkingDaysNextWorkingDay?.toIso8601String()} $isConfirmed');
+      isNotConfirmed = await checkConfiremStatus(
+          datetime: checkPreviousWorkingDaysNextWorkingDay);
+      pr('-- while: not confirmed????${checkPreviousWorkingDaysNextWorkingDay?.toIso8601String()} $isNotConfirmed');
       pr('-- while:: weekDay: ${checkPreviousWorkingDaysNextWorkingDay!.weekday}');
     }
   }
 
   Future<void> checkPreviousWorkingDay(String day, {DateTime? dt}) async {
     previousWorkingDay = DateUtil.previousDay(dt: dt ?? DateUtil.getDate(day));
-    // var isConfirmed = await checkConfiremStatus();
-    // pr('++ not confirmed????${previousWorkingDay?.toIso8601String()} $isConfirmed');
+    var isNotConfirmed =
+        await checkConfiremStatus(datetime: previousWorkingDay);
+    pr('++ not confirmed????${previousWorkingDay?.toIso8601String()} $isNotConfirmed');
     pr('++ is not holiday, LastWorkDay :: ${previousWorkingDay!.weekday}');
-    while (previousWorkingDay!.weekday == 7 ||
-        previousWorkingDay!.weekday == 6 ||
+    while ((previousWorkingDay!.weekday == 7 && !isNotConfirmed) ||
+        (previousWorkingDay!.weekday == 6 && !isNotConfirmed) ||
         holidayList.contains(previousWorkingDay)) {
       previousWorkingDay = DateUtil.previousDay(dt: previousWorkingDay);
-      // isConfirmed = await checkConfiremStatus();
-      // pr('++ while : not confirmed ????${previousWorkingDay?.toIso8601String()} $isConfirmed');
+      isNotConfirmed = await checkConfiremStatus(datetime: previousWorkingDay);
+      pr('++ while : not confirmed ????${previousWorkingDay?.toIso8601String()} $isNotConfirmed');
       pr('++ while weekDay:: ${previousWorkingDay!.weekday}');
     }
   }
@@ -378,10 +386,18 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> getDayData({bool? isWithLoading}) async {
+    selectedMonth ??= DateTime.now();
+    if (selectedDay != null &&
+        (selectedDay!.year != selectedMonth!.year ||
+            selectedDay!.month != selectedMonth!.month)) {
+      setSelectedMonth(selectedDay!);
+      await getMonthData();
+    }
     if (isWithLoading != null && isWithLoading) {
       isLoadDayData = true;
       notifyListeners();
     }
+
     await getHolidayListForMonth(selectedDay ?? DateTime.now());
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
