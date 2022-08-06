@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/cache_service.dart
  * Created Date: 2021-08-22 19:45:10
- * Last Modified: 2022-07-18 17:39:44
+ * Last Modified: 2022-08-05 17:44:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -99,6 +99,14 @@ class CacheService {
 // Simulator 나 Emulator 에서는 네이트웍 상태 감지 못하기 때문에 Default true로 설정 합니다.
   static bool getNetworkState() {
     return getData('is_network_alive') ?? true;
+  }
+
+  static void saveIsActivityStart(bool val) {
+    saveData('activity_status', val);
+  }
+
+  static bool isActivityStart() {
+    return getData('activity_status') ?? false;
   }
 
 //* isLogin

@@ -57,7 +57,7 @@ class AppStyles {
       bool? isWithBorder,
       Color? borderColor,
       bool? isOnlyTopBorder}) {
-    return InkWell(
+    return GestureDetector(
       onTap: callback.call,
       child: Container(
           alignment: Alignment.center,

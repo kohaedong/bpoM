@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/date_util.dart
  * Created Date: 2021-11-23 07:56:54
- * Last Modified: 2022-08-02 17:15:55
+ * Last Modified: 2022-08-06 18:36:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -32,7 +32,7 @@ class DateUtil {
     return formatter.format(DateTime(date.year, date.month + 1, date.day));
   }
 
-  static DateTime lastDay({DateTime? dt}) {
+  static DateTime previousDay({DateTime? dt}) {
     var date = dt ?? DateTime.now();
     return DateTime(date.year, date.month, date.day - 1);
   }

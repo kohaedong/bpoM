@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-05 09:25:22
+ * Last Modified: 2022-08-06 19:10:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,7 +11,12 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/enums/activity_status.dart';
+import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/activity_menu_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
@@ -234,10 +239,12 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           final p = context.read<SalseActivityManagerPageProvider>();
           if (isMonth != null && isMonth) {
             isLeft != null && isLeft
-                ? p.getLastMonthData()
+                ? p.getPreviousMonthData()
                 : p.getNextMonthData();
           } else {
-            isLeft != null && isLeft ? p.getLastDayData() : p.getNextDayData();
+            isLeft != null && isLeft
+                ? p.getPreviousDayData()
+                : p.getNextDayData();
           }
         },
         child: Container(
@@ -312,6 +319,41 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     );
   }
 
+  Widget _buildPopupView(BuildContext context) {
+    final p = context.read<SalseActivityManagerPageProvider>();
+    return Selector<SalseActivityManagerPageProvider, bool?>(
+      selector: (context, provider) => provider.isShowPopup,
+      builder: (context, isShowPopup, _) {
+        return Builder(builder: (context) {
+          if (isShowPopup != null && isShowPopup) {
+            Future.delayed(Duration.zero, () async {
+              await AppDialog.showSimpleDialog(
+                  context,
+                  null,
+                  tr('have_unconfirmed_activity', args: [
+                    '${DateUtil.getDateStrForKR(p.previousWorkingDay!)}'
+                  ]), () {
+                pr('ok');
+                Navigator.pop(context);
+                final p = context.read<SalseActivityManagerPageProvider>();
+                p.setSelectedDate(p.previousWorkingDay!);
+                p.setIsResetDay(false);
+                p.getDayData(
+                  isWithLoading: true,
+                );
+                if (_tabController.index == 0) {
+                  _tabController.animateTo(1);
+                  p.resetIsShowPopup();
+                }
+              }, () {}, isSingleButton: true);
+            });
+          }
+          return Container();
+        });
+      },
+    );
+  }
+
   Widget _buildMonthView(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
@@ -351,7 +393,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           builder: (context, isLoadData, _) {
             return BaseLoadingViewOnStackWidget.build(context, isLoadData);
           },
-        )
+        ),
+        _buildPopupView(context),
       ],
     );
   }
@@ -539,12 +582,26 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             return isToday ? _buildMenuButton(context) : Container();
           },
         ),
+        Selector<SalseActivityManagerPageProvider, ActivityStatus?>(
+          selector: (context, provider) => provider.activityStatus,
+          builder: (context, activityStatus, _) {
+            if (activityStatus == null) {
+              Future.delayed(Duration.zero, () {
+                pr('null');
+                _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY;
+                _actionButton.value = _pageType.value!.actionWidget;
+              });
+              return Container();
+            }
+            return Container();
+          },
+        ),
         Selector<SalseActivityManagerPageProvider, bool>(
           selector: (context, provider) => provider.isLoadDayData,
           builder: (context, isLoadDayData, _) {
             return BaseLoadingViewOnStackWidget.build(context, isLoadDayData);
           },
-        )
+        ),
       ],
     );
   }
@@ -649,13 +706,27 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     builder: (context, _actionButton, _) {
                       return _actionButton;
                     }),
-                actionCallback: () {
+                actionCallback: () async {
                   pr('pressed');
-                  if (_pageType.value == PageType.SALES_ACTIVITY_MANAGER_DAY) {
-                    _pageType.value =
-                        PageType.SALES_ACTIVITY_MANAGER_DAY_DISIBLE;
-                    _actionButton.value = _pageType.value!.actionWidget;
-                    //do something
+                  if ((p.activityStatus == null ||
+                      p.activityStatus == ActivityStatus.ACTIVITY_START)) {
+                    AppDialog.showSimpleDialog(
+                        context, null, tr('must_stop_activity_first'), () {
+                      Navigator.pop(context);
+                    }, () {
+                      Navigator.pop(context);
+                    }, isSingleButton: true);
+                  } else {
+                    if (_pageType.value ==
+                        PageType.SALES_ACTIVITY_MANAGER_DAY) {
+                      final isAllConfirmed = await p.checkIsAllConfirmed();
+                      if (isAllConfirmed) {
+                        _pageType.value =
+                            PageType.SALES_ACTIVITY_MANAGER_DAY_DISIBLE;
+                        _actionButton.value = _pageType.value!.actionWidget;
+                      }
+                      //do something
+                    }
                   }
                 },
               ),

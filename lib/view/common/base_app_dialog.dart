@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-07-06 14:59:28
+ * Last Modified: 2022-08-05 17:13:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +35,45 @@ class AppDialog {
             contentPadding: EdgeInsets.zero,
             content:
                 WillPopScope(child: widget, onWillPop: () async => false)));
+  }
+
+  static Future<void> showSimpleDialog(BuildContext context, String? title,
+      String text, Function successCallback, Function cancelCallback,
+      {String? cancelButtonText,
+      String? successButtonText,
+      bool? isSingleButton}) async {
+    var default16 = AppTextStyle.default_16.copyWith(color: AppColors.primary);
+    var actionWidget = isSingleButton != null && isSingleButton
+        ? <Widget>[
+            CupertinoDialogAction(
+                textStyle: default16,
+                child: Text(successButtonText ?? tr('ok')),
+                onPressed: () => successCallback.call()),
+          ]
+        : <Widget>[
+            CupertinoDialogAction(
+              textStyle: default16,
+              child: Text(cancelButtonText ?? tr('cancel')),
+              onPressed: () => cancelCallback.call(),
+            ),
+            CupertinoDialogAction(
+                textStyle: default16,
+                child: Text(successButtonText ?? tr('ok')),
+                onPressed: () => successCallback.call()),
+          ];
+
+    await showCupertinoDialog(
+        context: context,
+        builder: (ctx) {
+          return CupertinoAlertDialog(
+              title: title != null ? Text(title) : Container(),
+              content: Text(
+                text,
+                style: AppTextStyle.default_14,
+                textAlign: TextAlign.center,
+              ),
+              actions: actionWidget);
+        });
   }
 
   static dynamic showNetworkErrorDialog(BuildContext context) {

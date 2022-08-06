@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-05 13:49:57
+ * Last Modified: 2022-08-06 19:20:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/common/holiday_response_model.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
@@ -30,21 +31,31 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   SearchKeyResponseModel? searchKeyResponseModel;
   HolidayResponseModel? holidayResponseModel;
   List<List<DateTime?>> weekListForMonth = [];
+
   bool isLoadData = false;
   bool isLoadDayData = false;
   bool isShowAnimation = false;
   bool? isShowConfirm;
   bool? isResetDay;
   bool? isShowPopup;
+
+  // -------- menu scope ------
+  ActivityStatus? activityStatus;
+  // -------- menu scope ------
   DateTime? selectedMonth;
   DateTime? selectedDay;
-  DateTime? lastWorkDay;
-  DateTime? lastWorkDaysNextWorkDay;
+  DateTime? previousWorkingDay;
+  DateTime? checkPreviousWorkingDaysNextWorkingDay;
   List<DateTime> holidayList = [];
   final _api = ApiService();
 
   void setSelectedDate(DateTime dt) {
     selectedDay = dt;
+    notifyListeners();
+  }
+
+  void setActivityStatus(ActivityStatus? status) {
+    activityStatus = status;
     notifyListeners();
   }
 
@@ -63,6 +74,11 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetIsShowPopup() {
+    isShowPopup = null;
+    notifyListeners();
+  }
+
   void getNextMonthData() {
     if (selectedMonth == null) {
       selectedMonth = DateUtil.getDate(DateUtil.nextMonth());
@@ -72,9 +88,32 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     getMonthData(isWithLoading: true);
   }
 
-  void checkShowConfirm() {
-    isShowConfirm = (selectedDay!.day == DateTime.now().day);
+  void checkShowConfirm() async {
+    await checkPreviousWorkingDay('', dt: DateTime.now());
+    var lastworkday = previousWorkingDay;
+    var isToday = selectedDay!.day == DateTime.now().day;
+    var seletedDayIsWorkingDayBeforeToday =
+        selectedDay!.day == lastworkday!.day;
+
+    var isNotConfirmed = await checkConfiremStatus(datetime: selectedDay);
+    isShowConfirm =
+        isToday || (seletedDayIsWorkingDayBeforeToday && isNotConfirmed);
+
+    if (seletedDayIsWorkingDayBeforeToday) {
+      setActivityStatus(ActivityStatus.ACTIVITY_STOP);
+    } else {
+      if (isToday && CacheService.isActivityStart()) {
+        setActivityStatus(ActivityStatus.ACTIVITY_START);
+      } else {
+        setActivityStatus(null);
+      }
+    }
+  }
+
+  Future<bool> checkIsAllConfirmed() async {
+    // 모든
     notifyListeners();
+    return true;
   }
 
   bool isHaveUnconfirmedActivity(
@@ -84,22 +123,26 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
             int.parse(val2 != null && val2.isNotEmpty ? val2.trim() : '0'));
   }
 
-  Future<void> checkIsShowPopup() async {
-    await checkLastWorkDaysNextWorkDay(DateTime.now());
+  Future<bool> checkConfiremStatus(
+      {bool? isWithLastWorkdaysNextWorkDay, DateTime? datetime}) async {
     var weekListIndex = 0;
     var weekRowIndex = 0;
     weekListForMonth.asMap().entries.forEach((map) {
-      var lastworkDay = DateUtil.getDate(
-          FormatUtil.removeDash(DateUtil.getDateStr('', dt: lastWorkDay)));
-      if (map.value.contains(lastworkDay)) {
+      var day = DateUtil.getDate(FormatUtil.removeDash(DateUtil.getDateStr('',
+          dt: datetime != null
+              ? datetime
+              : isWithLastWorkdaysNextWorkDay == null
+                  ? previousWorkingDay
+                  : checkPreviousWorkingDaysNextWorkingDay)));
+      if (map.value.contains(day)) {
         weekListIndex = map.key;
-        weekRowIndex = map.value.indexOf(lastworkDay);
+        weekRowIndex = map.value.indexOf(day);
       }
     });
-    pr('listIndex::: $weekListIndex');
-    pr('weekRowIndex::: $weekRowIndex');
+    pr('listIndex::: $weekListIndex $datetime');
+    pr('weekRowIndex::: $weekRowIndex $datetime');
     var model = monthResponseModel!.tList![weekListIndex];
-    var isLastDayNotConfirm = (weekRowIndex == 0
+    var isNotConfirmed = (weekRowIndex == 0
         ? isHaveUnconfirmedActivity(
             model.day04 != 'C', model.day01, model.day02)
         : weekRowIndex == 1
@@ -119,11 +162,15 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
                                 model.day54 != 'C', model.day51, model.day52)
                             : isHaveUnconfirmedActivity(
                                 model.day64 != 'C', model.day61, model.day62));
-    // &&   DateUtil.getDate(model.!)
-    // .isBefore(DateTime.now());
+    return isNotConfirmed;
+  }
 
-    isShowPopup = (lastWorkDaysNextWorkDay!.day == DateTime.now().day) &&
-        isLastDayNotConfirm;
+  Future<void> checkIsShowPopup() async {
+    await checkNextWorkingDayForPreviousWorkingDay(DateTime.now());
+    var isNotConfirmed = await checkConfiremStatus();
+    isShowPopup =
+        (checkPreviousWorkingDaysNextWorkingDay!.day == DateTime.now().day) &&
+            isNotConfirmed;
     pr('show popup ???? $isShowPopup');
     notifyListeners();
   }
@@ -133,7 +180,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getLastMonthData() {
+  void getPreviousMonthData() {
     if (selectedMonth == null) {
       selectedMonth = DateUtil.getDate(DateUtil.prevMonth());
     } else {
@@ -152,11 +199,11 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getLastDayData() {
+  void getPreviousDayData() {
     if (selectedDay == null) {
-      selectedDay = DateUtil.lastDay();
+      selectedDay = DateUtil.previousDay();
     } else {
-      selectedDay = DateUtil.lastDay(dt: selectedDay);
+      selectedDay = DateUtil.previousDay(dt: selectedDay);
     }
     getDayData(isWithLoading: true);
     notifyListeners();
@@ -178,26 +225,38 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     getDayData(isWithLoading: true);
   }
 
-  Future<void> checkLastWorkDaysNextWorkDay(DateTime dt) async {
-    await checkLastDay('', dt: dt);
-    lastWorkDaysNextWorkDay = DateUtil.nextDay(dt: lastWorkDay);
-    pr('lastWorkDaysNextWorkDay is not holiday, lastWorkDaysNextWorkDay :: ${lastWorkDaysNextWorkDay!.weekday}');
-    while (lastWorkDaysNextWorkDay!.weekday == 7 ||
-        lastWorkDaysNextWorkDay!.weekday == 6 ||
-        holidayList.contains(lastWorkDaysNextWorkDay)) {
-      lastWorkDaysNextWorkDay = DateUtil.nextDay(dt: lastWorkDaysNextWorkDay);
-      pr('lastWorkDaysNextWorkDay :: ${lastWorkDaysNextWorkDay!.weekday}');
+  Future<void> checkNextWorkingDayForPreviousWorkingDay(DateTime dt) async {
+    await checkPreviousWorkingDay('', dt: dt);
+    checkPreviousWorkingDaysNextWorkingDay =
+        DateUtil.nextDay(dt: previousWorkingDay);
+    // var isConfirmed =
+    //     await checkConfiremStatus(isWithLastWorkdaysNextWorkDay: true);
+    // pr('-- not confirmed????${checkPreviousWorkingDaysNextWorkingDay?.toIso8601String()} $isConfirmed');
+    pr('-- is not holiday, ${checkPreviousWorkingDaysNextWorkingDay!.weekday}');
+    while (checkPreviousWorkingDaysNextWorkingDay!.weekday == 7 ||
+        checkPreviousWorkingDaysNextWorkingDay!.weekday == 6 ||
+        holidayList.contains(checkPreviousWorkingDaysNextWorkingDay)) {
+      checkPreviousWorkingDaysNextWorkingDay =
+          DateUtil.nextDay(dt: checkPreviousWorkingDaysNextWorkingDay);
+      // isConfirmed =
+      // await checkConfiremStatus(isWithLastWorkdaysNextWorkDay: true);
+      // pr('-- while: not confirmed????${checkPreviousWorkingDaysNextWorkingDay?.toIso8601String()} $isConfirmed');
+      pr('-- while:: weekDay: ${checkPreviousWorkingDaysNextWorkingDay!.weekday}');
     }
   }
 
-  Future<void> checkLastDay(String day, {DateTime? dt}) async {
-    lastWorkDay = DateUtil.lastDay(dt: dt ?? DateUtil.getDate(day));
-    pr('lastWorkDay is not holiday, LastWorkDay :: ${lastWorkDay!.weekday}');
-    while (lastWorkDay!.weekday == 7 ||
-        lastWorkDay!.weekday == 6 ||
-        holidayList.contains(lastWorkDay)) {
-      lastWorkDay = DateUtil.lastDay(dt: lastWorkDay);
-      pr('lastWorkDay:: ${lastWorkDay!.weekday}');
+  Future<void> checkPreviousWorkingDay(String day, {DateTime? dt}) async {
+    previousWorkingDay = DateUtil.previousDay(dt: dt ?? DateUtil.getDate(day));
+    // var isConfirmed = await checkConfiremStatus();
+    // pr('++ not confirmed????${previousWorkingDay?.toIso8601String()} $isConfirmed');
+    pr('++ is not holiday, LastWorkDay :: ${previousWorkingDay!.weekday}');
+    while (previousWorkingDay!.weekday == 7 ||
+        previousWorkingDay!.weekday == 6 ||
+        holidayList.contains(previousWorkingDay)) {
+      previousWorkingDay = DateUtil.previousDay(dt: previousWorkingDay);
+      // isConfirmed = await checkConfiremStatus();
+      // pr('++ while : not confirmed ????${previousWorkingDay?.toIso8601String()} $isConfirmed');
+      pr('++ while weekDay:: ${previousWorkingDay!.weekday}');
     }
   }
 
@@ -305,17 +364,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       }
       await getHolidayListForMonth(selectedMonth ?? DateTime.now());
       await checkIsShowPopup();
-
       if (isWithLoading != null && isWithLoading) {
         isLoadData = false;
-      }
-      var now = DateTime.now();
-      //  검색 하고자 하는 월의 2번쨰주?(data not null) data 가져와  <당월 여부> 확인.
-      var randomDayOfMonth =
-          DateUtil.getDate(monthResponseModel!.tList![2].day0!);
-      if (randomDayOfMonth.year == now.year &&
-          randomDayOfMonth.month == now.month) {
-        checkLastDay('', dt: now);
       }
       notifyListeners();
       return ResultModel(true);
@@ -355,18 +405,15 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
-      // checkLastDay('', dt: selectedDay);
-      await checkLastWorkDaysNextWorkDay(selectedDay!);
       dayResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
-      dayResponseModel?.table260!.forEach((element) {
-        pr(element.toJson());
-      });
+      checkShowConfirm();
+      checkIsAllConfirmed();
       if (isWithLoading != null && isWithLoading) {
         isLoadDayData = false;
       }
       isResetDay = null;
-      checkShowConfirm();
+
       return ResultModel(true);
     }
     if (isWithLoading != null && isWithLoading) {
