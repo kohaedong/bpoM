@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-07 14:08:24
+ * Last Modified: 2022-08-07 17:42:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -16,6 +16,7 @@ import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/enums/menu_type.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/enums/image_type.dart';
@@ -327,7 +328,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   null,
                   tr('have_unconfirmed_activity', args: [
                     '${DateUtil.getDateStrForKR(p.previousWorkingDay!)}'
-                  ]), () {
+                  ]), callBack: (isPressedTrue) {
                 pr('ok');
                 Navigator.pop(context);
                 final p = context.read<SalseActivityManagerPageProvider>();
@@ -340,7 +341,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   _tabController.animateTo(1);
                   p.resetIsShowPopup();
                 }
-              }, () {}, isSingleButton: true);
+              }, isSingleButton: true);
             });
           }
           return Container();
@@ -456,6 +457,10 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         : Container();
   }
 
+  Widget _buildEventLocation(BuildContext context) {
+    return Container();
+  }
+
   Widget _buildAnimationMenuItem(
       BuildContext context, String text, MenuType menuType) {
     return AppStyles.buildButton(
@@ -468,7 +473,15 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       // var startedDate = CacheService.getActivityStartDate();
       // final isStarted =
       //     startedDate != null && DateUtil.equlse(startedDate, DateTime.now());
-      var isStarted = 1 + 1 == 3;
+      final p = context.read<ActivityMenuProvider>();
+      var table250 = p.editModel?.table250!;
+      var startAddressIsNotEmpty = table250 != null &&
+          table250.single.saddcat != null &&
+          table250.single.saddcat!.isNotEmpty;
+      var stopAddressIsNotEmpty = table250 != null &&
+          table250.single.saddcat != null &&
+          table250.single.faddcat!.isNotEmpty;
+      var isStarted = startAddressIsNotEmpty && !stopAddressIsNotEmpty;
       switch (menuType) {
         case MenuType.ACTIVITY_DELETE:
           break;
@@ -477,22 +490,25 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             pr('add activity ');
           } else {
             await AppDialog.showSimpleDialog(
-                context, null, tr('start_activity_first_commont'), () async {
-              pr('yes i want');
-              Navigator.pop(context);
-
-              await AppDialog.showSimpleDialog(context, null, 'start', () {
-                Navigator.pop(context, true);
-              }, () {
-                Navigator.pop(context, true);
-              }, callBack: (isPressedTrue) {
-                pr('callback $isPressedTrue');
-              });
-            }, () {
-              pr('no, i dont want');
-              Navigator.pop(context);
+                context, null, tr('start_activity_first_commont'),
+                callBack: (val) async {
+              pr(val);
+              if (val) {
+                Navigator.pop(context);
+                final result = await AppDialog.showPopup(
+                    context,
+                    buildDialogContents(
+                        context, _buildEventLocation(context), false, 300,
+                        radius: 30));
+                if (result != null) {
+                  pr(result);
+                }
+              } else {
+                Navigator.pop(context);
+              }
             });
           }
+
           break;
         case MenuType.ACTIVITY_STATUS:
           break;
@@ -500,12 +516,13 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     }, selfHeight: AppSize.smallButtonHeight * 1.2);
   }
 
-  Widget _buildDialogContents(
-      BuildContext context, SalesActivityDayResponseModel dayResponseModel) {
+  Widget _buildDialogContents(BuildContext context,
+      SalesActivityDayResponseModel fromParentWindowModel) {
     return ChangeNotifierProvider(
       create: (context) => ActivityMenuProvider(),
       builder: (context, _) {
-        pr(dayResponseModel.toJson());
+        final p = context.read<ActivityMenuProvider>();
+        p.saveEditModel(fromParentWindowModel);
         return Material(
           type: MaterialType.transparency,
           child: GestureDetector(
@@ -743,9 +760,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     break;
                   default:
                     AppDialog.showSimpleDialog(
-                        context, null, tr('stop_activity_first_commont'), () {
-                      Navigator.pop(context);
-                    }, () {}, isSingleButton: true);
+                        context, null, tr('stop_activity_first_commont'),
+                        isSingleButton: true);
                 }
               }),
               child: FutureBuilder<ResultModel>(

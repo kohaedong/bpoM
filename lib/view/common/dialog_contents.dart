@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-07-05 16:56:10
+ * Last Modified: 2022-08-07 17:45:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -36,7 +36,8 @@ Widget withTitleContents(String title) {
   );
 }
 
-Widget popUpTwoButton(BuildContext context, String rightText, String leftText) {
+Widget popUpTwoButton(BuildContext context, String rightText, String leftText,
+    {double? radius}) {
   return Row(
     children: [
       Expanded(
@@ -57,7 +58,8 @@ Widget buildDialogContents(BuildContext context, Widget widget,
     String? signgleButtonText,
     bool? iswithTitle,
     String? titleText,
-    bool? isNotPadding}) {
+    bool? isNotPadding,
+    double? radius}) {
   return Container(
       decoration:
           BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -84,13 +86,15 @@ Widget buildDialogContents(BuildContext context, Widget widget,
           isSigngleButton
               ? popUpSignleButton(context, '$signgleButtonText',
                   isWithBottomRadius: true)
-              : popUpTwoButton(context, rightButtonText!, leftButtonText!)
+              : popUpTwoButton(context, rightButtonText ?? tr('ok'),
+                  leftButtonText ?? tr('cancel'),
+                  radius: radius)
         ],
       ));
 }
 
 Widget popUpSignleButton(BuildContext context, String buttonText,
-    {bool? isLeftButton, bool? isWithBottomRadius}) {
+    {bool? isLeftButton, bool? isWithBottomRadius, double? radius}) {
   return Container(
     alignment: Alignment.center,
     decoration: BoxDecoration(
@@ -110,7 +114,7 @@ Widget popUpSignleButton(BuildContext context, String buttonText,
                 ? AppColors.defaultText
                 : AppColors.primary
             : AppColors.primary),
-        15, () {
+        radius ?? 25, () {
       Navigator.pop(
           context,
           isLeftButton != null

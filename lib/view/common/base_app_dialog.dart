@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-08-07 13:18:14
+ * Last Modified: 2022-08-07 17:55:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -35,37 +35,51 @@ class AppDialog {
             titlePadding: EdgeInsets.zero,
             insetPadding: EdgeInsets.zero,
             contentPadding: EdgeInsets.zero,
+            shape: isWithShapeBorder == null || isWithShapeBorder
+                ? RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(AppSize.radius15)))
+                : null,
             content:
                 WillPopScope(child: widget, onWillPop: () async => false)));
   }
 
-  static Future<void> showSimpleDialog(BuildContext context, String? title,
-      String text, Function successCallback, Function cancelCallback,
+  static Future<void> showSimpleDialog(
+      BuildContext context, String? title, String text,
       {String? cancelButtonText,
       String? successButtonText,
       bool? isSingleButton,
       DiaLogCallBack? callBack}) async {
-    var default16 = AppTextStyle.default_16.copyWith(color: AppColors.primary);
+    var default16 =
+        AppTextStyle.default_16.copyWith(color: AppColors.defaultText);
+    var primray16 = AppTextStyle.default_16.copyWith(color: AppColors.primary);
     var actionWidget = isSingleButton != null && isSingleButton
         ? <Widget>[
             CupertinoDialogAction(
-                textStyle: default16,
+                textStyle: primray16,
                 child: Text(successButtonText ?? tr('ok')),
-                onPressed: () => successCallback.call()),
+                onPressed: () => callBack != null
+                    ? callBack.call(true)
+                    : Navigator.pop(context)),
           ]
         : <Widget>[
             CupertinoDialogAction(
               textStyle: default16,
               child: Text(cancelButtonText ?? tr('cancel')),
-              onPressed: () => cancelCallback.call(),
+              onPressed: () => callBack != null
+                  ? callBack.call(false)
+                  : Navigator.pop(context),
             ),
             CupertinoDialogAction(
-                textStyle: default16,
-                child: Text(successButtonText ?? tr('ok')),
-                onPressed: () => successCallback.call()),
+              textStyle: primray16,
+              child: Text(successButtonText ?? tr('ok')),
+              onPressed: () => callBack != null
+                  ? callBack.call(true)
+                  : Navigator.pop(context),
+            ),
           ];
 
-    final result = await showCupertinoDialog(
+    showCupertinoDialog(
         context: context,
         builder: (ctx) {
           return CupertinoAlertDialog(
@@ -77,9 +91,6 @@ class AppDialog {
               ),
               actions: actionWidget);
         });
-    if (result != null) {
-      callBack?.call(result);
-    }
   }
 
   static dynamic showNetworkErrorDialog(BuildContext context) {

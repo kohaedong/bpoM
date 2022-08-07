@@ -57,7 +57,7 @@ class AppSize {
   static double get singlePopupHeight => 150.w;
   static double get menuPopupHeight =>
       buttonHeight * 3 + AppSize.dividerHeight * 2;
-  static double get buttonHeight => 55;
+  static double get buttonHeight => 45.0;
   static double get bottomButtonHeight => 65;
   static double get dividerHeight => 2;
   static double get strokeWidth => 2;
@@ -68,7 +68,7 @@ class AppSize {
   static double get radius4 => 4.r;
   static double get progressHeight => 3.h;
   static double get radius8 => 8.r;
-  static double get radius15 => 15.r;
+  static double get radius15 => 14.0;
   static double get radius25 => 25.r;
   static double get cellPadding => 10.w;
   static EdgeInsets get popupPadding =>
