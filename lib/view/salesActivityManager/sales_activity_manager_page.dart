@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-07 12:24:42
+ * Last Modified: 2022-08-07 14:08:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -456,18 +456,43 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         : Container();
   }
 
-  Widget _buildAnimationMenuItem(String text, MenuType menuType) {
+  Widget _buildAnimationMenuItem(
+      BuildContext context, String text, MenuType menuType) {
     return AppStyles.buildButton(
         context,
         '$text',
         120,
         AppColors.whiteText,
         AppTextStyle.default_14.copyWith(color: AppColors.primary),
-        AppSize.radius25, () {
+        AppSize.radius25, () async {
+      // var startedDate = CacheService.getActivityStartDate();
+      // final isStarted =
+      //     startedDate != null && DateUtil.equlse(startedDate, DateTime.now());
+      var isStarted = 1 + 1 == 3;
       switch (menuType) {
         case MenuType.ACTIVITY_DELETE:
           break;
         case MenuType.ACTIVITY_ADD:
+          if (isStarted) {
+            pr('add activity ');
+          } else {
+            await AppDialog.showSimpleDialog(
+                context, null, tr('start_activity_first_commont'), () async {
+              pr('yes i want');
+              Navigator.pop(context);
+
+              await AppDialog.showSimpleDialog(context, null, 'start', () {
+                Navigator.pop(context, true);
+              }, () {
+                Navigator.pop(context, true);
+              }, callBack: (isPressedTrue) {
+                pr('callback $isPressedTrue');
+              });
+            }, () {
+              pr('no, i dont want');
+              Navigator.pop(context);
+            });
+          }
           break;
         case MenuType.ACTIVITY_STATUS:
           break;
@@ -496,15 +521,15 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     child: Column(
                       children: [
                         _buildAnimationMenuItem(
-                            '최종콜 삭제', MenuType.ACTIVITY_DELETE),
+                            context, '최종콜 삭제', MenuType.ACTIVITY_DELETE),
                         defaultSpacing(),
                         defaultSpacing(),
                         _buildAnimationMenuItem(
-                            '신규활동 추가', MenuType.ACTIVITY_ADD),
+                            context, '신규활동 추가', MenuType.ACTIVITY_ADD),
                         defaultSpacing(),
                         defaultSpacing(),
                         _buildAnimationMenuItem(
-                            '영업활동 시작', MenuType.ACTIVITY_STATUS),
+                            context, '영업활동 시작', MenuType.ACTIVITY_STATUS),
                       ],
                     )),
                 Positioned(
@@ -718,11 +743,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     break;
                   default:
                     AppDialog.showSimpleDialog(
-                        context, null, tr('must_stop_activity_first'), () {
+                        context, null, tr('stop_activity_first_commont'), () {
                       Navigator.pop(context);
-                      // CacheService.saveActivityStartDate(DateTime.now());
-                      // CacheService.saveActivityStopedDate(DateTime.now());
-                      // p.setActivityStatus(ActivityStatus.STOPED);
                     }, () {}, isSingleButton: true);
                 }
               }),

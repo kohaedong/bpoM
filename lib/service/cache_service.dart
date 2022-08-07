@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/cache_service.dart
  * Created Date: 2021-08-22 19:45:10
- * Last Modified: 2022-08-07 01:34:23
+ * Last Modified: 2022-08-07 13:44:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -102,23 +102,23 @@ class CacheService {
     return getData('is_network_alive') ?? true;
   }
 
-  static void saveActivityStartDate(DateTime dt) {
-    saveData('activity_start_date', dt.toIso8601String());
-  }
+  // static void saveActivityStartDate(DateTime dt) {
+  //   saveData('activity_start_date', dt.toIso8601String());
+  // }
 
-  static DateTime? getActivityStartDate() {
-    var date = getData('activity_start_date');
-    return date != null ? DateUtil.getDate(date) : null;
-  }
+  // static DateTime? getActivityStartDate() {
+  //   var date = getData('activity_start_date');
+  //   return date != null ? DateUtil.getDate(date) : null;
+  // }
 
-  static void saveActivityStopedDate(DateTime dt) {
-    saveData('activity_stoped_date', dt.toIso8601String());
-  }
+  // static void saveActivityStopedDate(DateTime dt) {
+  //   saveData('activity_stoped_date', dt.toIso8601String());
+  // }
 
-  static DateTime? getActivityStopedDate() {
-    var date = getData('activity_stoped_date');
-    return date != null ? DateUtil.getDate(date) : null;
-  }
+  // static DateTime? getActivityStopedDate() {
+  //   var date = getData('activity_stoped_date');
+  //   return date != null ? DateUtil.getDate(date) : null;
+  // }
 
 //* isLogin
   static void saveIsLogin(String islogn) {

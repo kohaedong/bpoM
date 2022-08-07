@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-07 12:37:03
+ * Last Modified: 2022-08-07 14:12:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,12 +12,12 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/common/holiday_response_model.dart';
@@ -102,34 +102,31 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         (isToday || (seletedDayIsWorkingDayBeforeToday && isNotConfirmed))
             ? true
             : null;
-    pr(' isToday? $isToday');
-    pr('seleted Day $selectedDay');
-    pr('previouDay $previouWorkday');
-    pr('seletedDayIsWorkingDayBeforeToday $seletedDayIsWorkingDayBeforeToday');
-    pr('isShowConfirm $isShowConfirm');
-
+    pr('isShowConfirm:: $isShowConfirm');
     if (seletedDayIsWorkingDayBeforeToday) {
       activityStatus = ActivityStatus.STOPED;
     } else {
-      var activityStartDate = CacheService.getActivityStartDate();
-      var activityStopDate = CacheService.getActivityStopedDate();
-      var isStarted = activityStartDate != null &&
-          (activityStartDate.year == selectedDay!.year) &&
-          (activityStartDate.month == selectedDay!.month);
-      var isStoped = activityStopDate != null &&
-          DateUtil.equlse(activityStopDate, selectedDay!);
       if (isToday) {
-        pr('isStarted::$isStarted $activityStopDate');
-        pr('isStoped::$isStoped $activityStartDate');
-        activityStatus = isStarted && isStoped
-            ? ActivityStatus.STOPED
-            : isStarted && !isStoped
-                ? ActivityStatus.STARTED
-                : ActivityStatus.NONE;
+        var table250 = dayResponseModel!.table250!;
+        var startAddressIsNotEmpty = table250.single.saddcat != null &&
+            table250.single.saddcat!.isNotEmpty;
+        var stopAddressIsNotEmpty = table250.single.saddcat != null &&
+            table250.single.faddcat!.isNotEmpty;
+        if (table250.isNotEmpty &&
+            stopAddressIsNotEmpty &&
+            stopAddressIsNotEmpty) {
+          activityStatus = ActivityStatus.STOPED;
+        } else if (table250.isNotEmpty &&
+            startAddressIsNotEmpty &&
+            !stopAddressIsNotEmpty) {
+          activityStatus = ActivityStatus.STARTED;
+        } else {
+          activityStatus = ActivityStatus.NONE;
+        }
         pr(activityStatus);
       } else {
         activityStatus = ActivityStatus.NONE;
-        pr('????$activityStatus');
+        pr(activityStatus);
       }
       notifyListeners();
     }
@@ -408,7 +405,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   Future<ResultModel> getDayData({bool? isWithLoading}) async {
     isShowConfirm = false;
-    activityStatus = ActivityStatus.NONE;
+    activityStatus = ActivityStatus.STOPED;
     notifyListeners();
     selectedMonth ??= DateTime.now();
     if (selectedDay != null &&
@@ -448,7 +445,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       dayResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
-      pr(dayResponseModel?.toJson());
+      pr(dayResponseModel?.table250?.length);
+      pr(dayResponseModel?.table250?.first.toJson());
       // checkIsAllConfirmed();
       if (isWithLoading != null && isWithLoading) {
         isLoadDayData = false;

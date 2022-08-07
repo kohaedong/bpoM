@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-08-05 17:13:49
+ * Last Modified: 2022-08-07 13:18:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -20,6 +20,8 @@ import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/base_error_dialog_contents.dart';
+
+typedef DiaLogCallBack = Function(bool);
 
 class AppDialog {
   static dynamic showPopup(BuildContext context, Widget widget,
@@ -41,7 +43,8 @@ class AppDialog {
       String text, Function successCallback, Function cancelCallback,
       {String? cancelButtonText,
       String? successButtonText,
-      bool? isSingleButton}) async {
+      bool? isSingleButton,
+      DiaLogCallBack? callBack}) async {
     var default16 = AppTextStyle.default_16.copyWith(color: AppColors.primary);
     var actionWidget = isSingleButton != null && isSingleButton
         ? <Widget>[
@@ -62,7 +65,7 @@ class AppDialog {
                 onPressed: () => successCallback.call()),
           ];
 
-    await showCupertinoDialog(
+    final result = await showCupertinoDialog(
         context: context,
         builder: (ctx) {
           return CupertinoAlertDialog(
@@ -74,6 +77,9 @@ class AppDialog {
               ),
               actions: actionWidget);
         });
+    if (result != null) {
+      callBack?.call(result);
+    }
   }
 
   static dynamic showNetworkErrorDialog(BuildContext context) {
