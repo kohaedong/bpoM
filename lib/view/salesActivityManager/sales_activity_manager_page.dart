@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-07 02:57:41
+ * Last Modified: 2022-08-07 12:24:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
+import 'package:medsalesportal/enums/menu_type.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
@@ -454,27 +456,36 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         : Container();
   }
 
-  Widget _buildAnimationMenuItem(String text) {
+  Widget _buildAnimationMenuItem(String text, MenuType menuType) {
     return AppStyles.buildButton(
         context,
         '$text',
         120,
         AppColors.whiteText,
         AppTextStyle.default_14.copyWith(color: AppColors.primary),
-        AppSize.radius25,
-        () {},
-        selfHeight: AppSize.smallButtonHeight * 1.2);
+        AppSize.radius25, () {
+      switch (menuType) {
+        case MenuType.ACTIVITY_DELETE:
+          break;
+        case MenuType.ACTIVITY_ADD:
+          break;
+        case MenuType.ACTIVITY_STATUS:
+          break;
+      }
+    }, selfHeight: AppSize.smallButtonHeight * 1.2);
   }
 
-  Widget _buildDialogContents(BuildContext ctx) {
+  Widget _buildDialogContents(
+      BuildContext context, SalesActivityDayResponseModel dayResponseModel) {
     return ChangeNotifierProvider(
       create: (context) => ActivityMenuProvider(),
       builder: (context, _) {
+        pr(dayResponseModel.toJson());
         return Material(
           type: MaterialType.transparency,
           child: GestureDetector(
             onTap: () {
-              Navigator.pop(ctx);
+              Navigator.pop(context);
             },
             child: Stack(
               alignment: Alignment.center,
@@ -484,13 +495,16 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     bottom: AppSize.padding * 2 + AppSize.buttonHeight,
                     child: Column(
                       children: [
-                        _buildAnimationMenuItem('최종콜 삭제'),
+                        _buildAnimationMenuItem(
+                            '최종콜 삭제', MenuType.ACTIVITY_DELETE),
                         defaultSpacing(),
                         defaultSpacing(),
-                        _buildAnimationMenuItem('신규활동 추가'),
+                        _buildAnimationMenuItem(
+                            '신규활동 추가', MenuType.ACTIVITY_ADD),
                         defaultSpacing(),
                         defaultSpacing(),
-                        _buildAnimationMenuItem('영업활동 시작'),
+                        _buildAnimationMenuItem(
+                            '영업활동 시작', MenuType.ACTIVITY_STATUS),
                       ],
                     )),
                 Positioned(
@@ -499,7 +513,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     child: FloatingActionButton(
                       backgroundColor: AppColors.primary,
                       onPressed: () {
-                        Navigator.pop(ctx);
+                        Navigator.pop(context);
                       },
                       child: Icon(Icons.close, color: AppColors.whiteText),
                     ))
@@ -512,18 +526,23 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   }
 
   Widget _buildMenuButton(BuildContext context) {
+    final p = context.read<SalseActivityManagerPageProvider>();
+
     return Positioned(
         bottom: AppSize.padding,
         right: AppSize.padding,
         child: FloatingActionButton(
           backgroundColor: AppColors.primary,
           onPressed: () async {
-            await showDialog(
+            final result = await showDialog(
                 useSafeArea: false,
                 context: context,
-                builder: (ctx) {
-                  return _buildDialogContents(ctx);
+                builder: (context) {
+                  return _buildDialogContents(context, p.dayResponseModel!);
                 });
+            if (result != null) {
+              pr('result $result');
+            }
           },
           child: AppImage.getImage(ImageType.PLUS, color: AppColors.whiteText),
         ));
@@ -570,7 +589,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         Selector<SalseActivityManagerPageProvider,
             Tuple2<bool, ActivityStatus?>>(
           selector: (context, provider) => Tuple2(
-              provider.selectedDay?.day == DateTime.now().day,
+              DateUtil.equlse(provider.selectedDay!, DateTime.now()),
               provider.activityStatus),
           builder: (context, tuple, _) {
             pr(tuple.item1);
@@ -701,9 +720,9 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     AppDialog.showSimpleDialog(
                         context, null, tr('must_stop_activity_first'), () {
                       Navigator.pop(context);
-                      CacheService.saveActivityStartDate(DateTime.now());
-                      CacheService.saveActivityStopedDate(DateTime.now());
-                      p.setActivityStatus(ActivityStatus.STOPED);
+                      // CacheService.saveActivityStartDate(DateTime.now());
+                      // CacheService.saveActivityStopedDate(DateTime.now());
+                      // p.setActivityStatus(ActivityStatus.STOPED);
                     }, () {}, isSingleButton: true);
                 }
               }),
