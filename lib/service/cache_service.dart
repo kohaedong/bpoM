@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/cache_service.dart
  * Created Date: 2021-08-22 19:45:10
- * Last Modified: 2022-08-07 13:44:48
+ * Last Modified: 2022-08-07 19:49:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,7 +15,6 @@ import 'dart:convert';
 import 'package:medsalesportal/enums/account_type.dart';
 import 'package:medsalesportal/model/rfc/es_login_model.dart';
 import 'package:medsalesportal/model/user/user.dart';
-import 'package:medsalesportal/util/date_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //*  SharedPreferences Singleton

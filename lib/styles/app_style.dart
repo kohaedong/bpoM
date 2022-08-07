@@ -69,7 +69,8 @@ class AppStyles {
                   ? Border.all(
                       color: borderColor!, width: AppSize.defaultBorderWidth)
                   : isOnlyTopBorder != null
-                      ? Border(top: BorderSide(color: AppColors.textGrey))
+                      ? Border(
+                          top: BorderSide(width: .5, color: AppColors.textGrey))
                       : null,
               borderRadius: isLeft != null
                   ? isLeft

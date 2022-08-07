@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-08-07 17:45:29
+ * Last Modified: 2022-08-07 21:52:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -100,7 +100,7 @@ Widget popUpSignleButton(BuildContext context, String buttonText,
     decoration: BoxDecoration(
       border: isLeftButton != null
           ? isLeftButton
-              ? Border(right: BorderSide(width: 1, color: AppColors.textGrey))
+              ? Border(right: BorderSide(width: .5, color: AppColors.textGrey))
               : null
           : null,
     ),
@@ -172,8 +172,10 @@ Widget buildTowButtonDialogContents(
                   height: AppSize.buttonHeight,
                   decoration: BoxDecoration(
                       border: Border(
-                          right: BorderSide(color: AppColors.textGrey),
-                          top: BorderSide(color: AppColors.textGrey))),
+                          right:
+                              BorderSide(width: .5, color: AppColors.textGrey),
+                          top: BorderSide(
+                              width: .5, color: AppColors.textGrey))),
                   child: TextButton(
                       style: AppStyles.getButtonStyle(
                           successBackgraoundColor ?? AppColors.whiteText,
@@ -189,8 +191,9 @@ Widget buildTowButtonDialogContents(
                   width: AppSize.defaultContentsWidth / 2,
                   height: AppSize.buttonHeight,
                   decoration: BoxDecoration(
-                      border:
-                          Border(top: BorderSide(color: AppColors.textGrey))),
+                      border: Border(
+                          top: BorderSide(
+                              width: .5, color: AppColors.textGrey))),
                   child: TextButton(
                       style: AppStyles.getButtonStyle(
                           successBackgraoundColor ?? AppColors.whiteText,

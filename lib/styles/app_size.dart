@@ -57,7 +57,7 @@ class AppSize {
   static double get singlePopupHeight => 150.w;
   static double get menuPopupHeight =>
       buttonHeight * 3 + AppSize.dividerHeight * 2;
-  static double get buttonHeight => 45.0;
+  static double get buttonHeight => 55;
   static double get bottomButtonHeight => 65;
   static double get dividerHeight => 2;
   static double get strokeWidth => 2;

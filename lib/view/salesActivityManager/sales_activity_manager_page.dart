@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-07 17:42:56
+ * Last Modified: 2022-08-07 22:05:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,9 +14,11 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/enums/menu_type.dart';
+import 'package:medsalesportal/enums/popup_search_type.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
-import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/view/common/base_popup_search.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
+import 'package:medsalesportal/view/common/widget_of_select_location_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/enums/image_type.dart';
@@ -463,57 +465,81 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
 
   Widget _buildAnimationMenuItem(
       BuildContext context, String text, MenuType menuType) {
-    return AppStyles.buildButton(
-        context,
-        '$text',
-        120,
-        AppColors.whiteText,
-        AppTextStyle.default_14.copyWith(color: AppColors.primary),
-        AppSize.radius25, () async {
-      // var startedDate = CacheService.getActivityStartDate();
-      // final isStarted =
-      //     startedDate != null && DateUtil.equlse(startedDate, DateTime.now());
-      final p = context.read<ActivityMenuProvider>();
-      var table250 = p.editModel?.table250!;
-      var startAddressIsNotEmpty = table250 != null &&
-          table250.single.saddcat != null &&
-          table250.single.saddcat!.isNotEmpty;
-      var stopAddressIsNotEmpty = table250 != null &&
-          table250.single.saddcat != null &&
-          table250.single.faddcat!.isNotEmpty;
-      var isStarted = startAddressIsNotEmpty && !stopAddressIsNotEmpty;
-      switch (menuType) {
-        case MenuType.ACTIVITY_DELETE:
-          break;
-        case MenuType.ACTIVITY_ADD:
-          if (isStarted) {
-            pr('add activity ');
-          } else {
-            await AppDialog.showSimpleDialog(
-                context, null, tr('start_activity_first_commont'),
-                callBack: (val) async {
-              pr(val);
-              if (val) {
-                Navigator.pop(context);
+    return Selector<ActivityMenuProvider, String>(
+      selector: (context, provider) => provider.activitStatusText,
+      builder: (context, statsText, _) {
+        return AppStyles.buildButton(
+            context,
+            menuType == MenuType.ACTIVITY_STATUS ? statsText : '$text',
+            120,
+            AppColors.whiteText,
+            AppTextStyle.default_14.copyWith(color: AppColors.primary),
+            AppSize.radius25, () async {
+          // var startedDate = CacheService.getActivityStartDate();
+          // final isStarted =
+          //     startedDate != null && DateUtil.equlse(startedDate, DateTime.now());
+          final p = context.read<ActivityMenuProvider>();
+
+          switch (menuType) {
+            case MenuType.ACTIVITY_DELETE:
+              break;
+            case MenuType.ACTIVITY_ADD:
+              if (p.isStarted()) {
+                pr('add activity ');
+              } else {
                 final result = await AppDialog.showPopup(
                     context,
                     buildDialogContents(
-                        context, _buildEventLocation(context), false, 300,
-                        radius: 30));
+                      context,
+                      Container(
+                          alignment: Alignment.center,
+                          height:
+                              AppSize.singlePopupHeight - AppSize.buttonHeight,
+                          child: AppText.text(
+                              tr('start_activity_first_commont'),
+                              maxLines: 4,
+                              style: AppTextStyle.default_16)),
+                      false,
+                      AppSize.singlePopupHeight,
+                    ));
                 if (result != null) {
-                  pr(result);
-                }
-              } else {
-                Navigator.pop(context);
-              }
-            });
-          }
+                  result as bool;
+                  if (result) {
+                    Future.delayed(Duration.zero, () async {
+                      final result = await AppDialog.showPopup(
+                        context,
+                        WidgetOfSelectLocation(
+                          status: p.isStarted()
+                              ? ActivityStatus.STOPED
+                              : ActivityStatus.STARTED,
+                          callback: (isPressedTrue) {
+                            if (isPressedTrue) {
+                              // get address api && save location data to table.
 
-          break;
-        case MenuType.ACTIVITY_STATUS:
-          break;
-      }
-    }, selfHeight: AppSize.smallButtonHeight * 1.2);
+                              pr(isPressedTrue);
+                            }
+                          },
+                        ),
+                      );
+
+                      if (result != null) {
+                        if (result) {
+                          p.changeIsLoad();
+                          pr('ok');
+                        }
+                      }
+                    });
+                  }
+                }
+              }
+              break;
+            case MenuType.ACTIVITY_STATUS:
+              p.setActivityStatusText(tr('stop_sales_activity'));
+              break;
+          }
+        }, selfHeight: AppSize.smallButtonHeight * 1.2);
+      },
+    );
   }
 
   Widget _buildDialogContents(BuildContext context,
@@ -522,45 +548,49 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       create: (context) => ActivityMenuProvider(),
       builder: (context, _) {
         final p = context.read<ActivityMenuProvider>();
-        p.saveEditModel(fromParentWindowModel);
+        p.initData(fromParentWindowModel);
         return Material(
           type: MaterialType.transparency,
-          child: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Positioned(
-                    right: AppSize.padding,
-                    bottom: AppSize.padding * 2 + AppSize.buttonHeight,
-                    child: Column(
-                      children: [
-                        _buildAnimationMenuItem(
-                            context, '최종콜 삭제', MenuType.ACTIVITY_DELETE),
-                        defaultSpacing(),
-                        defaultSpacing(),
-                        _buildAnimationMenuItem(
-                            context, '신규활동 추가', MenuType.ACTIVITY_ADD),
-                        defaultSpacing(),
-                        defaultSpacing(),
-                        _buildAnimationMenuItem(
-                            context, '영업활동 시작', MenuType.ACTIVITY_STATUS),
-                      ],
-                    )),
-                Positioned(
-                    right: AppSize.padding,
-                    bottom: AppSize.padding,
-                    child: FloatingActionButton(
-                      backgroundColor: AppColors.primary,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(Icons.close, color: AppColors.whiteText),
-                    ))
-              ],
-            ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Positioned(
+                  right: AppSize.padding,
+                  bottom: AppSize.padding * 2 + AppSize.buttonHeight,
+                  child: Column(
+                    children: [
+                      _buildAnimationMenuItem(
+                          context, '최종콜 삭제', MenuType.ACTIVITY_DELETE),
+                      defaultSpacing(),
+                      defaultSpacing(),
+                      _buildAnimationMenuItem(
+                          context, '신규활동 추가', MenuType.ACTIVITY_ADD),
+                      defaultSpacing(),
+                      defaultSpacing(),
+                      _buildAnimationMenuItem(
+                          context, '', MenuType.ACTIVITY_STATUS),
+                    ],
+                  )),
+              Positioned(
+                  right: AppSize.padding,
+                  bottom: AppSize.padding,
+                  child: FloatingActionButton(
+                    backgroundColor: AppColors.primary,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(Icons.close, color: AppColors.whiteText),
+                  )),
+              Positioned(
+                  left: 0,
+                  bottom: 0,
+                  child: Selector<ActivityMenuProvider, bool>(
+                      selector: (context, provider) => provider.isLoadData,
+                      builder: (context, isLoadData, _) {
+                        return BaseLoadingViewOnStackWidget.build(
+                            context, isLoadData);
+                      }))
+            ],
           ),
         );
       },
