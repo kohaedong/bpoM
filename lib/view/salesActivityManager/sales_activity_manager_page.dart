@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-08 17:30:11
+ * Last Modified: 2022-08-08 18:27:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -700,6 +700,9 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             case ActivityStatus.STOPED:
               _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY;
               break;
+            case ActivityStatus.INIT:
+              _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY;
+              break;
             case ActivityStatus.NONE:
               _pageType.value = PageType.DEFAULT;
               break;
@@ -790,12 +793,11 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 switch (p.activityStatus!) {
                   case ActivityStatus.STOPED:
                     // save
-                    pr('ok');
-                    _pageType.value =
-                        PageType.SALES_ACTIVITY_MANAGER_DAY_DISIBLE;
-                    _actionButton.value = _pageType.value!.actionWidget;
+                    pr(' ${p.activityStatus}');
+                    p.setActivityStatus(ActivityStatus.FINISH);
                     break;
                   case ActivityStatus.FINISH:
+                    pr('finish');
                     DoNothingAction();
                     break;
                   default:

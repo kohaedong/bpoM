@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-08-07 22:49:23
+ * Last Modified: 2022-08-08 18:00:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -61,14 +61,15 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
           Navigator.pop(context);
         },
         child: Container(
-          height: AppSize.buttonHeight,
-          alignment: Alignment.center,
-          decoration: decration,
-          width: AppSize.defaultContentsWidth / 2,
-          child: AppText.text(isLeft ? tr('cancel') : tr('ok'),
-              style: AppTextStyle.default_16.copyWith(
-                  color: isLeft ? AppColors.defaultText : AppColors.primary)),
-        ));
+            height: AppSize.buttonHeight,
+            alignment: Alignment.center,
+            decoration: decration,
+            width: AppSize.defaultContentsWidth / 2,
+            child: AppText.text(
+              isLeft ? tr('cancel') : tr('ok'),
+              style: AppTextStyle.menu_18(
+                  isLeft ? AppColors.defaultText : AppColors.primary),
+            )));
   }
 
   Widget _buildBox(BuildContext context, double width,
