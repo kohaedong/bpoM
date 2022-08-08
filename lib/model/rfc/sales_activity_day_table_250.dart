@@ -37,6 +37,8 @@ class SalesActivityDayTable250 {
   String? stime;
   @JsonKey(name: 'SCALL_TYPE')
   String? scallType;
+  @JsonKey(name: 'FCALL_TYPE')
+  String? fcallType;
   @JsonKey(name: 'FX_LATITUDE')
   double? fxLatitude;
   @JsonKey(name: 'FY_LONGITUDE')
@@ -125,7 +127,8 @@ class SalesActivityDayTable250 {
       this.scallType,
       this.stime,
       this.sxLatitude,
-      this.sxLongitude);
+      this.sxLongitude,
+      this.fcallType);
   factory SalesActivityDayTable250.fromJson(Object? json) =>
       _$SalesActivityDayTable250FromJson(json as Map<String, dynamic>);
   Map<String, dynamic> toJson() => _$SalesActivityDayTable250ToJson(this);

@@ -46,6 +46,7 @@ SalesActivityDayTable250 _$SalesActivityDayTable250FromJson(
       json['STIME'] as String?,
       (json['SX_LATITUDE'] as num?)?.toDouble(),
       (json['SY_LONGITUDE'] as num?)?.toDouble(),
+      json['FCALL_TYPE'] as String?,
     );
 
 Map<String, dynamic> _$SalesActivityDayTable250ToJson(
@@ -63,6 +64,7 @@ Map<String, dynamic> _$SalesActivityDayTable250ToJson(
       'SY_LONGITUDE': instance.sxLongitude,
       'STIME': instance.stime,
       'SCALL_TYPE': instance.scallType,
+      'FCALL_TYPE': instance.fcallType,
       'FX_LATITUDE': instance.fxLatitude,
       'FY_LONGITUDE': instance.fylongitude,
       'FTIME': instance.ftime,

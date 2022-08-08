@@ -343,7 +343,7 @@ class SigninProvider extends ChangeNotifier {
     }
     _api.init(RequestType.SIGNIN);
     final signResult = await _api.request(body: signBody);
-
+    pr(signResult?.body);
     if (signResult!.statusCode == 200 && signResult.body['code'] == "NG") {
       isLoadData = false;
       notifyListeners();
@@ -353,7 +353,6 @@ class SigninProvider extends ChangeNotifier {
       user = User.fromJson(signResult.body['data']);
       final tokenResult =
           await requestToken(signBody['userAccount'], signBody['passwd']);
-
       if (tokenResult != null) {
         user!.tokenInfo = tokenResult;
       } else {

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-08-07 22:46:52
+ * Last Modified: 2022-08-08 14:31:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -41,25 +41,14 @@ class ActivityMenuProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isStarted() {
-    var table250 = editModel?.table250!;
-    var startAddressIsNotEmpty = table250 != null &&
-        table250.single.saddcat != null &&
-        table250.single.saddcat!.isNotEmpty;
-    var stopAddressIsNotEmpty = table250 != null &&
-        table250.single.saddcat != null &&
-        table250.single.faddcat!.isNotEmpty;
-    var isStarted = startAddressIsNotEmpty && !stopAddressIsNotEmpty;
-    return isStarted;
-  }
+  bool get isStarted => editModel!.table250!.length > 1;
 
   Future<void> initData(
       SalesActivityDayResponseModel fromParentWindowModel) async {
     editModel =
         SalesActivityDayResponseModel.fromJson(fromParentWindowModel.toJson());
     pr(editModel?.toJson());
-
     activitStatusText =
-        isStarted() ? tr('stop_sales_activity') : tr('start_sales_activity');
+        isStarted ? tr('stop_sales_activity') : tr('start_sales_activity');
   }
 }

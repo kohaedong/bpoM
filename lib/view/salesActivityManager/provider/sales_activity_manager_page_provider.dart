@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-07 20:49:09
+ * Last Modified: 2022-08-08 17:31:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -89,7 +89,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   }
 
   void checkShowConfirm() async {
-    await checkPreviousWorkingDay('', dt: selectedDay ?? DateTime.now());
+    await checkPreviousWorkingDay('', dt: DateTime.now());
     var previouWorkday = previousWorkingDay;
     var isToday = (selectedDay!.year == DateTime.now().year) &&
         (selectedDay!.month == DateTime.now().month) &&
@@ -97,46 +97,55 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
     var seletedDayIsWorkingDayBeforeToday =
         selectedDay!.day == previouWorkday!.day;
-    var isNotConfirmed = await checkConfiremStatus(datetime: previouWorkday);
+    var isPreviouDayNotConfirmed =
+        await checkConfiremStatus(datetime: previouWorkday);
     isShowConfirm =
-        (isToday || (seletedDayIsWorkingDayBeforeToday && isNotConfirmed))
-            ? true
-            : null;
+        (isToday || seletedDayIsWorkingDayBeforeToday) ? true : null;
     pr('isShowConfirm:: $isShowConfirm');
     if (seletedDayIsWorkingDayBeforeToday) {
-      activityStatus = ActivityStatus.STOPED;
-    } else {
-      if (isToday) {
-        activityStatus = ActivityStatus.NONE;
-        // var table250 = dayResponseModel!.table250!;
-        // var startAddressIsNotEmpty = table250.single.saddcat != null &&
-        //     table250.single.saddcat!.isNotEmpty;
-        // var stopAddressIsNotEmpty = table250.single.saddcat != null &&
-        //     table250.single.faddcat!.isNotEmpty;
-        // if (table250.isNotEmpty &&
-        //     stopAddressIsNotEmpty &&
-        //     stopAddressIsNotEmpty) {
-        //   activityStatus = ActivityStatus.STOPED;
-        // } else if (table250.isNotEmpty &&
-        //     startAddressIsNotEmpty &&
-        //     !stopAddressIsNotEmpty) {
-        //   activityStatus = ActivityStatus.STARTED;
-        // } else {
-        //   activityStatus = ActivityStatus.NONE;
-        // }
-        // pr(activityStatus);
-      } else {
-        activityStatus = ActivityStatus.NONE;
-        pr(activityStatus);
+      activityStatus = isPreviouDayNotConfirmed
+          ? ActivityStatus.STOPED
+          : ActivityStatus.FINISH;
+    } else if (isToday) {
+      var table250 = dayResponseModel!.table250!;
+      if (table250.length == 1) {
+        var isStarted = table250.single.scallType == 'M' &&
+            table250.single.ftime!.isNotEmpty &&
+            table250.single.fcallType != 'M' &&
+            table250.single.ftime!.isEmpty;
+        var isStoped = table250.single.scallType == 'M' &&
+            table250.single.ftime!.isNotEmpty &&
+            table250.single.fcallType == 'M' &&
+            table250.single.ftime!.isNotEmpty;
+        activityStatus = isStarted
+            ? ActivityStatus.STARTED
+            : isStoped
+                ? ActivityStatus.STOPED
+                : ActivityStatus.NONE;
       }
-      notifyListeners();
+      if (table250.length > 1) {
+        activityStatus = isPreviouDayNotConfirmed
+            ? ActivityStatus.STOPED
+            : ActivityStatus.FINISH;
+        var isStarted = table250.last.scallType == 'M' &&
+            table250.last.ftime!.isNotEmpty &&
+            table250.last.fcallType != 'M' &&
+            table250.last.ftime!.isEmpty;
+        var isStoped = table250.last.scallType == 'M' &&
+            table250.last.ftime!.isNotEmpty &&
+            table250.last.fcallType == 'M' &&
+            table250.last.ftime!.isNotEmpty;
+        activityStatus = isStarted
+            ? ActivityStatus.STARTED
+            : isStoped
+                ? ActivityStatus.STOPED
+                : ActivityStatus.NONE;
+      }
+    } else {
+      activityStatus = ActivityStatus.NONE;
     }
-  }
-
-  Future<bool> checkIsAllConfirmed() async {
-    // 모든
-    // notifyListeners();
-    return true;
+    pr(activityStatus);
+    notifyListeners();
   }
 
   bool isHaveUnconfirmedActivity(
@@ -152,6 +161,9 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     var weekRowIndex = 0;
     weekListForMonth.asMap().entries.forEach((map) {
       var day = DateUtil.getDate(FormatUtil.removeDash(DateUtil.getDateStr('',
+          // datetime :: passing된 date에 대한 확정여부 확인.
+          // isWithLastWorkdaysNextWorkDay::  null 일 경우 지난 영업일에 대한 확정여부 확인.[previousWorkingDay]
+          // 그외에 금일 확정여부 확인.  checkPreviousWorkingDaysNextWorkingDay 사실상 오늘이다.
           dt: datetime != null
               ? datetime
               : isWithLastWorkdaysNextWorkDay == null
@@ -189,6 +201,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   }
 
   Future<void> checkIsShowPopup() async {
+    // 지난영업일 확인.
     await checkNextWorkingDayForPreviousWorkingDay(DateTime.now());
     var isNotConfirmed = await checkConfiremStatus();
     isShowPopup =
@@ -446,6 +459,9 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       dayResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
+      dayResponseModel?.table250?.forEach((element) {
+        pr(element.toJson());
+      });
       // checkIsAllConfirmed();
       if (isWithLoading != null && isWithLoading) {
         isLoadDayData = false;

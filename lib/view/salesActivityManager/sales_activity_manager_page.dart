@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-07 22:54:00
+ * Last Modified: 2022-08-08 17:30:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -478,7 +478,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             case MenuType.ACTIVITY_DELETE:
               break;
             case MenuType.ACTIVITY_ADD:
-              if (p.isStarted()) {
+              if (p.isStarted) {
                 pr('add activity ');
               } else {
                 final result = await AppDialog.showPopup(
@@ -503,7 +503,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                       final result = await AppDialog.showPopup(
                         context,
                         WidgetOfSelectLocation(
-                          status: p.isStarted()
+                          status: p.isStarted
                               ? ActivityStatus.STOPED
                               : ActivityStatus.STARTED,
                           callback: (isPressedTrue) {
@@ -659,8 +659,11 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
               provider.activityStatus),
           builder: (context, tuple, _) {
             pr(tuple.item1);
-            return tuple.item1 && tuple.item2 != ActivityStatus.STOPED
-                ? _buildMenuButton(context)
+            return tuple.item1
+                ? (tuple.item2 == ActivityStatus.FINISH ||
+                        tuple.item2 == ActivityStatus.STOPED)
+                    ? Container()
+                    : _buildMenuButton(context)
                 : Container();
           },
         ),
@@ -683,20 +686,29 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   }
 
   Widget _changeAppbarConfirmButton(BuildContext context) {
-    return Selector<SalseActivityManagerPageProvider, bool?>(
-      selector: (context, provider) => provider.isShowConfirm,
-      builder: (context, isShowConfirm, _) {
-        if (isShowConfirm != null && isShowConfirm) {
-          Future.delayed(Duration.zero, () {
-            _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY;
-            _actionButton.value = _pageType.value!.actionWidget;
-          });
-        } else {
-          Future.delayed(Duration.zero, () {
-            _pageType.value = PageType.DEFAULT;
-            _actionButton.value = _pageType.value!.actionWidget;
-          });
-        }
+    return Selector<SalseActivityManagerPageProvider, ActivityStatus?>(
+      selector: (context, provider) => provider.activityStatus,
+      builder: (context, status, _) {
+        Future.delayed(Duration.zero, () {
+          switch (status) {
+            case ActivityStatus.FINISH:
+              _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY_DISIBLE;
+              break;
+            case ActivityStatus.STARTED:
+              _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY;
+              break;
+            case ActivityStatus.STOPED:
+              _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY;
+              break;
+            case ActivityStatus.NONE:
+              _pageType.value = PageType.DEFAULT;
+              break;
+            default:
+              return;
+          }
+          _actionButton.value = _pageType.value!.actionWidget;
+        });
+
         return Container();
       },
     );
@@ -778,9 +790,13 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 switch (p.activityStatus!) {
                   case ActivityStatus.STOPED:
                     // save
+                    pr('ok');
                     _pageType.value =
                         PageType.SALES_ACTIVITY_MANAGER_DAY_DISIBLE;
                     _actionButton.value = _pageType.value!.actionWidget;
+                    break;
+                  case ActivityStatus.FINISH:
+                    DoNothingAction();
                     break;
                   default:
                     AppDialog.showSimpleDialog(
