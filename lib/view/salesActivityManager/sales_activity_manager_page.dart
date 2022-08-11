@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-08 18:27:56
+ * Last Modified: 2022-08-11 13:57:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,9 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/service/key_service.dart';
+import 'package:medsalesportal/view/common/base_app_toast.dart';
+import 'package:medsalesportal/view/salesActivityManager/add_activity_page.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/enums/menu_type.dart';
@@ -457,28 +460,30 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         : Container();
   }
 
-  Widget _buildAnimationMenuItem(
-      BuildContext context, String text, MenuType menuType) {
-    return Selector<ActivityMenuProvider, String>(
-      selector: (context, provider) => provider.activitStatusText,
-      builder: (context, statsText, _) {
+  Widget _buildMenuItem(BuildContext context, String text, MenuType menuType) {
+    return Selector<ActivityMenuProvider, ActivityStatus?>(
+      selector: (context, provider) => provider.activityStatus,
+      builder: (context, status, _) {
         return AppStyles.buildButton(
             context,
-            menuType == MenuType.ACTIVITY_STATUS ? statsText : '$text',
+            menuType == MenuType.ACTIVITY_STATUS
+                ? status == ActivityStatus.STARTED
+                    ? tr('stop_sales_activity')
+                    : tr('start_sales_activity')
+                : '$text',
             120,
             AppColors.whiteText,
             AppTextStyle.default_14.copyWith(color: AppColors.primary),
             AppSize.radius25, () async {
-          // var startedDate = CacheService.getActivityStartDate();
-          // final isStarted =
-          //     startedDate != null && DateUtil.equlse(startedDate, DateTime.now());
           final p = context.read<ActivityMenuProvider>();
-
           switch (menuType) {
             case MenuType.ACTIVITY_DELETE:
+              // remove last table.
+              pr('delete last table');
               break;
             case MenuType.ACTIVITY_ADD:
-              if (p.isStarted) {
+              if (p.activityStatus == ActivityStatus.STARTED) {
+                // go to add activity page.
                 pr('add activity ');
               } else {
                 final result = await AppDialog.showPopup(
@@ -499,36 +504,52 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 if (result != null) {
                   result as bool;
                   if (result) {
-                    Future.delayed(Duration.zero, () async {
-                      final result = await AppDialog.showPopup(
-                        context,
-                        WidgetOfSelectLocation(
-                          status: p.isStarted
-                              ? ActivityStatus.STOPED
-                              : ActivityStatus.STARTED,
-                          callback: (isPressedTrue) {
-                            if (isPressedTrue) {
-                              // get address api && save location data to table.
-
-                              pr(isPressedTrue);
-                            }
-                          },
-                        ),
-                      );
-
-                      if (result != null) {
-                        if (result) {
+                    final popupResult = await AppDialog.showPopup(
+                      context,
+                      WidgetOfSelectLocation(
+                        status: p.activityStatus == ActivityStatus.STARTED
+                            ? ActivityStatus.STOPED
+                            : ActivityStatus.INIT,
+                      ),
+                    );
+                    if (popupResult != null) {
+                      pr('popupResult ::$popupResult');
+                      if (popupResult) {
+                        // get address api && save location data to table.
+                        // AppToast()
+                        //     .show(context, tr('activity_is_started'));
+                        Future.delayed(Duration.zero, () {
+                          p.setActivityStatus(ActivityStatus.STARTED);
                           p.changeIsLoad();
-                          pr('ok');
-                        }
+                        }).whenComplete(() async {
+                          final naviResult = await Navigator.pushNamed(
+                              context, AddActivityPage.routeName);
+                          if (naviResult != null) {
+                            pr('naviResult $naviResult');
+                          }
+                        });
                       }
-                    });
+                    }
                   }
                 }
               }
               break;
             case MenuType.ACTIVITY_STATUS:
-              p.setActivityStatusText(tr('stop_sales_activity'));
+              switch (p.activityStatus) {
+                case ActivityStatus.INIT:
+                  // save table
+                  // 250테이블에 데이터가 없으면 추가.
+                  p.setActivityStatus(ActivityStatus.STARTED);
+                  break;
+                case ActivityStatus.STARTED:
+                  // save table
+                  // 종료.
+                  AppToast().show(context, tr('activity_is_stoped'));
+                  Navigator.pop(context);
+                  pr('finish');
+                  break;
+                default:
+              }
               break;
           }
         }, selfHeight: AppSize.smallButtonHeight * 1.2);
@@ -536,13 +557,15 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     );
   }
 
-  Widget _buildDialogContents(BuildContext context,
-      SalesActivityDayResponseModel fromParentWindowModel) {
+  Widget _buildDialogContents(
+      BuildContext context,
+      SalesActivityDayResponseModel fromParentWindowModel,
+      ActivityStatus? activityStatus) {
     return ChangeNotifierProvider(
       create: (context) => ActivityMenuProvider(),
       builder: (context, _) {
         final p = context.read<ActivityMenuProvider>();
-        p.initData(fromParentWindowModel);
+        p.initData(fromParentWindowModel, activityStatus);
         return Material(
           type: MaterialType.transparency,
           child: Stack(
@@ -553,16 +576,14 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   bottom: AppSize.padding * 2 + AppSize.buttonHeight,
                   child: Column(
                     children: [
-                      _buildAnimationMenuItem(
+                      _buildMenuItem(
                           context, '최종콜 삭제', MenuType.ACTIVITY_DELETE),
                       defaultSpacing(),
                       defaultSpacing(),
-                      _buildAnimationMenuItem(
-                          context, '신규활동 추가', MenuType.ACTIVITY_ADD),
+                      _buildMenuItem(context, '신규활동 추가', MenuType.ACTIVITY_ADD),
                       defaultSpacing(),
                       defaultSpacing(),
-                      _buildAnimationMenuItem(
-                          context, '', MenuType.ACTIVITY_STATUS),
+                      _buildMenuItem(context, '', MenuType.ACTIVITY_STATUS),
                     ],
                   )),
               Positioned(
@@ -604,7 +625,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 useSafeArea: false,
                 context: context,
                 builder: (context) {
-                  return _buildDialogContents(context, p.dayResponseModel!);
+                  return _buildDialogContents(
+                      context, p.dayResponseModel!, p.activityStatus);
                 });
             if (result != null) {
               pr('result $result');
@@ -655,7 +677,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         Selector<SalseActivityManagerPageProvider,
             Tuple2<bool, ActivityStatus?>>(
           selector: (context, provider) => Tuple2(
-              DateUtil.equlse(provider.selectedDay!, DateTime.now()),
+              DateUtil.equlse(
+                  provider.selectedDay ?? DateTime.now(), DateTime.now()),
               provider.activityStatus),
           builder: (context, tuple, _) {
             pr(tuple.item1);

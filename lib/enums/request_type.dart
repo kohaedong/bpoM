@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-08-04 16:22:14
+ * Last Modified: 2022-08-11 14:26:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -32,6 +32,8 @@ enum RequestType {
   HOME_NOTICE_DETAIL,
   NOTICE_DONT_SHOW_AGAIN,
   SEND_IMAGE_TO_SERVER,
+  GET_OFFICE_ADDRESS,
+  GET_LAT_AND_LON,
   // --------------
   SEARCH_STAFF,
   SEARCH_CUSTOMER,
@@ -97,6 +99,9 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SEARCH_STAFF:
         return '$rfcURL/common';
+      case RequestType.GET_OFFICE_ADDRESS:
+        return '$rfcURL/common';
+
       case RequestType.SALESE_ACTIVITY_DAY_DATA:
         return '$rfcURL/common';
       case RequestType.SEARCH_PARTMENT_KEY_ZIBI:
@@ -145,6 +150,8 @@ extension RequestTypeExtension on RequestType {
         return '$rfcURL/login';
       case RequestType.CHECK_HOLIDAY:
         return '$v2URL/opendata/holiday';
+      case RequestType.GET_LAT_AND_LON:
+        return '$rfcURL/getcoordinate';
       case RequestType.CHECK_NOTICE:
         return '$v2URL/rest';
       case RequestType.NOTICE_DONT_SHOW_AGAIN:
@@ -183,6 +190,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SEARCH_STAFF:
         return 'ES_RETURN,ET_STAFFLIST';
+      case RequestType.GET_OFFICE_ADDRESS:
+        return 'ES_RETURN,T_LIST';
       case RequestType.SALESE_ACTIVITY_DAY_DATA:
         return 'ES_RETURN,T_ZLTSP0250S,T_ZLTSP0260S,T_ZLTSP0270S,T_ZLTSP0280S,T_ZLTSP0290S,T_ZLTSP0291S,T_ZLTSP0300S,T_ZLTSP0301S,T_ZLTSP0310S,T_ZLTSP0320S,T_ZLTSP0321S,T_ZLTSP0330S,T_ZLTSP0340S,T_ZLTSP0350S,T_ZLTSP0430S, T_ZLTSP0361S';
       case RequestType.SEARCH_PARTMENT_KEY_ZIBI:
@@ -250,6 +259,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.CHECK_NOTICE:
         return "noticeAll";
+      case RequestType.GET_OFFICE_ADDRESS:
+        return "Z_LTSP_IF0133";
       case RequestType.SALESE_ACTIVITY_DAY_DATA:
         return "Z_LTSP_IF0130";
       case RequestType.SEARCH_PARTMENT_KEY_ZIBI:

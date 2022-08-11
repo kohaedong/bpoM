@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-08-08 18:00:10
+ * Last Modified: 2022-08-11 15:27:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/styles/app_size.dart';
@@ -24,11 +25,10 @@ import 'package:medsalesportal/view/common/provider/base_select_location_provide
 typedef PopupCallBack = Function(bool);
 
 class WidgetOfSelectLocation extends StatefulWidget {
-  const WidgetOfSelectLocation(
-      {Key? key, required this.status, required this.callback})
+  const WidgetOfSelectLocation({Key? key, required this.status, this.callback})
       : super(key: key);
   final ActivityStatus? status;
-  final PopupCallBack callback;
+  final PopupCallBack? callback;
 
   @override
   State<WidgetOfSelectLocation> createState() => _WidgetOfSelectLocationState();
@@ -57,8 +57,8 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
     return GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          widget.callback.call(isLeft ? false : true);
-          Navigator.pop(context);
+          widget.callback?.call(isLeft ? false : true);
+          Navigator.pop(context, isLeft ? false : true);
         },
         child: Container(
             height: AppSize.buttonHeight,
@@ -91,13 +91,7 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
     return GestureDetector(
         onTap: () {
           final p = context.read<BaseSelectLocationProvider>();
-          if (widget.status == ActivityStatus.STARTED) {
-            if (index != 2) {
-              p.setSelectedIndex(index);
-            }
-          } else {
-            p.setSelectedIndex(index);
-          }
+          p.setSelectedIndex(index);
         },
         behavior: HitTestBehavior.opaque,
         child: Container(
@@ -146,32 +140,43 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
     return ChangeNotifierProvider(
       create: (context) => BaseSelectLocationProvider(),
       builder: (context, _) {
-        return Selector<BaseSelectLocationProvider, double>(
-          selector: (context, provider) => provider.height,
-          builder: (context, height, _) {
-            return Container(
-                height: height,
-                width: AppSize.defaultContentsWidth,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildTitle(),
-                    Divider(thickness: 1, height: 0),
-                    Expanded(child: _buildSelectorButtons(context)),
-                    SizedBox(
-                      height: AppSize.buttonHeight,
-                      child: Row(
+        final p = context.read<BaseSelectLocationProvider>();
+        return FutureBuilder<ResultModel>(
+            future: p.getOfficeAddress(),
+            builder: (context, snapshot) {
+              var isDone = snapshot.hasData &&
+                  snapshot.connectionState == ConnectionState.done &&
+                  snapshot.data!.isSuccessful;
+              return Selector<BaseSelectLocationProvider, double>(
+                selector: (context, provider) => provider.height,
+                builder: (context, height, _) {
+                  return Container(
+                      height: height,
+                      width: AppSize.defaultContentsWidth,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _buildButton(isLeft: true),
-                          _buildButton(isLeft: false),
+                          _buildTitle(),
+                          Divider(thickness: 1, height: 0),
+                          Expanded(
+                              child: isDone
+                                  ? _buildSelectorButtons(context)
+                                  : Container()),
+                          SizedBox(
+                            height: AppSize.buttonHeight,
+                            child: Row(
+                              children: [
+                                _buildButton(isLeft: true),
+                                _buildButton(isLeft: false),
+                              ],
+                            ),
+                          )
                         ],
-                      ),
-                    )
-                  ],
-                ));
-          },
-        );
+                      ));
+                },
+              );
+            });
       },
     );
   }
