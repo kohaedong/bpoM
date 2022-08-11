@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-08-11 14:59:12
+ * Last Modified: 2022-08-11 15:29:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -17,7 +17,6 @@ import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class BaseSelectLocationProvider extends ChangeNotifier {
   SalseActivityLocationResponseModel? locationResponseModel;
