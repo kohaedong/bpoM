@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-07-26 17:15:47
+ * Last Modified: 2022-08-12 10:22:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -181,7 +181,6 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
           return;
         }
         if (widget.oneCellType == OneCellType.CONSULTATION_REPORT_TYPE) {
-          print(widget.checkBoxCallBack.runtimeType);
           final result =
               await BasePopupList(widget.oneCellType!, widget.iconType).show(
                   context,
@@ -315,7 +314,8 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                     ? AppSize.defaultTextFieldPaddingWidthSigninPage(
                         widget.textStyle != null
                             ? widget.textStyle!.fontSize!
-                            : AppTextStyle.default_16.fontSize!)
+                            : AppTextStyle.default_16.fontSize!,
+                        isSmallButton: true)
                     : AppSize.defaultTextFieldPadding,
                 border: widget._disabledBorder,
                 enabledBorder: widget._enabledBorder,

@@ -172,9 +172,17 @@ class AppSize {
   static double get searchBarTitleSidePadding => 20.w;
   static EdgeInsets get defaultTextFieldPadding =>
       EdgeInsets.fromLTRB(12.w, 10.w, 12.w, 11.w);
-  static EdgeInsets defaultTextFieldPaddingWidthSigninPage(double fontSize) =>
-      EdgeInsets.fromLTRB(12.w, (buttonHeight - fontSize) / 2, 12.w,
-          (buttonHeight - fontSize) / 2);
+  static EdgeInsets defaultTextFieldPaddingWidthSigninPage(double fontSize,
+          {bool? isSmallButton}) =>
+      EdgeInsets.fromLTRB(
+          12.w,
+          isSmallButton == null
+              ? (buttonHeight - fontSize) / 2
+              : (smallButtonHeight - fontSize) / 2,
+          12.w,
+          isSmallButton == null
+              ? (buttonHeight - fontSize) / 2
+              : (smallButtonHeight - fontSize) / 2);
   static EdgeInsets get zipCodeContentsPadding =>
       EdgeInsets.fromLTRB(16.w, 28.w, 16.w, 0.w);
 

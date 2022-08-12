@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/list_group_type.dart
  * Created Date: 2021-09-10 09:52:32
- * Last Modified: 2022-08-07 19:31:47
+ * Last Modified: 2022-08-12 10:45:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -29,6 +29,7 @@ enum OneCellType {
   SEARCH_END_CUSTOMER,
   SELECT_START_LOCATION,
   SELECT_STOP_LOCATION,
+  SELECT_OFFICE_ADDRESS,
   // -------------
   SEARCH_CUSTOMER_CONDITION,
   SEARCH_CUSOMER_TYPE,
@@ -98,6 +99,8 @@ extension OneCellTypeExtension on OneCellType {
     switch (this) {
       case OneCellType.SEARCH_SALLER:
         return '${tr('sales_office')}';
+      case OneCellType.SELECT_OFFICE_ADDRESS:
+        return '${tr('office')}';
       case OneCellType.SELECT_START_LOCATION:
         return '${tr('start_sales_activity')}';
       case OneCellType.SELECT_STOP_LOCATION:
@@ -367,6 +370,8 @@ extension OneCellTypeExtension on OneCellType {
     switch (this) {
       case OneCellType.CUSTOMER_APPROVAL_REFUSE:
         return AppSize.approvalPopupHeight;
+      case OneCellType.SELECT_OFFICE_ADDRESS:
+        return AppSize.smallPopupHeight * .8;
       case OneCellType.SEARCH_CUSTOMER:
         return AppSize.realHeight * .7;
       case OneCellType.CUSTOMER_APPROVAL_RESERVE:

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-11 15:29:22
+ * Last Modified: 2022-08-12 11:16:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -509,6 +509,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                         status: p.activityStatus == ActivityStatus.STARTED
                             ? ActivityStatus.STOPED
                             : ActivityStatus.INIT,
+                        locationList: p.locationResponseModel!.tList!,
                       ),
                     );
                     if (popupResult != null) {
@@ -591,7 +592,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   child: FloatingActionButton(
                     backgroundColor: AppColors.primary,
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context, p.isNeedUpdate);
                     },
                     child: Icon(Icons.close, color: AppColors.whiteText),
                   )),
@@ -622,13 +623,17 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           onPressed: () async {
             final result = await showDialog(
                 useSafeArea: false,
+                barrierDismissible: false,
                 context: context,
                 builder: (context) {
                   return _buildDialogContents(
                       context, p.dayResponseModel!, p.activityStatus);
                 });
             if (result != null) {
-              pr('result $result');
+              result as bool;
+              if (result) {
+                p.getDayData();
+              }
             }
           },
           child: AppImage.getImage(ImageType.PLUS, color: AppColors.whiteText),

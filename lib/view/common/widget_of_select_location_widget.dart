@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-08-11 15:27:08
+ * Last Modified: 2022-08-12 10:35:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,13 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/enums/input_icon_type.dart';
+import 'package:medsalesportal/enums/popup_list_type.dart';
+import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
+import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
+import 'package:medsalesportal/view/common/base_input_widget.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/styles/app_size.dart';
@@ -25,10 +31,15 @@ import 'package:medsalesportal/view/common/provider/base_select_location_provide
 typedef PopupCallBack = Function(bool);
 
 class WidgetOfSelectLocation extends StatefulWidget {
-  const WidgetOfSelectLocation({Key? key, required this.status, this.callback})
+  const WidgetOfSelectLocation(
+      {Key? key,
+      required this.status,
+      required this.locationList,
+      this.callback})
       : super(key: key);
   final ActivityStatus? status;
   final PopupCallBack? callback;
+  final List<SalseActivityLocationModel> locationList;
 
   @override
   State<WidgetOfSelectLocation> createState() => _WidgetOfSelectLocationState();
@@ -91,7 +102,20 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
     return GestureDetector(
         onTap: () {
           final p = context.read<BaseSelectLocationProvider>();
+          // var isMoreAddress = widget.locationList
+          //         .where((model) => model.addcat == 'O')
+          //         .toList()
+          //         .length >
+          //     1;
+          var isMoreAddress = true;
           p.setSelectedIndex(index);
+          if (index == 1 && isMoreAddress) {
+            p.setIsShowSelector(true);
+            p.setHeight(250);
+          } else {
+            p.setIsShowSelector(false);
+            p.setHeight(200);
+          }
         },
         behavior: HitTestBehavior.opaque,
         child: Container(
@@ -115,24 +139,82 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
         ));
   }
 
+  Widget _buildOfficePopup(BuildContext context) {
+    final p = context.read<BaseSelectLocationProvider>();
+    return Selector<BaseSelectLocationProvider, String?>(
+      selector: (context, provider) => provider.selectedAddress,
+      builder: (context, selectedAddress, _) {
+        return Padding(
+            padding: AppSize.defaultSidePadding,
+            child: BaseColumWithTitleAndTextFiled.build(
+                tr('office'),
+                BaseInputWidget(
+                    context: context,
+                    height: AppSize.smallButtonHeight,
+                    hintTextStyleCallBack: () => selectedAddress != null
+                        ? AppTextStyle.default_14
+                        : AppTextStyle.default_14
+                            .copyWith(color: AppColors.subText),
+                    textStyle: AppTextStyle.default_14,
+                    oneCellType: OneCellType.SELECT_OFFICE_ADDRESS,
+                    commononeCellDataCallback: () =>
+                        p.getAddress(widget.locationList),
+                    isSelectedStrCallBack: (str) => p.setSelectedAddress(str),
+                    iconType:
+                        selectedAddress != null ? InputIconType.DELETE : null,
+                    defaultIconCallback: () => p.setSelectedAddress(null),
+                    hintText: selectedAddress ?? tr('plz_select'),
+                    width: AppSize.defaultContentsWidth - AppSize.padding * 2,
+                    enable: selectedAddress != null ? true : false)));
+      },
+    );
+  }
+
+  Widget _buildSelector(BuildContext context) {
+    return Column(
+      children: [
+        defaultSpacing(),
+        Selector<BaseSelectLocationProvider, bool>(
+            selector: (context, provider) => provider.isShowSelector,
+            builder: (context, isShow, _) {
+              return isShow ? _buildOfficePopup(context) : Container();
+            })
+      ],
+    );
+  }
+
   Widget _buildSelectorButtons(BuildContext context) {
     var contextsWidth = AppSize.defaultContentsWidth - AppSize.padding * 2;
     var width = contextsWidth / 3;
-    return Selector<BaseSelectLocationProvider, int>(
-        selector: (context, provider) => provider.selectedIndex,
-        builder: (context, isSelectedIndex, _) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildBox(context, width,
-                  index: 0, isSelected: isSelectedIndex == 0 ? true : false),
-              _buildBox(context, width,
-                  index: 1, isSelected: isSelectedIndex == 1 ? true : false),
-              _buildBox(context, width,
-                  index: 2, isSelected: isSelectedIndex == 2 ? true : false),
-            ],
-          );
-        });
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Selector<BaseSelectLocationProvider, int>(
+            selector: (context, provider) => provider.selectedIndex,
+            builder: (context, isSelectedIndex, _) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildBox(context, width,
+                      index: 0,
+                      isSelected: isSelectedIndex == 0 ? true : false),
+                  _buildBox(context, width,
+                      index: 1,
+                      isSelected: isSelectedIndex == 1 ? true : false),
+                  _buildBox(context, width,
+                      index: 2,
+                      isSelected: isSelectedIndex == 2 ? true : false),
+                ],
+              );
+            }),
+        Selector<BaseSelectLocationProvider, bool>(
+          selector: (context, provider) => provider.isShowSelector,
+          builder: (context, isShowSelector, _) {
+            return isShowSelector ? _buildSelector(context) : Container();
+          },
+        )
+      ],
+    );
   }
 
   @override
@@ -141,42 +223,33 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
       create: (context) => BaseSelectLocationProvider(),
       builder: (context, _) {
         final p = context.read<BaseSelectLocationProvider>();
-        return FutureBuilder<ResultModel>(
-            future: p.getOfficeAddress(),
-            builder: (context, snapshot) {
-              var isDone = snapshot.hasData &&
-                  snapshot.connectionState == ConnectionState.done &&
-                  snapshot.data!.isSuccessful;
-              return Selector<BaseSelectLocationProvider, double>(
-                selector: (context, provider) => provider.height,
-                builder: (context, height, _) {
-                  return Container(
-                      height: height,
-                      width: AppSize.defaultContentsWidth,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
+
+        return Selector<BaseSelectLocationProvider, double>(
+          selector: (context, provider) => provider.height,
+          builder: (context, height, _) {
+            return Container(
+                height: height,
+                width: AppSize.defaultContentsWidth,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildTitle(),
+                    Divider(thickness: 1, height: 0),
+                    Expanded(child: _buildSelectorButtons(context)),
+                    SizedBox(
+                      height: AppSize.buttonHeight,
+                      child: Row(
                         children: [
-                          _buildTitle(),
-                          Divider(thickness: 1, height: 0),
-                          Expanded(
-                              child: isDone
-                                  ? _buildSelectorButtons(context)
-                                  : Container()),
-                          SizedBox(
-                            height: AppSize.buttonHeight,
-                            child: Row(
-                              children: [
-                                _buildButton(isLeft: true),
-                                _buildButton(isLeft: false),
-                              ],
-                            ),
-                          )
+                          _buildButton(isLeft: true),
+                          _buildButton(isLeft: false),
                         ],
-                      ));
-                },
-              );
-            });
+                      ),
+                    )
+                  ],
+                ));
+          },
+        );
       },
     );
   }
