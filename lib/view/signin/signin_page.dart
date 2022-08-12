@@ -60,25 +60,25 @@ class _SigninPageState extends State<SigninPage> {
             selector: (context, provider) => provider.userAccount,
             builder: (context, account, _) {
               return BaseInputWidget(
-                  onTap: () {
-                    p.setIsIdFocused(true);
-                  },
-                  focusNode: idFocus,
-                  textEditingController: _idController,
-                  keybordType: TextInputType.multiline,
-                  context: context,
-                  iconType: account != null ? InputIconType.DELETE : null,
-                  hintText: account != null ? null : '${tr('id')}',
-                  width: AppSize.defaultContentsWidth,
-                  defaultIconCallback: () {
-                    p.setAccount(null);
-                    _idController!.text = '';
-                  },
-                  hintTextStyleCallBack:
-                      account != null ? null : () => AppTextStyle.hint_16,
-                  onChangeCallBack: (str) => p.setAccount(str),
-                  enable: true,
-                  height: AppSize.buttonHeight);
+                onTap: () {
+                  p.setIsIdFocused(true);
+                },
+                focusNode: idFocus,
+                textEditingController: _idController,
+                keybordType: TextInputType.multiline,
+                context: context,
+                iconType: account != null ? InputIconType.DELETE : null,
+                hintText: account != null ? null : '${tr('id')}',
+                width: AppSize.defaultContentsWidth,
+                defaultIconCallback: () {
+                  p.setAccount(null);
+                  _idController!.text = '';
+                },
+                hintTextStyleCallBack:
+                    account != null ? null : () => AppTextStyle.hint_16,
+                onChangeCallBack: (str) => p.setAccount(str),
+                enable: true,
+              );
             }));
   }
 
@@ -92,24 +92,24 @@ class _SigninPageState extends State<SigninPage> {
             builder: (context, password, _) {
               return Builder(builder: (context) {
                 return BaseInputWidget(
-                    textEditingController: _passwordController,
-                    onTap: () {
-                      p.setIsPwFocused(true);
-                    },
-                    focusNode: pwFocus,
-                    context: context,
-                    iconType: password != null ? InputIconType.DELETE : null,
-                    hintText: password != null ? null : '${tr('password')}',
-                    width: AppSize.defaultContentsWidth,
-                    keybordType: TextInputType.visiblePassword,
-                    defaultIconCallback: () {
-                      p.setPassword(null);
-                      _passwordController!.text = '';
-                    },
-                    hintTextStyleCallBack: () => AppTextStyle.hint_16,
-                    onChangeCallBack: (str) => p.setPassword(str),
-                    enable: true,
-                    height: AppSize.buttonHeight);
+                  textEditingController: _passwordController,
+                  onTap: () {
+                    p.setIsPwFocused(true);
+                  },
+                  focusNode: pwFocus,
+                  context: context,
+                  iconType: password != null ? InputIconType.DELETE : null,
+                  hintText: password != null ? null : '${tr('password')}',
+                  width: AppSize.defaultContentsWidth,
+                  keybordType: TextInputType.visiblePassword,
+                  defaultIconCallback: () {
+                    p.setPassword(null);
+                    _passwordController!.text = '';
+                  },
+                  hintTextStyleCallBack: () => AppTextStyle.hint_16,
+                  onChangeCallBack: (str) => p.setPassword(str),
+                  enable: true,
+                );
               });
             }));
   }
