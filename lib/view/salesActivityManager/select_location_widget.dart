@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-08-13 12:42:08
+ * Last Modified: 2022-08-13 13:46:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -29,10 +29,10 @@ import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
 import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
-import 'package:medsalesportal/view/common/provider/base_select_location_provider.dart';
+import 'package:medsalesportal/view/salesActivityManager/provider/select_location_provider.dart';
 
-class WidgetOfSelectLocation extends StatefulWidget {
-  const WidgetOfSelectLocation({
+class SelectLocationWidget extends StatefulWidget {
+  const SelectLocationWidget({
     Key? key,
     required this.status,
     required this.locationList,
@@ -43,10 +43,10 @@ class WidgetOfSelectLocation extends StatefulWidget {
   final List<SalseActivityLocationModel> locationList;
 
   @override
-  State<WidgetOfSelectLocation> createState() => _WidgetOfSelectLocationState();
+  State<SelectLocationWidget> createState() => _SelectLocationWidgetState();
 }
 
-class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
+class _SelectLocationWidgetState extends State<SelectLocationWidget> {
   Widget _buildTitle() {
     return Container(
       padding: EdgeInsets.only(left: AppSize.padding),
@@ -72,7 +72,7 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
           if (isLeft) {
             Navigator.pop(context, false);
           } else {
-            final p = context.read<BaseSelectLocationProvider>();
+            final p = context.read<SelectLocationProvider>();
             var index = p.selectedIndex;
             switch (index) {
               case 0:
@@ -132,7 +132,7 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
         isSelected ? null : Border.all(width: .5, color: AppColors.textGrey);
     return GestureDetector(
         onTap: () {
-          final p = context.read<BaseSelectLocationProvider>();
+          final p = context.read<SelectLocationProvider>();
           p.setSelectedIndex(index);
           if (index == 1 && p.isShowSelector) {
             p.setIsShowSelector(true);
@@ -165,8 +165,8 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
   }
 
   Widget _buildOfficePopup(BuildContext context) {
-    final p = context.read<BaseSelectLocationProvider>();
-    return Selector<BaseSelectLocationProvider, String?>(
+    final p = context.read<SelectLocationProvider>();
+    return Selector<SelectLocationProvider, String?>(
       selector: (context, provider) => provider.selectedAddress,
       builder: (context, selectedAddress, _) {
         return Padding(
@@ -199,7 +199,7 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
     return Column(
       children: [
         defaultSpacing(),
-        Selector<BaseSelectLocationProvider, bool>(
+        Selector<SelectLocationProvider, bool>(
             selector: (context, provider) => provider.isShowSelector,
             builder: (context, isShow, _) {
               return isShow ? _buildOfficePopup(context) : Container();
@@ -214,7 +214,7 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Selector<BaseSelectLocationProvider, int>(
+        Selector<SelectLocationProvider, int>(
             selector: (context, provider) => provider.selectedIndex,
             builder: (context, isSelectedIndex, _) {
               return Row(
@@ -232,7 +232,7 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
                 ],
               );
             }),
-        Selector<BaseSelectLocationProvider, bool>(
+        Selector<SelectLocationProvider, bool>(
           selector: (context, provider) => provider.isShowSelector,
           builder: (context, isShowSelector, _) {
             return isShowSelector ? _buildSelector(context) : Container();
@@ -245,11 +245,11 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => BaseSelectLocationProvider(),
+      create: (context) => SelectLocationProvider(),
       builder: (context, _) {
-        final p = context.read<BaseSelectLocationProvider>();
+        final p = context.read<SelectLocationProvider>();
         p.initData(widget.model!, widget.locationList);
-        return Selector<BaseSelectLocationProvider, double>(
+        return Selector<SelectLocationProvider, double>(
           selector: (context, provider) => provider.height,
           builder: (context, height, _) {
             return Container(
@@ -276,7 +276,7 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
                       ],
                     ),
                     Positioned(
-                        child: Selector<BaseSelectLocationProvider, bool>(
+                        child: Selector<SelectLocationProvider, bool>(
                       selector: (context, provider) => provider.isLoadData,
                       builder: (context, isLoadData, d) {
                         return BaseLoadingViewOnStackWidget.build(

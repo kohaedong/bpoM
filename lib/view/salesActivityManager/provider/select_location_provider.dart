@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-08-13 12:35:39
+ * Last Modified: 2022-08-13 13:45:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,8 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_250.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
@@ -23,7 +25,7 @@ import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
 
-class BaseSelectLocationProvider extends ChangeNotifier {
+class SelectLocationProvider extends ChangeNotifier {
   SalseActivityCoordinateResponseModel? coordinateResponseModel;
   SalesActivityDayResponseModel? editDayModel;
   List<SalseActivityLocationModel>? locationList;
@@ -73,18 +75,24 @@ class BaseSelectLocationProvider extends ChangeNotifier {
           SalseActivityCoordinateResponseModel.fromJson(result.body['data']);
       pr(coordinateResponseModel?.toJson());
       var model = coordinateResponseModel?.result;
-      var tempLat = model != null && model.lat != null && model.lon != null
-          ? model.lat
-          : null;
-      var newLat = model != null && model.newLat != null && model.newLon != null
-          ? model.newLat
-          : null;
-      var tempLon = model != null && model.lat != null && model.lon != null
-          ? model.lon
-          : null;
-      var newLon = model != null && model.newLon != null && model.newLon != null
-          ? model.newLon
-          : null;
+      var newLatLonNotNull = model != null &&
+          model.newLat != null &&
+          model.newLat!.isNotEmpty &&
+          model.newLon != null &&
+          model.newLon!.isNotEmpty;
+
+      var latLonNotNull = model != null &&
+          model.lat != null &&
+          model.lat!.isNotEmpty &&
+          model.lon != null &&
+          model.lon!.isNotEmpty;
+
+      var tempLat = latLonNotNull ? model.lat : null;
+      var tempLon = latLonNotNull ? model.lon : null;
+
+      var newLat = newLatLonNotNull ? model.newLat : null;
+      var newLon = newLatLonNotNull ? model.newLon : null;
+
       lat = tempLat ?? newLat ?? null;
       lon = tempLon ?? newLon ?? null;
       return ResultModel(lat != null && lon != null);
@@ -104,11 +112,24 @@ class BaseSelectLocationProvider extends ChangeNotifier {
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
     var t250Base64 = '';
-    //! 영업활동이 없으면 table 하나 만들고, 있으면 그데로base64로 보냄.
-    //! 처음 table 만들떄 UMODE = I ; 아니면 U;
+    //! 영업활동이 없으면 table 하나 만들고 base64로 보냄. 있으면 그데로base64로 변경후 보냄.
+    //! 처음 table 만들떄  UMODE = I ; 아니면 U;
     var t260Base64 = '';
     List<Map<String, dynamic>> temp = [];
+    if (editDayModel!.table250!.isEmpty) {
+      var t250 = SalesActivityDayTable250();
+      t250.umode = 'I';
+      t250.sxLatitude = double.parse(lat!.trim());
+      t250.sxLongitude = double.parse(lon!.trim());
+      t250.stime = DateUtil.getTimeNow();
+      t250.scallType = 'M';
+      t250.szaddr = selectedAddress;
+      pr(t250.toJson());
+    } else {}
 
+    if (editDayModel!.table260!.isEmpty) {
+      var t260 = SalesActivityDayTable260();
+    }
     // if (condition) {
     //   temp.addAll([headerTable.toJson()]);
     // }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-13 12:53:35
+ * Last Modified: 2022-08-13 13:46:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -40,7 +40,7 @@ import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_single_date_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/view/salesActivityManager/add_activity_page.dart';
-import 'package:medsalesportal/view/common/widget_of_select_location_widget.dart';
+import 'package:medsalesportal/view/salesActivityManager/select_location_widget.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/activity_menu_provider.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/sales_activity_manager_page_provider.dart';
 import 'package:tuple/tuple.dart';
@@ -463,7 +463,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     final p = context.read<ActivityMenuProvider>();
     final popupResult = await AppDialog.showPopup(
       context,
-      WidgetOfSelectLocation(
+      SelectLocationWidget(
           status: p.activityStatus == ActivityStatus.STARTED
               ? ActivityStatus.STOPED
               : ActivityStatus.INIT,
