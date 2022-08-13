@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-08-13 10:34:38
+ * Last Modified: 2022-08-13 10:47:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_250.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
@@ -106,6 +107,7 @@ class BaseSelectLocationProvider extends ChangeNotifier {
     var isLogin = CacheService.getIsLogin();
     var t250Base64 = '';
     //! 영업활동이 없으면 table 하나 만들고, 있으면 그데로base64로 보냄.
+    //! 처음 table 만들떄 UMODE = I ; 아니면 U;
     var t260Base64 = '';
     List<Map<String, dynamic>> temp = [];
 
@@ -137,6 +139,8 @@ class BaseSelectLocationProvider extends ChangeNotifier {
       notifyListeners();
       return ResultModel(true);
     }
+    isLoadData = false;
+    notifyListeners();
     return ResultModel(false, errorMassage: result?.errorMessage);
   }
 
