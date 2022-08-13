@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-13 10:01:45
+ * Last Modified: 2022-08-13 12:53:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -471,21 +471,22 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           model: p.editModel),
     );
     if (popupResult != null) {
-      pr('popupResult ::$popupResult');
-      if (popupResult) {
-        // get address api && save location data to table.
-        // AppToast()
-        //     .show(context, tr('activity_is_started'));
-        Future.delayed(Duration.zero, () {
-          p.setActivityStatus(ActivityStatus.STARTED);
-          p.changeIsLoad();
-        }).whenComplete(() async {
-          final naviResult =
-              await Navigator.pushNamed(context, AddActivityPage.routeName);
-          if (naviResult != null) {
+      popupResult as ResultModel;
+      //!  주소 선택 팝업창에서 리턴된 데이터.
+      //!  영업활동 추가 성공 의미.
+      if (popupResult.isSuccessful) {
+        p.initData(popupResult.data, ActivityStatus.STARTED);
+        p.setIsNeedUpdate(true);
+        final naviResult =
+            await Navigator.pushNamed(context, AddActivityPage.routeName);
+        if (naviResult != null) {
+          naviResult as bool;
+          if (naviResult) {
+            //!
+            Navigator.pop(context, p.isNeedUpdate);
             pr('naviResult $naviResult');
           }
-        });
+        }
       }
     }
   }
@@ -640,6 +641,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 });
             if (result != null) {
               result as bool;
+              //!   자식창에서 리턴된 데이터 isNeedUpdate ?
+              //!   업데이트가 필요하면 최신 데이터 가져온다.
               if (result) {
                 p.getDayData();
               }

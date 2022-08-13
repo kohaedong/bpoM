@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-08-13 10:55:06
+ * Last Modified: 2022-08-13 12:35:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -31,7 +31,6 @@ class BaseSelectLocationProvider extends ChangeNotifier {
   double height = 200;
   int selectedIndex = 0;
   bool isShowSelector = false;
-  bool isNeedUpdate = false;
   bool isLoadData = false;
   String? selectedAddress;
   String? lat;
@@ -133,7 +132,8 @@ class BaseSelectLocationProvider extends ChangeNotifier {
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
-      pr(result.body);
+      editDayModel =
+          SalesActivityDayResponseModel.fromJson(result.body['data']);
       isLoadData = false;
       notifyListeners();
       return ResultModel(true);

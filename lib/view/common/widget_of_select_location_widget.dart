@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-08-13 10:37:30
+ * Last Modified: 2022-08-13 12:42:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/app_size.dart';
@@ -30,18 +31,14 @@ import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
 import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
 import 'package:medsalesportal/view/common/provider/base_select_location_provider.dart';
 
-typedef PopupCallBack = Function(bool);
-
 class WidgetOfSelectLocation extends StatefulWidget {
-  const WidgetOfSelectLocation(
-      {Key? key,
-      required this.status,
-      required this.locationList,
-      required this.model,
-      this.callback})
-      : super(key: key);
+  const WidgetOfSelectLocation({
+    Key? key,
+    required this.status,
+    required this.locationList,
+    required this.model,
+  }) : super(key: key);
   final ActivityStatus? status;
-  final PopupCallBack? callback;
   final SalesActivityDayResponseModel? model;
   final List<SalseActivityLocationModel> locationList;
 
@@ -92,16 +89,16 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
             if (p.editDayModel!.table250!.isEmpty) {
               await p.saveBaseTable().then((result) {
                 if (result.isSuccessful) {
-                  //! base table250 저장완료. 부모창으로 결과전달.
-                  widget.callback?.call(isLeft ? false : true);
-                  Navigator.pop(context, isLeft ? false : true);
+                  //!  table저장완료. 부모창으로 model전달.
+                  Navigator.pop(context,
+                      isLeft ? null : ResultModel(true, data: p.editDayModel));
                 } else {
                   AppToast().show(context, result.errorMassage!);
                 }
               });
             } else {
-              widget.callback?.call(isLeft ? false : true);
-              Navigator.pop(context, isLeft ? false : true);
+              Navigator.pop(context,
+                  isLeft ? null : ResultModel(true, data: p.editDayModel));
             }
           }
         },
