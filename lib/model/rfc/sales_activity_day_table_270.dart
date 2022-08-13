@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/sales_activity_day_table_270.dart
  * Created Date: 2022-08-03 10:14:31
- * Last Modified: 2022-08-03 13:11:38
+ * Last Modified: 2022-08-13 10:49:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -49,7 +49,7 @@ class SalesActivityDayTable270 {
   String? umode;
 
   SalesActivityDayTable270(
-      this.acttyp,
+      {this.acttyp,
       this.aedat,
       this.aenam,
       this.aewid,
@@ -63,7 +63,7 @@ class SalesActivityDayTable270 {
       this.keymanR,
       this.seqno,
       this.subcat,
-      this.umode);
+      this.umode});
   factory SalesActivityDayTable270.fromJson(Object? json) =>
       _$SalesActivityDayTable270FromJson(json as Map<String, dynamic>);
   Map<String, dynamic> toJson() => _$SalesActivityDayTable270ToJson(this);

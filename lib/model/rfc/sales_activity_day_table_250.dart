@@ -91,7 +91,7 @@ class SalesActivityDayTable250 {
   String? umode;
 
   SalesActivityDayTable250(
-      this.adate,
+      {this.adate,
       this.addcat,
       this.aedat,
       this.aenam,
@@ -128,7 +128,7 @@ class SalesActivityDayTable250 {
       this.stime,
       this.sxLatitude,
       this.sxLongitude,
-      this.fcallType);
+      this.fcallType});
   factory SalesActivityDayTable250.fromJson(Object? json) =>
       _$SalesActivityDayTable250FromJson(json as Map<String, dynamic>);
   Map<String, dynamic> toJson() => _$SalesActivityDayTable250ToJson(this);

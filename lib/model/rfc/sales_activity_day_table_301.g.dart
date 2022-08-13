@@ -9,21 +9,21 @@ part of 'sales_activity_day_table_301.dart';
 SalesActivityDayTable301 _$SalesActivityDayTable301FromJson(
         Map<String, dynamic> json) =>
     SalesActivityDayTable301(
-      json['AEDAT'] as String?,
-      json['AENAM'] as String?,
-      json['AEWID'] as String?,
-      json['AEZET'] as String?,
-      json['BZACTNO'] as String?,
-      json['CPCOD'] as String?,
-      json['CPCOD_NM'] as String?,
-      json['DESC_DTL'] as String?,
-      json['ERDAT'] as String?,
-      json['ERNAM'] as String?,
-      json['ERWID'] as String?,
-      json['ERZET'] as String?,
-      json['SEQNO'] as String?,
-      json['SUBSEQ'] as int?,
-      json['UMODE'] as String?,
+      aedat: json['AEDAT'] as String?,
+      aenam: json['AENAM'] as String?,
+      aewid: json['AEWID'] as String?,
+      aezet: json['AEZET'] as String?,
+      bzactno: json['BZACTNO'] as String?,
+      cpc0d: json['CPCOD'] as String?,
+      cpc0dNm: json['CPCOD_NM'] as String?,
+      descDtl: json['DESC_DTL'] as String?,
+      erdat: json['ERDAT'] as String?,
+      ernam: json['ERNAM'] as String?,
+      erwid: json['ERWID'] as String?,
+      erzet: json['ERZET'] as String?,
+      seqno: json['SEQNO'] as String?,
+      subseq: json['SUBSEQ'] as int?,
+      umode: json['UMODE'] as String?,
     );
 
 Map<String, dynamic> _$SalesActivityDayTable301ToJson(

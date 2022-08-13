@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/sales_activity_day_table_340.dart
  * Created Date: 2022-08-03 11:18:00
- * Last Modified: 2022-08-03 14:31:37
+ * Last Modified: 2022-08-13 10:51:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -57,7 +57,7 @@ class SalesActivityDayTable340 {
   String? umode;
 
   SalesActivityDayTable340(
-      this.adate,
+      {this.adate,
       this.aedat,
       this.aenam,
       this.aezet,
@@ -75,7 +75,7 @@ class SalesActivityDayTable340 {
       this.stat,
       this.umode,
       this.validt0,
-      this.zskunnr);
+      this.zskunnr});
 
   factory SalesActivityDayTable340.fromJson(Object? json) =>
       _$SalesActivityDayTable340FromJson(json as Map<String, dynamic>);
