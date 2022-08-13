@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-12 11:16:22
+ * Last Modified: 2022-08-13 10:01:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -459,6 +459,58 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         : Container();
   }
 
+  void _showLocationPopup(BuildContext context) async {
+    final p = context.read<ActivityMenuProvider>();
+    final popupResult = await AppDialog.showPopup(
+      context,
+      WidgetOfSelectLocation(
+          status: p.activityStatus == ActivityStatus.STARTED
+              ? ActivityStatus.STOPED
+              : ActivityStatus.INIT,
+          locationList: p.locationResponseModel!.tList!,
+          model: p.editModel),
+    );
+    if (popupResult != null) {
+      pr('popupResult ::$popupResult');
+      if (popupResult) {
+        // get address api && save location data to table.
+        // AppToast()
+        //     .show(context, tr('activity_is_started'));
+        Future.delayed(Duration.zero, () {
+          p.setActivityStatus(ActivityStatus.STARTED);
+          p.changeIsLoad();
+        }).whenComplete(() async {
+          final naviResult =
+              await Navigator.pushNamed(context, AddActivityPage.routeName);
+          if (naviResult != null) {
+            pr('naviResult $naviResult');
+          }
+        });
+      }
+    }
+  }
+
+  void _showIsStartAvtivityPopup(BuildContext context) async {
+    final result = await AppDialog.showPopup(
+        context,
+        buildDialogContents(
+          context,
+          Container(
+              alignment: Alignment.center,
+              height: AppSize.singlePopupHeight - AppSize.buttonHeight,
+              child: AppText.text(tr('start_activity_first_commont'),
+                  maxLines: 4, style: AppTextStyle.default_16)),
+          false,
+          AppSize.singlePopupHeight,
+        ));
+    if (result != null) {
+      result as bool;
+      if (result) {
+        _showLocationPopup(context);
+      }
+    }
+  }
+
   Widget _buildMenuItem(BuildContext context, String text, MenuType menuType) {
     return Selector<ActivityMenuProvider, ActivityStatus?>(
       selector: (context, provider) => provider.activityStatus,
@@ -485,53 +537,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 // go to add activity page.
                 pr('add activity ');
               } else {
-                final result = await AppDialog.showPopup(
-                    context,
-                    buildDialogContents(
-                      context,
-                      Container(
-                          alignment: Alignment.center,
-                          height:
-                              AppSize.singlePopupHeight - AppSize.buttonHeight,
-                          child: AppText.text(
-                              tr('start_activity_first_commont'),
-                              maxLines: 4,
-                              style: AppTextStyle.default_16)),
-                      false,
-                      AppSize.singlePopupHeight,
-                    ));
-                if (result != null) {
-                  result as bool;
-                  if (result) {
-                    final popupResult = await AppDialog.showPopup(
-                      context,
-                      WidgetOfSelectLocation(
-                        status: p.activityStatus == ActivityStatus.STARTED
-                            ? ActivityStatus.STOPED
-                            : ActivityStatus.INIT,
-                        locationList: p.locationResponseModel!.tList!,
-                      ),
-                    );
-                    if (popupResult != null) {
-                      pr('popupResult ::$popupResult');
-                      if (popupResult) {
-                        // get address api && save location data to table.
-                        // AppToast()
-                        //     .show(context, tr('activity_is_started'));
-                        Future.delayed(Duration.zero, () {
-                          p.setActivityStatus(ActivityStatus.STARTED);
-                          p.changeIsLoad();
-                        }).whenComplete(() async {
-                          final naviResult = await Navigator.pushNamed(
-                              context, AddActivityPage.routeName);
-                          if (naviResult != null) {
-                            pr('naviResult $naviResult');
-                          }
-                        });
-                      }
-                    }
-                  }
-                }
+                _showIsStartAvtivityPopup(context);
               }
               break;
             case MenuType.ACTIVITY_STATUS:
@@ -539,7 +545,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 case ActivityStatus.INIT:
                   // save table
                   // 250테이블에 데이터가 없으면 추가.
-                  p.setActivityStatus(ActivityStatus.STARTED);
+                  _showLocationPopup(context);
                   break;
                 case ActivityStatus.STARTED:
                   // save table
@@ -557,6 +563,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     );
   }
 
+// 주소선택 메뉴
   Widget _buildDialogContents(
       BuildContext context,
       SalesActivityDayResponseModel fromParentWindowModel,
@@ -573,7 +580,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             children: [
               Positioned(
                   right: AppSize.padding,
-                  bottom: AppSize.padding * 2 + AppSize.buttonHeight,
+                  bottom: (AppSize.defaultListItemSpacing * 2) +
+                      AppSize.buttonHeight * 2,
                   child: Column(
                     children: [
                       _buildMenuItem(
@@ -588,7 +596,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   )),
               Positioned(
                   right: AppSize.padding,
-                  bottom: AppSize.padding,
+                  bottom: AppSize.buttonHeight,
                   child: FloatingActionButton(
                     backgroundColor: AppColors.primary,
                     onPressed: () {
@@ -616,7 +624,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     final p = context.read<SalseActivityManagerPageProvider>();
 
     return Positioned(
-        bottom: AppSize.padding,
+        bottom: AppSize.buttonHeight,
         right: AppSize.padding,
         child: FloatingActionButton(
           backgroundColor: AppColors.primary,
@@ -626,6 +634,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 barrierDismissible: false,
                 context: context,
                 builder: (context) {
+                  // dialog 내부 provider model 전달.
                   return _buildDialogContents(
                       context, p.dayResponseModel!, p.activityStatus);
                 });

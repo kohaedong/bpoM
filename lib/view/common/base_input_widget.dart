@@ -4,13 +4,13 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-08-12 10:22:28
+ * Last Modified: 2022-08-12 14:17:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
- * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
- * 												Discription													
- * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
+ * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+ *                        Discription                         
+ * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
  */
 import 'base_popup_cell.dart';
 import 'package:flutter/material.dart';
@@ -181,6 +181,7 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
           return;
         }
         if (widget.oneCellType == OneCellType.CONSULTATION_REPORT_TYPE) {
+          print(widget.checkBoxCallBack.runtimeType);
           final result =
               await BasePopupList(widget.oneCellType!, widget.iconType).show(
                   context,
@@ -315,7 +316,10 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                         widget.textStyle != null
                             ? widget.textStyle!.fontSize!
                             : AppTextStyle.default_16.fontSize!,
-                        isSmallButton: true)
+                        isSmallButton: widget.oneCellType ==
+                                OneCellType.SELECT_OFFICE_ADDRESS
+                            ? true
+                            : null)
                     : AppSize.defaultTextFieldPadding,
                 border: widget._disabledBorder,
                 enabledBorder: widget._enabledBorder,

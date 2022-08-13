@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-08-12 10:35:03
+ * Last Modified: 2022-08-13 10:37:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,20 +12,22 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/input_icon_type.dart';
-import 'package:medsalesportal/enums/popup_list_type.dart';
-import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
-import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
-import 'package:medsalesportal/view/common/base_input_widget.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:provider/provider.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_text.dart';
+import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/enums/popup_list_type.dart';
+import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/styles/app_text_style.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
+import 'package:medsalesportal/view/common/base_app_toast.dart';
+import 'package:medsalesportal/view/common/base_input_widget.dart';
+import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
+import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
+import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
 import 'package:medsalesportal/view/common/provider/base_select_location_provider.dart';
 
 typedef PopupCallBack = Function(bool);
@@ -35,10 +37,12 @@ class WidgetOfSelectLocation extends StatefulWidget {
       {Key? key,
       required this.status,
       required this.locationList,
+      required this.model,
       this.callback})
       : super(key: key);
   final ActivityStatus? status;
   final PopupCallBack? callback;
+  final SalesActivityDayResponseModel? model;
   final List<SalseActivityLocationModel> locationList;
 
   @override
@@ -60,16 +64,46 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
     );
   }
 
-  Widget _buildButton({required bool isLeft}) {
+  Widget _buildButton(BuildContext context, {required bool isLeft}) {
     var borderSide = BorderSide(width: .5, color: AppColors.textGrey);
     var decration = isLeft
         ? BoxDecoration(border: Border(top: borderSide, right: borderSide))
         : BoxDecoration(border: Border(top: borderSide));
     return GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () {
-          widget.callback?.call(isLeft ? false : true);
-          Navigator.pop(context, isLeft ? false : true);
+        onTap: () async {
+          if (isLeft) {
+            Navigator.pop(context, false);
+          } else {
+            final p = context.read<BaseSelectLocationProvider>();
+            var index = p.selectedIndex;
+            switch (index) {
+              case 0:
+                p.setSelectedAddress(p.homeAddress);
+                break;
+              case 1:
+                if (p.selectedAddress == null && p.isShowSelector) {
+                  AppToast().show(context, tr('plz_select_office'));
+                } else {
+                  p.setSelectedAddress(p.officeAddress);
+                }
+                break;
+            }
+            if (p.editDayModel!.table250!.isEmpty) {
+              await p.saveBaseTable().then((result) {
+                if (result.isSuccessful) {
+                  //! base table250 저장완료. 부모창으로 결과전달.
+                  widget.callback?.call(isLeft ? false : true);
+                  Navigator.pop(context, isLeft ? false : true);
+                } else {
+                  AppToast().show(context, result.errorMassage!);
+                }
+              });
+            } else {
+              widget.callback?.call(isLeft ? false : true);
+              Navigator.pop(context, isLeft ? false : true);
+            }
+          }
         },
         child: Container(
             height: AppSize.buttonHeight,
@@ -102,14 +136,8 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
     return GestureDetector(
         onTap: () {
           final p = context.read<BaseSelectLocationProvider>();
-          // var isMoreAddress = widget.locationList
-          //         .where((model) => model.addcat == 'O')
-          //         .toList()
-          //         .length >
-          //     1;
-          var isMoreAddress = true;
           p.setSelectedIndex(index);
-          if (index == 1 && isMoreAddress) {
+          if (index == 1 && p.isShowSelector) {
             p.setIsShowSelector(true);
             p.setHeight(250);
           } else {
@@ -223,29 +251,41 @@ class _WidgetOfSelectLocationState extends State<WidgetOfSelectLocation> {
       create: (context) => BaseSelectLocationProvider(),
       builder: (context, _) {
         final p = context.read<BaseSelectLocationProvider>();
-
+        p.initData(widget.model!, widget.locationList);
         return Selector<BaseSelectLocationProvider, double>(
           selector: (context, provider) => provider.height,
           builder: (context, height, _) {
             return Container(
                 height: height,
                 width: AppSize.defaultContentsWidth,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Stack(
                   children: [
-                    _buildTitle(),
-                    Divider(thickness: 1, height: 0),
-                    Expanded(child: _buildSelectorButtons(context)),
-                    SizedBox(
-                      height: AppSize.buttonHeight,
-                      child: Row(
-                        children: [
-                          _buildButton(isLeft: true),
-                          _buildButton(isLeft: false),
-                        ],
-                      ),
-                    )
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildTitle(),
+                        Divider(thickness: 1, height: 0),
+                        Expanded(child: _buildSelectorButtons(context)),
+                        SizedBox(
+                          height: AppSize.buttonHeight,
+                          child: Row(
+                            children: [
+                              _buildButton(context, isLeft: true),
+                              _buildButton(context, isLeft: false),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                    Positioned(
+                        child: Selector<BaseSelectLocationProvider, bool>(
+                      selector: (context, provider) => provider.isLoadData,
+                      builder: (context, isLoadData, d) {
+                        return BaseLoadingViewOnStackWidget.build(
+                            context, isLoadData);
+                      },
+                    ))
                   ],
                 ));
           },

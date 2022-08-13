@@ -518,6 +518,7 @@
     "add_activity_page":"영업활동 등록",
     "activity_is_started":"영업활동이 시작 되였습니다.",
     "activity_is_stoped":"영업활동이 종료 되였습니다.",
+    "plz_select_office":"사무실을 선택해주세요.",
     "have_unconfirmed_activity":"전일 영업활동이 미확정 상태입니다.\n{} 영업활동을 확정해주세요.",
     "stop_activity_first_commont":"영업활동 종료후 확정가능합니다.",
     "start_activity_first_commont":"영업활동 시작후 신규 활동 추가가 가능합니다.영업활동을 시작 하시겠습니까?"

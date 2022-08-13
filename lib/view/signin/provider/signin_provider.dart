@@ -49,6 +49,7 @@ class SigninProvider extends ChangeNotifier {
 
   void setIsIdFocused(bool val) {
     isIdFocused = val;
+    pr('id focused');
     notifyListeners();
   }
 

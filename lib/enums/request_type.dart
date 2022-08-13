@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-08-11 14:26:05
+ * Last Modified: 2022-08-12 17:10:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -101,7 +101,6 @@ extension RequestTypeExtension on RequestType {
         return '$rfcURL/common';
       case RequestType.GET_OFFICE_ADDRESS:
         return '$rfcURL/common';
-
       case RequestType.SALESE_ACTIVITY_DAY_DATA:
         return '$rfcURL/common';
       case RequestType.SEARCH_PARTMENT_KEY_ZIBI:
@@ -151,7 +150,7 @@ extension RequestTypeExtension on RequestType {
       case RequestType.CHECK_HOLIDAY:
         return '$v2URL/opendata/holiday';
       case RequestType.GET_LAT_AND_LON:
-        return '$rfcURL/getcoordinate';
+        return '$medical/getcoordinate';
       case RequestType.CHECK_NOTICE:
         return '$v2URL/rest';
       case RequestType.NOTICE_DONT_SHOW_AGAIN:

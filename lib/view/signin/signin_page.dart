@@ -70,6 +70,7 @@ class _SigninPageState extends State<SigninPage> {
                 iconType: account != null ? InputIconType.DELETE : null,
                 hintText: account != null ? null : '${tr('id')}',
                 width: AppSize.defaultContentsWidth,
+                height: AppSize.buttonHeight,
                 defaultIconCallback: () {
                   p.setAccount(null);
                   _idController!.text = '';
@@ -101,6 +102,7 @@ class _SigninPageState extends State<SigninPage> {
                   iconType: password != null ? InputIconType.DELETE : null,
                   hintText: password != null ? null : '${tr('password')}',
                   width: AppSize.defaultContentsWidth,
+                  height: AppSize.buttonHeight,
                   keybordType: TextInputType.visiblePassword,
                   defaultIconCallback: () {
                     p.setPassword(null);
@@ -202,7 +204,9 @@ class _SigninPageState extends State<SigninPage> {
             bottom: (tuple.item1 != null && tuple.item1!) ||
                     (tuple.item2 != null && tuple.item2!)
                 ? 0
-                : AppSize.realHeight * .2,
+                : AppSize.realHeight > 800
+                    ? AppSize.realHeight * .2
+                    : 100,
             child: Padding(
                 padding: AppSize.defaultSidePadding,
                 child: Selector<SigninProvider, Tuple3<bool, bool, bool>>(
@@ -293,11 +297,22 @@ class _SigninPageState extends State<SigninPage> {
       selector: (context, provider) =>
           Tuple2(provider.isIdFocused, provider.isPwFocused),
       builder: (context, tuple, _) {
+        Future.delayed(Duration(milliseconds: 500), () {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.fastOutSlowIn,
+          );
+        });
         return Padding(
-            padding: (tuple.item1 != null && tuple.item1!) ||
-                    (tuple.item2 != null && tuple.item2!)
-                ? EdgeInsets.only(top: 100)
-                : EdgeInsets.zero);
+          padding: (tuple.item1 != null && tuple.item1!) ||
+                  (tuple.item2 != null && tuple.item2!)
+              ? EdgeInsets.only(top: 100)
+              : EdgeInsets.zero,
+          child: Container(
+            child: AppText.text(''),
+          ),
+        );
       },
     );
   }
@@ -370,6 +385,7 @@ class _SigninPageState extends State<SigninPage> {
                             _buildTextFormForPassword(context),
                             _buildErrorMessage(context),
                             _buildCheckBoxRow(context),
+                            defaultSpacing(),
                             _buildAutoSpacing(context)
                           ],
                         ),
