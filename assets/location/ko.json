@@ -419,7 +419,7 @@
     "not_visited":"미방문",
     "success_lable":"성공",
     "activity_date":"활동일자",
-    "activity_report":"활동보고서",
+    "activity_report":"활동 보고서",
     "customer_type_2":"고객형태",
     "address":"주소",
     "key_man":"key man",
@@ -521,6 +521,8 @@
     "plz_select_office":"사무실을 선택해주세요.",
     "have_unconfirmed_activity":"전일 영업활동이 미확정 상태입니다.\n{} 영업활동을 확정해주세요.",
     "stop_activity_first_commont":"영업활동 종료후 확정가능합니다.",
-    "start_activity_first_commont":"영업활동 시작후 신규 활동 추가가 가능합니다.영업활동을 시작 하시겠습니까?"
+    "start_activity_first_commont":"영업활동 시작후 신규 활동 추가가 가능합니다.영업활동을 시작 하시겠습니까?",
+    "costomer_search":"고객 조회"
+    
 
 }

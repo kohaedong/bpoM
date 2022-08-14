@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-08-07 19:49:24
+ * Last Modified: 2022-08-14 20:46:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,7 +13,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/model/rfc/et_end_customer_response_model.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
@@ -21,20 +20,22 @@ import 'package:medsalesportal/service/hive_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/model/rfc/et_end_customer_response_model.dart';
 
 class BasePopupSearchProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirestRun = true;
   bool isSingleData = false;
   String? personInputText;
+  String? customerInputTextForAddActivityPage;
   String? customerInputText;
   String? endCustomerInputText;
   String? selectedProductCategory;
@@ -93,8 +94,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
   }
 
   void setPersonInputText(String? value) {
-    this.personInputText = value;
+    personInputText = value;
     if (value == null || (value.length == 1) || value == '') {
+      if (value == '*') {
+        personInputText = ' ';
+      }
       notifyListeners();
     }
   }
@@ -128,8 +132,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
   }
 
   void setCustomerInputText(String? value) {
-    this.customerInputText = value;
+    customerInputText = value;
     if (value == null || (value.length == 1) || value == '') {
+      if (value == '*') {
+        customerInputText = ' ';
+      }
       notifyListeners();
     }
   }
@@ -137,6 +144,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
   void setEndCustomerInputText(String? value) {
     endCustomerInputText = value;
     if (value == null || (value.length == 1) || value == '') {
+      if (value == '*') {
+        endCustomerInputText = ' ';
+      }
       notifyListeners();
     }
   }
@@ -294,7 +304,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return BasePoupSearchResult(false);
   }
 
-  Future<BasePoupSearchResult> searchCustomer(bool isMounted) async {
+  Future<BasePoupSearchResult> searchCustomer(bool isMounted,
+      {bool? isAddActivityPage}) async {
     if (isFirestRun) {
       isFirestRun = false;
       return BasePoupSearchResult(false);
@@ -313,13 +324,15 @@ class BasePopupSearchProvider extends ChangeNotifier {
       var temp = productCategoryDataList!
           .where((data) => data.contains(selectedProductCategory!))
           .toList();
-      zbiz = temp.isEmpty ? '' : temp.first.substring(temp.indexOf('-') + 1);
+      zbiz =
+          temp.isEmpty ? '' : temp.first.substring(temp.first.indexOf('-') + 1);
     }
     if (selectedProductFamily != null) {
       var temp = productFamilyDataList!
           .where((data) => data.contains(selectedProductFamily!))
           .toList();
-      spart = temp.isEmpty ? '' : temp.first.substring(temp.indexOf('-') + 1);
+      spart =
+          temp.isEmpty ? '' : temp.first.substring(temp.first.indexOf('-') + 1);
     }
 
     body = {
@@ -540,6 +553,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
     switch (type) {
       case OneCellType.SEARCH_SALSE_PERSON:
         return await searchPerson(isMounted);
+      case OneCellType.SEARCH_CUSTOMER_FOR_ADD_ACTIVITY_PAGE:
+        return await searchCustomer(isMounted);
       case OneCellType.SEARCH_CUSTOMER:
         return await searchCustomer(isMounted);
       case OneCellType.SEARCH_SALLER:

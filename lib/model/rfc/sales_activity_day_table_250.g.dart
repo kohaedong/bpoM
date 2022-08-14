@@ -9,6 +9,7 @@ part of 'sales_activity_day_table_250.dart';
 SalesActivityDayTable250 _$SalesActivityDayTable250FromJson(
         Map<String, dynamic> json) =>
     SalesActivityDayTable250(
+      mandt: json['MANDT'] as String?,
       adate: json['ADATE'] as String?,
       addcat: json['ADDCAT'] as String?,
       aedat: json['AEDAT'] as String?,
@@ -45,7 +46,7 @@ SalesActivityDayTable250 _$SalesActivityDayTable250FromJson(
       scallType: json['SCALL_TYPE'] as String?,
       stime: json['STIME'] as String?,
       sxLatitude: (json['SX_LATITUDE'] as num?)?.toDouble(),
-      sxLongitude: (json['SY_LONGITUDE'] as num?)?.toDouble(),
+      syLongitude: (json['SY_LONGITUDE'] as num?)?.toDouble(),
       fcallType: json['FCALL_TYPE'] as String?,
     );
 
@@ -61,7 +62,7 @@ Map<String, dynamic> _$SalesActivityDayTable250ToJson(
       'SZADDR': instance.szaddr,
       'FADDCAT': instance.faddcat,
       'SX_LATITUDE': instance.sxLatitude,
-      'SY_LONGITUDE': instance.sxLongitude,
+      'SY_LONGITUDE': instance.syLongitude,
       'STIME': instance.stime,
       'SCALL_TYPE': instance.scallType,
       'FCALL_TYPE': instance.fcallType,
@@ -83,6 +84,7 @@ Map<String, dynamic> _$SalesActivityDayTable250ToJson(
       'ERNAM': instance.ernam,
       'ERWID': instance.erwid,
       'AEDAT': instance.aedat,
+      'MANDT': instance.mandt,
       'AEZET': instance.aezet,
       'AENAM': instance.aenam,
       'AEWID': instance.aewid,

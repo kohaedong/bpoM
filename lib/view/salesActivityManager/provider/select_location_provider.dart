@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-08-13 14:24:43
+ * Last Modified: 2022-08-14 20:48:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,23 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/enums/activity_status.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_270.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_280.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_290.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_291.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_300.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_301.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_310.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_320.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_321.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_330.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_340.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_350.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_430.dart';
 import 'package:medsalesportal/util/date_util.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';
@@ -37,6 +53,7 @@ class SelectLocationProvider extends ChangeNotifier {
   SalseActivityCoordinateResponseModel? coordinateResponseModel;
   SalesActivityDayResponseModel? editDayModel;
   List<SalseActivityLocationModel>? locationList;
+  ActivityStatus? activityStatus;
   final _api = ApiService();
   double height = 200;
   int selectedIndex = 0;
@@ -49,12 +66,18 @@ class SelectLocationProvider extends ChangeNotifier {
       locationList!.where((model) => model.addcat == 'H').single.zadd1!;
   String get officeAddress =>
       locationList!.where((model) => model.addcat == 'O').single.zadd1!;
-
-  void initData(SalesActivityDayResponseModel fromParentModel,
-      List<SalseActivityLocationModel> fromParentLocationList) {
+  String get locationType => locationList!
+      .where((model) => model.zadd1 == selectedAddress)
+      .first
+      .addcat!;
+  void initData(
+      SalesActivityDayResponseModel fromParentModel,
+      List<SalseActivityLocationModel> fromParentLocationList,
+      ActivityStatus status) {
     editDayModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
     locationList = fromParentLocationList;
+    activityStatus = status;
     isShowSelector =
         locationList!.where((model) => model.addcat == 'O').toList().length > 1;
   }
@@ -120,31 +143,142 @@ class SelectLocationProvider extends ChangeNotifier {
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
     var t250Base64 = '';
-    //! 영업활동이 없으면 table 하나 만들고 base64로 보냄. 있으면 그데로base64로 변경후 보냄.
-    //! 처음 table 만들떄  UMODE = I ; 아니면 U;
     var t260Base64 = '';
-    List<Map<String, dynamic>> temp = [];
+    var t270Base64 = '';
+    var t280Base64 = '';
+    var t290Base64 = '';
+    var t291Base64 = '';
+    var t300Base64 = '';
+    var t301Base64 = '';
+    var t310Base64 = '';
+    var t320Base64 = '';
+    var t321Base64 = '';
+    var t330Base64 = '';
+    var t340Base64 = '';
+    var t350Base64 = '';
+    var t430Base64 = '';
+    var temp = <Map<String, dynamic>>[];
+    var t250 = SalesActivityDayTable250();
+    var t260 = SalesActivityDayTable260();
+    var t270 = SalesActivityDayTable270();
+    var t280 = SalesActivityDayTable280();
+    var t290 = SalesActivityDayTable290();
+    var t291 = SalesActivityDayTable291();
+    var t300 = SalesActivityDayTable300();
+    var t301 = SalesActivityDayTable301();
+    var t310 = SalesActivityDayTable310();
+    var t320 = SalesActivityDayTable320();
+    var t321 = SalesActivityDayTable321();
+    var t330 = SalesActivityDayTable330();
+    var t340 = SalesActivityDayTable340();
+    var t350 = SalesActivityDayTable350();
+    var t430 = SalesActivityDayTable430();
+    var date = t250.adate =
+        FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now()));
+    var time = DateUtil.getTimeNow();
 
-    if (editDayModel!.table250!.isEmpty) {
-      var t250 = SalesActivityDayTable250();
+    var esLogin = CacheService.getEsLogin();
+
+    if (activityStatus == ActivityStatus.STARTED) {
+      // 영업활동 시작 하였으면 >>>  영업활동 종료
+      t250.umode = 'U';
+      t250.fcallType = 'M';
+      t250.adate = date;
+      t250.faddcat = locationType;
+      t250.fxLatitude = double.parse('0.00');
+      t250.fylongitude = double.parse('0.00');
+      t250.ftime = DateUtil.getTimeNow();
+      t250.fzaddr = selectedAddress;
+    } else {
+      // 영업활동 시작 하지 않았으면. >>> 영업활동 시작. table 신규 추가.
       t250.umode = 'I';
-      t250.sxLatitude = double.parse(lat!.trim());
-      t250.sxLongitude = double.parse(lon!.trim());
-      t250.stime = DateUtil.getTimeNow();
       t250.scallType = 'M';
-      t250.szaddr = selectedAddress;
-      pr(t250.toJson());
-    } else {}
+      t250.adate = date;
+      t250.aedat = date;
+      t250.aezet = time;
+      t250.aenam = esLogin!.ename;
 
-    // if (condition) {
-    //   temp.addAll([headerTable.toJson()]);
-    // }
+      t250.erdat = date;
+      t250.ernam = esLogin.ename;
+      t250.erwid = esLogin.logid!.toUpperCase();
+      t250.saddcat = locationType;
+      t250.sxLatitude = double.parse(lat!.trim());
+      t250.syLongitude = double.parse(lon!.trim());
+      t250.stime = time;
+      t250.szaddr = selectedAddress;
+
+      // t260.umode = 'I';
+      // t260.seqno = '0001';
+      // t260.callType = 'M';
+      // t260.isGps = 'X';
+      // t260.xLatitude = double.parse('0.00');
+      // t260.yLongitude = double.parse('0.00');
+      // t260.erdat = t250.erdat;
+    }
+    temp.addAll([t250.toJson()]);
+    t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t260.toJson()]);
+    t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t270.toJson()]);
+    t270Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t280.toJson()]);
+    t280Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t290.toJson()]);
+    t290Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t291.toJson()]);
+    t291Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t300.toJson()]);
+    t300Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t301.toJson()]);
+    t301Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t310.toJson()]);
+    t310Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t320.toJson()]);
+    t320Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t321.toJson()]);
+    t321Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t330.toJson()]);
+    t330Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t340.toJson()]);
+    t340Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t350.toJson()]);
+    t350Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([t430.toJson()]);
+    t430Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {
-        "IV_PTYPE": "U",
+        "IV_PTYPE": "I",
         "T_ZLTSP0250S": t250Base64,
         "T_ZLTSP0260S": t260Base64,
+        "T_ZLTSP0270S": t270Base64,
+        "T_ZLTSP0280S": t280Base64,
+        "T_ZLTSP0290S": t290Base64,
+        "T_ZLTSP0291S": t291Base64,
+        "T_ZLTSP0300S": t300Base64,
+        "T_ZLTSP0301S": t301Base64,
+        "T_ZLTSP0310S": t310Base64,
+        "T_ZLTSP0320S": t320Base64,
+        "T_ZLTSP0321S": t321Base64,
+        "T_ZLTSP0330S": t330Base64,
+        "T_ZLTSP0340S": t340Base64,
+        "T_ZLTSP0350S": t350Base64,
+        "T_ZLTSP0430S": t430Base64,
         "IV_ADATE":
             FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now())),
         "IS_LOGIN": isLogin,
@@ -161,6 +295,7 @@ class SelectLocationProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       editDayModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
+      pr('result::: ${editDayModel?.toJson()}');
       isLoadData = false;
       notifyListeners();
       return ResultModel(true);

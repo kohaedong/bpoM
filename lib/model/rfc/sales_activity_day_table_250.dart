@@ -32,7 +32,7 @@ class SalesActivityDayTable250 {
   @JsonKey(name: 'SX_LATITUDE')
   double? sxLatitude;
   @JsonKey(name: 'SY_LONGITUDE')
-  double? sxLongitude;
+  double? syLongitude;
   @JsonKey(name: 'STIME')
   String? stime;
   @JsonKey(name: 'SCALL_TYPE')
@@ -75,6 +75,8 @@ class SalesActivityDayTable250 {
   String? erwid;
   @JsonKey(name: 'AEDAT')
   String? aedat;
+  @JsonKey(name: 'MANDT')
+  String? mandt;
   @JsonKey(name: 'AEZET')
   String? aezet;
   @JsonKey(name: 'AENAM')
@@ -91,7 +93,8 @@ class SalesActivityDayTable250 {
   String? umode;
 
   SalesActivityDayTable250(
-      {this.adate,
+      {this.mandt,
+      this.adate,
       this.addcat,
       this.aedat,
       this.aenam,
@@ -127,7 +130,7 @@ class SalesActivityDayTable250 {
       this.scallType,
       this.stime,
       this.sxLatitude,
-      this.sxLongitude,
+      this.syLongitude,
       this.fcallType});
   factory SalesActivityDayTable250.fromJson(Object? json) =>
       _$SalesActivityDayTable250FromJson(json as Map<String, dynamic>);

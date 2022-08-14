@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-08-13 13:46:03
+ * Last Modified: 2022-08-14 13:39:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -47,6 +47,16 @@ class SelectLocationWidget extends StatefulWidget {
 }
 
 class _SelectLocationWidgetState extends State<SelectLocationWidget> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Widget _buildTitle() {
     return Container(
       padding: EdgeInsets.only(left: AppSize.padding),
@@ -70,7 +80,7 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
         behavior: HitTestBehavior.opaque,
         onTap: () async {
           if (isLeft) {
-            Navigator.pop(context, false);
+            Navigator.pop(context, null);
           } else {
             final p = context.read<SelectLocationProvider>();
             var index = p.selectedIndex;
@@ -97,8 +107,12 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                 }
               });
             } else {
-              Navigator.pop(context,
-                  isLeft ? null : ResultModel(true, data: p.editDayModel));
+              Navigator.pop(
+                  context,
+                  isLeft
+                      ? null
+                      : ResultModel(true,
+                          data: ResultModel(true, data: p.editDayModel)));
             }
           }
         },
@@ -248,7 +262,7 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
       create: (context) => SelectLocationProvider(),
       builder: (context, _) {
         final p = context.read<SelectLocationProvider>();
-        p.initData(widget.model!, widget.locationList);
+        p.initData(widget.model!, widget.locationList, widget.status!);
         return Selector<SelectLocationProvider, double>(
           selector: (context, provider) => provider.height,
           builder: (context, height, _) {
