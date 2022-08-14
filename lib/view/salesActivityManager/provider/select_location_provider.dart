@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-08-13 13:45:44
+ * Last Modified: 2022-08-13 14:24:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,8 +12,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_250.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
@@ -21,10 +19,20 @@ import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_250.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
 
+// ---------------  description  --------------------
+// 1. [ActivityMenuProvider]에서  model 가져와 editDayModel에 저장한다.
+// 2. 영업활동 시작시 250table 신규저장후 result를  editDayModel에 저장한다.(update)
+// 3. 영업활동 등록페이지로 이동시 editDayModel을 전달한다.
+// 4. 영업활동 등록페이지에서 신규 260table 만들때 editDayModel에 있는 250table 활용해 필요한 데이터 가져온다.
+// 5. 영업활동 페이지가 닫힐때 ::
+//      - 영업활동 시작 했을 경우: 영업활동이 시작 하였음으로 신규 영업활동 추가 하던 안하던 부모창에서는 업데이트 한다.
+//      - 영업활동 시작 안했을 경우: 부모창 업데이트 안함.
+//      - 마지막 영업활동 삭제 했을 경우: 부모창에서 최신데이터 반영한다.
 class SelectLocationProvider extends ChangeNotifier {
   SalseActivityCoordinateResponseModel? coordinateResponseModel;
   SalesActivityDayResponseModel? editDayModel;
@@ -116,6 +124,7 @@ class SelectLocationProvider extends ChangeNotifier {
     //! 처음 table 만들떄  UMODE = I ; 아니면 U;
     var t260Base64 = '';
     List<Map<String, dynamic>> temp = [];
+
     if (editDayModel!.table250!.isEmpty) {
       var t250 = SalesActivityDayTable250();
       t250.umode = 'I';
@@ -127,9 +136,6 @@ class SelectLocationProvider extends ChangeNotifier {
       pr(t250.toJson());
     } else {}
 
-    if (editDayModel!.table260!.isEmpty) {
-      var t260 = SalesActivityDayTable260();
-    }
     // if (condition) {
     //   temp.addAll([headerTable.toJson()]);
     // }
