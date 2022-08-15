@@ -20,14 +20,11 @@ import 'package:medsalesportal/styles/export_common.dart';
 //
 class BaseColumWithTitleAndTextFiled {
   static Widget buildRowWithStart(String text,
-      {bool? isNotshowStart, bool? isTextSize14}) {
+      {bool? isNotshowStart, TextStyle? style}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        AppText.listViewText('$text',
-            style: isTextSize14 != null
-                ? AppTextStyle.sub_12
-                : AppTextStyle.sub_14),
+        AppText.listViewText('$text', style: style ?? AppTextStyle.h4),
         isNotshowStart != null
             ? Container(
                 height: AppSize.zero,
@@ -38,16 +35,20 @@ class BaseColumWithTitleAndTextFiled {
     );
   }
 
-  static Widget build(String text, Widget input,
-      {bool? isNotShowStar, bool? isTextSize14, Widget? input2}) {
+  static Widget build(
+    String text,
+    Widget input, {
+    bool? isNotShowStar,
+    TextStyle? style,
+    Widget? input2,
+  }) {
     // isNotShowStar   true : 필수 옵션 * 보여짐,  false: 필수 옵션 * 안보여짐.
     // isTextSize14 true: 폰트 크기 14, false 폰트 크기 16
     // input2 잠재고객페이지에서만 사용. 주소가 2줄일 경우 input 1개 추가.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        buildRowWithStart(text,
-            isNotshowStart: isNotShowStar, isTextSize14: isTextSize14),
+        buildRowWithStart(text, isNotshowStart: isNotShowStar, style: style),
         Padding(
           padding: EdgeInsets.only(
               top: AppSize.defaultSpacingForTitleAndTextField,

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-14 13:22:14
+ * Last Modified: 2022-08-15 09:33:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -475,6 +475,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       //!  주소 선택 팝업창에서 리턴된 데이터.
       //!  영업활동 추가 성공 의미.
       if (popupResult.isSuccessful) {
+        //! popupResult.data >>>>  출발지 선택후 영업활동 개시 api의 result.
         p.initData(popupResult.data, ActivityStatus.STARTED);
         p.setIsNeedUpdate(true);
         final naviResult = await Navigator.pushNamed(

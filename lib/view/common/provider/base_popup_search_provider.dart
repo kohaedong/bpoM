@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-08-14 20:46:29
+ * Last Modified: 2022-08-15 12:00:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/model/rfc/add_activity_key_man_response_model.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
@@ -35,6 +36,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   bool isFirestRun = true;
   bool isSingleData = false;
   String? personInputText;
+  String? keymanInputText;
   String? customerInputTextForAddActivityPage;
   String? customerInputText;
   String? endCustomerInputText;
@@ -50,6 +52,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   EtKunnrResponseModel? etKunnrResponseModel;
   EtCustomerResponseModel? etCustomerResponseModel;
   EtEndCustomerResponseModel? etEndCustomerResponseModel;
+  AddActivityKeyManResponseModel? keyManResponseModel;
   OneCellType? type;
   Map<String, dynamic>? bodyMap;
 
@@ -68,6 +71,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     etKunnrResponseModel = null;
     etCustomerResponseModel = null;
     etEndCustomerResponseModel = null;
+    keyManResponseModel = null;
     staList = null;
     hasMore = true;
     onSearch(type!, true);
@@ -98,6 +102,16 @@ class BasePopupSearchProvider extends ChangeNotifier {
     if (value == null || (value.length == 1) || value == '') {
       if (value == '*') {
         personInputText = ' ';
+      }
+      notifyListeners();
+    }
+  }
+
+  void setKeymanInputText(String? value) {
+    keymanInputText = value;
+    if (value == null || (value.length == 1) || value == '') {
+      if (value == '*') {
+        keymanInputText = ' ';
       }
       notifyListeners();
     }
@@ -301,6 +315,63 @@ class BasePopupSearchProvider extends ChangeNotifier {
       return BasePoupSearchResult(true);
     }
     isLoadData = false;
+    notifyListeners();
+    return BasePoupSearchResult(false);
+  }
+
+  Future<BasePoupSearchResult> searchKeyMan(
+    bool isMounted,
+  ) async {
+    isLoadData = true;
+    if (isMounted) {
+      notifyListeners();
+    }
+    var _api = ApiService();
+    final isLogin = CacheService.getIsLogin();
+    Map<String, dynamic>? body;
+    body = {
+      "methodName": RequestType.SEARCH_KEY_MAN.serverMethod,
+      "methodParamMap": {
+        "IV_NAME": "",
+        "IV_XREPKM": "",
+        "IV_ZSKUNNR": "",
+        "IV_ZTRAITMENT": "",
+        "pos": pos,
+        "partial": partial,
+        "IS_LOGIN": isLogin,
+        "IV_ZKMNAME": keymanInputText ?? '',
+        "resultTables": RequestType.SEARCH_KEY_MAN.resultTable,
+        "functionName": RequestType.SEARCH_KEY_MAN.serverMethod,
+      }
+    };
+
+    _api.init(RequestType.SEARCH_KEY_MAN);
+    final result = await _api.request(body: body);
+    if (result == null || result.statusCode != 200) {
+      isLoadData = false;
+      notifyListeners();
+      return BasePoupSearchResult(false);
+    }
+    if (result.statusCode == 200 && result.body['data'] != null) {
+      var temp = AddActivityKeyManResponseModel.fromJson(result.body['data']);
+      if (temp.etList!.length != partial) {
+        hasMore = false;
+      }
+      if (keyManResponseModel == null) {
+        keyManResponseModel = temp;
+      } else {
+        keyManResponseModel!.etList!.addAll(temp.etList!);
+      }
+      if (keyManResponseModel != null && keyManResponseModel!.etList == null) {
+        keyManResponseModel = null;
+      }
+      pr(temp.toJson());
+      isLoadData = false;
+      notifyListeners();
+      return BasePoupSearchResult(true);
+    }
+    isLoadData = false;
+    notifyListeners();
     return BasePoupSearchResult(false);
   }
 
@@ -553,6 +624,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
     switch (type) {
       case OneCellType.SEARCH_SALSE_PERSON:
         return await searchPerson(isMounted);
+      case OneCellType.SEARCH_KEY_MAN:
+        return await searchKeyMan(isMounted);
       case OneCellType.SEARCH_CUSTOMER_FOR_ADD_ACTIVITY_PAGE:
         return await searchCustomer(isMounted);
       case OneCellType.SEARCH_CUSTOMER:

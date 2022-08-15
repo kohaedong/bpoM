@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_info_row_by_key_and_value.dart
  * Created Date: 2021-10-03 02:10:59
- * Last Modified: 2022-07-08 17:49:16
+ * Last Modified: 2022-08-15 09:55:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -67,7 +67,8 @@ class BaseInfoRowByKeyAndValue {
       double? contentsTextWidth,
       int? maxLine,
       Color? exceptionColor,
-      bool? isWithStar}) {
+      bool? isWithStar,
+      TextStyle? style}) {
     return Padding(
       padding: AppSize.textRowModelLinePadding,
       child: TextRowModelByKeyValue(
@@ -84,6 +85,7 @@ class BaseInfoRowByKeyAndValue {
         isWithEndShowAllButton ?? false,
         isWithShimmer: isWithShimmer,
         shimmerRow: shimmerRow,
+        style: style,
         icon: icon,
         maxLine: maxLine,
         callback: callback,

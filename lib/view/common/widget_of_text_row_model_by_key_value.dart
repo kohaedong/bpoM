@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/text_row_model_by_key_value.dart
  * Created Date: 2021-09-06 11:46:11
- * Last Modified: 2022-07-26 17:20:17
+ * Last Modified: 2022-08-15 09:56:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -39,7 +39,8 @@ class TextRowModelByKeyValue extends StatelessWidget {
       this.discription2,
       this.maxLine,
       this.contentsTextWidth,
-      this.leadingTextWidth})
+      this.leadingTextWidth,
+      this.style})
       : super(key: key);
 
   final String title;
@@ -58,6 +59,7 @@ class TextRowModelByKeyValue extends StatelessWidget {
   final bool? isTitleTwoRow;
   final double? leadingTextWidth;
   final double? contentsTextWidth;
+  final TextStyle? style;
 
   Widget buildShowAllButton() {
     return Padding(
@@ -133,7 +135,7 @@ class TextRowModelByKeyValue extends StatelessWidget {
             Expanded(
               child: Container(
                 child: AppText.text('$title',
-                    style: p.themeData.textTheme.headline6!,
+                    style: style ?? p.themeData.textTheme.headline6!,
                     maxLines: isTitleTwoRow != null ? 2 : 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.start),
@@ -182,10 +184,13 @@ class TextRowModelByKeyValue extends StatelessWidget {
                     Expanded(
                         child: Container(
                             child: AppText.text('$discription',
-                                style: exceptionColor != null
-                                    ? p.themeData.textTheme.headline4!
-                                        .copyWith(color: exceptionColor)
-                                    : p.themeData.textTheme.headline4!,
+                                style: style != null
+                                    ? style!
+                                        .copyWith(color: AppColors.defaultText)
+                                    : exceptionColor != null
+                                        ? p.themeData.textTheme.headline4!
+                                            .copyWith(color: exceptionColor)
+                                        : p.themeData.textTheme.headline4!,
                                 maxLines: maxLine != null
                                     ? maxLine
                                     : isWithEndShowAllButton

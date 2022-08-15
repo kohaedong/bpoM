@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-14 20:47:24
+ * Last Modified: 2022-08-15 11:01:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,10 @@
  */
 
 import 'package:flutter/widgets.dart';
+import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
+import 'package:medsalesportal/service/hive_service.dart';
+import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -38,7 +41,6 @@ class AddActivityPage extends StatefulWidget {
 class _AddActivityPageState extends State<AddActivityPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -55,23 +57,97 @@ class _AddActivityPageState extends State<AddActivityPage> {
         return Padding(
             padding: AppSize.defaultSidePadding,
             child: BaseColumWithTitleAndTextFiled.build(
-                tr('office'),
-                BaseInputWidget(
-                    context: context,
-                    hintTextStyleCallBack: () => model != null
-                        ? AppTextStyle.default_14
-                        : AppTextStyle.default_14
-                            .copyWith(color: AppColors.subText),
-                    textStyle: AppTextStyle.default_14,
-                    popupSearchType: PopupSearchType.SEARCH_CUSTOMER,
-                    isSelectedStrCallBack: (costomerModel) {
-                      return p.setCostomerModel(costomerModel);
-                    },
-                    iconType: model != null ? InputIconType.DELETE : null,
-                    defaultIconCallback: () => p.setCostomerModel(null),
-                    hintText: model != null ? model.kunnr : tr('plz_select'),
-                    width: AppSize.defaultContentsWidth,
-                    enable: model != null ? true : false)));
+              tr('customer_name'),
+              BaseInputWidget(
+                  context: context,
+                  hintTextStyleCallBack: () => model != null
+                      ? AppTextStyle.default_14
+                      : AppTextStyle.default_14
+                          .copyWith(color: AppColors.subText),
+                  textStyle: AppTextStyle.default_14,
+                  popupSearchType: PopupSearchType.SEARCH_CUSTOMER,
+                  isSelectedStrCallBack: (costomerModel) {
+                    return p.setCustomerModel(costomerModel);
+                  },
+                  iconType: model != null
+                      ? InputIconType.DELETE
+                      : InputIconType.SEARCH,
+                  iconColor: model != null ? null : AppColors.unReadyText,
+                  defaultIconCallback: () => p.setCustomerModel(null),
+                  hintText: model != null ? model.name : tr('plz_select'),
+                  width: AppSize.defaultContentsWidth,
+                  enable: model != null ? true : false),
+            ));
+      },
+    );
+  }
+
+  Widget _buildCustomerDiscription(BuildContext context) {
+    return Padding(
+      padding: AppSize.defaultSidePadding,
+      child: Selector<AddActivityPageProvider, EtKunnrModel?>(
+        selector: (context, provider) => provider.selectedKunnr,
+        builder: (context, model, _) {
+          return model == null
+              ? Container()
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    FutureBuilder<List<String>?>(
+                        future: HiveService.getCustomerType(model.zstatus!),
+                        builder: (context, snapshot) {
+                          return BaseInfoRowByKeyAndValue.build(
+                              tr('customer_type_2'),
+                              snapshot.hasData &&
+                                      snapshot.connectionState ==
+                                          ConnectionState.done
+                                  ? '${snapshot.data!.single}'
+                                  : '',
+                              style: AppTextStyle.h5);
+                        }),
+                    BaseInfoRowByKeyAndValue.build(
+                        tr('address'),
+                        model.zaddName1 ??
+                            model.zaddName2 ??
+                            model.zadoName3 ??
+                            '',
+                        style: AppTextStyle.h5),
+                  ],
+                );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSelectKeyMan(BuildContext context) {
+    final p = context.read<AddActivityPageProvider>();
+    return Selector<AddActivityPageProvider, AddActivityKeyManModel?>(
+      selector: (context, provider) => provider.selectedKeyMan,
+      builder: (context, model, _) {
+        return Padding(
+            padding: AppSize.defaultSidePadding,
+            child: BaseColumWithTitleAndTextFiled.build(
+              tr('key_man'),
+              BaseInputWidget(
+                  context: context,
+                  hintTextStyleCallBack: () => model != null
+                      ? AppTextStyle.default_14
+                      : AppTextStyle.default_14
+                          .copyWith(color: AppColors.subText),
+                  textStyle: AppTextStyle.default_14,
+                  popupSearchType: PopupSearchType.SEARCH_KEY_MAN,
+                  isSelectedStrCallBack: (keymanModel) {
+                    return p.setKeymanModel(keymanModel);
+                  },
+                  iconType: model != null
+                      ? InputIconType.DELETE
+                      : InputIconType.SELECT,
+                  iconColor: model != null ? null : AppColors.unReadyText,
+                  defaultIconCallback: () => p.setCustomerModel(null),
+                  hintText: model != null ? model.zkmnoNm : tr('plz_select'),
+                  width: AppSize.defaultContentsWidth,
+                  enable: model != null ? true : false),
+            ));
       },
     );
   }
@@ -101,6 +177,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   defaultSpacing(),
                   defaultSpacing(),
                   _buildSelectCustomer(context),
+                  _buildCustomerDiscription(context),
+                  _buildSelectKeyMan(context)
                 ],
               ),
             );

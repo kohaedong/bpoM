@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/popup_search_type.dart
  * Created Date: 2021-09-10 21:38:04
- * Last Modified: 2022-08-14 20:20:08
+ * Last Modified: 2022-08-15 10:42:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -23,6 +23,7 @@ enum PopupSearchType {
   SEARCH_SALLER,
   SEARCH_SALLER_FOR_BULK_ORDER,
   SEARCH_END_CUSTOMER,
+  SEARCH_KEY_MAN,
   SEARCH_PLANT, // 플랜트 조회 화면
 
 }
@@ -83,6 +84,8 @@ extension PopupSearchTypeExtension on PopupSearchType {
     switch (this) {
       case PopupSearchType.SEARCH_SALSE_PERSON:
         return [OneCellType.SEARCH_SALSE_PERSON]; // 영업사원
+      case PopupSearchType.SEARCH_KEY_MAN:
+        return [OneCellType.SEARCH_KEY_MAN];
       case PopupSearchType.SEARCH_END_CUSTOMER:
         return [OneCellType.SEARCH_END_CUSTOMER];
       case PopupSearchType.SEARCH_SALLER:

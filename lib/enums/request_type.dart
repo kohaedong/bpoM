@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-08-12 17:10:26
+ * Last Modified: 2022-08-15 11:12:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -34,6 +34,7 @@ enum RequestType {
   SEND_IMAGE_TO_SERVER,
   GET_OFFICE_ADDRESS,
   GET_LAT_AND_LON,
+  SEARCH_KEY_MAN,
   // --------------
   SEARCH_STAFF,
   SEARCH_CUSTOMER,
@@ -98,6 +99,8 @@ extension RequestTypeExtension on RequestType {
   String url({String? params}) {
     switch (this) {
       case RequestType.SEARCH_STAFF:
+        return '$rfcURL/common';
+      case RequestType.SEARCH_KEY_MAN:
         return '$rfcURL/common';
       case RequestType.GET_OFFICE_ADDRESS:
         return '$rfcURL/common';
@@ -189,6 +192,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SEARCH_STAFF:
         return 'ES_RETURN,ET_STAFFLIST';
+      case RequestType.SEARCH_KEY_MAN:
+        return 'ES_RETURN,ET_LIST';
       case RequestType.GET_OFFICE_ADDRESS:
         return 'ES_RETURN,T_LIST';
       case RequestType.SALESE_ACTIVITY_DAY_DATA:
@@ -321,6 +326,8 @@ extension RequestTypeExtension on RequestType {
         return 'Z_LTSP_IF0913';
       case RequestType.SEARCH_DETAIL_BOOK:
         return "Z_LTSP_IF0891";
+      case RequestType.SEARCH_KEY_MAN:
+        return "Z_LTSP_IF0054";
       default:
         throw NullThrownError();
     }

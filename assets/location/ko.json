@@ -422,7 +422,7 @@
     "activity_report":"활동 보고서",
     "customer_type_2":"고객형태",
     "address":"주소",
-    "key_man":"key man",
+    "key_man":"Key man",
     "leader_together":"팀장 동행",
     "colleague_together":"영업사원 동행",
     "distance":"거리",
@@ -522,7 +522,7 @@
     "have_unconfirmed_activity":"전일 영업활동이 미확정 상태입니다.\n{} 영업활동을 확정해주세요.",
     "stop_activity_first_commont":"영업활동 종료후 확정가능합니다.",
     "start_activity_first_commont":"영업활동 시작후 신규 활동 추가가 가능합니다.영업활동을 시작 하시겠습니까?",
-    "costomer_search":"고객 조회"
+    "customer_search":"고객 조회"
     
 
 }

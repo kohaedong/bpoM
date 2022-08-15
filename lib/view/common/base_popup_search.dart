@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-08-14 20:19:48
+ * Last Modified: 2022-08-15 11:59:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
  */
 
+import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/et_end_customer_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
@@ -133,6 +134,47 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     _personInputController.text = '';
                   },
                   hintText: personInputText != null
+                      ? null
+                      : '${tr('plz_enter_search_key_for_something_1', args: [
+                              '${tr('name')}'
+                            ])}');
+            })
+      ],
+    );
+  }
+
+  Widget _buildKeyManSearchBar(BuildContext context) {
+    final p = context.read<BasePopupSearchProvider>();
+    return Column(
+      children: [
+        defaultSpacing(),
+        Selector<BasePopupSearchProvider, String?>(
+            selector: (context, provider) => provider.keymanInputText,
+            builder: (context, keymanInputText, _) {
+              return BaseInputWidget(
+                  context: context,
+                  width: AppSize.defaultContentsWidth - AppSize.padding * 2,
+                  enable: true,
+                  hintTextStyleCallBack: keymanInputText != null
+                      ? null
+                      : () => AppTextStyle.hint_16,
+                  iconType: keymanInputText != null
+                      ? InputIconType.DELETE_AND_SEARCH
+                      : InputIconType.SEARCH,
+                  onChangeCallBack: (e) => p.setKeymanInputText(e),
+                  iconColor: keymanInputText == null
+                      ? AppColors.textFieldUnfoucsColor
+                      : null,
+                  defaultIconCallback: () {
+                    hideKeyboard(context);
+                    p.refresh();
+                  },
+                  textEditingController: _personInputController,
+                  otherIconcallback: () {
+                    p.setKeymanInputText(null);
+                    _personInputController.text = '';
+                  },
+                  hintText: keymanInputText != null
                       ? null
                       : '${tr('plz_enter_search_key_for_something_1', args: [
                               '${tr('name')}'
@@ -489,7 +531,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? _buildSallerSearchBar(context)
                       : widget.type == PopupSearchType.SEARCH_END_CUSTOMER
                           ? _buildEndCustomerBar(context)
-                          : Container(),
+                          : widget.type == PopupSearchType.SEARCH_KEY_MAN
+                              ? _buildKeyManSearchBar(context)
+                              : Container(),
         ],
       ),
     );
@@ -516,8 +560,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     (provider.etEndCustomerResponseModel != null &&
                         provider.etEndCustomerResponseModel!.etCustList !=
                             null &&
-                        provider
-                            .etEndCustomerResponseModel!.etCustList!.isNotEmpty)
+                        provider.etEndCustomerResponseModel!.etCustList!
+                            .isNotEmpty) ||
+                    (provider.keyManResponseModel != null &&
+                        provider.keyManResponseModel!.etList != null &&
+                        provider.keyManResponseModel!.etList!.isNotEmpty)
                 ? Padding(
                     padding: AppSize.defaultSearchPopupSidePadding,
                     child: Container(
@@ -563,7 +610,14 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                   .etEndCustomerResponseModel!
                                                   .etCustList!
                                                   .length
-                                              : 0,
+                                              : widget.type ==
+                                                      PopupSearchType
+                                                          .SEARCH_KEY_MAN
+                                                  ? provider
+                                                      .keyManResponseModel!
+                                                      .etList!
+                                                      .length
+                                                  : 0,
                               itemBuilder: (BuildContext context, int index) {
                                 return widget.type ==
                                         PopupSearchType.SEARCH_SALSE_PERSON
@@ -615,7 +669,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                     index,
                                                     !provider.hasMore &&
                                                         index == provider.etEndCustomerResponseModel!.etCustList!.length - 1)
-                                                : Container();
+                                                : widget.type == PopupSearchType.SEARCH_KEY_MAN
+                                                    ? _buildKeymanContentsItem(context, provider.keyManResponseModel!.etList![index], index, !provider.hasMore && index == provider.keyManResponseModel!.etList!.length - 1)
+                                                    : Container();
                               },
                             ),
                             // 수정 ! nextPage ->  refresh
@@ -828,6 +884,46 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                         )
                       ],
                     ),
+                  ],
+                ),
+              ),
+              isShowLastPageText ? lastPageText() : Container()
+            ],
+          )),
+    );
+  }
+
+  Widget _buildKeymanContentsItem(BuildContext context,
+      AddActivityKeyManModel model, int index, bool isShowLastPageText) {
+    final p = context.read<BasePopupSearchProvider>();
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context, model);
+      },
+      child: Padding(
+          padding: index == 0
+              ? AppSize.searchPopupListPadding.copyWith(top: 0)
+              : AppSize.searchPopupListPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Selector<BasePopupSearchProvider, bool?>(
+                  selector: (context, provider) => provider.isSingleData,
+                  builder: (context, isSingleData, _) {
+                    isSingleData != null && isSingleData
+                        ? Navigator.pop(context,
+                            p.etEndCustomerResponseModel!.etCustList!.single)
+                        : DoNothingAction();
+                    return Container();
+                  }),
+              _horizontalRow(
+                Row(
+                  children: [
+                    AppText.text(model.zkmnoNm!,
+                        style: AppTextStyle.h4
+                            .copyWith(fontWeight: FontWeight.bold)),
+                    SizedBox(width: AppSize.defaultShimmorSpacing),
+                    AppText.text('${model.zskunnrNm!}/${model.zskunnr!}'),
                   ],
                 ),
               ),
