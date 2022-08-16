@@ -341,6 +341,7 @@
     "choose":"선택",
     "essential":"필수",
     "essential_option":"필수사항",
+    "plz_check_essential_option":"필수사항을 확인해주세요.",
    
     "plz_enter_comments":"의견을 입력해주세요.",
     "to_do_approval":"으로 승인합니다.",
@@ -523,8 +524,6 @@
     "stop_activity_first_commont":"영업활동 종료후 확정가능합니다.",
     "start_activity_first_commont":"영업활동 시작후 신규 활동 추가가 가능합니다.영업활동을 시작 하시겠습니까?",
     "customer_search":"고객 조회",
-    "arrival":"도착"
-
-    
-
+    "arrival":"도착",
+    "":""
 }

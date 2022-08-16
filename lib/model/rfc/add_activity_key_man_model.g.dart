@@ -9,18 +9,18 @@ part of 'add_activity_key_man_model.dart';
 AddActivityKeyManModel _$AddActivityKeyManModelFromJson(
         Map<String, dynamic> json) =>
     AddActivityKeyManModel(
-      json['TELF2'] as String?,
-      json['XREPKM'] as String?,
-      json['ZTRAITMENT'] as String?,
-      json['ZADD_NAME1'] as String?,
-      json['ZADD_NAME2'] as String?,
-      json['ZEMAIL'] as String?,
-      json['ZKMTRUST'] as String?,
-      json['ZKMTYPE'] as String?,
-      json['ZKMNO'] as String?,
-      json['ZKMNO_NM'] as String?,
-      json['ZSKUNNR'] as String?,
-      json['ZSKUNNR_NM'] as String?,
+      telf2: json['TELF2'] as String?,
+      xrepkm: json['XREPKM'] as String?,
+      zTraitment: json['ZTRAITMENT'] as String?,
+      zaddName1: json['ZADD_NAME1'] as String?,
+      zaddName2: json['ZADD_NAME2'] as String?,
+      zeMail: json['ZEMAIL'] as String?,
+      zkmTrust: json['ZKMTRUST'] as String?,
+      zkmType: json['ZKMTYPE'] as String?,
+      zkmno: json['ZKMNO'] as String?,
+      zkmnoNm: json['ZKMNO_NM'] as String?,
+      zskunnr: json['ZSKUNNR'] as String?,
+      zskunnrNm: json['ZSKUNNR_NM'] as String?,
     );
 
 Map<String, dynamic> _$AddActivityKeyManModelToJson(

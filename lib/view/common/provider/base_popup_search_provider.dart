@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-08-15 12:00:28
+ * Last Modified: 2022-08-16 21:25:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -324,7 +324,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   ) async {
     isLoadData = true;
     if (isMounted) {
-      notifyListeners();
+      // notifyListeners();
     }
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();

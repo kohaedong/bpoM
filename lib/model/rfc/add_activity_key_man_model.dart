@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/add_activity_key_man_model.dart
  * Created Date: 2022-08-15 10:47:56
- * Last Modified: 2022-08-15 10:54:31
+ * Last Modified: 2022-08-16 22:08:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -41,7 +41,7 @@ class AddActivityKeyManModel {
   @JsonKey(name: 'ZADD_NAME2')
   String? zaddName2;
   AddActivityKeyManModel(
-      this.telf2,
+      {this.telf2,
       this.xrepkm,
       this.zTraitment,
       this.zaddName1,
@@ -52,7 +52,7 @@ class AddActivityKeyManModel {
       this.zkmno,
       this.zkmnoNm,
       this.zskunnr,
-      this.zskunnrNm);
+      this.zskunnrNm});
   factory AddActivityKeyManModel.fromJson(Object? json) =>
       _$AddActivityKeyManModelFromJson(json as Map<String, dynamic>);
   Map<String, dynamic> toJson() => _$AddActivityKeyManModelToJson(this);

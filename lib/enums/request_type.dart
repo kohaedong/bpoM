@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-08-15 11:12:35
+ * Last Modified: 2022-08-16 17:02:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -57,6 +57,7 @@ enum RequestType {
   SALESE_ACTIVITY_DAY_DATA,
   SEARCH_PARTMENT_KEY_ZIBI,
   CHECK_HOLIDAY,
+  GET_DISTANCE,
 }
 
 // [KolonBuildConfig] 빌드 옵션에 따라 url가 변한다.
@@ -154,6 +155,8 @@ extension RequestTypeExtension on RequestType {
         return '$v2URL/opendata/holiday';
       case RequestType.GET_LAT_AND_LON:
         return '$medical/getcoordinate';
+      case RequestType.GET_DISTANCE:
+        return '$medical/getdistancenew';
       case RequestType.CHECK_NOTICE:
         return '$v2URL/rest';
       case RequestType.NOTICE_DONT_SHOW_AGAIN:

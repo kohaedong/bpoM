@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-15 09:33:08
+ * Last Modified: 2022-08-16 13:50:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -478,17 +478,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         //! popupResult.data >>>>  출발지 선택후 영업활동 개시 api의 result.
         p.initData(popupResult.data, ActivityStatus.STARTED);
         p.setIsNeedUpdate(true);
-        final naviResult = await Navigator.pushNamed(
-            context, AddActivityPage.routeName,
-            arguments: p.editModel);
-        if (naviResult != null) {
-          naviResult as bool;
-          if (naviResult) {
-            //!
-            Navigator.pop(context, p.isNeedUpdate);
-            pr('naviResult $naviResult');
-          }
-        }
+        _routeToAddActivityPage(context);
       }
     }
   }
@@ -510,6 +500,21 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       result as bool;
       if (result) {
         _showLocationPopup(context);
+      }
+    }
+  }
+
+  void _routeToAddActivityPage(BuildContext context) async {
+    final p = context.read<ActivityMenuProvider>();
+    final naviResult = await Navigator.pushNamed(
+        context, AddActivityPage.routeName,
+        arguments: {'model': p.editModel, 'status': p.activityStatus});
+    if (naviResult != null) {
+      naviResult as bool;
+      if (naviResult) {
+        //!
+        Navigator.pop(context, p.isNeedUpdate);
+        pr('naviResult $naviResult');
       }
     }
   }
@@ -539,6 +544,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
               if (p.activityStatus == ActivityStatus.STARTED) {
                 // go to add activity page.
                 pr('add activity ');
+
+                _routeToAddActivityPage(context);
               } else {
                 _showIsStartAvtivityPopup(context);
               }

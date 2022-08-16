@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-08-16 10:57:57
+ * Last Modified: 2022-08-16 21:49:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,30 +12,17 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/activity_status.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_270.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_280.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_290.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_291.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_300.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_301.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_310.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_320.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_321.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_330.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_340.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_350.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_430.dart';
 import 'package:medsalesportal/util/date_util.dart';
-import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';
+import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_250.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
@@ -126,7 +113,8 @@ class SelectLocationProvider extends ChangeNotifier {
 
       lat = tempLat ?? newLat ?? null;
       lon = tempLon ?? newLon ?? null;
-      return ResultModel(lat != null && lon != null);
+      return ResultModel(lat != null && lon != null,
+          data: {'lat': lat, 'lon': lon});
     }
     return ResultModel(false);
   }
@@ -143,7 +131,6 @@ class SelectLocationProvider extends ChangeNotifier {
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
     var t250Base64 = '';
-    var t260Base64 = '';
     // var t270Base64 = '';
     // var t280Base64 = '';
     // var t290Base64 = '';
@@ -176,9 +163,6 @@ class SelectLocationProvider extends ChangeNotifier {
     var date = t250.adate =
         FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now()));
     var time = DateUtil.getTimeNow();
-
-    var esLogin = CacheService.getEsLogin();
-
     if (activityStatus == ActivityStatus.STARTED) {
       // 영업활동 시작 하였으면 >>>  영업활동 종료
       t250.umode = 'U';
@@ -191,7 +175,6 @@ class SelectLocationProvider extends ChangeNotifier {
       t250.fzaddr = selectedAddress;
     } else {
       // 영업활동 시작 하지 않았으면. >>> 영업활동 시작. table 신규 추가.
-
       t250.adate = date;
       t250.saddcat = locationType;
       t250.szaddr = selectedAddress!;
@@ -207,14 +190,13 @@ class SelectLocationProvider extends ChangeNotifier {
     t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
     temp.clear();
     temp.addAll([t260.toJson()]);
-    t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
-
+    pr(t250Base64);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {
-        "IV_PTYPE": "I",
+        "IV_PTYPE": "U",
         "T_ZLTSP0250S": t250Base64,
-        "T_ZLTSP0260S": t260Base64,
+        "T_ZLTSP0260S": "",
         "IV_ADATE":
             FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now())),
         "IS_LOGIN": isLogin,
@@ -231,7 +213,6 @@ class SelectLocationProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       editDayModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
-      pr('result::: ${editDayModel?.toJson()}');
       isLoadData = false;
       notifyListeners();
       return ResultModel(true);

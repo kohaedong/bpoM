@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/et_customer_model.dart
  * Created Date: 2022-07-06 21:38:39
- * Last Modified: 2022-07-11 11:13:50
+ * Last Modified: 2022-08-16 22:02:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -115,7 +115,7 @@ class EtKunnrModel {
   @JsonKey(name: 'ZCLOSEYN')
   String? zcloseyn;
   EtKunnrModel(
-      this.isvalid,
+      {this.isvalid,
       this.kunnr,
       this.name,
       this.orghk,
@@ -163,7 +163,7 @@ class EtKunnrModel {
       this.ztreat2Nm,
       this.ztreat3,
       this.ztreat3Nm,
-      this.zyarAmt);
+      this.zyarAmt});
   factory EtKunnrModel.fromJson(Object? json) =>
       _$EtKunnrModelFromJson(json as Map<String, dynamic>);
 
