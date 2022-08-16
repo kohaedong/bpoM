@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-08-14 13:39:48
+ * Last Modified: 2022-08-16 11:01:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -107,12 +107,8 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                 }
               });
             } else {
-              Navigator.pop(
-                  context,
-                  isLeft
-                      ? null
-                      : ResultModel(true,
-                          data: ResultModel(true, data: p.editDayModel)));
+              Navigator.pop(context,
+                  isLeft ? null : ResultModel(true, data: p.editDayModel));
             }
           }
         },

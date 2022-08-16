@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-14 14:44:28
+ * Last Modified: 2022-08-16 11:27:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -111,14 +111,18 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       if (table250.isEmpty) {
         activityStatus = ActivityStatus.INIT;
       }
-
+      var arrivalLatLonIsNull =
+          table250.last.fxLatitude! == 0 && table250.last.fylongitude! == 0;
       if (table250.length > 0) {
         var isStarted = table250.last.scallType == 'M' &&
-            table250.last.ftime!.isNotEmpty &&
-            table250.last.fcallType != 'M' &&
-            table250.last.ftime!.isEmpty;
-        var isStoped = table250.last.scallType == 'M' &&
-            table250.last.ftime!.isNotEmpty &&
+            table250.last.sxLatitude != null &&
+            table250.last.syLongitude != null &&
+            table250.last.stime!.isNotEmpty &&
+            table250.last.faddcat!.isEmpty &&
+            arrivalLatLonIsNull;
+        var isStoped = isStarted &&
+            !arrivalLatLonIsNull &&
+            table250.last.faddcat!.isNotEmpty &&
             table250.last.fcallType == 'M' &&
             table250.last.ftime!.isNotEmpty;
         activityStatus = isStarted
@@ -447,7 +451,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
           SalesActivityDayResponseModel.fromJson(result.body['data']);
       pr(dayResponseModel?.toJson());
       dayResponseModel?.table250?.forEach((e) {
-        pr('???????${e.mandt}');
         pr(e.toJson());
       });
       // dayResponseModel?.table250?.forEach((element) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const Color primary = Color(0xff3a6af6);
+  static const Color sendButtonColor = Color(0xffdfebff);
   static const Color defaultText = Color(0xde141618);
   static const Color subText = Color(0x99141618);
   static const Color appBarIconColor = Color(0xff666666);
