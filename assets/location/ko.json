@@ -526,6 +526,7 @@
     "customer_search":"고객 조회",
     "arrival":"도착",
     "reason_for_interview_failure":"면담 실패 사유",
-    "with_team_leader":"팀장 동행"
+    "with_team_leader":"팀장 동행",
+    "with_another_saler":"영업사원 동행"
    
 }

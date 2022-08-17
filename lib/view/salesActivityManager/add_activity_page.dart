@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-17 14:40:05
+ * Last Modified: 2022-08-17 15:16:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
@@ -234,12 +236,14 @@ class _AddActivityPageState extends State<AddActivityPage> {
         });
   }
 
-  Widget _buildTitleRow(String text) {
+  Widget _buildTitleRow(String text, {bool? isNotwithStart}) {
     return Row(children: [
       AppText.text(text, style: AppTextStyle.h4),
       SizedBox(width: AppSize.defaultListItemSpacing),
-      AppText.text('*',
-          style: AppTextStyle.h4.copyWith(color: AppColors.dangerColor))
+      isNotwithStart != null && isNotwithStart
+          ? Container()
+          : AppText.text('*',
+              style: AppTextStyle.h4.copyWith(color: AppColors.dangerColor))
     ]);
   }
 
@@ -305,8 +309,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    defaultSpacing(),
-                    defaultSpacing(),
+                    defaultSpacing(times: 2),
                     _buildTitleRow(tr('reason_for_not_visiting')),
                     defaultSpacing(),
                     _buildTextField(context, isForInterview: false)
@@ -428,8 +431,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    defaultSpacing(),
-                    defaultSpacing(),
+                    defaultSpacing(times: 2),
                     _buildTitleRow(tr('reason_for_interview_failure')),
                     defaultSpacing(),
                     _buildTextField(context, isForInterview: true)
@@ -494,6 +496,50 @@ class _AddActivityPageState extends State<AddActivityPage> {
         });
   }
 
+  Widget _buildIsWithAnotherSales(BuildContext context) {
+    final p = context.read<AddActivityPageProvider>();
+
+    return Column(
+      children: [
+        _buildTitleRow(tr('with_another_saler'), isNotwithStart: true),
+        defaultSpacing(),
+        Selector<AddActivityPageProvider, EtStaffListModel?>(
+            selector: (context, provider) => provider.anotherSaler,
+            builder: (context, anotherSaler, _) {
+              return BaseInputWidget(
+                context: context,
+                iconType: InputIconType.SEARCH,
+                iconColor: anotherSaler != null
+                    ? AppColors.defaultText
+                    : AppColors.textFieldUnfoucsColor,
+                hintText: anotherSaler != null
+                    ? anotherSaler.sname
+                    : '${tr('plz_select_something_1', args: [tr('manager')])}',
+                // 팀장 일때 만 팀원선택후 삭제가능.
+                isShowDeleteForHintText: anotherSaler != null ? true : false,
+                deleteIconCallback: () => p.setAnotherSaler(null),
+                width: AppSize.defaultContentsWidth,
+                hintTextStyleCallBack: () => anotherSaler != null
+                    ? AppTextStyle.default_16
+                    : AppTextStyle.hint_16,
+                popupSearchType: PopupSearchType.SEARCH_SALSE_PERSON,
+                isSelectedStrCallBack: (persion) {
+                  return p.setAnotherSaler(persion);
+                },
+                // 멀티계정 전부 조회.
+                // 팀장계정 조속팀 조회.
+                bodyMap: CheckSuperAccount.isMultiAccount()
+                    ? {'dptnm': ''}
+                    : CheckSuperAccount.isLeaderAccount()
+                        ? {'dptnm': p.dptnm}
+                        : null,
+                enable: false,
+              );
+            })
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var arguments =
@@ -534,27 +580,25 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                 padding: AppSize.defaultSidePadding,
                                 child: Column(
                                   children: [
-                                    defaultSpacing(),
-                                    defaultSpacing(),
+                                    defaultSpacing(times: 2),
                                     _buildSelectCustomer(context),
                                     _buildCustomerDiscription(context),
                                     _buildSelectKeyMan(context),
                                     defaultSpacing(),
                                     _buildIsVisitRow(context),
-                                    defaultSpacing(
-                                        height:
-                                            AppSize.defaultListItemSpacing / 2),
-                                    _buildReasonForNotVisit(context),
                                     defaultSpacing(),
+                                    _buildReasonForNotVisit(context),
+                                    defaultSpacing(times: 2),
                                     _buildDistanceDiscription(context),
                                     defaultSpacing(),
                                     _buildIsInterview(context),
                                     _buildReasonForInterviewFailure(context),
-                                    defaultSpacing(),
+                                    defaultSpacing(times: 2),
                                     _buildActivityType(context),
-                                    defaultSpacing(),
-                                    defaultSpacing(),
+                                    defaultSpacing(times: 4),
                                     _buildIsWithTeamLeader(context),
+                                    defaultSpacing(times: 4),
+                                    _buildIsWithAnotherSales(context),
                                     defaultSpacing(
                                         height: AppSize.realHeight * .3),
                                   ],

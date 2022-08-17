@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-17 14:25:10
+ * Last Modified: 2022-08-17 15:01:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,10 +13,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
@@ -33,6 +35,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   SalesActivityDayResponseModel? editModel;
   AddActivityDistanceModel? distanceModel;
   AddActivityKeyManModel? selectedKeyMan;
+  EtStaffListModel? anotherSaler;
   ActivityStatus? activityStatus;
   EtKunnrModel? selectedKunnr;
   String? reasonForinterviewFailure;
@@ -44,7 +47,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   int? index;
   int isInterviewIndex = 0;
   final _api = ApiService();
-
+  String get dptnm => CacheService.getEsLogin()!.dptnm!;
   Future<ResultModel> initData(SalesActivityDayResponseModel fromParentModel,
       ActivityStatus status, int? indexx) async {
     editModel =
@@ -67,6 +70,12 @@ class AddActivityPageProvider extends ChangeNotifier {
       reasonForinterviewFailure = temp.meetRmk ?? '';
     }
     return ResultModel(true);
+  }
+
+  void setAnotherSaler(saler) {
+    saler as EtStaffListModel?;
+    anotherSaler = saler;
+    notifyListeners();
   }
 
   void setSelectedActionType(String? str) {

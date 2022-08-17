@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_detail_page.dart
  * Created Date: 2022-07-12 15:20:28
- * Last Modified: 2022-07-14 12:48:15
+ * Last Modified: 2022-08-17 15:16:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -127,8 +127,7 @@ class OrderDetailPage extends StatelessWidget {
                   '${modelList.length}',
                   '${FormatUtil.addComma('$totalPrice')}'
                 ])}'),
-        defaultSpacing(),
-        defaultSpacing(),
+        defaultSpacing(times: 2),
         ...modelList
             .asMap()
             .entries

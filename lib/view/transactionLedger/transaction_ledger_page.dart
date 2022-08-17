@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-08-02 09:30:55
+ * Last Modified: 2022-08-17 15:17:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -672,8 +672,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             isModelNotNull
                 ? Column(
                     children: [
-                      defaultSpacing(),
-                      defaultSpacing(),
+                      defaultSpacing(times: 2),
                       _buildResultTitle(context),
                     ],
                   )
@@ -1066,8 +1065,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
               defaultSpacing(height: AppSize.defaultListItemSpacing / 4),
               _buildResultTitleWithLandSpaceScrren(context),
               _buildResultForLandSpace(context),
-              defaultSpacing(),
-              defaultSpacing(),
+              defaultSpacing(times: 2),
             ],
           ),
         ),
