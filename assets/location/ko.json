@@ -532,6 +532,11 @@
     "suggested_item":"제안품목",
     "give_sample":"셈플 전달",
     "add":"추가",
-    "only_three_can_be_added":"제안품목은 3개만 추가 가능합니다."
+    "only_three_can_be_added":"제안품목은 3개만 추가 가능합니다.",
+    "result_and_future":"결과/향후 활동",
+    "visit_result":"방문결과",
+    "leader_advice":"당월 팀장 어드바이스",
+    "curren_month_scenario":"당월 시나리오",
+    "visit_result_history":"과거 방문 결과 "
    
 }

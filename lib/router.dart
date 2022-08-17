@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/route.dart
  * Created Date: 2022-07-02 14:47:58
- * Last Modified: 2022-08-11 10:43:03
+ * Last Modified: 2022-08-17 23:43:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -17,6 +17,8 @@ import 'package:medsalesportal/view/detailBook/detail_book_web_view.dart';
 import 'package:medsalesportal/view/home/home_page.dart';
 import 'package:medsalesportal/view/orderSearch/order_detail_page.dart';
 import 'package:medsalesportal/view/salesActivityManager/add_activity_page.dart';
+import 'package:medsalesportal/view/salesActivityManager/current_month_scenario_page.dart';
+import 'package:medsalesportal/view/salesActivityManager/visit_result_history_page.dart';
 import 'package:medsalesportal/view/signin/signin_page.dart';
 import 'package:medsalesportal/view/home/notice_all_page.dart';
 import 'package:medsalesportal/view/home/notice_detail_page.dart';
@@ -58,5 +60,8 @@ Map<String, WidgetBuilder> routes = {
   OrderDetailPage.routeName: (context) => const OrderDetailPage(),
   BulkOrderDetailPage.routeName: (context) => const BulkOrderDetailPage(),
   DetailBookWebView.routeName: (context) => const DetailBookWebView(),
-  AddActivityPage.routeName: (context) => const AddActivityPage()
+  AddActivityPage.routeName: (context) => const AddActivityPage(),
+  CurruntMonthScenarioPage.routeName: (context) =>
+      const CurruntMonthScenarioPage(),
+  VisitResultHistoryPage.routeName: (context) => const VisitResultHistoryPage()
 };

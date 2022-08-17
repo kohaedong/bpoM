@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-17 22:29:33
+ * Last Modified: 2022-08-17 23:27:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -42,6 +42,8 @@ class AddActivityPageProvider extends ChangeNotifier {
   String? reasonForinterviewFailure;
   String? selectedActionType;
   String? reasonForNotVisit;
+  String? visitResultInput;
+  String? leaderAdviceInput;
   List<String>? activityList;
   List<AddActivitySuggetionItemModel>? suggestedList;
   bool isVisit = false;
@@ -122,6 +124,14 @@ class AddActivityPageProvider extends ChangeNotifier {
   void setSelectedActionType(String? str) {
     selectedActionType = str;
     notifyListeners();
+  }
+
+  void setVisitResultInputText(String? str) {
+    visitResultInput = str;
+  }
+
+  void setLeaderAdviceInputText(String? str) {
+    leaderAdviceInput = str;
   }
 
   void setIsInterviewIndex(int indexx) {

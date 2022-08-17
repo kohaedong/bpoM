@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-17 22:33:31
+ * Last Modified: 2022-08-17 23:41:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,9 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/enums/add_activity_page_input_type.dart';
+import 'package:medsalesportal/view/salesActivityManager/current_month_scenario_page.dart';
+import 'package:medsalesportal/view/salesActivityManager/visit_result_history_page.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,14 +55,22 @@ class AddActivityPage extends StatefulWidget {
 class _AddActivityPageState extends State<AddActivityPage> {
   late TextEditingController _textEditingController;
   late TextEditingController _interviewTextEditingController;
+  late TextEditingController _visitResultTextEditingController;
+  late TextEditingController _leaderAdviceTextEditingController;
   late ScrollController _textFieldScrollController;
   late ScrollController _interviewTextFieldScrollController;
+  late ScrollController _visitTextFieldScrollController;
+  late ScrollController _leaderAdviceTextFieldScrollController;
   @override
   void initState() {
     _textEditingController = TextEditingController();
     _interviewTextEditingController = TextEditingController();
+    _visitResultTextEditingController = TextEditingController();
+    _leaderAdviceTextEditingController = TextEditingController();
     _textFieldScrollController = ScrollController();
     _interviewTextFieldScrollController = ScrollController();
+    _visitTextFieldScrollController = ScrollController();
+    _leaderAdviceTextFieldScrollController = ScrollController();
 
     super.initState();
   }
@@ -68,8 +79,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
   void dispose() {
     _textEditingController.dispose();
     _interviewTextEditingController.dispose();
+    _visitResultTextEditingController.dispose();
+    _leaderAdviceTextEditingController.dispose();
     _textFieldScrollController.dispose();
     _interviewTextFieldScrollController.dispose();
+    _visitTextFieldScrollController.dispose();
+    _leaderAdviceTextFieldScrollController.dispose();
     super.dispose();
   }
 
@@ -247,32 +262,65 @@ class _AddActivityPageState extends State<AddActivityPage> {
     ]);
   }
 
-  Widget _buildTextField(BuildContext context, {required bool isForInterview}) {
+  Widget _buildTextField(BuildContext context,
+      {required AddActivityPageInputType type}) {
     final p = context.read<AddActivityPageProvider>();
     return TextFormField(
-      controller: isForInterview
+      controller: type == AddActivityPageInputType.INTERVIEW
           ? _interviewTextEditingController
-          : _textEditingController,
-      scrollController: isForInterview
+          : type == AddActivityPageInputType.NOT_VISIT
+              ? _textEditingController
+              : type == AddActivityPageInputType.VISIT_RESULT
+                  ? _visitResultTextEditingController
+                  : _leaderAdviceTextEditingController,
+      scrollController: type == AddActivityPageInputType.INTERVIEW
           ? _interviewTextFieldScrollController
-          : _textFieldScrollController,
+          : type == AddActivityPageInputType.NOT_VISIT
+              ? _textFieldScrollController
+              : type == AddActivityPageInputType.VISIT_RESULT
+                  ? _visitTextFieldScrollController
+                  : _leaderAdviceTextFieldScrollController,
       onTap: () {
-        if (isForInterview) {
-          _interviewTextEditingController.text.isEmpty
-              ? _interviewTextEditingController.text =
-                  p.reasonForinterviewFailure ?? ''
-              : DoNothingAction();
-        } else {
-          _textEditingController.text.isEmpty
-              ? _textEditingController.text = p.reasonForNotVisit ?? ''
-              : DoNothingAction();
+        switch (type) {
+          case AddActivityPageInputType.INTERVIEW:
+            _interviewTextEditingController.text.isEmpty
+                ? _interviewTextEditingController.text =
+                    p.reasonForinterviewFailure ?? ''
+                : DoNothingAction();
+            break;
+          case AddActivityPageInputType.NOT_VISIT:
+            _textEditingController.text.isEmpty
+                ? _textEditingController.text = p.reasonForNotVisit ?? ''
+                : DoNothingAction();
+            break;
+          case AddActivityPageInputType.VISIT_RESULT:
+            _visitResultTextEditingController.text.isEmpty
+                ? _visitResultTextEditingController.text =
+                    p.visitResultInput ?? ''
+                : DoNothingAction();
+            break;
+          case AddActivityPageInputType.LEADER_ADVICE:
+            _leaderAdviceTextEditingController.text.isEmpty
+                ? _leaderAdviceTextEditingController.text =
+                    p.leaderAdviceInput ?? ''
+                : DoNothingAction();
+            break;
         }
       },
       onChanged: (text) {
-        if (isForInterview) {
-          p.setReasonForInterviewFailure(text);
-        } else {
-          p.setReasonForNotVisit(text);
+        switch (type) {
+          case AddActivityPageInputType.INTERVIEW:
+            p.setReasonForInterviewFailure(text);
+            break;
+          case AddActivityPageInputType.NOT_VISIT:
+            p.setReasonForNotVisit(text);
+            break;
+          case AddActivityPageInputType.VISIT_RESULT:
+            p.setVisitResultInputText(text);
+            break;
+          case AddActivityPageInputType.LEADER_ADVICE:
+            p.setLeaderAdviceInputText(text);
+            break;
         }
       },
       autofocus: false,
@@ -312,7 +360,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     defaultSpacing(times: 2),
                     _buildTitleRow(tr('reason_for_not_visiting')),
                     defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
-                    _buildTextField(context, isForInterview: false)
+                    _buildTextField(context,
+                        type: AddActivityPageInputType.NOT_VISIT)
                   ],
                 );
         });
@@ -435,7 +484,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     defaultSpacing(times: 2),
                     _buildTitleRow(tr('reason_for_interview_failure')),
                     defaultSpacing(),
-                    _buildTextField(context, isForInterview: true)
+                    _buildTextField(context,
+                        type: AddActivityPageInputType.INTERVIEW)
                   ],
                 );
         });
@@ -659,6 +709,69 @@ class _AddActivityPageState extends State<AddActivityPage> {
         ));
   }
 
+  Widget _buildLinkedText(String text, {required bool isCurrentMonthScenario}) {
+    return Row(
+      children: [
+        InkWell(
+          onTap: () {
+            Navigator.pushNamed(
+                context,
+                isCurrentMonthScenario
+                    ? CurruntMonthScenarioPage.routeName
+                    : VisitResultHistoryPage.routeName);
+          },
+          child: AppText.text(text,
+              style: AppTextStyle.sub_14.copyWith(color: AppColors.primary)),
+        ),
+        SizedBox(
+            height: AppSize.iconSmallDefaultWidth,
+            child: Icon(
+              Icons.arrow_forward_ios_sharp,
+              color: AppColors.showAllTextColor,
+              size: AppSize.iconSmallDefaultWidth,
+            ))
+      ],
+    );
+  }
+
+  Widget _buildVisitResult(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildTitleRow(tr('visit_result')),
+            _buildLinkedText('${tr('visit_result_history')} 보기',
+                isCurrentMonthScenario: false)
+          ],
+        ),
+        defaultSpacing(),
+        _buildTextField(context, type: AddActivityPageInputType.VISIT_RESULT)
+      ],
+    );
+  }
+
+  Widget _buildTeamLeaderAdvice(BuildContext context) {
+    return Column(
+      children: [
+        _buildTitleRow(tr('leader_advice')),
+        defaultSpacing(),
+        _buildTextField(context, type: AddActivityPageInputType.LEADER_ADVICE)
+      ],
+    );
+  }
+
+  Widget _buildCurrentMonthScenario(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildTitleRow(tr('curren_month_scenario')),
+        _buildLinkedText('${tr('curren_month_scenario')} 보기',
+            isCurrentMonthScenario: true)
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var arguments =
@@ -732,7 +845,23 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                     children: [
                                       _buildSuggestedItems(context),
                                       defaultSpacing(),
-                                      _buildAddSuggestedItemButton(context)
+                                      _buildAddSuggestedItemButton(context),
+                                      defaultSpacing(times: 2)
+                                    ],
+                                  )),
+                              CustomerinfoWidget.buildSubTitle(
+                                  context, '${tr('result_and_future')}'),
+                              Padding(
+                                  padding: AppSize.defaultSidePadding,
+                                  child: Column(
+                                    children: [
+                                      defaultSpacing(),
+                                      _buildVisitResult(context),
+                                      defaultSpacing(times: 2),
+                                      _buildTeamLeaderAdvice(context),
+                                      defaultSpacing(times: 2),
+                                      _buildCurrentMonthScenario(context),
+                                      defaultSpacing(times: 2),
                                     ],
                                   )),
                               defaultSpacing(height: AppSize.realHeight * .3),
