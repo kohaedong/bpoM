@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-17 13:45:33
+ * Last Modified: 2022-08-17 14:15:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
@@ -438,13 +439,28 @@ class _AddActivityPageState extends State<AddActivityPage> {
   }
 
   Widget _buildActivityType(BuildContext context) {
+    final p = context.read<AddActivityPageProvider>();
     return Selector<AddActivityPageProvider, String?>(
       selector: (context, provider) => provider.selectedActionType,
       builder: (context, type, _) {
-        return BaseInputWidget(
-            context: context,
-            width: AppSize.defaultContentsWidth,
-            enable: false);
+        return Column(
+          children: [
+            defaultSpacing(),
+            _buildTitleRow(tr('activity_type_2')),
+            defaultSpacing(),
+            BaseInputWidget(
+                context: context,
+                oneCellType: OneCellType.SEARCH_ACTIVITY_TYPE,
+                hintText: type ?? tr('plz_select'),
+                hintTextStyleCallBack: () => type == null
+                    ? AppTextStyle.hint_16
+                    : AppTextStyle.default_16,
+                commononeCellDataCallback: () => p.getActivityType(),
+                isSelectedStrCallBack: (type) => p.setSelectedActionType(type),
+                width: AppSize.defaultContentsWidth,
+                enable: false)
+          ],
+        );
       },
     );
   }

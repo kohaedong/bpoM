@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-17 13:45:13
+ * Last Modified: 2022-08-17 14:12:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -17,6 +17,7 @@ import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
+import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
@@ -37,6 +38,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   String? reasonForinterviewFailure;
   String? selectedActionType;
   String? reasonForNotVisit;
+  List<String>? activityList;
   bool isVisit = false;
   int? index;
   int isInterviewIndex = 0;
@@ -66,6 +68,11 @@ class AddActivityPageProvider extends ChangeNotifier {
     return ResultModel(true);
   }
 
+  void setSelectedActionType(String? str) {
+    selectedActionType = str;
+    notifyListeners();
+  }
+
   void setIsInterviewIndex(int indexx) {
     isInterviewIndex = indexx;
     notifyListeners();
@@ -93,6 +100,18 @@ class AddActivityPageProvider extends ChangeNotifier {
   void setKeymanModel(AddActivityKeyManModel? model) {
     selectedKeyMan = model;
     notifyListeners();
+  }
+
+  Future<List<String>> getActivityType() async {
+    if (activityList == null) {
+      activityList = await HiveService.getActivityType();
+    }
+    var temp = <String>[];
+    activityList!.forEach((item) {
+      temp.add(item.substring(0, item.indexOf('-')));
+    });
+    temp.removeWhere((item) => item.contains('사용불가'));
+    return temp;
   }
 
   Future<ResultModel> getAddressLatLon(String addr) async {

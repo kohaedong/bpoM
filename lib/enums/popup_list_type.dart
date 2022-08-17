@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/list_group_type.dart
  * Created Date: 2021-09-10 09:52:32
- * Last Modified: 2022-08-15 10:41:31
+ * Last Modified: 2022-08-17 14:15:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -32,6 +32,7 @@ enum OneCellType {
   SELECT_OFFICE_ADDRESS,
   SEARCH_CUSTOMER_FOR_ADD_ACTIVITY_PAGE,
   SEARCH_KEY_MAN,
+  SEARCH_ACTIVITY_TYPE,
   // -------------
   SEARCH_CUSTOMER_CONDITION,
   SEARCH_CUSOMER_TYPE,
@@ -101,6 +102,8 @@ extension OneCellTypeExtension on OneCellType {
     switch (this) {
       case OneCellType.SEARCH_SALLER:
         return '${tr('sales_office')}';
+      case OneCellType.SEARCH_ACTIVITY_TYPE:
+        return '${tr('activity_type_2')}';
       case OneCellType.SEARCH_KEY_MAN:
         return '${tr('key_man')}';
       case OneCellType.SEARCH_CUSTOMER_FOR_ADD_ACTIVITY_PAGE:
