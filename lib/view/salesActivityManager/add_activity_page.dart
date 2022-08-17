@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-17 20:11:59
+ * Last Modified: 2022-08-17 20:15:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -607,36 +607,41 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   Widget _buildAddSuggestedItemButton(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        final p = context.read<AddActivityPageProvider>();
-        if (p.suggestedList!.length < 3) {
-          p.insertToSuggestedList();
-        } else {
-          AppToast().show(context, tr('only_three_can_be_added'));
-        }
-      },
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        alignment: Alignment.centerLeft,
-        height: AppSize.smallButtonHeight,
-        width: AppSize.smallButtonWidth,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSize.radius4),
-            border:
-                Border.all(width: .5, color: AppColors.textFieldUnfoucsColor)),
+        onTap: () {
+          final p = context.read<AddActivityPageProvider>();
+          if (p.suggestedList!.length < 3) {
+            p.insertToSuggestedList();
+          } else {
+            AppToast().show(context, tr('only_three_can_be_added'));
+          }
+        },
+        behavior: HitTestBehavior.opaque,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.add,
-              color: AppColors.textFieldUnfoucsColor,
+            Container(
+              alignment: Alignment.centerLeft,
+              height: AppSize.smallButtonHeight,
+              width: AppSize.smallButtonWidth,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(AppSize.radius4),
+                  border: Border.all(
+                      width: .5, color: AppColors.textFieldUnfoucsColor)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.add,
+                    color: AppColors.textFieldUnfoucsColor,
+                  ),
+                  AppText.text(tr('add'),
+                      style: AppTextStyle.h5
+                          .copyWith(color: AppColors.defaultText))
+                ],
+              ),
             ),
-            AppText.text(tr('add'),
-                style: AppTextStyle.h5.copyWith(color: AppColors.defaultText))
+            Spacer()
           ],
-        ),
-      ),
-    );
+        ));
   }
 
   @override
