@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-16 22:11:04
+ * Last Modified: 2022-08-17 10:21:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,19 +12,19 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
-import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
-import 'package:medsalesportal/model/rfc/add_activity_key_man_response_model.dart';
-import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
-import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
-import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
+import 'package:medsalesportal/enums/activity_status.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
+import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
+import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
+import 'package:medsalesportal/model/rfc/add_activity_key_man_response_model.dart';
+import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
 
 class AddActivityPageProvider extends ChangeNotifier {
   EtKunnrResponseModel? etKunnrResponseModel;
@@ -138,11 +138,15 @@ class AddActivityPageProvider extends ChangeNotifier {
     var startY = '';
     var stopX = '';
     var stopY = '';
+    var startKunnr = '';
+    var stopKunnr = '';
     var setStartLatLonFormTable250 = () {
       startX = '${editModel!.table250!.single.sxLatitude!}';
       startY = '${editModel!.table250!.single.syLongitude!}';
       stopX = latLonResult.data['lat'];
       stopY = latLonResult.data['lon'];
+      startKunnr = '';
+      stopKunnr = selectedKunnr!.kunnr!;
     };
     if (isNewActivity) {
       if (isTable260Null) {
@@ -153,26 +157,37 @@ class AddActivityPageProvider extends ChangeNotifier {
             editModel!.table260!.where((item) => item.xvisit == 'Y').toList();
         // 도착처리건 있으면. 마지막 도착 지점의 lat & lon 가져온다.
         if (visitList.isNotEmpty) {
-          var model = _getLastVisitModel(visitList);
-          startX = '${model.xLatitude}';
-          startY = '${model.yLongitude}';
+          var lastVisitModel = _getLastVisitModel(visitList);
+          startX = '${lastVisitModel.xLatitude}';
+          startY = '${lastVisitModel.yLongitude}';
           stopX = latLonResult.data['lat'];
           stopY = latLonResult.data['lon'];
+          startKunnr = lastVisitModel.zskunnr ?? '';
+          stopKunnr = selectedKunnr!.kunnr!;
         } else {
           // 도착처리건 없으면 영업활동 첫건으로 판단해 table 250어서 영업활동 시작주소 가져옴.
           setStartLatLonFormTable250.call();
         }
       }
     } else {
-      //  일별영업활동 List 클릭시 index 받아와 혜당 model 도착처리유무 판단함.
+      //  일별 영업활동 화면에서 List 클릭 후 진입시
       var model = editModel!.table260![index!];
+      var visitList =
+          editModel!.table260!.where((item) => item.xvisit == 'Y').toList();
+      var lastVisitModel = _getLastVisitModel(visitList);
+      startX = '${lastVisitModel.xLatitude}';
+      startY = '${lastVisitModel.yLongitude}';
+      stopX = '${model.xLatitude!}';
+      stopY = '${model.yLongitude}';
+      startKunnr = lastVisitModel.zskunnr ?? '';
+      stopKunnr = selectedKunnr!.kunnr!;
     }
     _api.init(RequestType.GET_DISTANCE);
     Map<String, dynamic> _body = {
-      "departureCode": "",
+      "departureCode": startKunnr,
       "departureX": startX,
       "departureY": startY,
-      "destinationCode": "",
+      "destinationCode": stopKunnr,
       "destinationX": stopX,
       "destinationY": stopY
     };
@@ -184,8 +199,8 @@ class AddActivityPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       pr(result.body);
       distanceModel = AddActivityDistanceModel.fromJson(result.body['data']);
-      // distance = temp['distance'];
       isVisit = true;
+      notVisitDiscription = '';
       notifyListeners();
       return ResultModel(true);
     }
