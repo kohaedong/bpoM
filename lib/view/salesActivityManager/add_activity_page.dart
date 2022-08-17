@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-17 14:15:41
+ * Last Modified: 2022-08-17 14:40:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -465,6 +465,35 @@ class _AddActivityPageState extends State<AddActivityPage> {
     );
   }
 
+  Widget _buildCheckBox(BuildContext context, bool isChecked) {
+    return SizedBox(
+      height: AppSize.defaultCheckBoxHeight,
+      width: AppSize.defaultCheckBoxHeight,
+      child: Checkbox(
+          activeColor: AppColors.primary,
+          side: BorderSide(color: Colors.grey),
+          value: isChecked,
+          onChanged: (val) {
+            final p = context.read<AddActivityPageProvider>();
+            p.setIsWithTeamLeader(val);
+          }),
+    );
+  }
+
+  Widget _buildIsWithTeamLeader(BuildContext context) {
+    return Selector<AddActivityPageProvider, bool>(
+        selector: (context, provider) => provider.isWithTeamLeader,
+        builder: (context, isWithTeamLeader, _) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AppText.text(tr('with_team_leader'), style: AppTextStyle.h4),
+              _buildCheckBox(context, isWithTeamLeader)
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     var arguments =
@@ -523,6 +552,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                     _buildReasonForInterviewFailure(context),
                                     defaultSpacing(),
                                     _buildActivityType(context),
+                                    defaultSpacing(),
+                                    defaultSpacing(),
+                                    _buildIsWithTeamLeader(context),
                                     defaultSpacing(
                                         height: AppSize.realHeight * .3),
                                   ],
