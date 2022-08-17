@@ -9,9 +9,9 @@ part of 'add_activity_distance_model.dart';
 AddActivityDistanceModel _$AddActivityDistanceModelFromJson(
         Map<String, dynamic> json) =>
     AddActivityDistanceModel(
-      json['distance'] as String?,
-      json['resultCd'] as String?,
-      json['resultMsg'] as String?,
+      distance: json['distance'] as String?,
+      resultCd: json['resultCd'] as String?,
+      resultMsg: json['resultMsg'] as String?,
     );
 
 Map<String, dynamic> _$AddActivityDistanceModelToJson(

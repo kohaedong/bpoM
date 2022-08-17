@@ -525,5 +525,6 @@
     "start_activity_first_commont":"영업활동 시작후 신규 활동 추가가 가능합니다.영업활동을 시작 하시겠습니까?",
     "customer_search":"고객 조회",
     "arrival":"도착",
-    "":""
+    "reason_for_interview_failure":"면담 실패 사유"
+   
 }

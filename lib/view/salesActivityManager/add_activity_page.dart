@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-16 23:44:46
+ * Last Modified: 2022-08-17 13:45:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/service/hive_service.dart';
@@ -47,11 +48,15 @@ class AddActivityPage extends StatefulWidget {
 
 class _AddActivityPageState extends State<AddActivityPage> {
   late TextEditingController _textEditingController;
+  late TextEditingController _interviewTextEditingController;
   late ScrollController _textFieldScrollController;
+  late ScrollController _interviewTextFieldScrollController;
   @override
   void initState() {
     _textEditingController = TextEditingController();
+    _interviewTextEditingController = TextEditingController();
     _textFieldScrollController = ScrollController();
+    _interviewTextFieldScrollController = ScrollController();
 
     super.initState();
   }
@@ -59,7 +64,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
   @override
   void dispose() {
     _textEditingController.dispose();
+    _interviewTextEditingController.dispose();
     _textFieldScrollController.dispose();
+    _interviewTextFieldScrollController.dispose();
     super.dispose();
   }
 
@@ -187,7 +194,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   if (p.activityStatus == ActivityStatus.STOPED) {
                     AppToast().show(context, tr('activity_is_stoped'));
                   } else {
-                    if (p.selectedKunnr == null || p.selectedKeyMan == null) {
+                    if ((p.selectedKunnr == null || p.selectedKeyMan == null) &&
+                        !p.isVisit) {
                       AppToast()
                           .show(context, tr('plz_check_essential_option'));
                     } else if (!p.isVisit) {
@@ -225,7 +233,68 @@ class _AddActivityPageState extends State<AddActivityPage> {
         });
   }
 
-  Widget _buildNotVisitDiscroption(BuildContext context) {
+  Widget _buildTitleRow(String text) {
+    return Row(children: [
+      AppText.text(text, style: AppTextStyle.h4),
+      SizedBox(width: AppSize.defaultListItemSpacing),
+      AppText.text('*',
+          style: AppTextStyle.h4.copyWith(color: AppColors.dangerColor))
+    ]);
+  }
+
+  Widget _buildTextField(BuildContext context, {required bool isForInterview}) {
+    final p = context.read<AddActivityPageProvider>();
+    return TextFormField(
+      controller: isForInterview
+          ? _interviewTextEditingController
+          : _textEditingController,
+      scrollController: isForInterview
+          ? _interviewTextFieldScrollController
+          : _textFieldScrollController,
+      onTap: () {
+        if (isForInterview) {
+          _interviewTextEditingController.text.isEmpty
+              ? _interviewTextEditingController.text =
+                  p.reasonForinterviewFailure ?? ''
+              : DoNothingAction();
+        } else {
+          _textEditingController.text.isEmpty
+              ? _textEditingController.text = p.reasonForNotVisit ?? ''
+              : DoNothingAction();
+        }
+      },
+      onChanged: (text) {
+        if (isForInterview) {
+          p.setReasonForInterviewFailure(text);
+        } else {
+          p.setReasonForNotVisit(text);
+        }
+      },
+      autofocus: false,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(100),
+      ],
+      autocorrect: false,
+      keyboardType: TextInputType.multiline,
+      maxLines: 5,
+      style: AppTextStyle.default_16,
+      decoration: InputDecoration(
+          fillColor: AppColors.whiteText,
+          hintText: '${tr('suggestion_hint')}',
+          hintStyle: AppTextStyle.hint_16,
+          border: OutlineInputBorder(
+              gapPadding: 0,
+              borderSide:
+                  BorderSide(color: AppColors.textFieldUnfoucsColor, width: .5),
+              borderRadius: BorderRadius.circular(AppSize.radius5)),
+          focusedBorder: OutlineInputBorder(
+              gapPadding: 0,
+              borderSide: BorderSide(color: AppColors.primary, width: .5),
+              borderRadius: BorderRadius.circular(AppSize.radius5))),
+    );
+  }
+
+  Widget _buildReasonForNotVisit(BuildContext context) {
     return Selector<AddActivityPageProvider, bool>(
         selector: (context, provider) => provider.isVisit,
         builder: (context, isVisit, _) {
@@ -237,49 +306,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   children: [
                     defaultSpacing(),
                     defaultSpacing(),
-                    Row(children: [
-                      AppText.text(tr('reason_for_not_visiting'),
-                          style: AppTextStyle.h4),
-                      SizedBox(width: AppSize.defaultListItemSpacing),
-                      AppText.text('*',
-                          style: AppTextStyle.h4
-                              .copyWith(color: AppColors.dangerColor))
-                    ]),
+                    _buildTitleRow(tr('reason_for_not_visiting')),
                     defaultSpacing(),
-                    TextFormField(
-                      controller: _textEditingController,
-                      scrollController: _textFieldScrollController,
-                      onTap: () {},
-                      onChanged: (text) {
-                        final p = context.read<AddActivityPageProvider>();
-                        p.setNotVisitDiscription(text);
-                      },
-                      autofocus: false,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(100),
-                      ],
-                      autocorrect: false,
-                      keyboardType: TextInputType.multiline,
-                      maxLines: 5,
-                      style: AppTextStyle.default_16,
-                      decoration: InputDecoration(
-                          fillColor: AppColors.whiteText,
-                          hintText: '${tr('suggestion_hint')}',
-                          hintStyle: AppTextStyle.hint_16,
-                          border: OutlineInputBorder(
-                              gapPadding: 0,
-                              borderSide: BorderSide(
-                                  color: AppColors.textFieldUnfoucsColor,
-                                  width: .5),
-                              borderRadius:
-                                  BorderRadius.circular(AppSize.radius5)),
-                          focusedBorder: OutlineInputBorder(
-                              gapPadding: 0,
-                              borderSide: BorderSide(
-                                  color: AppColors.primary, width: .5),
-                              borderRadius:
-                                  BorderRadius.circular(AppSize.radius5))),
-                    )
+                    _buildTextField(context, isForInterview: false)
                   ],
                 );
         });
@@ -298,8 +327,16 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 AppSize.realWidth,
                 AppColors.primary,
                 AppTextStyle.menu_18(AppColors.whiteText),
-                0,
-                () {}));
+                0, () {
+              final p = context.read<AddActivityPageProvider>();
+              if ((p.selectedKunnr == null || p.selectedKeyMan == null)) {
+                AppToast().show(context, tr('plz_check_essential_option'));
+              } else {
+                //임시저장.
+                // 저장시간/면담여부/활동유형/팀장동행/영업사원 동행/제안품목/방문결과.
+
+              }
+            }));
       },
     );
   }
@@ -312,10 +349,104 @@ class _AddActivityPageState extends State<AddActivityPage> {
         builder: (context, tuple, _) {
           return tuple.item1
               ? BaseInfoRowByKeyAndValue.build(tr('distance'),
-                  tuple.item2 != null ? tuple.item2!.distance! : '',
+                  tuple.item2 != null ? '${tuple.item2!.distance!}Km' : '',
                   style: AppTextStyle.h5)
               : Container();
         });
+  }
+
+  Widget _buildBox(BuildContext context, double width, String text,
+      {required int index, required bool isSelected}) {
+    var borderradius = index == 0
+        ? BorderRadius.only(
+            topLeft: Radius.circular(AppSize.radius5),
+            bottomLeft: Radius.circular(AppSize.radius5),
+          )
+        : index == 1
+            ? BorderRadius.only(
+                topRight: Radius.circular(AppSize.radius5),
+                bottomRight: Radius.circular(AppSize.radius5),
+              )
+            : BorderRadius.only();
+    var border =
+        isSelected ? null : Border.all(width: .5, color: AppColors.textGrey);
+    return GestureDetector(
+        onTap: () {
+          final p = context.read<AddActivityPageProvider>();
+          p.setIsInterviewIndex(index);
+        },
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          alignment: Alignment.center,
+          width: width,
+          height: AppSize.defaultTextFieldHeight,
+          decoration: BoxDecoration(
+              color: isSelected ? AppColors.primary : AppColors.whiteText,
+              borderRadius: borderradius,
+              border: border),
+          child: AppText.text(
+            text,
+            style: AppTextStyle.default_14.copyWith(
+                color:
+                    isSelected ? AppColors.whiteText : AppColors.defaultText),
+          ),
+        ));
+  }
+
+  Widget _buildIsInterview(BuildContext context) {
+    return Column(
+      children: [
+        _buildTitleRow(tr('is_interview')),
+        defaultSpacing(),
+        Selector<AddActivityPageProvider, int>(
+            selector: (context, provider) => provider.isInterviewIndex,
+            builder: (context, index, _) {
+              pr('build');
+              return Row(
+                children: [
+                  _buildBox(context, AppSize.defaultContentsWidth / 2,
+                      tr('successful'),
+                      index: 0, isSelected: index == 0 ? true : false),
+                  _buildBox(
+                      context, AppSize.defaultContentsWidth / 2, tr('faild'),
+                      index: 1, isSelected: index == 1 ? true : false),
+                ],
+              );
+            })
+      ],
+    );
+  }
+
+  Widget _buildReasonForInterviewFailure(BuildContext context) {
+    return Selector<AddActivityPageProvider, int>(
+        selector: (context, provider) => provider.isInterviewIndex,
+        builder: (context, index, _) {
+          return index == 0
+              ? Container()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    defaultSpacing(),
+                    defaultSpacing(),
+                    _buildTitleRow(tr('reason_for_interview_failure')),
+                    defaultSpacing(),
+                    _buildTextField(context, isForInterview: true)
+                  ],
+                );
+        });
+  }
+
+  Widget _buildActivityType(BuildContext context) {
+    return Selector<AddActivityPageProvider, String?>(
+      selector: (context, provider) => provider.selectedActionType,
+      builder: (context, type, _) {
+        return BaseInputWidget(
+            context: context,
+            width: AppSize.defaultContentsWidth,
+            enable: false);
+      },
+    );
   }
 
   @override
@@ -350,27 +481,38 @@ class _AddActivityPageState extends State<AddActivityPage> {
                       fit: StackFit.expand,
                       children: [
                         SingleChildScrollView(
-                          child: Padding(
-                            padding: AppSize.defaultSidePadding,
-                            child: Column(
-                              children: [
-                                CustomerinfoWidget.buildSubTitle(
-                                    context, '${tr('activity_report')}'),
-                                defaultSpacing(),
-                                defaultSpacing(),
-                                _buildSelectCustomer(context),
-                                _buildCustomerDiscription(context),
-                                _buildSelectKeyMan(context),
-                                defaultSpacing(),
-                                _buildIsVisitRow(context),
-                                defaultSpacing(
-                                    height: AppSize.defaultListItemSpacing / 2),
-                                _buildNotVisitDiscroption(context),
-                                defaultSpacing(),
-                                _buildDistanceDiscription(context),
-                                defaultSpacing(),
-                              ],
-                            ),
+                          child: Column(
+                            children: [
+                              CustomerinfoWidget.buildSubTitle(
+                                  context, '${tr('activity_report')}'),
+                              Padding(
+                                padding: AppSize.defaultSidePadding,
+                                child: Column(
+                                  children: [
+                                    defaultSpacing(),
+                                    defaultSpacing(),
+                                    _buildSelectCustomer(context),
+                                    _buildCustomerDiscription(context),
+                                    _buildSelectKeyMan(context),
+                                    defaultSpacing(),
+                                    _buildIsVisitRow(context),
+                                    defaultSpacing(
+                                        height:
+                                            AppSize.defaultListItemSpacing / 2),
+                                    _buildReasonForNotVisit(context),
+                                    defaultSpacing(),
+                                    _buildDistanceDiscription(context),
+                                    defaultSpacing(),
+                                    _buildIsInterview(context),
+                                    _buildReasonForInterviewFailure(context),
+                                    defaultSpacing(),
+                                    _buildActivityType(context),
+                                    defaultSpacing(
+                                        height: AppSize.realHeight * .3),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         _buildSubmmitButton(context)

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-17 10:21:46
+ * Last Modified: 2022-08-17 13:45:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -27,17 +27,20 @@ import 'package:medsalesportal/model/rfc/add_activity_key_man_response_model.dar
 import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
 
 class AddActivityPageProvider extends ChangeNotifier {
-  EtKunnrResponseModel? etKunnrResponseModel;
   AddActivityKeyManResponseModel? keyManResponseModel;
+  EtKunnrResponseModel? etKunnrResponseModel;
   SalesActivityDayResponseModel? editModel;
   AddActivityDistanceModel? distanceModel;
   AddActivityKeyManModel? selectedKeyMan;
   ActivityStatus? activityStatus;
   EtKunnrModel? selectedKunnr;
-  String? notVisitDiscription;
-  final _api = ApiService();
+  String? reasonForinterviewFailure;
+  String? selectedActionType;
+  String? reasonForNotVisit;
   bool isVisit = false;
   int? index;
+  int isInterviewIndex = 0;
+  final _api = ApiService();
 
   Future<ResultModel> initData(SalesActivityDayResponseModel fromParentModel,
       ActivityStatus status, int? indexx) async {
@@ -54,12 +57,27 @@ class AddActivityPageProvider extends ChangeNotifier {
       selectedKunnr!.zaddName1 = temp.zaddName1;
       selectedKeyMan = AddActivityKeyManModel();
       selectedKeyMan!.zkmnoNm = temp.zkmnoNm;
+      distanceModel = AddActivityDistanceModel();
+      distanceModel!.distance = '${temp.dist}';
+      distanceModel!.distance = '25';
+      reasonForNotVisit = temp.visitRmk ?? '';
+      reasonForinterviewFailure = temp.meetRmk ?? '';
     }
     return ResultModel(true);
   }
 
-  void setNotVisitDiscription(String val) {
-    notVisitDiscription = val;
+  void setIsInterviewIndex(int indexx) {
+    isInterviewIndex = indexx;
+    notifyListeners();
+  }
+
+  void setReasonForInterviewFailure(String str) {
+    reasonForinterviewFailure = str;
+    notifyListeners();
+  }
+
+  void setReasonForNotVisit(String val) {
+    reasonForNotVisit = val;
   }
 
   void setIsVisit(bool val) {
@@ -200,7 +218,6 @@ class AddActivityPageProvider extends ChangeNotifier {
       pr(result.body);
       distanceModel = AddActivityDistanceModel.fromJson(result.body['data']);
       isVisit = true;
-      notVisitDiscription = '';
       notifyListeners();
       return ResultModel(true);
     }
