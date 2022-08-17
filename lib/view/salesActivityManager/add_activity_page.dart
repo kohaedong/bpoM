@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-17 20:52:17
+ * Last Modified: 2022-08-17 22:33:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -550,6 +550,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   Widget _buildItemSet(
       BuildContext context, AddActivitySuggetionItemModel model, int index) {
+    final p = context.read<AddActivityPageProvider>();
     return Column(
       children: [
         Row(
@@ -575,6 +576,13 @@ class _AddActivityPageState extends State<AddActivityPage> {
         ),
         BaseInputWidget(
             context: context,
+            hintText: model.maktx == null ? tr('plz_select') : model.maktx,
+            hintTextStyleCallBack: () => model.maktx == null
+                ? AppTextStyle.hint_16
+                : AppTextStyle.default_16,
+            popupSearchType: PopupSearchType.SEARCH_SUGGETION_ITEM,
+            isSelectedStrCallBack: (model) =>
+                p.updateSuggestedList(index, updateModel: model),
             width: AppSize.defaultContentsWidth,
             enable: false),
         defaultSpacing(),

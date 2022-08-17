@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-08-16 21:25:25
+ * Last Modified: 2022-08-17 22:10:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_response_model.dart';
+import 'package:medsalesportal/model/rfc/add_activity_suggetion_response_model.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
@@ -38,6 +39,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
   String? personInputText;
   String? keymanInputText;
   String? customerInputTextForAddActivityPage;
+  String? suggetionItemNameInputText;
+  String? suggetionItemGroupInputText;
   String? customerInputText;
   String? endCustomerInputText;
   String? selectedProductCategory;
@@ -53,6 +56,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   EtCustomerResponseModel? etCustomerResponseModel;
   EtEndCustomerResponseModel? etEndCustomerResponseModel;
   AddActivityKeyManResponseModel? keyManResponseModel;
+  AddActivitySuggetionResponseModel? suggetionResponseModel;
   OneCellType? type;
   Map<String, dynamic>? bodyMap;
 
@@ -72,6 +76,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     etCustomerResponseModel = null;
     etEndCustomerResponseModel = null;
     keyManResponseModel = null;
+    suggetionResponseModel = null;
     staList = null;
     hasMore = true;
     onSearch(type!, true);
@@ -102,6 +107,26 @@ class BasePopupSearchProvider extends ChangeNotifier {
     if (value == null || (value.length == 1) || value == '') {
       if (value == '*') {
         personInputText = ' ';
+      }
+      notifyListeners();
+    }
+  }
+
+  void setSuggetionItemNameInputText(String? value) {
+    suggetionItemNameInputText = value;
+    if (value == null || (value.length == 1) || value == '') {
+      if (value == '*') {
+        suggetionItemNameInputText = ' ';
+      }
+      notifyListeners();
+    }
+  }
+
+  void setSuggetionItemGroupInputText(String? value) {
+    suggetionItemGroupInputText = value;
+    if (value == null || (value.length == 1) || value == '') {
+      if (value == '*') {
+        suggetionItemGroupInputText = ' ';
       }
       notifyListeners();
     }
@@ -609,6 +634,63 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return BasePoupSearchResult(false);
   }
 
+  Future<BasePoupSearchResult> searchSuggetionItem(bool isMounted,
+      {bool? isDeliveryCustomer}) async {
+    isLoadData = true;
+    if (isMounted) {
+      notifyListeners();
+    }
+    var _api = ApiService();
+    _api.init(RequestType.SEARCH_SUGGETION_ITEM);
+    Map<String, dynamic>? _body;
+    _body = {
+      "methodName": RequestType.SEARCH_SUGGETION_ITEM.serverMethod,
+      "methodParamMap": {
+        "IV_PTYPE": "R",
+        "IV_MATNR": "",
+        "IV_MAKTX": suggetionItemNameInputText ?? '', // input
+        "IV_MATKL": "",
+        "IV_WGBEZ": suggetionItemGroupInputText ?? '', // input
+        "IV_MTART": "",
+        "pos": pos,
+        "partial": partial,
+        "IS_LOGIN": CacheService.getIsLogin(),
+        "resultTables": RequestType.SEARCH_SUGGETION_ITEM.resultTable,
+        "functionName": RequestType.SEARCH_SUGGETION_ITEM.serverMethod
+      }
+    };
+    _api.init(RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER);
+    final result = await _api.request(body: _body);
+    if (result == null || result.statusCode != 200) {
+      isLoadData = false;
+      suggetionResponseModel = null;
+      notifyListeners();
+      return BasePoupSearchResult(false);
+    }
+    if (result.statusCode == 200 && result.body['data'] != null) {
+      var temp =
+          AddActivitySuggetionResponseModel.fromJson(result.body['data']);
+      pr(temp.toJson());
+      if (temp.etOutput!.length != partial) {
+        hasMore = false;
+      }
+      if (suggetionResponseModel == null) {
+        suggetionResponseModel = temp;
+      } else {
+        suggetionResponseModel!.etOutput!.addAll(temp.etOutput!);
+      }
+      if (suggetionResponseModel != null &&
+          suggetionResponseModel!.etOutput == null) {
+        suggetionResponseModel = null;
+      }
+      isLoadData = false;
+      notifyListeners();
+      return BasePoupSearchResult(true);
+    }
+    isLoadData = false;
+    return BasePoupSearchResult(false);
+  }
+
   void setIsLoginModel() async {
     var isLogin = CacheService.getIsLogin();
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
@@ -624,6 +706,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
     switch (type) {
       case OneCellType.SEARCH_SALSE_PERSON:
         return await searchPerson(isMounted);
+      case OneCellType.SEARCH_SUGGETION_ITEM:
+        return await searchSuggetionItem(isMounted);
       case OneCellType.SEARCH_KEY_MAN:
         return await searchKeyMan(isMounted);
       case OneCellType.SEARCH_CUSTOMER_FOR_ADD_ACTIVITY_PAGE:

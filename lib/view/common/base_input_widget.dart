@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-08-12 14:17:07
+ * Last Modified: 2022-08-17 21:09:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -37,43 +37,43 @@ typedef CheckBoxDefaultValue = Future<List<bool>> Function();
 
 class BaseInputWidget extends StatefulWidget {
   final BuildContext context;
+  final bool enable;
+  final bool? isShowDeleteForHintText;
+  final double width;
+  final double? height;
+  final int? maxLine;
+  final String? routeName;
+  final String? hintText;
+  final String? initText;
+  final String? dateStr;
+  final Color? iconColor;
+  final dynamic arguments;
+  final Map<String, dynamic>? bodyMap;
+  final TextStyle? textStyle;
+  final TextInputType? keybordType;
   final ThreeCellType? threeCellType;
   final OneCellType? oneCellType;
   final PopupSearchType? popupSearchType;
   final InputIconType? iconType;
-  final String? hintText;
-  final bool? isShowDeleteForHintText;
+  final CheckBoxType? checkBoxType;
   final Function? deleteIconCallback;
-  final double width;
   final Function? onTap;
   final FocusNode? focusNode;
-  final bool enable;
-  final IsSelectedStrCallBack? isSelectedStrCallBack;
-  final IsSelectedCellCallBack? isSelectedCellCallBack;
-  final double? height;
   final Function? defaultIconCallback;
   final Function? otherIconcallback;
+  final IsSelectedStrCallBack? isSelectedStrCallBack;
+  final IsSelectedCellCallBack? isSelectedCellCallBack;
   final OnChangeCallBack? onChangeCallBack;
   final HintTextStyleCallBack? hintTextStyleCallBack;
-  final String? routeName;
   final TextEditingController? textEditingController;
   final CommononeCellDataCallback? commononeCellDataCallback;
   final CommonThreeCellDataCallback? commonThreeCellDataCallback;
-  final Color? iconColor;
-  final String? initText;
   final CheckBoxCallBack? checkBoxCallBack;
-  final TextInputType? keybordType;
-  final TextStyle? textStyle;
   final InitDataCallback? initDataCallback;
-  final int? maxLine;
-  final dynamic arguments;
   final OnSubmittedCallBack? onSubmittedCallBack;
-  final Map<String, dynamic>? bodyMap;
   final DiscountListCallback? discountListCallback;
   final AddressSelectedCity? selectedCity;
   final CheckBoxDefaultValue? checkBoxDefaultValue;
-  final CheckBoxType? checkBoxType;
-  final String? dateStr;
   BaseInputWidget(
       {Key? key,
       required this.context,

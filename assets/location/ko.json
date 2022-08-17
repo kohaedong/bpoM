@@ -89,6 +89,7 @@
     "staff_name":"사원명",
     "department_name":"부서명",
     "materials_name":"자재명",
+    "materials_group":"자재그룹",
     "materials_code":"자재코드",
     "plant_code":"플랜트 코드",
     "plant_code_":"플랜트코드",

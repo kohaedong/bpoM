@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/popup_search_type.dart
  * Created Date: 2021-09-10 21:38:04
- * Last Modified: 2022-08-15 10:42:04
+ * Last Modified: 2022-08-17 21:35:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -24,6 +24,7 @@ enum PopupSearchType {
   SEARCH_SALLER_FOR_BULK_ORDER,
   SEARCH_END_CUSTOMER,
   SEARCH_KEY_MAN,
+  SEARCH_SUGGETION_ITEM,
   SEARCH_PLANT, // 플랜트 조회 화면
 
 }
@@ -84,6 +85,8 @@ extension PopupSearchTypeExtension on PopupSearchType {
     switch (this) {
       case PopupSearchType.SEARCH_SALSE_PERSON:
         return [OneCellType.SEARCH_SALSE_PERSON]; // 영업사원
+      case PopupSearchType.SEARCH_SUGGETION_ITEM:
+        return [OneCellType.SEARCH_SUGGETION_ITEM];
       case PopupSearchType.SEARCH_KEY_MAN:
         return [OneCellType.SEARCH_KEY_MAN];
       case PopupSearchType.SEARCH_END_CUSTOMER:
@@ -110,6 +113,8 @@ extension PopupSearchTypeExtension on PopupSearchType {
         return AppSize.realHeight * .8;
       case PopupSearchType.SEARCH_SALLER:
         return AppSize.realHeight * .85;
+      case PopupSearchType.SEARCH_SUGGETION_ITEM:
+        return AppSize.realHeight * .8;
       case PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER:
         return AppSize.realHeight * .85;
       case PopupSearchType.SEARCH_END_CUSTOMER:
@@ -125,12 +130,17 @@ extension PopupSearchTypeExtension on PopupSearchType {
         return AppSize.defaultTextFieldHeight * 3 +
             AppSize.defaultListItemSpacing * 5 +
             AppSize.appBarHeight +
-            AppSize.secondButtonHeight; // 영업사원
+            AppSize.secondButtonHeight;
+      case PopupSearchType.SEARCH_SUGGETION_ITEM:
+        return AppSize.defaultTextFieldHeight * 2 +
+            AppSize.defaultListItemSpacing * 4 +
+            AppSize.appBarHeight +
+            AppSize.secondButtonHeight;
       case PopupSearchType.SEARCH_SALLER:
         return AppSize.defaultTextFieldHeight * 4 +
             AppSize.defaultListItemSpacing * 6 +
             AppSize.appBarHeight +
-            AppSize.secondButtonHeight; // 영업사원
+            AppSize.secondButtonHeight;
       case PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER:
         return AppSize.defaultTextFieldHeight * 4 +
             AppSize.defaultListItemSpacing * 6 +

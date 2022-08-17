@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-08-15 11:59:32
+ * Last Modified: 2022-08-17 22:15:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
+import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart';
 import 'package:medsalesportal/model/rfc/et_end_customer_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
@@ -83,11 +84,15 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
   late TextEditingController _personInputController;
   late TextEditingController _customerInputController;
   late TextEditingController _endCustomerInputController;
+  late TextEditingController _suggetionNameInputController;
+  late TextEditingController _suggetionGroupInputController;
   late ScrollController _scrollController;
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+    _suggetionNameInputController = TextEditingController();
+    _suggetionGroupInputController = TextEditingController();
     _personInputController = TextEditingController();
     _customerInputController = TextEditingController();
     _endCustomerInputController = TextEditingController();
@@ -98,6 +103,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     _personInputController.dispose();
     _customerInputController.dispose();
     _endCustomerInputController.dispose();
+    _suggetionNameInputController.dispose();
+    _suggetionGroupInputController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -139,6 +146,90 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                               '${tr('name')}'
                             ])}');
             })
+      ],
+    );
+  }
+
+  Widget _buildSuggetionItemSearchBar(BuildContext context) {
+    final p = context.read<BasePopupSearchProvider>();
+    return Column(
+      children: [
+        defaultSpacing(),
+        Selector<BasePopupSearchProvider, String?>(
+            selector: (context, provider) =>
+                provider.suggetionItemNameInputText,
+            builder: (context, name, _) {
+              return BaseInputWidget(
+                  context: context,
+                  width: AppSize.defaultContentsWidth - AppSize.padding * 2,
+                  enable: true,
+                  hintTextStyleCallBack:
+                      name != null ? null : () => AppTextStyle.hint_16,
+                  iconType: name != null
+                      ? InputIconType.DELETE_AND_SEARCH
+                      : InputIconType.SEARCH,
+                  onChangeCallBack: (e) => p.setSuggetionItemNameInputText(e),
+                  iconColor:
+                      name == null ? AppColors.textFieldUnfoucsColor : null,
+                  defaultIconCallback: () {
+                    hideKeyboard(context);
+                    p.refresh();
+                  },
+                  textEditingController: _suggetionNameInputController,
+                  otherIconcallback: () {
+                    p.setSuggetionItemNameInputText(null);
+                    _suggetionNameInputController.text = '';
+                  },
+                  hintText: name != null
+                      ? null
+                      : '${tr('plz_enter_search_key_for_something_1', args: [
+                              '${tr('materials_name')}'
+                            ])}');
+            }),
+        defaultSpacing(),
+        Selector<BasePopupSearchProvider, String?>(
+            selector: (context, provider) =>
+                provider.suggetionItemGroupInputText,
+            builder: (context, group, _) {
+              return BaseInputWidget(
+                  context: context,
+                  width: AppSize.defaultContentsWidth - AppSize.padding * 2,
+                  enable: true,
+                  hintTextStyleCallBack:
+                      group != null ? null : () => AppTextStyle.hint_16,
+                  iconType: group != null
+                      ? InputIconType.DELETE_AND_SEARCH
+                      : InputIconType.SEARCH,
+                  onChangeCallBack: (e) => p.setSuggetionItemGroupInputText(e),
+                  iconColor:
+                      group == null ? AppColors.textFieldUnfoucsColor : null,
+                  defaultIconCallback: () {
+                    hideKeyboard(context);
+                    p.refresh();
+                  },
+                  textEditingController: _suggetionGroupInputController,
+                  otherIconcallback: () {
+                    p.setSuggetionItemGroupInputText(null);
+                    _suggetionGroupInputController.text = '';
+                  },
+                  hintText: group != null
+                      ? null
+                      : '${tr('plz_enter_search_key_for_something_1', args: [
+                              '${tr('materials_group')}'
+                            ])}');
+            }),
+        defaultSpacing(),
+        AppStyles.buildSearchButton(context, tr('search'), () {
+          final p = context.read<BasePopupSearchProvider>();
+          if (!((p.suggetionItemGroupInputText != null &&
+                  p.suggetionItemGroupInputText!.isNotEmpty) ||
+              (p.suggetionItemNameInputText != null &&
+                  p.suggetionItemNameInputText!.isNotEmpty))) {
+            AppToast().show(context, tr('keyword_must_not_null'));
+          } else {
+            p.refresh();
+          }
+        }, doNotWithPadding: true),
       ],
     );
   }
@@ -533,7 +624,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                           ? _buildEndCustomerBar(context)
                           : widget.type == PopupSearchType.SEARCH_KEY_MAN
                               ? _buildKeyManSearchBar(context)
-                              : Container(),
+                              : widget.type ==
+                                      PopupSearchType.SEARCH_SUGGETION_ITEM
+                                  ? _buildSuggetionItemSearchBar(context)
+                                  : Container(),
         ],
       ),
     );
@@ -564,7 +658,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                             .isNotEmpty) ||
                     (provider.keyManResponseModel != null &&
                         provider.keyManResponseModel!.etList != null &&
-                        provider.keyManResponseModel!.etList!.isNotEmpty)
+                        provider.keyManResponseModel!.etList!.isNotEmpty) ||
+                    (provider.suggetionResponseModel != null &&
+                        provider.suggetionResponseModel!.etOutput != null &&
+                        provider.suggetionResponseModel!.etOutput!.isNotEmpty)
                 ? Padding(
                     padding: AppSize.defaultSearchPopupSidePadding,
                     child: Container(
@@ -617,7 +714,14 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                       .keyManResponseModel!
                                                       .etList!
                                                       .length
-                                                  : 0,
+                                                  : widget.type ==
+                                                          PopupSearchType
+                                                              .SEARCH_SUGGETION_ITEM
+                                                      ? provider
+                                                          .suggetionResponseModel!
+                                                          .etOutput!
+                                                          .length
+                                                      : 0,
                               itemBuilder: (BuildContext context, int index) {
                                 return widget.type ==
                                         PopupSearchType.SEARCH_SALSE_PERSON
@@ -671,7 +775,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                         index == provider.etEndCustomerResponseModel!.etCustList!.length - 1)
                                                 : widget.type == PopupSearchType.SEARCH_KEY_MAN
                                                     ? _buildKeymanContentsItem(context, provider.keyManResponseModel!.etList![index], index, !provider.hasMore && index == provider.keyManResponseModel!.etList!.length - 1)
-                                                    : Container();
+                                                    : widget.type == PopupSearchType.SEARCH_SUGGETION_ITEM
+                                                        ? _buildSuggetionContentsItem(context, provider.suggetionResponseModel!.etOutput![index], index, !provider.hasMore && index == provider.suggetionResponseModel!.etOutput!.length - 1)
+                                                        : Container();
                               },
                             ),
                             // 수정 ! nextPage ->  refresh
@@ -933,6 +1039,36 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     );
   }
 
+  Widget _buildSuggetionContentsItem(BuildContext context,
+      AddActivitySuggetionItemModel model, int index, bool isShowLastPageText) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context, model);
+      },
+      child: Padding(
+          padding: index == 0
+              ? AppSize.searchPopupListPadding.copyWith(top: 0)
+              : AppSize.searchPopupListPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _horizontalRow(
+                Row(
+                  children: [
+                    AppText.text(model.maktx ?? '',
+                        style: AppTextStyle.h4
+                            .copyWith(fontWeight: FontWeight.bold)),
+                    SizedBox(width: AppSize.defaultShimmorSpacing),
+                    AppText.text(model.kbetr1!),
+                  ],
+                ),
+              ),
+              isShowLastPageText ? lastPageText() : Container()
+            ],
+          )),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -988,8 +1124,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     },
                     child: ClipRRect(
                         borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(AppSize.radius8),
-                            bottomRight: Radius.circular(AppSize.radius8)),
+                            bottomLeft: Radius.circular(AppSize.radius15),
+                            bottomRight: Radius.circular(AppSize.radius15)),
                         child: Container(
                             alignment: Alignment.center,
                             width: AppSize.defaultContentsWidth,

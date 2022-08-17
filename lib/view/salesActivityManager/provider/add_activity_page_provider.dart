@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-17 20:51:25
+ * Last Modified: 2022-08-17 22:29:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -92,21 +92,30 @@ class AddActivityPageProvider extends ChangeNotifier {
   void insertToSuggestedList() {
     var temp = <AddActivitySuggetionItemModel>[];
     temp = [...suggestedList!];
-    temp.insert(temp.length > 0 ? temp.length - 1 : 0,
+    temp.insert(temp.length == 0 ? 0 : temp.length,
         AddActivitySuggetionItemModel(isChecked: false));
     suggestedList = [...temp];
     notifyListeners();
   }
 
-  void updateSuggestedList(int indexx) {
+  void updateSuggestedList(int indexx,
+      {AddActivitySuggetionItemModel? updateModel}) {
     var temp = <AddActivitySuggetionItemModel>[];
     temp = [...suggestedList!];
-    var model = AddActivitySuggetionItemModel.fromJson(temp[indexx].toJson());
-    model.isChecked = model.isChecked == null ? true : !model.isChecked!;
+    var model = AddActivitySuggetionItemModel();
+    if (updateModel == null) {
+      // checkBox만 update
+      model = AddActivitySuggetionItemModel.fromJson(temp[indexx].toJson());
+      model.isChecked = model.isChecked == null ? true : !model.isChecked!;
+    } else {
+      // 모듈 내부 data update.
+      model = AddActivitySuggetionItemModel.fromJson(updateModel.toJson());
+      var isCheced = temp[indexx].isChecked;
+      model.isChecked = isCheced;
+    }
     temp.removeAt(indexx);
     temp.insert(indexx, model);
     suggestedList = [...temp];
-    pr(suggestedList!.first.toJson());
     notifyListeners();
   }
 
