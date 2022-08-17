@@ -527,6 +527,10 @@
     "arrival":"도착",
     "reason_for_interview_failure":"면담 실패 사유",
     "with_team_leader":"팀장 동행",
-    "with_another_saler":"영업사원 동행"
+    "with_another_saler":"영업사원 동행",
+    "suggested_item":"제안품목",
+    "give_sample":"셈플 전달",
+    "add":"추가",
+    "only_three_can_be_added":"제안품목은 3개만 추가 가능합니다."
    
 }

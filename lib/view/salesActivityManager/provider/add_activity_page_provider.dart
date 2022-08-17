@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-17 15:01:10
+ * Last Modified: 2022-08-17 20:07:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
@@ -42,6 +43,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   String? selectedActionType;
   String? reasonForNotVisit;
   List<String>? activityList;
+  List<String>? suggestedList;
   bool isVisit = false;
   bool isWithTeamLeader = false;
   int? index;
@@ -68,13 +70,31 @@ class AddActivityPageProvider extends ChangeNotifier {
       distanceModel!.distance = '25';
       reasonForNotVisit = temp.visitRmk ?? '';
       reasonForinterviewFailure = temp.meetRmk ?? '';
+      suggestedList = ['품목', '품목'];
     }
+    suggestedList = [tr('suggested_item'), tr('suggested_item')];
     return ResultModel(true);
   }
 
   void setAnotherSaler(saler) {
     saler as EtStaffListModel?;
     anotherSaler = saler;
+    notifyListeners();
+  }
+
+  void removeAtSuggestedList(int indexx) {
+    var temp = <String>[];
+    temp = [...suggestedList!];
+    temp.removeAt(indexx);
+    suggestedList = [...temp];
+    notifyListeners();
+  }
+
+  void insertToSuggestedList() {
+    var temp = <String>[];
+    temp = [...suggestedList!];
+    temp.insert(temp.length > 0 ? temp.length - 1 : 0, '2b${temp.length}');
+    suggestedList = [...temp];
     notifyListeners();
   }
 

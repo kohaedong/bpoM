@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-17 15:16:53
+ * Last Modified: 2022-08-17 20:11:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -311,7 +311,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   children: [
                     defaultSpacing(times: 2),
                     _buildTitleRow(tr('reason_for_not_visiting')),
-                    defaultSpacing(),
+                    defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
                     _buildTextField(context, isForInterview: false)
                   ],
                 );
@@ -331,7 +331,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 AppSize.realWidth,
                 AppColors.primary,
                 AppTextStyle.menu_18(AppColors.whiteText),
-                0, () {
+                0,
+                selfHeight: AppSize.buttonHeight * 1.3, () {
               final p = context.read<AddActivityPageProvider>();
               if ((p.selectedKunnr == null || p.selectedKeyMan == null)) {
                 AppToast().show(context, tr('plz_check_essential_option'));
@@ -401,7 +402,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
     return Column(
       children: [
         _buildTitleRow(tr('is_interview')),
-        defaultSpacing(),
+        defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
         Selector<AddActivityPageProvider, int>(
             selector: (context, provider) => provider.isInterviewIndex,
             builder: (context, index, _) {
@@ -449,7 +450,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
           children: [
             defaultSpacing(),
             _buildTitleRow(tr('activity_type_2')),
-            defaultSpacing(),
+            defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
             BaseInputWidget(
                 context: context,
                 oneCellType: OneCellType.SEARCH_ACTIVITY_TYPE,
@@ -487,10 +488,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
         selector: (context, provider) => provider.isWithTeamLeader,
         builder: (context, isWithTeamLeader, _) {
           return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              _buildCheckBox(context, isWithTeamLeader),
+              Padding(
+                  padding:
+                      EdgeInsets.only(right: AppSize.defaultListItemSpacing)),
               AppText.text(tr('with_team_leader'), style: AppTextStyle.h4),
-              _buildCheckBox(context, isWithTeamLeader)
             ],
           );
         });
@@ -502,7 +505,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
     return Column(
       children: [
         _buildTitleRow(tr('with_another_saler'), isNotwithStart: true),
-        defaultSpacing(),
+        defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
         Selector<AddActivityPageProvider, EtStaffListModel?>(
             selector: (context, provider) => provider.anotherSaler,
             builder: (context, anotherSaler, _) {
@@ -537,6 +540,102 @@ class _AddActivityPageState extends State<AddActivityPage> {
               );
             })
       ],
+    );
+  }
+
+  Widget _buildItemSet(
+      BuildContext context, String str, int index, bool isChecked) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildTitleRow('$str$index', isNotwithStart: true),
+            GestureDetector(
+                onTap: () {
+                  final p = context.read<AddActivityPageProvider>();
+                  p.removeAtSuggestedList(index);
+                  pr('close');
+                },
+                behavior: HitTestBehavior.opaque,
+                child: SizedBox(
+                    height: AppSize.defaultCheckBoxHeight,
+                    width: AppSize.defaultCheckBoxHeight,
+                    child: Icon(
+                      Icons.close,
+                      color: AppColors.hintText,
+                    )))
+          ],
+        ),
+        BaseInputWidget(
+            context: context,
+            width: AppSize.defaultContentsWidth,
+            enable: false),
+        defaultSpacing(),
+        Row(
+          children: [
+            _buildCheckBox(context, isChecked),
+            Padding(
+                padding:
+                    EdgeInsets.only(right: AppSize.defaultListItemSpacing)),
+            AppText.text(tr('give_sample'), style: AppTextStyle.h4),
+          ],
+        ),
+        defaultSpacing()
+      ],
+    );
+  }
+
+  Widget _buildSuggestedItems(BuildContext context) {
+    return Selector<AddActivityPageProvider, List<String>?>(
+      selector: (context, provider) => provider.suggestedList,
+      builder: (context, suggestedList, _) {
+        return suggestedList == null
+            ? Container()
+            : Column(children: [
+                defaultSpacing(),
+                ...suggestedList
+                    .asMap()
+                    .entries
+                    .map((map) =>
+                        _buildItemSet(context, map.value, map.key, true))
+                    .toList(),
+              ]);
+      },
+    );
+  }
+
+  Widget _buildAddSuggestedItemButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        final p = context.read<AddActivityPageProvider>();
+        if (p.suggestedList!.length < 3) {
+          p.insertToSuggestedList();
+        } else {
+          AppToast().show(context, tr('only_three_can_be_added'));
+        }
+      },
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        alignment: Alignment.centerLeft,
+        height: AppSize.smallButtonHeight,
+        width: AppSize.smallButtonWidth,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSize.radius4),
+            border:
+                Border.all(width: .5, color: AppColors.textFieldUnfoucsColor)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.add,
+              color: AppColors.textFieldUnfoucsColor,
+            ),
+            AppText.text(tr('add'),
+                style: AppTextStyle.h5.copyWith(color: AppColors.defaultText))
+          ],
+        ),
+      ),
     );
   }
 
@@ -584,26 +683,39 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                     _buildSelectCustomer(context),
                                     _buildCustomerDiscription(context),
                                     _buildSelectKeyMan(context),
-                                    defaultSpacing(),
+                                    defaultSpacing(times: 1),
                                     _buildIsVisitRow(context),
-                                    defaultSpacing(),
+                                    defaultSpacing(times: 1),
                                     _buildReasonForNotVisit(context),
                                     defaultSpacing(times: 2),
                                     _buildDistanceDiscription(context),
-                                    defaultSpacing(),
+                                    defaultSpacing(times: 1),
                                     _buildIsInterview(context),
                                     _buildReasonForInterviewFailure(context),
                                     defaultSpacing(times: 2),
                                     _buildActivityType(context),
-                                    defaultSpacing(times: 4),
+                                    defaultSpacing(times: 2),
                                     _buildIsWithTeamLeader(context),
-                                    defaultSpacing(times: 4),
+                                    defaultSpacing(times: 2),
                                     _buildIsWithAnotherSales(context),
-                                    defaultSpacing(
-                                        height: AppSize.realHeight * .3),
+                                    defaultSpacing()
                                   ],
                                 ),
                               ),
+                              CustomerinfoWidget.buildSubTitle(
+                                  context, '${tr('activity_type_2')}'),
+                              Padding(
+                                  padding: AppSize.defaultSidePadding,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildSuggestedItems(context),
+                                      defaultSpacing(),
+                                      _buildAddSuggestedItemButton(context)
+                                    ],
+                                  )),
+                              defaultSpacing(height: AppSize.realHeight * .3),
                             ],
                           ),
                         ),
