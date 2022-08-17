@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-17 20:15:24
+ * Last Modified: 2022-08-17 20:43:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
+import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
@@ -468,7 +469,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
     );
   }
 
-  Widget _buildCheckBox(BuildContext context, bool isChecked) {
+  Widget _buildCheckBox(BuildContext context, bool isChecked,
+      {bool? isWithSuggetedItem, int? index}) {
     return SizedBox(
       height: AppSize.defaultCheckBoxHeight,
       width: AppSize.defaultCheckBoxHeight,
@@ -478,7 +480,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
           value: isChecked,
           onChanged: (val) {
             final p = context.read<AddActivityPageProvider>();
-            p.setIsWithTeamLeader(val);
+            if (isWithSuggetedItem != null && isWithSuggetedItem) {
+              p.updateSuggestedList(index!);
+            } else {
+              p.setIsWithTeamLeader(val);
+            }
           }),
     );
   }
@@ -544,13 +550,14 @@ class _AddActivityPageState extends State<AddActivityPage> {
   }
 
   Widget _buildItemSet(
-      BuildContext context, String str, int index, bool isChecked) {
+      BuildContext context, AddActivitySuggetionItemModel model, int index) {
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildTitleRow('$str$index', isNotwithStart: true),
+            _buildTitleRow('${tr('suggested_item')}${index + 1}',
+                isNotwithStart: true),
             GestureDetector(
                 onTap: () {
                   final p = context.read<AddActivityPageProvider>();
@@ -574,7 +581,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
         defaultSpacing(),
         Row(
           children: [
-            _buildCheckBox(context, isChecked),
+            _buildCheckBox(context, model.isChecked ?? false,
+                index: index, isWithSuggetedItem: true),
             Padding(
                 padding:
                     EdgeInsets.only(right: AppSize.defaultListItemSpacing)),
@@ -587,7 +595,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
   }
 
   Widget _buildSuggestedItems(BuildContext context) {
-    return Selector<AddActivityPageProvider, List<String>?>(
+    return Selector<AddActivityPageProvider,
+        List<AddActivitySuggetionItemModel>?>(
       selector: (context, provider) => provider.suggestedList,
       builder: (context, suggestedList, _) {
         return suggestedList == null
@@ -597,8 +606,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 ...suggestedList
                     .asMap()
                     .entries
-                    .map((map) =>
-                        _buildItemSet(context, map.value, map.key, true))
+                    .map((map) => _buildItemSet(context, map.value, map.key))
                     .toList(),
               ]);
       },

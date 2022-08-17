@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-17 20:07:41
+ * Last Modified: 2022-08-17 20:49:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
@@ -43,7 +44,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   String? selectedActionType;
   String? reasonForNotVisit;
   List<String>? activityList;
-  List<String>? suggestedList;
+  List<AddActivitySuggetionItemModel>? suggestedList;
   bool isVisit = false;
   bool isWithTeamLeader = false;
   int? index;
@@ -70,9 +71,8 @@ class AddActivityPageProvider extends ChangeNotifier {
       distanceModel!.distance = '25';
       reasonForNotVisit = temp.visitRmk ?? '';
       reasonForinterviewFailure = temp.meetRmk ?? '';
-      suggestedList = ['품목', '품목'];
     }
-    suggestedList = [tr('suggested_item'), tr('suggested_item')];
+    suggestedList = [];
     return ResultModel(true);
   }
 
@@ -83,7 +83,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   }
 
   void removeAtSuggestedList(int indexx) {
-    var temp = <String>[];
+    var temp = <AddActivitySuggetionItemModel>[];
     temp = [...suggestedList!];
     temp.removeAt(indexx);
     suggestedList = [...temp];
@@ -91,10 +91,23 @@ class AddActivityPageProvider extends ChangeNotifier {
   }
 
   void insertToSuggestedList() {
-    var temp = <String>[];
+    var temp = <AddActivitySuggetionItemModel>[];
     temp = [...suggestedList!];
-    temp.insert(temp.length > 0 ? temp.length - 1 : 0, '2b${temp.length}');
+    temp.insert(temp.length > 0 ? temp.length - 1 : 0,
+        AddActivitySuggetionItemModel(isChecked: false));
     suggestedList = [...temp];
+    notifyListeners();
+  }
+
+  void updateSuggestedList(int indexx) {
+    var temp = <AddActivitySuggetionItemModel>[];
+    temp = [...suggestedList!];
+    var model = AddActivitySuggetionItemModel.fromJson(temp[indexx].toJson());
+    model.isChecked = model.isChecked == null ? true : !model.isChecked!;
+    temp.removeAt(indexx);
+    temp.insert(indexx, model);
+    suggestedList = [...temp];
+    pr(suggestedList!.first.toJson());
     notifyListeners();
   }
 
