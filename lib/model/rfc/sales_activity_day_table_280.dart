@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/sales_activity_day_table_280.dart
  * Created Date: 2022-08-03 10:18:51
- * Last Modified: 2022-08-18 17:01:00
+ * Last Modified: 2022-08-18 17:54:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -27,6 +27,8 @@ class SalesActivityDayTable280 {
   String? subcat;
   @JsonKey(name: 'XGIFT')
   String? xgift;
+  @JsonKey(name: 'AMOUNT1')
+  double? amount1;
   @JsonKey(name: 'KEYMAN_R')
   String? keymanR;
   @JsonKey(name: 'ZMATKL1')
@@ -80,6 +82,7 @@ class SalesActivityDayTable280 {
 
   SalesActivityDayTable280(
       {this.mandt,
+      this.amount1,
       this.bzactno,
       this.aedat,
       this.aenam,
