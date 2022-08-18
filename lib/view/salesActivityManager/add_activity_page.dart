@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-18 09:58:16
+ * Last Modified: 2022-08-18 11:19:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,8 @@
  */
 
 import 'package:medsalesportal/enums/add_activity_page_input_type.dart';
+import 'package:medsalesportal/util/date_util.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/view/salesActivityManager/current_month_scenario_page.dart';
 import 'package:medsalesportal/view/salesActivityManager/visit_result_history_page.dart';
 import 'package:tuple/tuple.dart';
@@ -372,31 +374,39 @@ class _AddActivityPageState extends State<AddActivityPage> {
   }
 
   Widget _buildSubmmitButton(BuildContext context) {
-    return Selector<AddActivityPageProvider, bool>(
-      selector: (context, provider) => provider.index != null,
-      builder: (context, isNewActivity, _) {
-        return Positioned(
-            bottom: 0,
-            left: 0,
-            child: AppStyles.buildButton(
-                context,
-                isNewActivity ? tr('submmit') : tr('order_save'),
-                AppSize.realWidth,
-                AppColors.primary,
-                AppTextStyle.menu_18(AppColors.whiteText),
-                0,
-                selfHeight: AppSize.buttonHeight * 1.3, () {
-              final p = context.read<AddActivityPageProvider>();
-              if ((p.selectedKunnr == null || p.selectedKeyMan == null)) {
-                AppToast().show(context, tr('plz_check_essential_option'));
-              } else {
-                //임시저장.
-                // 저장시간/면담여부/활동유형/팀장동행/영업사원 동행/제안품목/방문결과.
-
-              }
-            }));
-      },
-    );
+    var arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    var model = arguments['model'] as SalesActivityDayResponseModel;
+    var index = arguments['index'] as int?;
+    var isNewActivity = (index == null);
+    var isToday = DateUtil.equlse(
+        DateUtil.getDate(model.table250!.first.adate!), DateTime.now());
+    return Positioned(
+        bottom: 0,
+        left: 0,
+        child: AppStyles.buildButton(
+            context,
+            isNewActivity ? tr('submmit') : tr('order_save'),
+            AppSize.realWidth,
+            isNewActivity || isToday
+                ? AppColors.primary
+                : AppColors.unReadyButton,
+            AppTextStyle.menu_18(isNewActivity || isToday
+                ? AppColors.whiteText
+                : AppColors.hintText),
+            0,
+            selfHeight: AppSize.buttonHeight * 1.3, () {
+          final p = context.read<AddActivityPageProvider>();
+          if ((p.selectedKunnr == null || p.selectedKeyMan == null)) {
+            AppToast().show(context, tr('plz_check_essential_option'));
+          } else {
+            //임시저장.
+            // 저장시간/면담여부/활동유형/팀장동행/영업사원 동행/제안품목/방문결과.
+            if (isToday) {
+              pr('today');
+            }
+          }
+        }));
   }
 
   Widget _buildDistanceDiscription(BuildContext context) {

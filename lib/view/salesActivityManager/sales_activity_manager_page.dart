@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-17 15:17:09
+ * Last Modified: 2022-08-18 10:59:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -398,49 +398,55 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   }
 
   Widget _buildDayListItem(
-      BuildContext context, SalesActivityDayTable260 model) {
-    return Padding(
-      padding: AppSize.defaultSidePadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          defaultSpacing(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              AppText.listViewText(model.zskunnrNm!),
-              BaseTagButton.build(
-                  tr(model.xmeet == 'S' ? 'successful' : 'faild'))
-            ],
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
+      BuildContext context, SalesActivityDayTable260 model, int index) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        _routeToAddActivityPage(context, index: index);
+      },
+      child: Padding(
+        padding: AppSize.defaultSidePadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            defaultSpacing(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                model.rslt != null && model.rslt!.trim().isEmpty
-                    ? Container()
-                    : AppImage.getImage(ImageType.L_ICON),
-                SizedBox(
-                  width: AppSize.calendarWidth * .7,
-                  child: AppText.listViewText('${model.rslt!}',
-                      textAlign: TextAlign.start),
-                ),
+                AppText.listViewText(model.zskunnrNm!),
+                BaseTagButton.build(
+                    tr(model.xmeet == 'S' ? 'successful' : 'faild'))
               ],
             ),
-          ),
-          defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
-          Row(
-            children: [
-              AppText.text(model.zstatus!),
-              AppStyles.buildPipe(),
-              AppText.text(model.zkmnoNm!),
-              AppStyles.buildPipe(),
-              AppText.text(tr(model.xvisit == 'Y' ? 'visit' : 'not_visit')),
-            ],
-          ),
-          defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
-          Divider()
-        ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  model.rslt != null && model.rslt!.trim().isEmpty
+                      ? Container()
+                      : AppImage.getImage(ImageType.L_ICON),
+                  SizedBox(
+                    width: AppSize.calendarWidth * .7,
+                    child: AppText.listViewText('${model.rslt!}',
+                        textAlign: TextAlign.start),
+                  ),
+                ],
+              ),
+            ),
+            defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
+            Row(
+              children: [
+                AppText.text(model.zstatus!),
+                AppStyles.buildPipe(),
+                AppText.text(model.zkmnoNm!),
+                AppStyles.buildPipe(),
+                AppText.text(tr(model.xvisit == 'Y' ? 'visit' : 'not_visit')),
+              ],
+            ),
+            defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
+            Divider()
+          ],
+        ),
       ),
     );
   }
@@ -504,17 +510,33 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     }
   }
 
-  void _routeToAddActivityPage(BuildContext context) async {
-    final p = context.read<ActivityMenuProvider>();
-    final naviResult = await Navigator.pushNamed(
-        context, AddActivityPage.routeName,
-        arguments: {'model': p.editModel, 'status': p.activityStatus});
-    if (naviResult != null) {
-      naviResult as bool;
-      if (naviResult) {
-        //!
-        Navigator.pop(context, p.isNeedUpdate);
-        pr('naviResult $naviResult');
+  void _routeToAddActivityPage(BuildContext context, {int? index}) async {
+    if (index == null) {
+      final p = context.read<ActivityMenuProvider>();
+      final naviResult = await Navigator.pushNamed(
+          context, AddActivityPage.routeName, arguments: {
+        'model': p.editModel,
+        'status': p.activityStatus,
+        'index': index
+      });
+      if (naviResult != null) {
+        naviResult as bool;
+        if (naviResult) {
+          //!
+          Navigator.pop(context, p.isNeedUpdate);
+          pr('naviResult $naviResult');
+        }
+      }
+    } else {
+      final p = context.read<SalseActivityManagerPageProvider>();
+      final naviResult = await Navigator.pushNamed(
+          context, AddActivityPage.routeName, arguments: {
+        'model': p.dayResponseModel,
+        'status': p.activityStatus,
+        'index': index
+      });
+      if (naviResult != null) {
+        p.getDayData();
       }
     }
   }
@@ -686,8 +708,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                               ...list260
                                   .asMap()
                                   .entries
-                                  .map((map) =>
-                                      _buildDayListItem(context, map.value))
+                                  .map((map) => _buildDayListItem(
+                                      context, map.value, map.key))
                                   .toList()
                             ],
                           )
