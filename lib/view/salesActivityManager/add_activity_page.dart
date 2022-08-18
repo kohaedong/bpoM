@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-17 23:41:00
+ * Last Modified: 2022-08-18 09:58:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -160,22 +160,26 @@ class _AddActivityPageState extends State<AddActivityPage> {
         return BaseColumWithTitleAndTextFiled.build(
           tr('key_man'),
           BaseInputWidget(
-              context: context,
-              hintTextStyleCallBack: () => model != null
-                  ? AppTextStyle.default_16
-                  : AppTextStyle.hint_16,
-              popupSearchType: PopupSearchType.SEARCH_KEY_MAN,
-              isSelectedStrCallBack: (keymanModel) {
-                return p.setKeymanModel(keymanModel);
-              },
-              deleteIconCallback: () => p.setKeymanModel(null),
-              iconType: InputIconType.SELECT,
-              isShowDeleteForHintText: model != null ? true : false,
-              iconColor: model != null ? null : AppColors.unReadyText,
-              defaultIconCallback: () => p.setKeymanModel(null),
-              hintText: model != null ? model.zkmnoNm : tr('plz_select'),
-              width: AppSize.defaultContentsWidth,
-              enable: false),
+            context: context,
+            onTap: () {
+              return;
+            },
+            hintTextStyleCallBack: () =>
+                model != null ? AppTextStyle.default_16 : AppTextStyle.hint_16,
+            popupSearchType: PopupSearchType.SEARCH_KEY_MAN,
+            isSelectedStrCallBack: (keymanModel) {
+              return p.setKeymanModel(keymanModel);
+            },
+            deleteIconCallback: () => p.setKeymanModel(null),
+            iconType: InputIconType.SELECT,
+            isShowDeleteForHintText: model != null ? true : false,
+            iconColor: model != null ? null : AppColors.unReadyText,
+            defaultIconCallback: () => p.setKeymanModel(null),
+            hintText: model != null ? model.zkmnoNm : tr('plz_select'),
+            width: AppSize.defaultContentsWidth,
+            enable: false,
+            bodyMap: {'zskunnr': p.selectedKunnr?.zskunnr},
+          ),
         );
       },
     );
@@ -671,42 +675,42 @@ class _AddActivityPageState extends State<AddActivityPage> {
   }
 
   Widget _buildAddSuggestedItemButton(BuildContext context) {
-    return GestureDetector(
-        onTap: () {
-          final p = context.read<AddActivityPageProvider>();
-          if (p.suggestedList!.length < 3) {
-            p.insertToSuggestedList();
-          } else {
-            AppToast().show(context, tr('only_three_can_be_added'));
-          }
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Row(
-          children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              height: AppSize.smallButtonHeight,
-              width: AppSize.smallButtonWidth,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppSize.radius4),
-                  border: Border.all(
-                      width: .5, color: AppColors.textFieldUnfoucsColor)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.add,
-                    color: AppColors.textFieldUnfoucsColor,
-                  ),
-                  AppText.text(tr('add'),
-                      style: AppTextStyle.h5
-                          .copyWith(color: AppColors.defaultText))
-                ],
-              ),
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () {
+            final p = context.read<AddActivityPageProvider>();
+            if (p.suggestedList!.length < 3) {
+              p.insertToSuggestedList();
+            } else {
+              AppToast().show(context, tr('only_three_can_be_added'));
+            }
+          },
+          child: Container(
+            alignment: Alignment.centerLeft,
+            height: AppSize.smallButtonHeight,
+            width: AppSize.smallButtonWidth,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppSize.radius4),
+                border: Border.all(
+                    width: .5, color: AppColors.textFieldUnfoucsColor)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.add,
+                  color: AppColors.textFieldUnfoucsColor,
+                ),
+                AppText.text(tr('add'),
+                    style:
+                        AppTextStyle.h5.copyWith(color: AppColors.defaultText))
+              ],
             ),
-            Spacer()
-          ],
-        ));
+          ),
+        ),
+        Spacer()
+      ],
+    );
   }
 
   Widget _buildLinkedText(String text, {required bool isCurrentMonthScenario}) {

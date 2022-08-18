@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-08-17 22:10:13
+ * Last Modified: 2022-08-18 09:59:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -353,13 +353,14 @@ class BasePopupSearchProvider extends ChangeNotifier {
     }
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();
+
     Map<String, dynamic>? body;
     body = {
       "methodName": RequestType.SEARCH_KEY_MAN.serverMethod,
       "methodParamMap": {
         "IV_NAME": "",
         "IV_XREPKM": "",
-        "IV_ZSKUNNR": "",
+        "IV_ZSKUNNR": bodyMap?['zskunnr'] ?? '',
         "IV_ZTRAITMENT": "",
         "pos": pos,
         "partial": partial,
@@ -369,7 +370,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "functionName": RequestType.SEARCH_KEY_MAN.serverMethod,
       }
     };
-
     _api.init(RequestType.SEARCH_KEY_MAN);
     final result = await _api.request(body: body);
     if (result == null || result.statusCode != 200) {
