@@ -9,6 +9,7 @@ part of 'sales_activity_day_table_260.dart';
 SalesActivityDayTable260 _$SalesActivityDayTable260FromJson(
         Map<String, dynamic> json) =>
     SalesActivityDayTable260(
+      mandt: json['MANDT'] as String?,
       actcat: json['ACTCAT'] as String?,
       actcat1: json['ACTCAT1'] as String?,
       actcat2: json['ACTCAT2'] as String?,
@@ -59,6 +60,7 @@ SalesActivityDayTable260 _$SalesActivityDayTable260FromJson(
 Map<String, dynamic> _$SalesActivityDayTable260ToJson(
         SalesActivityDayTable260 instance) =>
     <String, dynamic>{
+      'MANDT': instance.mandt,
       'ADATE': instance.adate,
       'BZACTNO': instance.bzactno,
       'SEQNO': instance.seqno,

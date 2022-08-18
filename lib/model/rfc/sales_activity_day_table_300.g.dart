@@ -9,6 +9,7 @@ part of 'sales_activity_day_table_300.dart';
 SalesActivityDayTable300 _$SalesActivityDayTable300FromJson(
         Map<String, dynamic> json) =>
     SalesActivityDayTable300(
+      mandt: json['MANDT'] as String?,
       aedat: json['AEDAT'] as String?,
       aenam: json['AENAM'] as String?,
       aewid: json['AEWID'] as String?,
@@ -27,6 +28,7 @@ SalesActivityDayTable300 _$SalesActivityDayTable300FromJson(
 Map<String, dynamic> _$SalesActivityDayTable300ToJson(
         SalesActivityDayTable300 instance) =>
     <String, dynamic>{
+      'MANDT': instance.mandt,
       'BZACTNO': instance.bzactno,
       'SEQNO': instance.seqno,
       'DESC_DTL1': instance.descDtl1,

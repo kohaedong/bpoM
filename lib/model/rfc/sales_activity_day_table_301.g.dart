@@ -9,6 +9,7 @@ part of 'sales_activity_day_table_301.dart';
 SalesActivityDayTable301 _$SalesActivityDayTable301FromJson(
         Map<String, dynamic> json) =>
     SalesActivityDayTable301(
+      mandt: json['MANDT'] as String?,
       aedat: json['AEDAT'] as String?,
       aenam: json['AENAM'] as String?,
       aewid: json['AEWID'] as String?,
@@ -29,6 +30,7 @@ SalesActivityDayTable301 _$SalesActivityDayTable301FromJson(
 Map<String, dynamic> _$SalesActivityDayTable301ToJson(
         SalesActivityDayTable301 instance) =>
     <String, dynamic>{
+      'MANDT': instance.mandt,
       'BZACTNO': instance.bzactno,
       'SEQNO': instance.seqno,
       'SUBSEQ': instance.subseq,

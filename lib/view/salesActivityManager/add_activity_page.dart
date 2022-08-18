@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-18 11:38:02
+ * Last Modified: 2022-08-18 15:26:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -55,7 +55,7 @@ class AddActivityPage extends StatefulWidget {
 }
 
 class _AddActivityPageState extends State<AddActivityPage> {
-  late TextEditingController _textEditingController;
+  late TextEditingController _notVisitEditingController;
   late TextEditingController _interviewTextEditingController;
   late TextEditingController _visitResultTextEditingController;
   late TextEditingController _leaderAdviceTextEditingController;
@@ -65,7 +65,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
   late ScrollController _leaderAdviceTextFieldScrollController;
   @override
   void initState() {
-    _textEditingController = TextEditingController();
+    _notVisitEditingController = TextEditingController();
     _interviewTextEditingController = TextEditingController();
     _visitResultTextEditingController = TextEditingController();
     _leaderAdviceTextEditingController = TextEditingController();
@@ -79,7 +79,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   @override
   void dispose() {
-    _textEditingController.dispose();
+    _notVisitEditingController.dispose();
     _interviewTextEditingController.dispose();
     _visitResultTextEditingController.dispose();
     _leaderAdviceTextEditingController.dispose();
@@ -156,9 +156,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   Widget _buildSelectKeyMan(BuildContext context) {
     final p = context.read<AddActivityPageProvider>();
-    return Selector<AddActivityPageProvider, AddActivityKeyManModel?>(
-      selector: (context, provider) => provider.selectedKeyMan,
-      builder: (context, model, _) {
+    return Selector<AddActivityPageProvider,
+        Tuple2<AddActivityKeyManModel?, EtKunnrModel?>>(
+      selector: (context, provider) =>
+          Tuple2(provider.selectedKeyMan, provider.selectedKunnr),
+      builder: (context, tuple, _) {
         return BaseColumWithTitleAndTextFiled.build(
           tr('key_man'),
           BaseInputWidget(
@@ -166,21 +168,23 @@ class _AddActivityPageState extends State<AddActivityPage> {
             onTap: () {
               return;
             },
-            hintTextStyleCallBack: () =>
-                model != null ? AppTextStyle.default_16 : AppTextStyle.hint_16,
+            hintTextStyleCallBack: () => tuple.item1 != null
+                ? AppTextStyle.default_16
+                : AppTextStyle.hint_16,
             popupSearchType: PopupSearchType.SEARCH_KEY_MAN,
             isSelectedStrCallBack: (keymanModel) {
               return p.setKeymanModel(keymanModel);
             },
             deleteIconCallback: () => p.setKeymanModel(null),
             iconType: InputIconType.SELECT,
-            isShowDeleteForHintText: model != null ? true : false,
-            iconColor: model != null ? null : AppColors.unReadyText,
+            isShowDeleteForHintText: tuple.item1 != null ? true : false,
+            iconColor: tuple.item1 != null ? null : AppColors.unReadyText,
             defaultIconCallback: () => p.setKeymanModel(null),
-            hintText: model != null ? model.zkmnoNm : tr('plz_select'),
+            hintText:
+                tuple.item1 != null ? tuple.item1!.zkmnoNm : tr('plz_select'),
             width: AppSize.defaultContentsWidth,
             enable: false,
-            bodyMap: {'zskunnr': p.selectedKunnr?.zskunnr},
+            bodyMap: {'zskunnr': tuple.item2?.zskunnr},
           ),
         );
       },
@@ -275,7 +279,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
       controller: type == AddActivityPageInputType.INTERVIEW
           ? _interviewTextEditingController
           : type == AddActivityPageInputType.NOT_VISIT
-              ? _textEditingController
+              ? _notVisitEditingController
               : type == AddActivityPageInputType.VISIT_RESULT
                   ? _visitResultTextEditingController
                   : _leaderAdviceTextEditingController,
@@ -295,8 +299,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 : DoNothingAction();
             break;
           case AddActivityPageInputType.NOT_VISIT:
-            _textEditingController.text.isEmpty
-                ? _textEditingController.text = p.reasonForNotVisit ?? ''
+            _notVisitEditingController.text.isEmpty
+                ? _notVisitEditingController.text = p.reasonForNotVisit ?? ''
                 : DoNothingAction();
             break;
           case AddActivityPageInputType.VISIT_RESULT:
