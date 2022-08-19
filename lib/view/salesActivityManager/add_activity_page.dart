@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-19 13:20:19
+ * Last Modified: 2022-08-19 13:47:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,8 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/enums/account_type.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -293,7 +295,23 @@ class _AddActivityPageState extends State<AddActivityPage> {
   Widget _buildTextField(BuildContext context,
       {required AddActivityPageInputType type}) {
     final p = context.read<AddActivityPageProvider>();
+    var accountType = CacheService.getAccountType();
+    var defaultBorder = OutlineInputBorder(
+        gapPadding: 0,
+        borderSide:
+            BorderSide(color: AppColors.textFieldUnfoucsColor, width: .5),
+        borderRadius: BorderRadius.circular(AppSize.radius5));
+    var focusedBorder = OutlineInputBorder(
+        gapPadding: 0,
+        borderSide: BorderSide(color: AppColors.primary, width: .5),
+        borderRadius: BorderRadius.circular(AppSize.radius5));
     return TextFormField(
+      readOnly: type == AddActivityPageInputType.LEADER_ADVICE
+          ? accountType == AccountType.MULTI ||
+                  accountType == AccountType.LEADER
+              ? false
+              : true
+          : false,
       controller: type == AddActivityPageInputType.INTERVIEW
           ? _interviewTextEditingController
           : type == AddActivityPageInputType.NOT_VISIT
@@ -363,15 +381,13 @@ class _AddActivityPageState extends State<AddActivityPage> {
           fillColor: AppColors.whiteText,
           hintText: '${tr('suggestion_hint')}',
           hintStyle: AppTextStyle.hint_16,
-          border: OutlineInputBorder(
-              gapPadding: 0,
-              borderSide:
-                  BorderSide(color: AppColors.textFieldUnfoucsColor, width: .5),
-              borderRadius: BorderRadius.circular(AppSize.radius5)),
-          focusedBorder: OutlineInputBorder(
-              gapPadding: 0,
-              borderSide: BorderSide(color: AppColors.primary, width: .5),
-              borderRadius: BorderRadius.circular(AppSize.radius5))),
+          border: defaultBorder,
+          focusedBorder: type == AddActivityPageInputType.LEADER_ADVICE
+              ? accountType == AccountType.MULTI ||
+                      accountType == AccountType.LEADER
+                  ? focusedBorder
+                  : defaultBorder
+              : focusedBorder),
     );
   }
 
