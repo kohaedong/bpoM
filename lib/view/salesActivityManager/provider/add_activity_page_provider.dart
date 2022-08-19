@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-19 12:51:35
+ * Last Modified: 2022-08-19 13:15:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -20,7 +20,6 @@ import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
@@ -73,7 +72,6 @@ class AddActivityPageProvider extends ChangeNotifier {
           temp.zkmnoNm != null && temp.zkmnoNm!.trim().isEmpty
               ? null
               : temp.zkmnoNm;
-      pr('2323232${selectedKeyMan!.zkmnoNm}');
       distanceModel = AddActivityDistanceModel();
       distanceModel!.distance = '${temp.dist}';
       reasonForNotVisit = temp.visitRmk ?? '';
@@ -181,7 +179,6 @@ class AddActivityPageProvider extends ChangeNotifier {
     if (activityList == null) {
       activityList = await HiveService.getActivityType();
     }
-    pr(activityList);
     var temp = <String>[];
     activityList!.forEach((item) {
       temp.add(item.substring(0, item.indexOf('-')));
@@ -204,7 +201,6 @@ class AddActivityPageProvider extends ChangeNotifier {
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
-      pr(result.body);
       var coordinateResponseModel =
           SalseActivityCoordinateResponseModel.fromJson(result.body['data']);
       var model = coordinateResponseModel.result;
@@ -316,7 +312,6 @@ class AddActivityPageProvider extends ChangeNotifier {
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
-      pr(result.body);
       distanceModel = AddActivityDistanceModel.fromJson(result.body['data']);
       isVisit = true;
       notifyListeners();

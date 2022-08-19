@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-08-16 21:49:11
+ * Last Modified: 2022-08-19 13:18:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -20,7 +20,6 @@ import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_250.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
@@ -88,10 +87,8 @@ class SelectLocationProvider extends ChangeNotifier {
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
-      pr(result.body);
       coordinateResponseModel =
           SalseActivityCoordinateResponseModel.fromJson(result.body['data']);
-      pr(coordinateResponseModel?.toJson());
       var model = coordinateResponseModel?.result;
       var newLatLonNotNull = model != null &&
           model.newLat != null &&
@@ -190,7 +187,6 @@ class SelectLocationProvider extends ChangeNotifier {
     t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
     temp.clear();
     temp.addAll([t260.toJson()]);
-    pr(t250Base64);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {

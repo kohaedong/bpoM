@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-08-18 11:28:49
+ * Last Modified: 2022-08-19 13:18:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -19,7 +19,6 @@ import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart'
 import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 
 // ----------------- discription ----------------------
 //     ______________________
@@ -85,7 +84,6 @@ class ActivityMenuProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       locationResponseModel =
           SalseActivityLocationResponseModel.fromJson(result.body['data']);
-      pr(locationResponseModel?.toJson());
       return ResultModel(true);
     }
     return ResultModel(false);

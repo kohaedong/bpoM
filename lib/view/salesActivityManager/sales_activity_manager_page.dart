@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-19 12:52:35
+ * Last Modified: 2022-08-19 13:18:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -30,7 +30,6 @@ import 'package:medsalesportal/enums/customer_report_type.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_popup_list.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/common/widget_of_tag_button.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
@@ -332,7 +331,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   tr('have_unconfirmed_activity', args: [
                     '${DateUtil.getDateStrForKR(p.previousWorkingDay!)}'
                   ]), callBack: (isPressedTrue) {
-                pr('ok');
                 Navigator.pop(context);
                 final p = context.read<SalseActivityManagerPageProvider>();
                 p.setSelectedDate(p.previousWorkingDay!);
@@ -538,7 +536,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         if (naviResult) {
           //!
           Navigator.pop(context, p.isNeedUpdate);
-          pr('naviResult $naviResult');
         }
       }
     } else {
@@ -577,13 +574,10 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           switch (menuType) {
             case MenuType.ACTIVITY_DELETE:
               // remove last table.
-              pr('delete last table');
               break;
             case MenuType.ACTIVITY_ADD:
               if (p.activityStatus == ActivityStatus.STARTED) {
                 // go to add activity page.
-                pr('add activity ');
-
                 _routeToAddActivityPage(context);
               } else {
                 _showIsStartAvtivityPopup(context);
@@ -601,7 +595,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   // 종료.
                   AppToast().show(context, tr('activity_is_stoped'));
                   Navigator.pop(context);
-                  pr('finish');
                   break;
                 default:
               }
@@ -743,7 +736,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   provider.selectedDay ?? DateTime.now(), DateTime.now()),
               provider.activityStatus),
           builder: (context, tuple, _) {
-            pr(tuple.item1);
             return tuple.item1
                 ? (tuple.item2 == ActivityStatus.FINISH ||
                         tuple.item2 == ActivityStatus.STOPED)
@@ -858,7 +850,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
 
   @override
   Widget build(BuildContext context) {
-    pr('build');
     return ChangeNotifierProvider(
         create: (context) => SalseActivityManagerPageProvider(),
         builder: (context, _) {
@@ -874,15 +865,12 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                         return _actionButton;
                       }), actionCallback: () async {
                 final p = context.read<SalseActivityManagerPageProvider>();
-                pr('pressed');
                 switch (p.activityStatus!) {
                   case ActivityStatus.STOPED:
                     // save
-                    pr(' ${p.activityStatus}');
                     p.setActivityStatus(ActivityStatus.FINISH);
                     break;
                   case ActivityStatus.FINISH:
-                    pr('finish');
                     DoNothingAction();
                     break;
                   default:

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-19 12:51:42
+ * Last Modified: 2022-08-19 13:20:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,15 +11,11 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/enums/add_activity_page_input_type.dart';
-import 'package:medsalesportal/util/date_util.dart';
-import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/view/salesActivityManager/current_month_scenario_page.dart';
-import 'package:medsalesportal/view/salesActivityManager/visit_result_history_page.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
@@ -36,6 +32,7 @@ import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
+import 'package:medsalesportal/enums/add_activity_page_input_type.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
@@ -44,6 +41,8 @@ import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
 import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
+import 'package:medsalesportal/view/salesActivityManager/visit_result_history_page.dart';
+import 'package:medsalesportal/view/salesActivityManager/current_month_scenario_page.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/add_activity_page_provider.dart';
 
 class AddActivityPage extends StatefulWidget {
@@ -174,9 +173,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 AppToast().show(context, tr('select_customer'));
               }
             },
-            hintTextStyleCallBack: () => tuple.item1 != null
-                ? AppTextStyle.default_16
-                : AppTextStyle.hint_16,
+            hintTextStyleCallBack: () =>
+                tuple.item1 != null && tuple.item1!.zkmnoNm != null
+                    ? AppTextStyle.default_16
+                    : AppTextStyle.hint_16,
             popupSearchType:
                 tuple.item2 == null ? null : PopupSearchType.SEARCH_KEY_MAN,
             isSelectedStrCallBack: (keymanModel) {

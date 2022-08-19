@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-19 12:02:49
+ * Last Modified: 2022-08-19 13:16:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -167,8 +167,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         weekRowIndex = map.value.indexOf(day);
       }
     });
-    pr('listIndex::: $weekListIndex $datetime');
-    pr('weekRowIndex::: $weekRowIndex $datetime');
     var model = monthResponseModel!.tList![weekListIndex];
     var isNotConfirmed = (weekRowIndex == 0
         ? isHaveUnconfirmedActivity(
@@ -200,7 +198,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     isShowPopup =
         (checkPreviousWorkingDaysNextWorkingDay!.day == DateTime.now().day) &&
             isNotConfirmed;
-    pr('show popup ???? $isShowPopup');
     notifyListeners();
   }
 
@@ -260,8 +257,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         DateUtil.nextDay(dt: previousWorkingDay);
     var isNotConfirmed = await checkConfiremStatus(
         datetime: checkPreviousWorkingDaysNextWorkingDay);
-    pr('-- not confirmed????${checkPreviousWorkingDaysNextWorkingDay?.toIso8601String()} $isNotConfirmed');
-    pr('-- is not holiday, ${checkPreviousWorkingDaysNextWorkingDay!.weekday}');
     while ((checkPreviousWorkingDaysNextWorkingDay!.weekday == 7 &&
             !isNotConfirmed) ||
         (checkPreviousWorkingDaysNextWorkingDay!.weekday == 6 &&
@@ -271,8 +266,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
           DateUtil.nextDay(dt: checkPreviousWorkingDaysNextWorkingDay);
       isNotConfirmed = await checkConfiremStatus(
           datetime: checkPreviousWorkingDaysNextWorkingDay);
-      pr('-- while: not confirmed????${checkPreviousWorkingDaysNextWorkingDay?.toIso8601String()} $isNotConfirmed');
-      pr('-- while:: weekDay: ${checkPreviousWorkingDaysNextWorkingDay!.weekday}');
     }
   }
 
@@ -280,20 +273,15 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     previousWorkingDay = DateUtil.previousDay(dt: dt ?? DateUtil.getDate(day));
     var isNotConfirmed =
         await checkConfiremStatus(datetime: previousWorkingDay);
-    pr('++ not confirmed????${previousWorkingDay?.toIso8601String()} $isNotConfirmed');
-    pr('++ is not holiday, LastWorkDay :: ${previousWorkingDay!.weekday}');
     while ((previousWorkingDay!.weekday == 7 && !isNotConfirmed) ||
         (previousWorkingDay!.weekday == 6 && !isNotConfirmed) ||
         holidayList.contains(previousWorkingDay)) {
       previousWorkingDay = DateUtil.previousDay(dt: previousWorkingDay);
       isNotConfirmed = await checkConfiremStatus(datetime: previousWorkingDay);
-      pr('++ while : not confirmed ????${previousWorkingDay?.toIso8601String()} $isNotConfirmed');
-      pr('++ while weekDay:: ${previousWorkingDay!.weekday}');
     }
   }
 
   Future<ResultModel> getHolidayListForMonth(DateTime date) async {
-    pr(date.toIso8601String());
     if (holidayList.isEmpty ||
         (holidayList.isNotEmpty &&
             (holidayList.first.month != date.month ||
@@ -309,7 +297,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       if (result != null && result.statusCode == 200) {
         holidayList.clear();
         holidayResponseModel = HolidayResponseModel.fromJson(result.body);
-        pr(holidayResponseModel?.toJson());
         if (holidayResponseModel!.data != null &&
             holidayResponseModel!.data!.isNotEmpty) {
           holidayResponseModel!.data!.forEach((holidayModel) {
@@ -340,7 +327,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       searchKeyResponseModel =
           SearchKeyResponseModel.fromJson(result.body['data']);
-      pr(searchKeyResponseModel?.toJson());
       return ResultModel(true);
     }
     return ResultModel(false);
@@ -429,7 +415,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     await getHolidayListForMonth(selectedDay ?? DateTime.now());
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
-    pr(isLogin);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {
@@ -452,14 +437,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       dayResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
-      pr(dayResponseModel?.toJson());
-      dayResponseModel?.table250?.forEach((e) {
-        pr(e.toJson());
-      });
-      // dayResponseModel?.table250?.forEach((element) {
-      //   pr(element.toJson());
-      // });
-      // checkIsAllConfirmed();
       if (isWithLoading != null && isWithLoading) {
         isLoadDayData = false;
       }
