@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-20 01:02:51
+ * Last Modified: 2022-08-20 01:35:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -28,6 +28,7 @@ import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart'
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class AddActivityPageProvider extends ChangeNotifier {
   AddActivityKeyManResponseModel? keyManResponseModel;
@@ -58,6 +59,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     editModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
     activityStatus = status;
+    pr(activityStatus);
     index = indexx;
     if (index != null) {
       var temp = editModel!.table260![index!];

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/visit_result_history_page.dart
  * Created Date: 2022-08-17 23:31:14
- * Last Modified: 2022-08-20 01:27:16
+ * Last Modified: 2022-08-20 01:54:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,22 +11,20 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/model/rfc/visit_result_history_page_model.dart';
-import 'package:medsalesportal/model/rfc/visit_result_history_page_response_model.dart';
-import 'package:medsalesportal/styles/export_common.dart';
+import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
-import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/view/common/base_app_bar.dart';
-import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
-import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
+import 'package:medsalesportal/view/common/base_app_bar.dart';
+import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
-import 'package:medsalesportal/view/common/widget_of_null_data.dart';
+import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
+import 'package:medsalesportal/model/rfc/visit_result_history_page_model.dart';
+import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/visit_result_history_page_provider.dart';
-import 'package:provider/provider.dart';
 
 class VisitResultHistoryPage extends StatelessWidget {
   const VisitResultHistoryPage({Key? key}) : super(key: key);
@@ -71,7 +69,7 @@ class VisitResultHistoryPage extends StatelessWidget {
                     : model.visitRmk!,
                 leadingTextWidth: AppSize.defaultContentsWidth * .3,
                 contentsTextWidth: AppSize.defaultContentsWidth * .7,
-                maxLine: 2)),
+                maxLine: 3)),
         defaultSpacing()
       ],
     );

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/visit_result_history_page_provider.dart
  * Created Date: 2022-08-17 23:32:54
- * Last Modified: 2022-08-20 00:48:10
+ * Last Modified: 2022-08-20 01:39:50
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -24,10 +24,6 @@ class VisitResultHistoryPageProvider extends ChangeNotifier {
   final _api = ApiService();
 
   Future<ResultModel> getVisitHistory(String date, String zskunnr) async {
-    if (date.isEmpty || zskunnr.isEmpty) {
-      pr('empty');
-      return ResultModel(true);
-    }
     _api.init(RequestType.GET_VISIT_HISTORY);
     Map<String, dynamic> _body = {
       "methodName": RequestType.GET_VISIT_HISTORY.serverMethod,
