@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-19 13:47:25
+ * Last Modified: 2022-08-19 23:01:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -57,6 +57,7 @@ class AddActivityPage extends StatefulWidget {
 
 class _AddActivityPageState extends State<AddActivityPage> {
   late TextEditingController _notVisitEditingController;
+  late TextEditingController _amountEditingController;
   late TextEditingController _interviewTextEditingController;
   late TextEditingController _visitResultTextEditingController;
   late TextEditingController _leaderAdviceTextEditingController;
@@ -67,6 +68,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
   @override
   void initState() {
     _notVisitEditingController = TextEditingController();
+    _amountEditingController = TextEditingController();
     _interviewTextEditingController = TextEditingController();
     _visitResultTextEditingController = TextEditingController();
     _leaderAdviceTextEditingController = TextEditingController();
@@ -81,6 +83,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
   @override
   void dispose() {
     _notVisitEditingController.dispose();
+    _amountEditingController.dispose();
     _interviewTextEditingController.dispose();
     _visitResultTextEditingController.dispose();
     _leaderAdviceTextEditingController.dispose();
@@ -654,9 +657,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
     );
   }
 
-  Widget _buildItemSet(
-      BuildContext context, AddActivitySuggetionItemModel model, int index) {
+  Widget _buildItemSet(BuildContext context,
+      AddActivitySuggetionItemModel model, int index, String actionType) {
     final p = context.read<AddActivityPageProvider>();
+
     return Column(
       children: [
         Row(
@@ -668,6 +672,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 onTap: () {
                   final p = context.read<AddActivityPageProvider>();
                   p.removeAtSuggestedList(index);
+                  if (index == 0) {
+                    p.setAmount(null);
+                    _amountEditingController.clear();
+                  }
                   pr('close');
                 },
                 behavior: HitTestBehavior.opaque,
@@ -691,6 +699,35 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 p.updateSuggestedList(index, updateModel: model),
             width: AppSize.defaultContentsWidth,
             enable: false),
+        actionType.trim() == '제품신규' && index == 0
+            ? Column(
+                children: [
+                  defaultSpacing(),
+                  _buildTitleRow(tr('month_amount_price'),
+                      isNotwithStart: true),
+                  Selector<AddActivityPageProvider, String?>(
+                    selector: (context, provider) => provider.seletedAmount,
+                    builder: (context, amount, _) {
+                      return BaseInputWidget(
+                          context: context,
+                          keybordType: TextInputType.number,
+                          hintText: amount == null || amount.isEmpty
+                              ? tr('plz_enter_search_key_for_something_1',
+                                  args: [tr('expected_amount')])
+                              : amount,
+                          hintTextStyleCallBack: () =>
+                              amount == null || amount.isEmpty
+                                  ? AppTextStyle.hint_16
+                                  : AppTextStyle.default_16,
+                          onChangeCallBack: (str) => p.setAmount(str),
+                          textEditingController: _amountEditingController,
+                          width: AppSize.defaultContentsWidth,
+                          enable: true);
+                    },
+                  )
+                ],
+              )
+            : Container(),
         defaultSpacing(),
         Row(
           children: [
@@ -709,17 +746,19 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   Widget _buildSuggestedItems(BuildContext context) {
     return Selector<AddActivityPageProvider,
-        List<AddActivitySuggetionItemModel>?>(
-      selector: (context, provider) => provider.suggestedList,
-      builder: (context, suggestedList, _) {
-        return suggestedList == null
+        Tuple2<List<AddActivitySuggetionItemModel>?, String?>>(
+      selector: (context, provider) =>
+          Tuple2(provider.suggestedList, provider.selectedActionType),
+      builder: (context, tuple, _) {
+        return tuple.item1 == null
             ? Container()
             : Column(children: [
                 defaultSpacing(),
-                ...suggestedList
+                ...tuple.item1!
                     .asMap()
                     .entries
-                    .map((map) => _buildItemSet(context, map.value, map.key))
+                    .map((map) => _buildItemSet(
+                        context, map.value, map.key, tuple.item2!))
                     .toList(),
               ]);
       },
@@ -732,10 +771,15 @@ class _AddActivityPageState extends State<AddActivityPage> {
         GestureDetector(
           onTap: () {
             final p = context.read<AddActivityPageProvider>();
-            if (p.suggestedList!.length < 3) {
-              p.insertToSuggestedList();
+            if (p.selectedActionType != null) {
+              if (p.suggestedList!.length < 3) {
+                p.insertToSuggestedList();
+              } else {
+                AppToast().show(context, tr('only_three_can_be_added'));
+              }
             } else {
-              AppToast().show(context, tr('only_three_can_be_added'));
+              AppToast().show(context,
+                  tr('plz_select_something_1', args: [tr('activity_type_2')]));
             }
           },
           child: Container(

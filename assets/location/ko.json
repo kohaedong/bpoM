@@ -203,6 +203,7 @@
     "sales_opp_name":"영업기회명",
     "status_stage":"상태/단계",
     "expected_order_amount":"예상수주액",
+    "expected_amount":"예상 금액",
     "expected_order_quantity":"예상 수량",
     "expected_original_price":"예상원가",
     "expected_sales_unit_price":"예상판매단가",
@@ -537,6 +538,7 @@
     "visit_result":"방문결과",
     "leader_advice":"당월 팀장 어드바이스",
     "curren_month_scenario":"당월 시나리오",
-    "visit_result_history":"과거 방문 결과 "
+    "visit_result_history":"과거 방문 결과 ",
+    "month_amount_price":"월 예상 매출"
    
 }
