@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-18 10:59:26
+ * Last Modified: 2022-08-19 12:52:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/service/hive_service.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/enums/menu_type.dart';
@@ -436,9 +437,21 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
             Row(
               children: [
-                AppText.text(model.zstatus!),
-                AppStyles.buildPipe(),
-                AppText.text(model.zkmnoNm!),
+                FutureBuilder<List<String>?>(
+                    future: HiveService.getCustomerType(
+                        model.zstatus?.length == 1 &&
+                                int.tryParse(model.zstatus!) != null
+                            ? '0${model.zstatus}'
+                            : '${model.zstatus}'),
+                    builder: (context, snapshot) {
+                      var hasData = snapshot.hasData &&
+                          snapshot.connectionState == ConnectionState.done;
+                      return AppText.text(hasData ? snapshot.data!.single : '');
+                    }),
+                model.zkmnoNm != null && model.zkmnoNm!.isNotEmpty
+                    ? AppStyles.buildPipe()
+                    : Container(),
+                AppText.text(model.zkmnoNm ?? ''),
                 AppStyles.buildPipe(),
                 AppText.text(tr(model.xvisit == 'Y' ? 'visit' : 'not_visit')),
               ],
@@ -484,6 +497,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         //! popupResult.data >>>>  출발지 선택후 영업활동 개시 api의 result.
         p.initData(popupResult.data, ActivityStatus.STARTED);
         p.setIsNeedUpdate(true);
+        AppToast().show(context, tr('activity_is_started'));
         _routeToAddActivityPage(context);
       }
     }
@@ -536,7 +550,10 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         'index': index
       });
       if (naviResult != null) {
-        p.getDayData();
+        naviResult as bool;
+        if (naviResult) {
+          p.getDayData();
+        }
       }
     }
   }

@@ -298,11 +298,13 @@ class _SigninPageState extends State<SigninPage> {
           Tuple2(provider.isIdFocused, provider.isPwFocused),
       builder: (context, tuple, _) {
         Future.delayed(Duration(milliseconds: 500), () {
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: Duration(milliseconds: 300),
-            curve: Curves.fastOutSlowIn,
-          );
+          try {
+            _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.fastOutSlowIn,
+            );
+          } catch (e) {}
         });
         return Padding(
           padding: (tuple.item1 != null && tuple.item1!) ||

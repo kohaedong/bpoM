@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/sales_activity_day_table_280.dart
  * Created Date: 2022-08-03 10:18:51
- * Last Modified: 2022-08-18 17:54:32
+ * Last Modified: 2022-08-19 11:17:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 

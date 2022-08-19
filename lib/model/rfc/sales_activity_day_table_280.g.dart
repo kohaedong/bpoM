@@ -10,7 +10,7 @@ SalesActivityDayTable280 _$SalesActivityDayTable280FromJson(
         Map<String, dynamic> json) =>
     SalesActivityDayTable280(
       mandt: json['MANDT'] as String?,
-      amount1: json['AMOUNT1'] as double?,
+      amount1: (json['AMOUNT1'] as num?)?.toDouble(),
       bzactno: json['BZACTNO'] as String?,
       aedat: json['AEDAT'] as String?,
       aenam: json['AENAM'] as String?,
@@ -46,11 +46,11 @@ Map<String, dynamic> _$SalesActivityDayTable280ToJson(
         SalesActivityDayTable280 instance) =>
     <String, dynamic>{
       'MANDT': instance.mandt,
-      'AMOUNT1': instance.mandt,
       'BZACTNO': instance.bzactno,
       'SEQNO': instance.seqno,
       'SUBCAT': instance.subcat,
       'XGIFT': instance.xgift,
+      'AMOUNT1': instance.amount1,
       'KEYMAN_R': instance.keymanR,
       'ZMATKL1': instance.zmatkl1,
       'XSAMPL1': instance.xsampl1,

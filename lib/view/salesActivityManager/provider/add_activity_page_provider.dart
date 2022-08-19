@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-18 17:51:57
+ * Last Modified: 2022-08-19 12:51:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -48,6 +48,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   List<AddActivitySuggetionItemModel>? suggestedList;
   bool isVisit = false;
   bool isWithTeamLeader = false;
+  bool isUpdate = false;
   int? index;
   int isInterviewIndex = 0;
   final _api = ApiService();
@@ -68,10 +69,13 @@ class AddActivityPageProvider extends ChangeNotifier {
       selectedKunnr!.zaddName1 = temp.zaddr;
       selectedKunnr!.zstatus = temp.zstatus;
       selectedKeyMan = AddActivityKeyManModel();
-      selectedKeyMan!.zkmnoNm = temp.zkmnoNm;
+      selectedKeyMan!.zkmnoNm =
+          temp.zkmnoNm != null && temp.zkmnoNm!.trim().isEmpty
+              ? null
+              : temp.zkmnoNm;
+      pr('2323232${selectedKeyMan!.zkmnoNm}');
       distanceModel = AddActivityDistanceModel();
       distanceModel!.distance = '${temp.dist}';
-
       reasonForNotVisit = temp.visitRmk ?? '';
       reasonForinterviewFailure = temp.meetRmk ?? '';
       visitResultInput = '';
@@ -184,6 +188,12 @@ class AddActivityPageProvider extends ChangeNotifier {
     });
     temp.removeWhere((item) => item.contains('사용불가'));
     return temp;
+  }
+
+  Future<ResultModel> saveTable() async {
+    isUpdate = true;
+    notifyListeners();
+    return ResultModel(false);
   }
 
   Future<ResultModel> getAddressLatLon(String addr) async {

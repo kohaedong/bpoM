@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/popup_search_type.dart
  * Created Date: 2021-09-10 21:38:04
- * Last Modified: 2022-08-17 21:35:05
+ * Last Modified: 2022-08-19 12:14:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -26,7 +26,6 @@ enum PopupSearchType {
   SEARCH_KEY_MAN,
   SEARCH_SUGGETION_ITEM,
   SEARCH_PLANT, // 플랜트 조회 화면
-
 }
 
 extension PopupSearchTypeExtension on PopupSearchType {

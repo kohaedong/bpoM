@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-16 15:06:44
+ * Last Modified: 2022-08-19 12:02:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -136,7 +136,9 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       activityStatus = ActivityStatus.NONE;
     }
     pr(activityStatus);
-    notifyListeners();
+    try {
+      notifyListeners();
+    } catch (e) {}
   }
 
   bool isHaveUnconfirmedActivity(

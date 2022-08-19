@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-18 15:26:37
+ * Last Modified: 2022-08-19 12:51:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -129,14 +129,18 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   FutureBuilder<List<String>?>(
-                      future: HiveService.getCustomerType(model.zstatus!),
+                      future: HiveService.getCustomerType(
+                          model.zstatus?.length == 1 &&
+                                  int.tryParse(model.zstatus!) != null
+                              ? '0${model.zstatus}'
+                              : '${model.zstatus}'),
                       builder: (context, snapshot) {
                         return BaseInfoRowByKeyAndValue.build(
                             tr('customer_type_2'),
                             snapshot.hasData &&
                                     snapshot.connectionState ==
                                         ConnectionState.done
-                                ? '${snapshot.data!.single}'
+                                ? '${snapshot.data!.isEmpty ? '' : '${snapshot.data!.single}'}'
                                 : '',
                             style: AppTextStyle.h5);
                       }),
@@ -166,22 +170,29 @@ class _AddActivityPageState extends State<AddActivityPage> {
           BaseInputWidget(
             context: context,
             onTap: () {
-              return;
+              if (tuple.item2 == null) {
+                AppToast().show(context, tr('select_customer'));
+              }
             },
             hintTextStyleCallBack: () => tuple.item1 != null
                 ? AppTextStyle.default_16
                 : AppTextStyle.hint_16,
-            popupSearchType: PopupSearchType.SEARCH_KEY_MAN,
+            popupSearchType:
+                tuple.item2 == null ? null : PopupSearchType.SEARCH_KEY_MAN,
             isSelectedStrCallBack: (keymanModel) {
               return p.setKeymanModel(keymanModel);
             },
             deleteIconCallback: () => p.setKeymanModel(null),
             iconType: InputIconType.SELECT,
-            isShowDeleteForHintText: tuple.item1 != null ? true : false,
+            isShowDeleteForHintText:
+                tuple.item1 != null && tuple.item1!.zkmnoNm != null
+                    ? true
+                    : false,
             iconColor: tuple.item1 != null ? null : AppColors.unReadyText,
             defaultIconCallback: () => p.setKeymanModel(null),
-            hintText:
-                tuple.item1 != null ? tuple.item1!.zkmnoNm : tr('plz_select'),
+            hintText: tuple.item1 != null && tuple.item1!.zkmnoNm != null
+                ? tuple.item1!.zkmnoNm
+                : tr('plz_select'),
             width: AppSize.defaultContentsWidth,
             enable: false,
             bodyMap: {'zskunnr': tuple.item2?.zskunnr},
@@ -219,6 +230,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   )),
               GestureDetector(
                 onTap: () {
+                  if (p.activityStatus == ActivityStatus.NONE) {
+                    return;
+                  }
                   if (p.activityStatus == ActivityStatus.STOPED) {
                     AppToast().show(context, tr('activity_is_stoped'));
                   } else {
@@ -237,21 +251,25 @@ class _AddActivityPageState extends State<AddActivityPage> {
                       AppSize.defaultListItemSpacing / 2,
                   height: AppSize.defaultTextFieldHeight,
                   decoration: BoxDecoration(
-                      color:
-                          isVisit || p.activityStatus == ActivityStatus.STOPED
-                              ? AppColors.unReadyButton
-                              : AppColors.sendButtonColor,
+                      color: isVisit ||
+                              p.activityStatus == ActivityStatus.STOPED ||
+                              p.activityStatus == ActivityStatus.NONE
+                          ? AppColors.unReadyButton
+                          : AppColors.sendButtonColor,
                       borderRadius:
                           BorderRadius.all(Radius.circular(AppSize.radius5)),
                       border: Border.all(
                           width: .5,
                           color: isVisit ||
-                                  p.activityStatus == ActivityStatus.STOPED
+                                  p.activityStatus == ActivityStatus.STOPED ||
+                                  p.activityStatus == ActivityStatus.NONE
                               ? AppColors.textFieldUnfoucsColor
                               : AppColors.primary)),
                   child: AppText.text(tr('arrival'),
                       style: AppTextStyle.h4.copyWith(
-                          color: isVisit
+                          color: isVisit ||
+                                  p.activityStatus == ActivityStatus.STOPED ||
+                                  p.activityStatus == ActivityStatus.NONE
                               ? AppColors.hintText
                               : AppColors.primary)),
                 ),
@@ -401,13 +419,17 @@ class _AddActivityPageState extends State<AddActivityPage> {
             0,
             selfHeight: AppSize.buttonHeight * 1.3, () {
           final p = context.read<AddActivityPageProvider>();
-          if ((p.selectedKunnr == null || p.selectedKeyMan == null)) {
-            AppToast().show(context, tr('plz_check_essential_option'));
+          if (p.activityStatus == ActivityStatus.STOPED ||
+              p.activityStatus == ActivityStatus.NONE) {
+            return;
           } else {
-            //임시저장.
-            // 저장시간/면담여부/활동유형/팀장동행/영업사원 동행/제안품목/방문결과.
-            if (isToday) {
-              pr('today');
+            if ((p.selectedKunnr == null || p.selectedKeyMan == null)) {
+              AppToast().show(context, tr('plz_check_essential_option'));
+            } else {
+              if (isToday) {
+                //임시저장.
+                // 저장시간/면담여부/활동유형/팀장동행/영업사원 동행/제안품목/방문결과.
+              }
             }
           }
         }));
@@ -797,21 +819,22 @@ class _AddActivityPageState extends State<AddActivityPage> {
     var model = arguments['model'] as SalesActivityDayResponseModel;
     var activityStatus = arguments['status'] as ActivityStatus;
     var index = arguments['index'] as int?;
-
-    return BaseLayout(
-        hasForm: true,
-        appBar: MainAppBar(
-          context,
-          titleText: AppText.text(tr('add_activity_page'),
-              style: AppTextStyle.w500_22),
-          callback: () {
-            Navigator.pop(context, true);
-          },
-        ),
-        child: ChangeNotifierProvider(
-          create: (context) => AddActivityPageProvider(),
-          builder: (context, _) {
-            return FutureBuilder<ResultModel>(
+    pr(model.toJson());
+    return ChangeNotifierProvider(
+      create: (context) => AddActivityPageProvider(),
+      builder: (context, _) {
+        return BaseLayout(
+            hasForm: true,
+            appBar: MainAppBar(
+              context,
+              titleText: AppText.text(tr('add_activity_page'),
+                  style: AppTextStyle.w500_22),
+              callback: () {
+                final p = context.read<AddActivityPageProvider>();
+                Navigator.pop(context, p.isUpdate);
+              },
+            ),
+            child: FutureBuilder<ResultModel>(
                 future: context
                     .read<AddActivityPageProvider>()
                     .initData(model, activityStatus, index),
@@ -891,8 +914,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     );
                   }
                   return Container();
-                });
-          },
-        ));
+                }));
+      },
+    );
   }
 }
