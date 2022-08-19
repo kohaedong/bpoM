@@ -244,7 +244,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return Padding(
         padding: AppSize.homeNoticeContentsPadding,
         child: Container(
-            alignment: Alignment.center,
+            alignment: Alignment.topCenter,
+            constraints: BoxConstraints(minHeight: AppSize.appBarHeight * 2.5),
             decoration: BoxDecoration(
                 borderRadius:
                     BorderRadius.all(Radius.circular(AppSize.radius8)),
