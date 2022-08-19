@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-19 23:01:29
+ * Last Modified: 2022-08-20 01:06:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -809,16 +809,34 @@ class _AddActivityPageState extends State<AddActivityPage> {
     );
   }
 
-  Widget _buildLinkedText(String text, {required bool isCurrentMonthScenario}) {
+  Widget _buildLinkedText(BuildContext context, String text,
+      {required bool isCurrentMonthScenario}) {
+    final p = context.read<AddActivityPageProvider>();
     return Row(
       children: [
         InkWell(
           onTap: () {
-            Navigator.pushNamed(
-                context,
-                isCurrentMonthScenario
-                    ? CurruntMonthScenarioPage.routeName
-                    : VisitResultHistoryPage.routeName);
+            if (isCurrentMonthScenario) {
+              Navigator.pushNamed(context, CurruntMonthScenarioPage.routeName);
+              return;
+            }
+            if (p.selectedKunnr != null && !isCurrentMonthScenario) {
+              Navigator.pushNamed(context, VisitResultHistoryPage.routeName,
+                  arguments: {
+                    'date': p.index != null
+                        ? p.editModel!.table260![p.index!].adate
+                        : '',
+                    'zskunnr':
+                        p.selectedKunnr != null ? p.selectedKunnr!.zskunnr : '',
+                    'customerName':
+                        p.selectedKunnr != null ? p.selectedKunnr!.name : '',
+                    'keyMan': p.selectedKeyMan != null
+                        ? p.selectedKeyMan!.zkmnoNm
+                        : ''
+                  });
+            } else {
+              AppToast().show(context, tr('select_customer'));
+            }
           },
           child: AppText.text(text,
               style: AppTextStyle.sub_14.copyWith(color: AppColors.primary)),
@@ -841,7 +859,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildTitleRow(tr('visit_result')),
-            _buildLinkedText('${tr('visit_result_history')} 보기',
+            _buildLinkedText(context, '${tr('visit_result_history')} 보기',
                 isCurrentMonthScenario: false)
           ],
         ),
@@ -866,7 +884,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         _buildTitleRow(tr('curren_month_scenario')),
-        _buildLinkedText('${tr('curren_month_scenario')} 보기',
+        _buildLinkedText(context, '${tr('curren_month_scenario')} 보기',
             isCurrentMonthScenario: true)
       ],
     );

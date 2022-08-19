@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-08-17 21:15:09
+ * Last Modified: 2022-08-19 23:44:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -36,6 +36,7 @@ enum RequestType {
   GET_LAT_AND_LON,
   SEARCH_KEY_MAN,
   SEARCH_SUGGETION_ITEM,
+  GET_VISIT_HISTORY,
   // --------------
   SEARCH_STAFF,
   SEARCH_CUSTOMER,
@@ -101,6 +102,8 @@ extension RequestTypeExtension on RequestType {
   String url({String? params}) {
     switch (this) {
       case RequestType.SEARCH_STAFF:
+        return '$rfcURL/common';
+      case RequestType.GET_VISIT_HISTORY:
         return '$rfcURL/common';
       case RequestType.SEARCH_SUGGETION_ITEM:
         return '$rfcURL/common';
@@ -198,6 +201,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SEARCH_STAFF:
         return 'ES_RETURN,ET_STAFFLIST';
+      case RequestType.GET_VISIT_HISTORY:
+        return 'ES_RETURN,T_LIST';
       case RequestType.SEARCH_SUGGETION_ITEM:
         return 'ES_RETURN,ET_OUTPUT';
       case RequestType.SEARCH_KEY_MAN:
@@ -271,6 +276,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.CHECK_NOTICE:
         return "noticeAll";
+      case RequestType.GET_VISIT_HISTORY:
+        return "Z_LTSP_IF0132";
       case RequestType.SEARCH_SUGGETION_ITEM:
         return "Z_LTSP_IF0101";
       case RequestType.GET_OFFICE_ADDRESS:

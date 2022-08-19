@@ -1,0 +1,91 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'visit_result_history_page_model.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+VisitResultHistoryPageModel _$VisitResultHistoryPageModelFromJson(
+        Map<String, dynamic> json) =>
+    VisitResultHistoryPageModel(
+      json['ACCOMPANY'] as String?,
+      json['ACTCAT1'] as String?,
+      json['ACTCAT2'] as String?,
+      json['ACTCAT3'] as String?,
+      json['ADATE'] as String?,
+      json['AEDAT'] as String?,
+      json['AENAM'] as String?,
+      json['AEWID'] as String?,
+      json['AEZET'] as String?,
+      json['ATIME'] as String?,
+      json['BZACTNO'] as String?,
+      json['CALL_TYPE'] as String?,
+      json['COMNT'] as String?,
+      (json['DIST'] as num?)?.toDouble(),
+      json['ERDAT'] as String?,
+      json['ERNAM'] as String?,
+      json['ERWID'] as String?,
+      json['ERZET'] as String?,
+      json['ETIME'] as String?,
+      json['MANDT'] as String?,
+      json['MEET_RMK'] as String?,
+      json['PVISIT'] as String?,
+      json['RSLT'] as String?,
+      json['SEQNO'] as String?,
+      json['SMINUTE'] as String?,
+      json['STPNO'] as String?,
+      json['VISIT_RMK'] as String?,
+      (json['X_LATITUDE'] as num?)?.toDouble(),
+      json['XMEET'] as String?,
+      json['XVISIT'] as String?,
+      (json['Y_LONGITUDE'] as num?)?.toDouble(),
+      json['ZADDR'] as String?,
+      json['ZKMNO'] as String?,
+      json['ZKMNO_NM'] as String?,
+      json['ZKMTRUST'] as String?,
+      json['ZSKUNNR'] as String?,
+      json['ZSTATUS'] as String?,
+    );
+
+Map<String, dynamic> _$VisitResultHistoryPageModelToJson(
+        VisitResultHistoryPageModel instance) =>
+    <String, dynamic>{
+      'MANDT': instance.mandt,
+      'ADATE': instance.adate,
+      'BZACTNO': instance.bzactno,
+      'SEQNO': instance.seqno,
+      'ATIME': instance.atime,
+      'ETIME': instance.etime,
+      'ZSKUNNR': instance.zskunnr,
+      'ZSTATUS': instance.zstatus,
+      'ZKMNO': instance.zkmno,
+      'ZKMTRUST': instance.zkmtrust,
+      'STPNO': instance.stpno,
+      'XVISIT': instance.xvisit,
+      'VISIT_RMK': instance.visitRmk,
+      'XMEET': instance.xmeet,
+      'MEET_RMK': instance.meetRmk,
+      'ACTCAT1': instance.actcat1,
+      'ACTCAT2': instance.actcat2,
+      'ACTCAT3': instance.actcat3,
+      'ZADDR': instance.zaddr,
+      'DIST': instance.dist,
+      'RSLT': instance.rslt,
+      'COMNT': instance.comnt,
+      'X_LATITUDE': instance.xLatitude,
+      'Y_LONGITUDE': instance.yLongitude,
+      'SMINUTE': instance.sminute,
+      'ACCOMPANY': instance.accompany,
+      'CALL_TYPE': instance.callType,
+      'PVISIT': instance.pvisit,
+      'ERDAT': instance.erdat,
+      'ERZET': instance.erzet,
+      'ERNAM': instance.ernam,
+      'ERWID': instance.erwid,
+      'AEDAT': instance.aedat,
+      'AEZET': instance.aezet,
+      'AENAM': instance.aenam,
+      'AEWID': instance.aewid,
+      'ZKMNO_NM': instance.zkmnoNm,
+    };
