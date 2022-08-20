@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-20 01:35:38
+ * Last Modified: 2022-08-20 10:16:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -79,8 +79,10 @@ class AddActivityPageProvider extends ChangeNotifier {
       distanceModel!.distance = '${temp.dist}';
       reasonForNotVisit = temp.visitRmk ?? '';
       reasonForinterviewFailure = temp.meetRmk ?? '';
-      visitResultInput = '';
-      leaderAdviceInput = '';
+      visitResultInput = temp.rslt ?? '';
+      leaderAdviceInput = temp.comnt ?? '';
+      isVisit = temp.xvisit == 'Y';
+      isInterviewIndex = temp.xmeet == 'Y' ? 0 : 1;
     }
     suggestedList = [];
 
@@ -95,6 +97,7 @@ class AddActivityPageProvider extends ChangeNotifier {
 
   void setAmount(String? str) {
     seletedAmount = str;
+    pr(seletedAmount);
     notifyListeners();
   }
 
@@ -144,10 +147,14 @@ class AddActivityPageProvider extends ChangeNotifier {
 
   void setVisitResultInputText(String? str) {
     visitResultInput = str;
+    pr(visitResultInput);
+    notifyListeners();
   }
 
   void setLeaderAdviceInputText(String? str) {
     leaderAdviceInput = str;
+    pr(leaderAdviceInput);
+    notifyListeners();
   }
 
   void setIsInterviewIndex(int indexx) {
@@ -157,11 +164,12 @@ class AddActivityPageProvider extends ChangeNotifier {
 
   void setReasonForInterviewFailure(String str) {
     reasonForinterviewFailure = str;
-    notifyListeners();
+    pr(reasonForinterviewFailure);
   }
 
   void setReasonForNotVisit(String val) {
     reasonForNotVisit = val;
+    pr(reasonForNotVisit);
   }
 
   void setIsVisit(bool val) {

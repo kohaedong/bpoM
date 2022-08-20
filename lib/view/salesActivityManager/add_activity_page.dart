@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-20 01:42:10
+ * Last Modified: 2022-08-20 10:49:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -897,6 +897,15 @@ class _AddActivityPageState extends State<AddActivityPage> {
     var model = arguments['model'] as SalesActivityDayResponseModel;
     var activityStatus = arguments['status'] as ActivityStatus;
     var index = arguments['index'] as int?;
+    if (index != null) {
+      _interviewTextEditingController.text = model.table260![index].meetRmk!;
+      _visitResultTextEditingController.text = model.table260![index].visitRmk!;
+      _notVisitEditingController.text = model.table260![index].visitRmk!;
+      _leaderAdviceTextEditingController.text =
+          model.table260![index].comnt!; //! m??
+      _amountEditingController.text = '${model.table280![index].amount1 ?? ''}';
+    }
+
     pr(model.toJson());
     return ChangeNotifierProvider(
       create: (context) => AddActivityPageProvider(),
