@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-08-20 16:39:18
+ * Last Modified: 2022-08-20 17:06:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -98,10 +98,28 @@ class ActivityMenuProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> deletLastActivity() async {
-    return ResultModel(true);
+    _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
+    Map<String, dynamic> _body = {};
+    final result = await _api.request(body: _body);
+    if (result != null && result.statusCode != 200) {
+      return ResultModel(false);
+    }
+    if (result != null && result.statusCode == 200) {
+      return ResultModel(true);
+    }
+    return ResultModel(false);
   }
 
   Future<ResultModel> stopSalesActivity() async {
-    return ResultModel(true);
+    _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
+    Map<String, dynamic> _body = {};
+    final result = await _api.request(body: _body);
+    if (result != null && result.statusCode != 200) {
+      return ResultModel(false);
+    }
+    if (result != null && result.statusCode == 200) {
+      return ResultModel(true);
+    }
+    return ResultModel(false);
   }
 }

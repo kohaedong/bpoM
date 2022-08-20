@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-20 16:44:00
+ * Last Modified: 2022-08-20 17:43:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -482,9 +482,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     final popupResult = await AppDialog.showPopup(
       context,
       SelectLocationWidget(
-          status: p.activityStatus == ActivityStatus.STARTED
-              ? ActivityStatus.STOPED
-              : ActivityStatus.INIT,
+          status: p.activityStatus,
           locationList: p.locationResponseModel!.tList!,
           model: p.editModel),
     );
@@ -493,11 +491,22 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       //!  주소 선택 팝업창에서 리턴된 데이터.
       //!  영업활동 추가 성공 의미.
       if (popupResult.isSuccessful) {
-        //! popupResult.data >>>>  출발지 선택후 영업활동 개시 api의 result.
-        p.initData(popupResult.data, ActivityStatus.STARTED);
-        p.setIsNeedUpdate(true);
-        AppToast().show(context, tr('activity_is_started'));
-        _routeToAddActivityPage(context);
+        if (p.activityStatus == ActivityStatus.STARTED) {
+          await p.stopSalesActivity().then((result) {
+            if (result.isSuccessful) {
+              p.setIsNeedUpdate(true);
+              AppToast().show(context, tr('activity_is_stoped'));
+              Navigator.pop(context, p.isNeedUpdate);
+            }
+          });
+        }
+        if (p.activityStatus == ActivityStatus.INIT) {
+          //! popupResult.data >>>>  출발지 선택후 영업활동 개시 api의 result.
+          p.initData(popupResult.data, ActivityStatus.STARTED);
+          p.setIsNeedUpdate(true);
+          AppToast().show(context, tr('activity_is_started'));
+          _routeToAddActivityPage(context);
+        }
       }
     }
   }
@@ -605,12 +614,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 case ActivityStatus.STARTED:
                   //! stop salse activity
                   // 종료.
-                  await p.stopSalesActivity().then((result) {
-                    if (result.isSuccessful) {
-                      AppToast().show(context, tr('activity_is_stoped'));
-                      Navigator.pop(context, true);
-                    }
-                  });
+                  _showLocationPopup(context);
 
                   break;
                 default:
