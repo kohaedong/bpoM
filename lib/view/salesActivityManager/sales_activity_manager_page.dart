@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-20 17:43:15
+ * Last Modified: 2022-08-20 18:03:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -533,6 +533,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   }
 
   void _routeToAddActivityPage(BuildContext context, {int? index}) async {
+    //! context 가 다릅니다.
+    //! [ActivityMenuProvider]  와  [SalseActivityManagerPageProvider] 구분 필요.
     if (index == null) {
       final p = context.read<ActivityMenuProvider>();
       final naviResult = await Navigator.pushNamed(
@@ -544,8 +546,10 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       if (naviResult != null) {
         pr(naviResult);
         naviResult as bool;
+        p.setIsNeedUpdate(naviResult);
         if (naviResult) {
           //!
+          pr('menuButtonNaviResult:: $naviResult');
           Navigator.pop(context, p.isNeedUpdate);
         }
       }

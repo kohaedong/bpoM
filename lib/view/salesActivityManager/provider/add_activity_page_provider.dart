@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-20 10:16:24
+ * Last Modified: 2022-08-20 17:55:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -208,7 +208,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   Future<ResultModel> saveTable() async {
     isUpdate = true;
     notifyListeners();
-    return ResultModel(false);
+    return ResultModel(true);
   }
 
   Future<ResultModel> getAddressLatLon(String addr) async {
