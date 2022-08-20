@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-19 13:18:26
+ * Last Modified: 2022-08-20 16:44:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/service/hive_service.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/enums/menu_type.dart';
@@ -532,6 +533,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         'index': index
       });
       if (naviResult != null) {
+        pr(naviResult);
         naviResult as bool;
         if (naviResult) {
           //!
@@ -573,7 +575,17 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           final p = context.read<ActivityMenuProvider>();
           switch (menuType) {
             case MenuType.ACTIVITY_DELETE:
-              // remove last table.
+              //! remove last table.
+              if (p.editModel!.table260!.isNotEmpty) {
+                p.deletLastActivity().then((result) {
+                  if (result.isSuccessful) {
+                    AppToast().show(context, tr('success'));
+                    Navigator.pop(context, true);
+                  }
+                });
+              } else {
+                AppToast().show(context, tr('nothing_to_delete'));
+              }
               break;
             case MenuType.ACTIVITY_ADD:
               if (p.activityStatus == ActivityStatus.STARTED) {
@@ -591,10 +603,15 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   _showLocationPopup(context);
                   break;
                 case ActivityStatus.STARTED:
-                  // save table
+                  //! stop salse activity
                   // 종료.
-                  AppToast().show(context, tr('activity_is_stoped'));
-                  Navigator.pop(context);
+                  await p.stopSalesActivity().then((result) {
+                    if (result.isSuccessful) {
+                      AppToast().show(context, tr('activity_is_stoped'));
+                      Navigator.pop(context, true);
+                    }
+                  });
+
                   break;
                 default:
               }

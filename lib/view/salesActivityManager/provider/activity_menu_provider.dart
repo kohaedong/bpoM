@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-08-19 13:18:21
+ * Last Modified: 2022-08-20 16:39:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -54,6 +54,14 @@ class ActivityMenuProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> initData(SalesActivityDayResponseModel fromParentWindowModel,
+      ActivityStatus? status) async {
+    getOfficeAddress();
+    editModel =
+        SalesActivityDayResponseModel.fromJson(fromParentWindowModel.toJson());
+    activityStatus = status;
+  }
+
   Future<ResultModel> addActivity() async {
     return ResultModel(false);
   }
@@ -89,11 +97,11 @@ class ActivityMenuProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  Future<void> initData(SalesActivityDayResponseModel fromParentWindowModel,
-      ActivityStatus? status) async {
-    getOfficeAddress();
-    editModel =
-        SalesActivityDayResponseModel.fromJson(fromParentWindowModel.toJson());
-    activityStatus = status;
+  Future<ResultModel> deletLastActivity() async {
+    return ResultModel(true);
+  }
+
+  Future<ResultModel> stopSalesActivity() async {
+    return ResultModel(true);
   }
 }
