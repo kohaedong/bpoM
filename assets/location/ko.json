@@ -540,6 +540,8 @@
     "curren_month_scenario":"당월 시나리오",
     "visit_result_history":"과거 방문 결과 ",
     "month_amount_price":"월 예상 매출",
-    "nothing_to_delete":"삭제 할 내역이 없습니다."
+    "nothing_to_delete":"삭제 할 내역이 없습니다.",
+    "order_product_info":"주문 제품 정보",
+    "other_info":"기타사항"
    
 }

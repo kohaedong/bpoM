@@ -99,4 +99,15 @@ class AppStyles {
               border: Border(right: BorderSide(color: AppColors.textGrey)))),
     );
   }
+
+  static Widget buildTitleRow(String text, {bool? isNotwithStart}) {
+    return Row(children: [
+      AppText.text(text, style: AppTextStyle.h4),
+      SizedBox(width: AppSize.defaultListItemSpacing),
+      isNotwithStart != null && isNotwithStart
+          ? Container()
+          : AppText.text('*',
+              style: AppTextStyle.h4.copyWith(color: AppColors.dangerColor))
+    ]);
+  }
 }

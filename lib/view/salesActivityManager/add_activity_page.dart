@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-20 17:55:00
+ * Last Modified: 2022-08-21 11:57:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -406,7 +406,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   children: [
                     defaultSpacing(times: 2),
                     _buildTitleRow(tr('reason_for_not_visiting')),
-                    defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
+                    defaultSpacing(isHalf: true),
                     _buildTextField(context,
                         type: AddActivityPageInputType.NOT_VISIT)
                   ],
@@ -515,7 +515,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
     return Column(
       children: [
         _buildTitleRow(tr('is_interview')),
-        defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
+        defaultSpacing(isHalf: true),
         Selector<AddActivityPageProvider, int>(
             selector: (context, provider) => provider.isInterviewIndex,
             builder: (context, index, _) {
@@ -564,7 +564,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
           children: [
             defaultSpacing(),
             _buildTitleRow(tr('activity_type_2')),
-            defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
+            defaultSpacing(isHalf: true),
             BaseInputWidget(
                 context: context,
                 oneCellType: OneCellType.SEARCH_ACTIVITY_TYPE,

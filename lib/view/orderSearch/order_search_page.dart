@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-07-19 16:28:00
+ * Last Modified: 2022-08-21 11:57:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -419,7 +419,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                     textAlign: TextAlign.start),
               ],
             ),
-            defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
+            defaultSpacing(isHalf: true),
             Row(
               children: [
                 AppText.listViewText(

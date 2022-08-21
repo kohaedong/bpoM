@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-07-28 10:57:34
+ * Last Modified: 2022-08-21 11:57:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -318,9 +318,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                             .map((map) => _buildItem(context, map.value,
                                 map.key, model.tHead!.single))
                             .toList(),
-                        isStatusA
-                            ? defaultSpacing(height: AppSize.appBarHeight * 3)
-                            : defaultSpacing()
+                        isStatusA ? defaultSpacing(times: 3) : defaultSpacing()
                       ],
                     )
                   : Container(),
