@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-21 11:57:18
+ * Last Modified: 2022-08-22 11:24:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -489,21 +489,15 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     if (popupResult != null) {
       popupResult as ResultModel;
       //!  주소 선택 팝업창에서 리턴된 데이터.
-      //!  영업활동 추가 성공 의미.
+      //!  영업활동 시작/종료 성공 의미.
       if (popupResult.isSuccessful) {
+        p.setIsNeedUpdate(true);
         if (p.activityStatus == ActivityStatus.STARTED) {
-          await p.stopSalesActivity().then((result) {
-            if (result.isSuccessful) {
-              p.setIsNeedUpdate(true);
-              AppToast().show(context, tr('activity_is_stoped'));
-              Navigator.pop(context, p.isNeedUpdate);
-            }
-          });
+          AppToast().show(context, tr('activity_is_stoped'));
+          Navigator.pop(context, p.isNeedUpdate);
         }
         if (p.activityStatus == ActivityStatus.INIT) {
-          //! popupResult.data >>>>  출발지 선택후 영업활동 개시 api의 result.
           p.initData(popupResult.data, ActivityStatus.STARTED);
-          p.setIsNeedUpdate(true);
           AppToast().show(context, tr('activity_is_started'));
           _routeToAddActivityPage(context);
         }
@@ -630,7 +624,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     );
   }
 
-// 주소선택 메뉴
+// 사작/추가/종료 버튼 view
   Widget _buildDialogContents(
       BuildContext context,
       SalesActivityDayResponseModel fromParentWindowModel,

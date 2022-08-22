@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-08-21 12:46:49
+ * Last Modified: 2022-08-22 09:37:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -99,7 +99,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     final resultList = await HiveSelectDataUtil.select(HiveBoxType.T_VALUE,
         tvalueConditional: (tValue) {
       return tValue.tname == 'H_TVKOV' && tValue.helpValues!.isNotEmpty;
-    }, searchLevel: 2, group1SearchKey: '');
+    }, searchLevel: 2, group1SearchKey: temp.substring(temp.indexOf('-') + 1));
 
     return resultList.strList;
   }

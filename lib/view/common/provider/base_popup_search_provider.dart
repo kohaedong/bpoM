@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-08-18 11:27:05
+ * Last Modified: 2022-08-22 09:47:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -585,6 +585,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     var newIslogin = await EncodingUtils.base64Convert(isloginModel.toJson());
     Map<String, dynamic>? _body;
     _body = {
+      // Z_LTS_IFS6002
       "methodName": RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER.serverMethod,
       "methodParamMap": {
         "IV_VTWEG": "10",

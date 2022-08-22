@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-08-19 13:18:23
+ * Last Modified: 2022-08-22 11:26:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -25,6 +25,7 @@ import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 
 // ---------------  description  --------------------
 // 1. [ActivityMenuProvider]에서  model 가져와 editDayModel에 저장한다.
@@ -116,58 +117,46 @@ class SelectLocationProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  Future<ResultModel> saveBaseTable() async {
+  Future<double> _getTable260TotalDistance() async {
+    var dist = 0.0;
+    if (editDayModel!.table260!.isNotEmpty) {
+      editDayModel!.table260!.forEach((item) {
+        dist = item.dist! + dist;
+      });
+    }
+    return dist;
+  }
+
+  Future<ResultModel> startOrStopActivity() async {
     isLoadData = true;
     notifyListeners();
     if (selectedAddress != null) {
       await getAddressLatLon(selectedAddress!);
     } else {
+      pr('???');
       lat = lon = '0.00';
     }
     assert(lat != null && lon != null);
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
     var t250Base64 = '';
-    // var t270Base64 = '';
-    // var t280Base64 = '';
-    // var t290Base64 = '';
-    // var t291Base64 = '';
-    // var t300Base64 = '';
-    // var t301Base64 = '';
-    // var t310Base64 = '';
-    // var t320Base64 = '';
-    // var t321Base64 = '';
-    // var t330Base64 = '';
-    // var t340Base64 = '';
-    // var t350Base64 = '';
-    // var t430Base64 = '';
     var temp = <Map<String, dynamic>>[];
     var t250 = SalesActivityDayTable250();
     var t260 = SalesActivityDayTable260();
-    // var t270 = SalesActivityDayTable270();
-    // var t280 = SalesActivityDayTable280();
-    // var t290 = SalesActivityDayTable290();
-    // var t291 = SalesActivityDayTable291();
-    // var t300 = SalesActivityDayTable300();
-    // var t301 = SalesActivityDayTable301();
-    // var t310 = SalesActivityDayTable310();
-    // var t320 = SalesActivityDayTable320();
-    // var t321 = SalesActivityDayTable321();
-    // var t330 = SalesActivityDayTable330();
-    // var t340 = SalesActivityDayTable340();
-    // var t350 = SalesActivityDayTable350();
-    // var t430 = SalesActivityDayTable430();
     var date = t250.adate =
         FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now()));
     var time = DateUtil.getTimeNow();
     if (activityStatus == ActivityStatus.STARTED) {
+      final totalDistance = await _getTable260TotalDistance();
       // 영업활동 시작 하였으면 >>>  영업활동 종료
+      t250 = SalesActivityDayTable250.fromJson(
+          editDayModel!.table250!.first.toJson());
+      t250.totDist = totalDistance; // 총 거리 계산.
       t250.umode = 'U';
       t250.fcallType = 'M';
-      t250.adate = date;
       t250.faddcat = locationType;
-      t250.fxLatitude = double.parse('0.00');
-      t250.fylongitude = double.parse('0.00');
+      t250.fxLatitude = double.parse(lat!.trim());
+      t250.fylongitude = double.parse(lon!.trim());
       t250.ftime = DateUtil.getTimeNow();
       t250.fzaddr = selectedAddress;
     } else {
@@ -210,6 +199,8 @@ class SelectLocationProvider extends ChangeNotifier {
       editDayModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
       isLoadData = false;
+      pr(editDayModel?.toJson());
+      pr(editDayModel?.table250!.first.toJson());
       notifyListeners();
       return ResultModel(true);
     }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-08-16 11:01:07
+ * Last Modified: 2022-08-22 10:33:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -84,32 +84,27 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
           } else {
             final p = context.read<SelectLocationProvider>();
             var index = p.selectedIndex;
+            if (index == 1 && p.selectedAddress == null && p.isShowSelector) {
+              AppToast().show(context, tr('plz_select_office'));
+              return;
+            }
             switch (index) {
               case 0:
                 p.setSelectedAddress(p.homeAddress);
                 break;
               case 1:
-                if (p.selectedAddress == null && p.isShowSelector) {
-                  AppToast().show(context, tr('plz_select_office'));
-                } else {
-                  p.setSelectedAddress(p.officeAddress);
-                }
+                p.setSelectedAddress(p.officeAddress);
                 break;
             }
-            if (p.editDayModel!.table250!.isEmpty) {
-              await p.saveBaseTable().then((result) {
-                if (result.isSuccessful) {
-                  //!  table저장완료. 부모창으로 model전달.
-                  Navigator.pop(context,
-                      isLeft ? null : ResultModel(true, data: p.editDayModel));
-                } else {
-                  AppToast().show(context, result.errorMassage!);
-                }
-              });
-            } else {
-              Navigator.pop(context,
-                  isLeft ? null : ResultModel(true, data: p.editDayModel));
-            }
+            await p.startOrStopActivity().then((result) {
+              if (result.isSuccessful) {
+                //!  table저장완료. 부모창으로 model전달.
+                Navigator.pop(context,
+                    isLeft ? null : ResultModel(true, data: p.editDayModel));
+              } else {
+                AppToast().show(context, result.errorMassage!);
+              }
+            });
           }
         },
         child: Container(
