@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/deviceInfo_service.dart
  * Created Date: 2021-08-16 21:01:02
- * Last Modified: 2022-07-02 14:28:28
+ * Last Modified: 2022-08-22 08:59:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,6 @@
  */
 
 import 'dart:io';
-
 import 'package:medsalesportal/model/user/user_device_info.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
