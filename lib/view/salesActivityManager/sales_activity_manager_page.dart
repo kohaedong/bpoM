@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-22 15:21:40
+ * Last Modified: 2022-08-22 16:06:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -505,6 +505,39 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     }
   }
 
+  void _showIsDeleteLastAvtivityPopup(BuildContext context) async {
+    final p = context.read<ActivityMenuProvider>();
+    if (p.editModel!.table260!.isNotEmpty) {
+      var date = DateUtil.getDateStrForKR(
+          DateUtil.getDate(p.editModel!.table250!.single.adate!));
+      var person = p.editModel!.table250!.single.ernam!;
+      final result = await AppDialog.showPopup(
+          context,
+          buildDialogContents(
+            context,
+            Container(
+                alignment: Alignment.center,
+                height: AppSize.singlePopupHeight - AppSize.buttonHeight,
+                child: AppText.text(
+                    tr('is_realy_delete_last_activity', args: [date, person]),
+                    maxLines: 4,
+                    style: AppTextStyle.default_16)),
+            false,
+            AppSize.singlePopupHeight,
+          ));
+      if (result != null && result) {
+        p.deletLastActivity().then((result) {
+          if (result.isSuccessful) {
+            AppToast().show(context, tr('success'));
+            Navigator.pop(context, true);
+          }
+        });
+      }
+    } else {
+      AppToast().show(context, tr('nothing_to_delete'));
+    }
+  }
+
   void _showIsStartAvtivityPopup(BuildContext context) async {
     final result = await AppDialog.showPopup(
         context,
@@ -583,16 +616,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           switch (menuType) {
             case MenuType.ACTIVITY_DELETE:
               //! remove last table.
-              if (p.editModel!.table260!.isNotEmpty) {
-                p.deletLastActivity().then((result) {
-                  if (result.isSuccessful) {
-                    AppToast().show(context, tr('success'));
-                    Navigator.pop(context, true);
-                  }
-                });
-              } else {
-                AppToast().show(context, tr('nothing_to_delete'));
-              }
+              _showIsDeleteLastAvtivityPopup(context);
               break;
             case MenuType.ACTIVITY_ADD:
               if (p.activityStatus == ActivityStatus.STARTED) {

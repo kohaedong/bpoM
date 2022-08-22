@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-08-22 10:39:22
+ * Last Modified: 2022-08-22 15:57:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -16,9 +16,13 @@ import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_250.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 
 // ----------------- discription ----------------------
 //     ______________________
@@ -98,15 +102,48 @@ class ActivityMenuProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> deletLastActivity() async {
+    assert(editModel!.table260!.isNotEmpty);
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
-    Map<String, dynamic> _body = {};
+    var isLogin = CacheService.getIsLogin();
+    var t250Base64 = '';
+    var t260Base64 = '';
+    var temp = <Map<String, dynamic>>[];
+    var t250 =
+        SalesActivityDayTable250.fromJson(editModel!.table250!.single.toJson());
+    var t260 = <SalesActivityDayTable260>[];
+    temp.addAll([t250.toJson()]);
+    t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    editModel!.table260!.forEach((tableItem) {
+      t260.add(SalesActivityDayTable260.fromJson(tableItem.toJson()));
+    });
+    t260.removeLast();
+    t260.forEach((table) {
+      temp.add(table.toJson());
+    });
+    t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
+      "methodParamMap": {
+        "IV_PTYPE": "U",
+        "T_ZLTSP0250S": t250Base64,
+        "T_ZLTSP0260S": t260Base64,
+        "IS_LOGIN": isLogin,
+        "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
+        "functionName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
+      }
+    };
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {
-      return ResultModel(false);
+      return ResultModel(false, errorMassage: result.errorMessage);
     }
     if (result != null && result.statusCode == 200) {
+      editModel = SalesActivityDayResponseModel.fromJson(result.body['data']);
+      pr(editModel?.toJson());
+      pr(editModel?.table260?.length);
+      isLoadData = false;
       return ResultModel(true);
     }
-    return ResultModel(false);
+    return ResultModel(false, errorMassage: result!.errorMessage);
   }
 }

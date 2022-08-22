@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-08-22 11:26:32
+ * Last Modified: 2022-08-22 15:35:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -143,8 +143,7 @@ class SelectLocationProvider extends ChangeNotifier {
     var temp = <Map<String, dynamic>>[];
     var t250 = SalesActivityDayTable250();
     var t260 = SalesActivityDayTable260();
-    var date = t250.adate =
-        FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now()));
+
     var time = DateUtil.getTimeNow();
     if (activityStatus == ActivityStatus.STARTED) {
       final totalDistance = await _getTable260TotalDistance();
@@ -161,7 +160,8 @@ class SelectLocationProvider extends ChangeNotifier {
       t250.fzaddr = selectedAddress;
     } else {
       // 영업활동 시작 하지 않았으면. >>> 영업활동 시작. table 신규 추가.
-      t250.adate = date;
+      t250.adate =
+          FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now()));
       t250.saddcat = locationType;
       t250.szaddr = selectedAddress!;
       t250.sxLatitude = double.parse(lat!.trim());
