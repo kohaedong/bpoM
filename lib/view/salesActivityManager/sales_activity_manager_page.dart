@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-22 17:24:46
+ * Last Modified: 2022-08-22 17:59:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -491,14 +491,15 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       //!  주소 선택 팝업창에서 리턴된 데이터.
       //!  영업활동 시작/종료 성공 의미.
       if (popupResult.isSuccessful) {
-        p.setIsNeedUpdate(true);
         if (p.activityStatus == ActivityStatus.STARTED) {
           AppToast().show(context, tr('activity_is_stoped'));
-          Navigator.pop(context, p.isNeedUpdate);
+          Navigator.pop(context, true);
         }
         if (p.activityStatus == ActivityStatus.INIT) {
-          p.initData(popupResult.data, ActivityStatus.STARTED);
+          var parentModel = popupResult.data as SalesActivityDayResponseModel;
+          p.initData(parentModel, ActivityStatus.STARTED);
           AppToast().show(context, tr('activity_is_started'));
+          Navigator.pop(context, true);
           _routeToAddActivityPage(context);
         }
       }
@@ -620,7 +621,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
               break;
             case MenuType.ACTIVITY_ADD:
               if (p.activityStatus == ActivityStatus.STARTED) {
-                // go to add activity page.
                 _routeToAddActivityPage(context);
               } else {
                 p.setIsNeedUpdate(true);
@@ -630,13 +630,11 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             case MenuType.ACTIVITY_STATUS:
               switch (p.activityStatus) {
                 case ActivityStatus.INIT:
-                  // save table
-                  // 250테이블에 데이터가 없으면 추가.
+                  // 영업활동 시작
                   _showLocationPopup(context);
                   break;
                 case ActivityStatus.STARTED:
-                  //! stop salse activity
-                  // 종료.
+                  // 영업활동 종료.
                   _showLocationPopup(context);
 
                   break;
