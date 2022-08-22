@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:medsalesportal/enums/account_type.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/salesActivityManager/sales_activity_manager_page.dart';
 
 import './home_icon_map.dart';
@@ -120,7 +121,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   } else {
                     if (map.value.routeName ==
                         SalseActivityManagerPage.routeName) {
-                      if (CacheService.getAccountType() == AccountType.MULTI) {
+                      if (CheckSuperAccount.isMultiAccount()) {
                         AppToast().show(context, '${tr('permission_denied')}');
                       } else {
                         Navigator.pushNamed(context, map.value.routeName);

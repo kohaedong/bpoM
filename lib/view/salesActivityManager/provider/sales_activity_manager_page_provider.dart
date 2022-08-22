@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-22 11:13:26
+ * Last Modified: 2022-08-22 17:21:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -196,11 +196,15 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   Future<void> checkIsShowPopup() async {
     // 지난영업일 확인.
-    await checkNextWorkingDayForPreviousWorkingDay(DateTime.now());
-    var isNotConfirmed = await checkConfiremStatus();
-    isShowPopup =
-        (checkPreviousWorkingDaysNextWorkingDay!.day == DateTime.now().day) &&
-            isNotConfirmed;
+    try {
+      await checkNextWorkingDayForPreviousWorkingDay(DateTime.now());
+      var isNotConfirmed = await checkConfiremStatus();
+      isShowPopup =
+          (checkPreviousWorkingDaysNextWorkingDay!.day == DateTime.now().day) &&
+              isNotConfirmed;
+    } catch (e) {
+      pr(e);
+    }
     notifyListeners();
   }
 
@@ -292,7 +296,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       _api.init(RequestType.CHECK_HOLIDAY);
       final result = await _api.request(body: {
         'year': date.year,
-        'month': date.month,
+        'month': date.month < 10 ? '0${date.month}' : '${date.month}',
       });
       if (result != null && result.statusCode != 200) {
         return ResultModel(false);
@@ -300,6 +304,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       if (result != null && result.statusCode == 200) {
         holidayList.clear();
         holidayResponseModel = HolidayResponseModel.fromJson(result.body);
+        pr(holidayResponseModel!.toJson());
         if (holidayResponseModel!.data != null &&
             holidayResponseModel!.data!.isNotEmpty) {
           holidayResponseModel!.data!.forEach((holidayModel) {
@@ -330,6 +335,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       searchKeyResponseModel =
           SearchKeyResponseModel.fromJson(result.body['data']);
+      pr(searchKeyResponseModel?.toJson());
       return ResultModel(true);
     }
     return ResultModel(false);
@@ -370,27 +376,33 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       monthResponseModel =
           SalesActivityMonthResponseModel.fromJson(result.body['data']);
-      if (monthResponseModel != null && monthResponseModel!.tList!.isNotEmpty) {
-        weekListForMonth.clear();
-        monthResponseModel!.tList!.forEach((e) {
-          var week0 = e.day0 != null ? DateUtil.getDate(e.day0!) : null;
-          var week1 = e.day1 != null ? DateUtil.getDate(e.day1!) : null;
-          var week2 = e.day2 != null ? DateUtil.getDate(e.day2!) : null;
-          var week3 = e.day3 != null ? DateUtil.getDate(e.day3!) : null;
-          var week4 = e.day4 != null ? DateUtil.getDate(e.day4!) : null;
-          var week5 = e.day5 != null ? DateUtil.getDate(e.day5!) : null;
-          var week6 = e.day6 != null ? DateUtil.getDate(e.day6!) : null;
-          weekListForMonth
-              .add([week0, week1, week2, week3, week4, week5, week6]);
-        });
+      if (monthResponseModel!.esReturn!.mtype != 'S') {
+        return ResultModel(false,
+            errorMassage: monthResponseModel!.esReturn!.message);
+      } else {
+        if (monthResponseModel != null &&
+            monthResponseModel!.tList!.isNotEmpty) {
+          weekListForMonth.clear();
+          monthResponseModel!.tList!.forEach((e) {
+            var week0 = e.day0 != null ? DateUtil.getDate(e.day0!) : null;
+            var week1 = e.day1 != null ? DateUtil.getDate(e.day1!) : null;
+            var week2 = e.day2 != null ? DateUtil.getDate(e.day2!) : null;
+            var week3 = e.day3 != null ? DateUtil.getDate(e.day3!) : null;
+            var week4 = e.day4 != null ? DateUtil.getDate(e.day4!) : null;
+            var week5 = e.day5 != null ? DateUtil.getDate(e.day5!) : null;
+            var week6 = e.day6 != null ? DateUtil.getDate(e.day6!) : null;
+            weekListForMonth
+                .add([week0, week1, week2, week3, week4, week5, week6]);
+          });
+        }
+        await getHolidayListForMonth(selectedMonth ?? DateTime.now());
+        await checkIsShowPopup();
+        if (isWithLoading != null && isWithLoading) {
+          isLoadData = false;
+        }
+        notifyListeners();
+        return ResultModel(true);
       }
-      await getHolidayListForMonth(selectedMonth ?? DateTime.now());
-      await checkIsShowPopup();
-      if (isWithLoading != null && isWithLoading) {
-        isLoadData = false;
-      }
-      notifyListeners();
-      return ResultModel(true);
     }
     if (isWithLoading != null && isWithLoading) {
       isLoadData = false;
