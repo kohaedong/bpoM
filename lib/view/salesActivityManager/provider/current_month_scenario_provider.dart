@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/current_month_scenario_provider.dart
  * Created Date: 2022-08-17 23:40:28
- * Last Modified: 2022-08-17 23:40:43
+ * Last Modified: 2022-08-22 14:58:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,5 +12,10 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
 
-class CurrentMonthScenarioProvider extends ChangeNotifier {}
+class CurrentMonthScenarioProvider extends ChangeNotifier {
+  Future<ResultModel> getCurrentMonthScenario() async {
+    return ResultModel(false);
+  }
+}

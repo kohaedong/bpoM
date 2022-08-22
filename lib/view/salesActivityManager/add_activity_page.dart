@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-21 11:57:18
+ * Last Modified: 2022-08-22 15:23:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,13 +11,13 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/enums/account_type.dart';
-import 'package:medsalesportal/service/cache_service.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
+import 'package:medsalesportal/enums/account_type.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
@@ -821,24 +821,36 @@ class _AddActivityPageState extends State<AddActivityPage> {
       children: [
         InkWell(
           onTap: () {
-            if (isCurrentMonthScenario) {
-              Navigator.pushNamed(context, CurruntMonthScenarioPage.routeName);
-              return;
-            }
-            if (p.selectedKunnr != null && !isCurrentMonthScenario) {
-              Navigator.pushNamed(context, VisitResultHistoryPage.routeName,
-                  arguments: {
-                    'date': p.index != null
-                        ? p.editModel!.table260![p.index!].adate
-                        : DateUtil.getDateStr('', dt: DateTime.now()),
-                    'zskunnr':
-                        p.selectedKunnr != null ? p.selectedKunnr!.zskunnr : '',
-                    'customerName':
-                        p.selectedKunnr != null ? p.selectedKunnr!.name : '',
-                    'keyMan': p.selectedKeyMan != null
-                        ? p.selectedKeyMan!.zkmnoNm
-                        : ''
-                  });
+            if (p.selectedKunnr != null) {
+              if (isCurrentMonthScenario) {
+                Navigator.pushNamed(context, CurruntMonthScenarioPage.routeName,
+                    arguments: {
+                      'model': p.editModel!.table430,
+                      'zskunnr': p.selectedKunnr != null
+                          ? p.selectedKunnr!.zskunnr
+                          : '',
+                      'keyMan': p.selectedKeyMan != null
+                          ? p.selectedKeyMan!.zkmnoNm
+                          : ''
+                    });
+                return;
+              } else {
+                Navigator.pushNamed(context, VisitResultHistoryPage.routeName,
+                    arguments: {
+                      'date': p.index != null
+                          ? p.editModel!.table260![p.index!].adate
+                          : DateUtil.getDateStr('', dt: DateTime.now()),
+                      'zskunnr': p.selectedKunnr != null
+                          ? p.selectedKunnr!.zskunnr
+                          : '',
+                      'customerName':
+                          p.selectedKunnr != null ? p.selectedKunnr!.name : '',
+                      'keyMan': p.selectedKeyMan != null
+                          ? p.selectedKeyMan!.zkmnoNm
+                          : ''
+                    });
+                return;
+              }
             } else {
               AppToast().show(context, tr('select_customer'));
             }
@@ -908,7 +920,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
       _visitResultTextEditingController.text = model.table260![index].rslt!;
       _leaderAdviceTextEditingController.text =
           model.table260![index].comnt!; //! m??
-      _amountEditingController.text = '${model.table280![index].amount1 ?? ''}';
+      _amountEditingController.text = model.table280!.isNotEmpty
+          ? '${model.table280![index].amount1 ?? ''}'
+          : '';
     }
 
     pr(model.toJson());
