@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-23 10:12:01
+ * Last Modified: 2022-08-23 11:08:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -329,33 +329,6 @@ class _AddActivityPageState extends State<AddActivityPage> {
               : type == AddActivityPageInputType.VISIT_RESULT
                   ? _visitTextFieldScrollController
                   : _leaderAdviceTextFieldScrollController,
-      // onTap: () {
-      //   switch (type) {
-      //     case AddActivityPageInputType.INTERVIEW:
-      //       _interviewTextEditingController.text.isEmpty
-      //           ? _interviewTextEditingController.text =
-      //               p.reasonForinterviewFailure ?? ''
-      //           : DoNothingAction();
-      //       break;
-      //     case AddActivityPageInputType.NOT_VISIT:
-      //       _notVisitEditingController.text.isEmpty
-      //           ? _notVisitEditingController.text = p.reasonForNotVisit ?? ''
-      //           : DoNothingAction();
-      //       break;
-      //     case AddActivityPageInputType.VISIT_RESULT:
-      //       _visitResultTextEditingController.text.isEmpty
-      //           ? _visitResultTextEditingController.text =
-      //               p.visitResultInput ?? ''
-      //           : DoNothingAction();
-      //       break;
-      //     case AddActivityPageInputType.LEADER_ADVICE:
-      //       _leaderAdviceTextEditingController.text.isEmpty
-      //           ? _leaderAdviceTextEditingController.text =
-      //               p.leaderAdviceInput ?? ''
-      //           : DoNothingAction();
-      //       break;
-      //   }
-      // },
       onChanged: (text) {
         switch (type) {
           case AddActivityPageInputType.INTERVIEW:
