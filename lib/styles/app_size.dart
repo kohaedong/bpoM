@@ -16,6 +16,7 @@ class AppSize {
   static double get progressWidth => 250.w;
   static double get doPopupHeight => AppSize.defaultContentsWidth;
   static double get doInputHeight => 126;
+  static double get scenarioBoxHeight => 80;
 
   static double get defaultPopupHeight => 200.h;
   static double get approvalInputHeight => 200.w;

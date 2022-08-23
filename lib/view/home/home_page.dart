@@ -1,17 +1,14 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:medsalesportal/enums/account_type.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
-import 'package:medsalesportal/view/salesActivityManager/sales_activity_manager_page.dart';
-
 import './home_icon_map.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/home/notice_all_page.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
@@ -23,6 +20,7 @@ import 'package:medsalesportal/view/home/provider/notice_provider.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
 import 'package:medsalesportal/view/commonLogin/update_and_notice_dialog.dart';
+import 'package:medsalesportal/view/salesActivityManager/sales_activity_manager_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-20 17:55:06
+ * Last Modified: 2022-08-23 10:16:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -75,6 +75,8 @@ class AddActivityPageProvider extends ChangeNotifier {
           temp.zkmnoNm != null && temp.zkmnoNm!.trim().isEmpty
               ? null
               : temp.zkmnoNm;
+      selectedKeyMan!.zkmno =
+          temp.zkmno != null && temp.zkmno!.trim().isEmpty ? null : temp.zkmno;
       distanceModel = AddActivityDistanceModel();
       distanceModel!.distance = '${temp.dist}';
       reasonForNotVisit = temp.visitRmk ?? '';

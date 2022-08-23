@@ -110,4 +110,9 @@ class AppStyles {
               style: AppTextStyle.h4.copyWith(color: AppColors.dangerColor))
     ]);
   }
+
+  static Widget defultRowSpacing() {
+    return Padding(
+        padding: EdgeInsets.only(right: AppSize.defaultListItemSpacing));
+  }
 }
