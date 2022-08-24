@@ -544,6 +544,7 @@
     "order_product_info":"주문 제품 정보",
     "other_info":"기타사항",
     "is_realy_delete_last_activity":"{} {} 담당자의 최종 콜 내역을 삭제하시겠습니까?",
-    "is_visit":"방문여부"
+    "is_visit":"방문여부",
+    "plz_enter_reason_for_interview_failure":"면담 실패 사유를 입력해주세요."
    
 }

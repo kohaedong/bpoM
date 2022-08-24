@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-24 18:19:28
+ * Last Modified: 2022-08-24 18:32:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -63,6 +63,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   int? index;
   int isInterviewIndex = 0;
   final _api = ApiService();
+
   String get dptnm => CacheService.getEsLogin()!.dptnm!;
   Future<ResultModel> initData(SalesActivityDayResponseModel fromParentModel,
       ActivityStatus status, int? indexx) async {
