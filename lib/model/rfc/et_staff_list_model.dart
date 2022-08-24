@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/model/rfc/et_staff_list_model.dart
  * Created Date: 2021-09-23 11:36:54
- * Last Modified: 2022-01-08 01:24:08
+ * Last Modified: 2022-08-24 09:24:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -37,7 +37,7 @@ class EtStaffListModel {
   String? rSeq;
 
   EtStaffListModel(
-      this.dptck,
+      {this.dptck,
       this.dptnm,
       this.empno,
       this.levelcdnm,
@@ -47,7 +47,7 @@ class EtStaffListModel {
       this.rChk,
       this.rSeq,
       this.rStatus,
-      this.sname);
+      this.sname});
 
   factory EtStaffListModel.fromJson(Object? json) =>
       _$EtStaffListModelFromJson(json as Map<String, dynamic>);

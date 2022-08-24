@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-23 17:40:37
+ * Last Modified: 2022-08-24 09:56:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -608,7 +608,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
         _buildTitleRow(tr('with_another_saler'), isNotwithStart: true),
         defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
         Selector<AddActivityPageProvider, EtStaffListModel?>(
-            selector: (context, provider) => provider.anotherSaler,
+            selector: (context, provider) => provider.anotherSaller,
             builder: (context, anotherSaler, _) {
               return BaseInputWidget(
                 context: context,

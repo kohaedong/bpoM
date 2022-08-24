@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-24 09:07:14
+ * Last Modified: 2022-08-24 10:32:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -37,6 +37,7 @@ import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
 typedef IncrementSeqNo = String Function();
+typedef IsThisActivity = bool Function(SalesActivityDayTable361);
 
 class AddActivityPageProvider extends ChangeNotifier {
   AddActivityKeyManResponseModel? keyManResponseModel;
@@ -44,7 +45,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   SalesActivityDayResponseModel? editModel;
   AddActivityDistanceModel? distanceModel;
   AddActivityKeyManModel? selectedKeyMan;
-  EtStaffListModel? anotherSaler;
+  EtStaffListModel? anotherSaller;
   ActivityStatus? activityStatus;
   EtKunnrModel? selectedKunnr;
   String? reasonForinterviewFailure;
@@ -94,6 +95,38 @@ class AddActivityPageProvider extends ChangeNotifier {
       leaderAdviceInput = temp.comnt ?? '';
       isVisit = temp.xvisit == 'Y';
       isInterviewIndex = temp.xmeet == 'Y' ? 0 : 1;
+      // 동행 초기화.
+      var saveAnotherSaller = () {
+        IsThisActivity isThisActivity = (SalesActivityDayTable361 table) {
+          return table.bzactno == temp.bzactno &&
+              table.zkmno == temp.zkmno &&
+              table.zskunnr == temp.zskunnr &&
+              table.seqno == temp.seqno;
+        };
+        var temp361 = editModel!.table361!
+            .where((table) => isThisActivity(table))
+            .toList();
+        if (temp361.isNotEmpty) {
+          var model = SalesActivityDayTable361.fromJson(temp361.last.toJson());
+          anotherSaller = EtStaffListModel();
+          anotherSaller!.sname = model.sname;
+          anotherSaller!.logid = model.logid;
+        }
+      };
+      // 동행 주요 로직.
+      switch (temp.accompany?.trim()) {
+        case 'E001':
+          saveAnotherSaller();
+          break;
+        case 'D001':
+          isWithTeamLeader = true;
+          break;
+        case 'E002':
+          isWithTeamLeader = true;
+          saveAnotherSaller();
+          break;
+        default:
+      }
     }
     suggestedList = [];
 
@@ -102,7 +135,7 @@ class AddActivityPageProvider extends ChangeNotifier {
 
   void setAnotherSaler(saler) {
     saler as EtStaffListModel?;
-    anotherSaler = saler;
+    anotherSaller = saler;
     notifyListeners();
   }
 
@@ -317,9 +350,17 @@ class AddActivityPageProvider extends ChangeNotifier {
       t260.rslt = visitResultInput ?? '';
       t260.comnt = leaderAdviceInput ?? '';
 
-      // 동행 처리.
-
-      // 활동 유형 추가.
+      // 동행 처리 - 260.
+      var withLeaderOnly = isWithTeamLeader && anotherSaller == null;
+      var withLeaderAndSaller = isWithTeamLeader && anotherSaller != null;
+      var withSallerOnly = !isWithTeamLeader && anotherSaller != null;
+      t260.accompany = withLeaderOnly
+          ? 'D001'
+          : withSallerOnly
+              ? 'E001'
+              : withLeaderAndSaller
+                  ? 'E002'
+                  : '';
     };
 
     if (editModel!.table260!.isEmpty) {
@@ -334,26 +375,46 @@ class AddActivityPageProvider extends ChangeNotifier {
     temp.addAll([...t260List.map((table) => table.toJson())]);
     t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
 
-    var newT361 = () async {
-      var isFirstEntity = editModel!.table361!
-          .where((table) => table.seqno == t260.seqno)
-          .toList()
-          .isNotEmpty;
+    // 동행 처리 - 361 .
+    var newT361 = ({required bool isFirstEntity}) async {
       isFirstEntity
           ? () {
               // insert
+              t361.bzactno = t260.bzactno;
+              t361.seqno = t260.seqno;
+              t361.logid = anotherSaller!.logid;
+              t361.sname = anotherSaller!.sname;
+              t361.subseq = 1;
+              t361.zkmno = selectedKeyMan!.zkmno;
+              t361.zskunnr = selectedKunnr!.zskunnr;
+              t361.umode = 'I';
             }()
           : () {
               // update
             }();
     };
-    if (editModel!.table260!.isEmpty) {
-      await newT361().then((_) => t361List.add(t361));
-    } else {
+
+    // 기존 데이터 유지 .
+    var isTable360NotEmpty = editModel!.table361!.isNotEmpty;
+    if (isTable360NotEmpty) {
       editModel!.table361!.forEach((table) {
         t361List.add(SalesActivityDayTable361.fromJson(table.toJson()));
       });
-      await newT361().then((_) => t361List.add(t361));
+    }
+    // 신규 데이터 추가.
+    if (anotherSaller != null) {
+      IsThisActivity isThisActivity = (SalesActivityDayTable361 table) {
+        return table.bzactno == t260.bzactno &&
+            table.zkmno == t260.zkmno &&
+            table.zskunnr == t260.zskunnr &&
+            table.seqno == t260.seqno;
+      };
+      var isFirstEntity = editModel!.table361!
+          .where((table) => isThisActivity(table))
+          .toList()
+          .isEmpty;
+      await newT361(isFirstEntity: isFirstEntity)
+          .then((_) => t361List.add(t361));
     }
     temp.clear();
     temp.addAll([...t361List.map((table) => table.toJson())]);
