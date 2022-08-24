@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-23 11:08:51
+ * Last Modified: 2022-08-23 17:40:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -175,7 +176,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
             context: context,
             onTap: () {
               if (tuple.item2 == null) {
-                AppToast().show(context, tr('select_customer'));
+                AppDialog.showSignglePopup(context, tr('select_customer'));
               }
             },
             hintTextStyleCallBack: () =>
@@ -209,79 +210,86 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   Widget _buildIsVisitRow(BuildContext context) {
     final p = context.read<AddActivityPageProvider>();
-    return Selector<AddActivityPageProvider, bool>(
-        selector: (context, provider) => provider.isVisit,
-        builder: (context, isVisit, _) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                  alignment: Alignment.centerLeft,
-                  width: (AppSize.defaultContentsWidth * .7) -
-                      AppSize.defaultListItemSpacing / 2,
-                  height: AppSize.defaultTextFieldHeight,
-                  decoration: BoxDecoration(
-                      color: AppColors.unReadyButton,
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(AppSize.radius5)),
-                      border: Border.all(
-                          width: .5, color: AppColors.textFieldUnfoucsColor)),
-                  child: Padding(
-                    padding: EdgeInsets.only(left: AppSize.padding),
-                    child: AppText.text(
-                        isVisit ? tr('visit') : tr('not_visited'),
-                        style: AppTextStyle.h4
-                            .copyWith(color: AppColors.hintText)),
-                  )),
-              GestureDetector(
-                onTap: () {
-                  if (p.activityStatus == ActivityStatus.NONE) {
-                    return;
-                  }
-                  if (p.activityStatus == ActivityStatus.STOPED) {
-                    AppToast().show(context, tr('activity_is_stoped'));
-                  } else {
-                    if ((p.selectedKunnr == null || p.selectedKeyMan == null) &&
-                        !p.isVisit) {
-                      AppToast()
-                          .show(context, tr('plz_check_essential_option'));
-                    } else if (!p.isVisit) {
-                      p.getDistance();
-                    }
-                  }
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  width: (AppSize.defaultContentsWidth * .3) -
-                      AppSize.defaultListItemSpacing / 2,
-                  height: AppSize.defaultTextFieldHeight,
-                  decoration: BoxDecoration(
-                      color: isVisit ||
-                              p.activityStatus == ActivityStatus.STOPED ||
-                              p.activityStatus == ActivityStatus.NONE
-                          ? AppColors.unReadyButton
-                          : AppColors.sendButtonColor,
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(AppSize.radius5)),
-                      border: Border.all(
-                          width: .5,
+    return BaseColumWithTitleAndTextFiled.build(
+        tr('is_visit'),
+        Selector<AddActivityPageProvider, bool>(
+            selector: (context, provider) => provider.isVisit,
+            builder: (context, isVisit, _) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                      alignment: Alignment.centerLeft,
+                      width: (AppSize.defaultContentsWidth * .7) -
+                          AppSize.defaultListItemSpacing / 2,
+                      height: AppSize.defaultTextFieldHeight,
+                      decoration: BoxDecoration(
+                          color: AppColors.unReadyButton,
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppSize.radius5)),
+                          border: Border.all(
+                              width: .5,
+                              color: AppColors.textFieldUnfoucsColor)),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: AppSize.padding),
+                        child: AppText.text(
+                            isVisit ? tr('visit') : tr('not_visited'),
+                            style: AppTextStyle.h4
+                                .copyWith(color: AppColors.hintText)),
+                      )),
+                  GestureDetector(
+                    onTap: () {
+                      if (p.activityStatus == ActivityStatus.NONE) {
+                        return;
+                      }
+                      if (p.activityStatus == ActivityStatus.STOPED) {
+                        AppToast().show(context, tr('activity_is_stoped'));
+                      } else {
+                        if ((p.selectedKunnr == null ||
+                                p.selectedKeyMan == null) &&
+                            !p.isVisit) {
+                          AppToast()
+                              .show(context, tr('plz_check_essential_option'));
+                        } else if (!p.isVisit) {
+                          p.getDistance();
+                        }
+                      }
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: (AppSize.defaultContentsWidth * .3) -
+                          AppSize.defaultListItemSpacing / 2,
+                      height: AppSize.defaultTextFieldHeight,
+                      decoration: BoxDecoration(
                           color: isVisit ||
                                   p.activityStatus == ActivityStatus.STOPED ||
                                   p.activityStatus == ActivityStatus.NONE
-                              ? AppColors.textFieldUnfoucsColor
-                              : AppColors.primary)),
-                  child: AppText.text(tr('arrival'),
-                      style: AppTextStyle.h4.copyWith(
-                          color: isVisit ||
-                                  p.activityStatus == ActivityStatus.STOPED ||
-                                  p.activityStatus == ActivityStatus.NONE
-                              ? AppColors.hintText
-                              : AppColors.primary)),
-                ),
-              )
-            ],
-          );
-        });
+                              ? AppColors.unReadyButton
+                              : AppColors.sendButtonColor,
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(AppSize.radius5)),
+                          border: Border.all(
+                              width: .5,
+                              color: isVisit ||
+                                      p.activityStatus ==
+                                          ActivityStatus.STOPED ||
+                                      p.activityStatus == ActivityStatus.NONE
+                                  ? AppColors.textFieldUnfoucsColor
+                                  : AppColors.primary)),
+                      child: AppText.text(tr('arrival'),
+                          style: AppTextStyle.h4.copyWith(
+                              color: isVisit ||
+                                      p.activityStatus ==
+                                          ActivityStatus.STOPED ||
+                                      p.activityStatus == ActivityStatus.NONE
+                                  ? AppColors.hintText
+                                  : AppColors.primary)),
+                    ),
+                  )
+                ],
+              );
+            }),
+        isNotShowStar: true);
   }
 
   Widget _buildTitleRow(String text, {bool? isNotwithStart}) {
@@ -377,8 +385,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    defaultSpacing(times: 2),
-                    _buildTitleRow(tr('reason_for_not_visiting')),
+                    _buildTitleRow(tr('reason_for_not_visiting'),
+                        isNotwithStart: true),
                     defaultSpacing(isHalf: true),
                     _buildTextField(context,
                         type: AddActivityPageInputType.NOT_VISIT)
@@ -416,7 +424,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
             return;
           } else {
             if ((p.selectedKunnr == null || p.selectedKeyMan == null)) {
-              AppToast().show(context, tr('plz_check_essential_option'));
+              AppDialog.showSignglePopup(
+                  context, tr('plz_check_essential_option'));
             } else {
               if (isToday) {
                 p.saveTable().then((result) {
@@ -487,7 +496,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
   Widget _buildIsInterview(BuildContext context) {
     return Column(
       children: [
-        _buildTitleRow(tr('is_interview')),
+        _buildTitleRow(tr('is_interview'), isNotwithStart: true),
         defaultSpacing(isHalf: true),
         Selector<AddActivityPageProvider, int>(
             selector: (context, provider) => provider.isInterviewIndex,
@@ -536,7 +545,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
         return Column(
           children: [
             defaultSpacing(),
-            _buildTitleRow(tr('activity_type_2')),
+            _buildTitleRow(tr('activity_type_2'), isNotwithStart: true),
             defaultSpacing(isHalf: true),
             BaseInputWidget(
                 context: context,
@@ -825,7 +834,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 return;
               }
             } else {
-              AppToast().show(context, tr('select_customer'));
+              AppDialog.showSignglePopup(context, tr('select_customer'));
             }
           },
           child: AppText.text(text,
@@ -848,7 +857,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildTitleRow(tr('visit_result')),
+            _buildTitleRow(tr('visit_result'), isNotwithStart: true),
             _buildLinkedText(context, '${tr('visit_result_history')} 보기',
                 isCurrentMonthScenario: false)
           ],
@@ -862,7 +871,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
   Widget _buildTeamLeaderAdvice(BuildContext context) {
     return Column(
       children: [
-        _buildTitleRow(tr('leader_advice')),
+        _buildTitleRow(tr('leader_advice'), isNotwithStart: true),
         defaultSpacing(),
         _buildTextField(context, type: AddActivityPageInputType.LEADER_ADVICE)
       ],
@@ -873,7 +882,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildTitleRow(tr('curren_month_scenario')),
+        _buildTitleRow(tr('curren_month_scenario'), isNotwithStart: true),
         _buildLinkedText(context, '${tr('curren_month_scenario')} 보기',
             isCurrentMonthScenario: true)
       ],
@@ -902,6 +911,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
     return ChangeNotifierProvider(
       create: (context) => AddActivityPageProvider(),
       builder: (context, _) {
+        final p = context.read<AddActivityPageProvider>();
         return BaseLayout(
             hasForm: true,
             appBar: MainAppBar(
@@ -909,7 +919,6 @@ class _AddActivityPageState extends State<AddActivityPage> {
               titleText: AppText.text(tr('add_activity_page'),
                   style: AppTextStyle.w500_22),
               callback: () {
-                final p = context.read<AddActivityPageProvider>();
                 Navigator.pop(context, p.isUpdate);
               },
             ),
@@ -936,54 +945,87 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                     _buildSelectCustomer(context),
                                     _buildCustomerDiscription(context),
                                     _buildSelectKeyMan(context),
-                                    defaultSpacing(times: 1),
+                                    defaultSpacing(),
                                     _buildIsVisitRow(context),
-                                    defaultSpacing(times: 1),
-                                    _buildReasonForNotVisit(context),
-                                    defaultSpacing(times: 2),
-                                    _buildDistanceDiscription(context),
-                                    defaultSpacing(times: 1),
-                                    _buildIsInterview(context),
-                                    _buildReasonForInterviewFailure(context),
-                                    defaultSpacing(times: 2),
-                                    _buildActivityType(context),
-                                    defaultSpacing(times: 2),
+                                    defaultSpacing(),
                                     _buildIsWithTeamLeader(context),
                                     defaultSpacing(times: 2),
                                     _buildIsWithAnotherSales(context),
-                                    defaultSpacing()
+                                    defaultSpacing(times: 2),
+                                    _buildReasonForNotVisit(context),
+                                    defaultSpacing(times: 2),
+                                    _buildDistanceDiscription(context),
+                                    defaultSpacing(),
+                                    Selector<AddActivityPageProvider, bool>(
+                                      selector: (context, provider) =>
+                                          provider.isVisit,
+                                      builder: (context, isVisit, _) {
+                                        return isVisit
+                                            ? Column(
+                                                children: [
+                                                  _buildIsInterview(context),
+                                                  _buildReasonForInterviewFailure(
+                                                      context),
+                                                  defaultSpacing(times: 2),
+                                                  _buildActivityType(context),
+                                                  defaultSpacing()
+                                                ],
+                                              )
+                                            : Container();
+                                      },
+                                    )
                                   ],
                                 ),
                               ),
-                              CustomerinfoWidget.buildSubTitle(
-                                  context, '${tr('activity_type_2')}'),
-                              Padding(
-                                  padding: AppSize.defaultSidePadding,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      _buildSuggestedItems(context),
-                                      defaultSpacing(),
-                                      _buildAddSuggestedItemButton(context),
-                                      defaultSpacing(times: 2)
-                                    ],
-                                  )),
-                              CustomerinfoWidget.buildSubTitle(
-                                  context, '${tr('result_and_future')}'),
-                              Padding(
-                                  padding: AppSize.defaultSidePadding,
-                                  child: Column(
-                                    children: [
-                                      defaultSpacing(),
-                                      _buildVisitResult(context),
-                                      defaultSpacing(times: 2),
-                                      _buildTeamLeaderAdvice(context),
-                                      defaultSpacing(times: 2),
-                                      _buildCurrentMonthScenario(context),
-                                      defaultSpacing(times: 2),
-                                    ],
-                                  )),
+                              Selector<AddActivityPageProvider, bool>(
+                                selector: (context, provider) =>
+                                    provider.isVisit,
+                                builder: (context, isVisit, _) {
+                                  return isVisit
+                                      ? Column(
+                                          children: [
+                                            CustomerinfoWidget.buildSubTitle(
+                                                context,
+                                                '${tr('activity_type_2')}'),
+                                            Padding(
+                                                padding:
+                                                    AppSize.defaultSidePadding,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    _buildSuggestedItems(
+                                                        context),
+                                                    defaultSpacing(),
+                                                    _buildAddSuggestedItemButton(
+                                                        context),
+                                                    defaultSpacing(times: 2)
+                                                  ],
+                                                )),
+                                            CustomerinfoWidget.buildSubTitle(
+                                                context,
+                                                '${tr('result_and_future')}'),
+                                            Padding(
+                                                padding:
+                                                    AppSize.defaultSidePadding,
+                                                child: Column(
+                                                  children: [
+                                                    defaultSpacing(),
+                                                    _buildVisitResult(context),
+                                                    defaultSpacing(times: 2),
+                                                    _buildTeamLeaderAdvice(
+                                                        context),
+                                                    defaultSpacing(times: 2),
+                                                    _buildCurrentMonthScenario(
+                                                        context),
+                                                    defaultSpacing(times: 2),
+                                                  ],
+                                                )),
+                                          ],
+                                        )
+                                      : Container();
+                                },
+                              ),
                               defaultSpacing(height: AppSize.realHeight * .3),
                             ],
                           ),

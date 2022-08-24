@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-23 10:16:05
+ * Last Modified: 2022-08-24 09:07:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -23,12 +23,20 @@ import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_280.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_361.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_250.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
+import 'package:medsalesportal/util/date_util.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
+
+typedef IncrementSeqNo = String Function();
 
 class AddActivityPageProvider extends ChangeNotifier {
   AddActivityKeyManResponseModel? keyManResponseModel;
@@ -47,6 +55,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   String? seletedAmount;
   List<String>? activityList;
   List<AddActivitySuggetionItemModel>? suggestedList;
+  bool isLoadData = false;
   bool isVisit = false;
   bool isWithTeamLeader = false;
   bool isUpdate = false;
@@ -208,9 +217,182 @@ class AddActivityPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> saveTable() async {
-    isUpdate = true;
+    isLoadData = true;
     notifyListeners();
-    return ResultModel(true);
+
+    var isLogin = CacheService.getIsLogin();
+    var t250Base64 = ''; // 영업활동 시작/종료
+    var t260Base64 = ''; // 영업활동 상세
+    var t280Base64 = ''; // 활동유형
+    var t361Base64 = ''; // 동행
+    var temp = <Map<String, dynamic>>[];
+    var t250 = SalesActivityDayTable250();
+    var t260 = SalesActivityDayTable260();
+    var t280 = SalesActivityDayTable280();
+    var t361 = SalesActivityDayTable361();
+    var time = DateUtil.getTimeNow();
+    t250 =
+        SalesActivityDayTable250.fromJson(editModel!.table250!.first.toJson());
+    temp.addAll([t250.toJson()]);
+    t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    var now = DateTime.now();
+    var esLogin = CacheService.getEsLogin();
+    var t260List = <SalesActivityDayTable260>[];
+    var t280List = <SalesActivityDayTable280>[];
+    var t361List = <SalesActivityDayTable361>[];
+
+    var newT260 = ({required bool isFirstEntity}) async {
+      isFirstEntity // first Activity
+          ? () {
+              t260.erdat = t250.erdat;
+              t260.erzet = t250.erzet;
+              t260.ernam = t250.ernam;
+              t260.erwid = t250.erwid;
+              t260.aedat = t250.aedat;
+              t260.aezet = t250.aezet;
+              t260.aenam = t250.aenam;
+              t260.aewid = t250.aewid;
+              t260.mandt = t250.mandt;
+              t260.bzactno = t250.bzactno;
+            }()
+          : () {
+              index == null // new activity.
+                  ? () {
+                      t260.erdat = DateUtil.getDateStr(now.toIso8601String());
+                      t260.erzet = DateUtil.getTimeNow(isNotWithColon: true);
+                      t260.ernam = esLogin!.ename;
+                      t260.erwid = esLogin.logid;
+                      t260.aedat = DateUtil.getDateStr(now.toIso8601String());
+                      t260.aezet = DateUtil.getTimeNow(isNotWithColon: true);
+                      t260.aenam = esLogin.ename;
+                      t260.aewid = esLogin.logid;
+                      t260.mandt = t250.mandt;
+                      t260.bzactno = t250.bzactno;
+                    }()
+                  : () {
+                      // update activity
+                      t260 = SalesActivityDayTable260.fromJson(
+                          editModel!.table260![index!].toJson());
+                    }();
+            }();
+
+      IncrementSeqNo incrementSeqno = () {
+        var lastSeqno = int.parse(editModel!.table260!.last.seqno!);
+        lastSeqno++;
+        var repairLenght = 4 - '$lastSeqno'.length;
+        var newSeqno = '';
+        for (var i = 0; i < repairLenght; i++) {
+          newSeqno += '0';
+        }
+        newSeqno = '$newSeqno$lastSeqno';
+        return newSeqno;
+      };
+      // 화면 수정사항.
+      var latLonMap = await getAddressLatLon(selectedKunnr!.zaddName1!)
+          .then((result) => result.data);
+
+      t260.adate = DateUtil.getDateStr(DateTime.now().toIso8601String());
+      t260.xLatitude = isVisit ? double.parse(latLonMap['lat']) : 0.00;
+      t260.yLongitude = isVisit ? double.parse(latLonMap['lon']) : 0.00;
+      t260.dist = isVisit ? double.parse(distanceModel!.distance!) : 0.0;
+      t260.seqno = isFirstEntity
+          ? '0001'
+          : index == null
+              ? incrementSeqno()
+              : t260.seqno;
+      t260.umode = isFirstEntity ? 'I' : 'U';
+      t260.isGps = 'X';
+      t260.callType = 'M';
+      t260.zskunnr = selectedKunnr!.kunnr;
+      t260.zskunnrNm = selectedKunnr!.name;
+      t260.zaddName1 = selectedKunnr!.zaddName1;
+      t260.xvisit = isVisit ? 'Y' : 'N';
+      t260.zstatus = selectedKunnr!.zstatus;
+      t260.zkmno = selectedKeyMan!.zkmno;
+      t260.zkmnoNm = selectedKeyMan!.zkmnoNm;
+      t260.visitRmk = isVisit ? '' : reasonForNotVisit ?? '';
+      t260.xmeet = isInterviewIndex == 0 ? 'Y' : 'N';
+      t260.meetRmk =
+          isInterviewIndex == 0 ? '' : reasonForinterviewFailure ?? '';
+      t260.rslt = visitResultInput ?? '';
+      t260.comnt = leaderAdviceInput ?? '';
+
+      // 동행 처리.
+
+      // 활동 유형 추가.
+    };
+
+    if (editModel!.table260!.isEmpty) {
+      await newT260(isFirstEntity: true).then((_) => t260List.add(t260));
+    } else {
+      editModel!.table260!.forEach((table) {
+        t260List.add(SalesActivityDayTable260.fromJson(table.toJson()));
+      });
+      await newT260(isFirstEntity: false).then((_) => t260List.add(t260));
+    }
+    temp.clear();
+    temp.addAll([...t260List.map((table) => table.toJson())]);
+    t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+
+    var newT361 = () async {
+      var isFirstEntity = editModel!.table361!
+          .where((table) => table.seqno == t260.seqno)
+          .toList()
+          .isNotEmpty;
+      isFirstEntity
+          ? () {
+              // insert
+            }()
+          : () {
+              // update
+            }();
+    };
+    if (editModel!.table260!.isEmpty) {
+      await newT361().then((_) => t361List.add(t361));
+    } else {
+      editModel!.table361!.forEach((table) {
+        t361List.add(SalesActivityDayTable361.fromJson(table.toJson()));
+      });
+      await newT361().then((_) => t361List.add(t361));
+    }
+    temp.clear();
+    temp.addAll([...t361List.map((table) => table.toJson())]);
+    t361Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+
+    _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
+      "methodParamMap": {
+        "IV_PTYPE": "U",
+        "IV_ADATE": FormatUtil.removeDash(
+            DateUtil.getDateStr(DateTime.now().toIso8601String())),
+        "T_ZLTSP0250S": t250Base64,
+        "T_ZLTSP0260S": t260Base64,
+        "T_ZLTSP0361S": t361Base64,
+        "IS_LOGIN": isLogin,
+        "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
+        "functionName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
+      }
+    };
+    final result = await _api.request(body: _body);
+    if (result != null && result.statusCode != 200) {
+      isLoadData = false;
+      notifyListeners();
+      return ResultModel(false);
+    }
+    if (result != null && result.statusCode == 200) {
+      pr(result.body);
+      editModel = SalesActivityDayResponseModel.fromJson(result.body['data']);
+      pr(editModel?.toJson());
+      isLoadData = false;
+      // notifyListeners();
+      isUpdate = true;
+      notifyListeners();
+      return ResultModel(true);
+    }
+    isLoadData = false;
+    notifyListeners();
+    return ResultModel(false, errorMassage: result?.errorMessage);
   }
 
   Future<ResultModel> getAddressLatLon(String addr) async {

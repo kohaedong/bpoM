@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/visit_result_history_page.dart
  * Created Date: 2022-08-17 23:31:14
- * Last Modified: 2022-08-20 01:54:10
+ * Last Modified: 2022-08-23 14:21:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -57,11 +57,12 @@ class VisitResultHistoryPage extends StatelessWidget {
         Padding(
             padding: AppSize.defaultSidePadding,
             child: BaseInfoRowByKeyAndValue.build(
-                model.xvisit == 'Y'
-                    ? model.xmeet == 'Y'
-                        ? tr('visit_result')
-                        : tr('reason_for_interview_faild')
-                    : tr('reason_for_not_visiting'),
+                tr('visit_result'),
+                // model.xvisit == 'Y'
+                //     ? model.xmeet == 'Y'
+                //         ? tr('visit_result')
+                //         : tr('reason_for_interview_faild')
+                //     : tr('reason_for_not_visiting'),
                 model.xvisit == 'Y'
                     ? model.xmeet == 'Y'
                         ? model.rslt!
