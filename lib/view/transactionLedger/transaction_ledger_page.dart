@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-08-17 15:17:37
+ * Last Modified: 2022-08-24 17:32:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,9 +12,6 @@
  */
 import 'dart:io';
 import 'dart:math' as math;
-import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +20,8 @@ import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/image_type.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
+import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/enums/popup_search_type.dart';
@@ -31,6 +30,7 @@ import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/enums/offset_direction_type.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';

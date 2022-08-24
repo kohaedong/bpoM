@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-24 16:36:15
+ * Last Modified: 2022-08-24 17:27:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,8 +11,6 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,10 +31,12 @@ import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
+import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/enums/add_activity_page_input_type.dart';
+import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
@@ -407,39 +407,39 @@ class _AddActivityPageState extends State<AddActivityPage> {
     return Positioned(
         bottom: 0,
         left: 0,
-        child: AppStyles.buildButton(
-            context,
-            isNewActivity ? tr('submmit') : tr('order_save'),
-            AppSize.realWidth,
-            isNewActivity || isToday
-                ? AppColors.primary
-                : AppColors.unReadyButton,
-            AppTextStyle.menu_18(isNewActivity || isToday
-                ? AppColors.whiteText
-                : AppColors.hintText),
-            0,
-            selfHeight: AppSize.buttonHeight * 1.3, () {
-          final p = context.read<AddActivityPageProvider>();
-          if (p.activityStatus == ActivityStatus.STOPED ||
-              p.activityStatus == ActivityStatus.NONE) {
-            return;
-          } else {
-            if ((p.selectedKunnr == null || p.selectedKeyMan == null)) {
-              AppDialog.showSignglePopup(
-                  context, tr('plz_check_essential_option'));
-            } else {
-              if (isToday) {
-                p.saveTable().then((result) {
-                  if (result.isSuccessful) {
-                    AppToast().show(context, tr('success'));
-                  }
-                });
-                //임시저장.
-                // 저장시간/면담여부/활동유형/팀장동행/영업사원 동행/제안품목/방문결과.
+        child: Selector<AddActivityPageProvider, Tuple2<bool, bool>>(
+          selector: (context, provider) => Tuple2(
+              provider.selectedKunnr != null, provider.selectedKeyMan != null),
+          builder: (context, tuple, _) {
+            var canShow =
+                (isNewActivity || isToday) && tuple.item1 && tuple.item2;
+            return AppStyles.buildButton(
+                context,
+                isNewActivity ? tr('submmit') : tr('order_save'),
+                AppSize.realWidth,
+                canShow ? AppColors.primary : AppColors.unReadyButton,
+                AppTextStyle.menu_18(
+                    canShow ? AppColors.whiteText : AppColors.hintText),
+                0,
+                selfHeight: AppSize.buttonHeight * 1.3, () {
+              final p = context.read<AddActivityPageProvider>();
+              if (p.activityStatus == ActivityStatus.STOPED ||
+                  p.activityStatus == ActivityStatus.NONE) {
+                return;
+              } else {
+                if (isToday && canShow) {
+                  p.saveTable().then((result) {
+                    if (result.isSuccessful) {
+                      AppToast().show(context, tr('success'));
+                    }
+                  });
+                  //임시저장.
+                  // 저장시간/면담여부/활동유형/팀장동행/영업사원 동행/제안품목/방문결과.
+                }
               }
-            }
-          }
-        }));
+            });
+          },
+        ));
   }
 
   Widget _buildDistanceDiscription(BuildContext context) {

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-08-22 15:23:06
+ * Last Modified: 2022-08-24 17:37:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,22 +11,22 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
+import 'package:tuple/tuple.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:medsalesportal/styles/export_common.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/enums/popup_search_type.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
+import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
-import 'package:medsalesportal/view/common/base_layout.dart';
-import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
+import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
 import 'package:medsalesportal/view/orderManager/provider/order_manager_page_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 class OrderManagerPage extends StatefulWidget {
   const OrderManagerPage({Key? key}) : super(key: key);

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivitySearch/salse_activity_detail_page.dart
  * Created Date: 2022-07-07 13:41:48
- * Last Modified: 2022-07-13 11:15:07
+ * Last Modified: 2022-08-24 17:30:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,17 +11,17 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/model/rfc/t_list_model.dart';
+import 'package:medsalesportal/util/format_util.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/view/common/base_app_bar.dart';
-import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
+import 'package:medsalesportal/model/rfc/t_list_model.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
+import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
+import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
 
 class SalseActivityDetailPage extends StatelessWidget {
   const SalseActivityDetailPage({Key? key}) : super(key: key);

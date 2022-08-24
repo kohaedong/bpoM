@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-08-01 16:48:49
+ * Last Modified: 2022-08-24 17:36:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,25 +11,25 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/input_icon_type.dart';
-import 'package:medsalesportal/model/rfc/detail_book_response_model.dart';
-import 'package:medsalesportal/view/common/base_app_toast.dart';
-import 'package:medsalesportal/view/common/base_input_widget.dart';
-import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
-import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
-import 'package:medsalesportal/view/common/widget_of_null_data.dart';
-import 'package:medsalesportal/view/detailBook/detail_book_web_view.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/base_app_bar.dart';
+import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
+import 'package:medsalesportal/view/common/base_app_bar.dart';
+import 'package:medsalesportal/view/common/base_app_toast.dart';
+import 'package:medsalesportal/view/common/base_input_widget.dart';
+import 'package:medsalesportal/view/common/widget_of_null_data.dart';
+import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:medsalesportal/model/rfc/detail_book_t_list_model.dart';
+import 'package:medsalesportal/view/detailBook/detail_book_web_view.dart';
+import 'package:medsalesportal/model/rfc/detail_book_response_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
+import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:medsalesportal/view/detailBook/provider/detail_book_page_provider.dart';
-import 'package:tuple/tuple.dart';
 
 class DetailBookPage extends StatefulWidget {
   const DetailBookPage({Key? key}) : super(key: key);

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/home/home_icon_map.dart
  * Created Date: 2021-10-27 18:09:39
- * Last Modified: 2022-07-05 10:28:31
+ * Last Modified: 2022-08-24 17:37:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,8 +11,8 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/enums/image_type.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 final List<ImageType> homeIconsListOne = [
   ImageType.APP_ACTIVITY_MANEGER,

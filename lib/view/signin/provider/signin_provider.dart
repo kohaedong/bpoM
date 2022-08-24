@@ -1,10 +1,10 @@
-import 'dart:async';
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medsalesportal/enums/account_type.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/model/user/user.dart';
+import 'package:medsalesportal/enums/account_type.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';

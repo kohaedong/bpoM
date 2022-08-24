@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-08-22 09:37:29
+ * Last Modified: 2022-08-24 17:37:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,8 +14,8 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
 import 'package:medsalesportal/service/hive_service.dart';
-import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class OrderManagerPageProvider extends ChangeNotifier {

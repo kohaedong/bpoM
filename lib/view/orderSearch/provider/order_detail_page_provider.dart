@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_detail_page_provider.dart
  * Created Date: 2022-07-13 09:31:34
- * Last Modified: 2022-07-13 17:13:01
+ * Last Modified: 2022-08-24 17:33:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,10 +13,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/model/rfc/es_return_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/model/rfc/es_return_model.dart';
 
 class OrderDetailPageProvider extends ChangeNotifier {
   Future<ResultModel> orderCancel(String orderNumber) async {

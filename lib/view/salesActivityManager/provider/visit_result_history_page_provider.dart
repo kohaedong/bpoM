@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/visit_result_history_page_provider.dart
  * Created Date: 2022-08-17 23:32:54
- * Last Modified: 2022-08-20 01:39:50
+ * Last Modified: 2022-08-24 17:28:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,11 +13,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/model/rfc/visit_result_history_page_response_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/model/rfc/visit_result_history_page_response_model.dart';
 
 class VisitResultHistoryPageProvider extends ChangeNotifier {
   VisitResultHistoryPageResponseModel? visitResponseModel;

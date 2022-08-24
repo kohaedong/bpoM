@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-24 16:06:13
+ * Last Modified: 2022-08-24 17:28:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,9 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/util/date_util.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
@@ -19,6 +22,7 @@ import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
@@ -31,10 +35,6 @@ import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart'
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
-import 'package:medsalesportal/util/date_util.dart';
-import 'package:medsalesportal/util/encoding_util.dart';
-import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 
 typedef IncrementSeqNo = String Function();
 typedef IsThisActivity = bool Function(SalesActivityDayTable361);
@@ -258,7 +258,6 @@ class AddActivityPageProvider extends ChangeNotifier {
     var t260 = SalesActivityDayTable260();
     var t280 = SalesActivityDayTable280();
     var t361 = SalesActivityDayTable361();
-    var time = DateUtil.getTimeNow();
     t250 =
         SalesActivityDayTable250.fromJson(editModel!.table250!.first.toJson());
     temp.addAll([t250.toJson()]);
@@ -269,7 +268,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     var t280List = <SalesActivityDayTable280>[];
     var t361List = <SalesActivityDayTable361>[];
     IsThisActivity isThisActivity = (SalesActivityDayTable361 table) {
-      return table.seqno == t260.seqno;
+      return table.seqno == t260.seqno && table.bzactno == t260.seqno;
     };
     var newT260 = ({required bool isFirstEntity}) async {
       isFirstEntity // first Activity
@@ -360,30 +359,27 @@ class AddActivityPageProvider extends ChangeNotifier {
               : withLeaderAndSaller
                   ? 'E002'
                   : '';
-      pr('26000000000${t260.toJson()}');
     };
 
     if (editModel!.table260!.isEmpty) {
       await newT260(isFirstEntity: true).then((_) => t260List.add(t260));
     } else {
+      // 기존 데이터 보류.
       if (index != null) {
-        // 기존 데이터 보류.
         var currentActivity = editModel!.table260![index!];
         editModel!.table260!.forEach((table) {
           if (table != currentActivity) {
             t260List.add(SalesActivityDayTable260.fromJson(table.toJson()));
-          } else {
-            pr('equlse');
           }
         });
       }
+      //  신규 데이터 추가.
       await newT260(isFirstEntity: false).then((_) => t260List.add(t260));
-      pr('t260List.length ${t260List.length}');
-      pr('t260List.last.seqno${t260List.last.seqno}');
     }
     temp.clear();
     temp.addAll([...t260List.map((table) => table.toJson())]);
     t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+
     // 동행 처리 - 361 .
     var newT361 =
         ({required bool isFirstEntity, SalesActivityDayTable361? model}) async {
@@ -400,19 +396,19 @@ class AddActivityPageProvider extends ChangeNotifier {
               t361.umode = 'I';
             }()
           : () {
-              // update
+              //! update   로직상 업데이트 불가처리 해 보류 함.
+              //! 서버단 update 가능시 추가 구현 가능.
               t361 = SalesActivityDayTable361.fromJson(model!.toJson());
-              t361.logid = anotherSaller!.logid;
-              t361.sname = anotherSaller!.sname;
-              t361.zkmno = selectedKeyMan!.zkmno;
-              t361.zskunnr = selectedKunnr!.zskunnr;
-              t361.umode = 'U';
+              // t361.logid = anotherSaller!.logid;
+              // t361.sname = anotherSaller!.sname;
+              // t361.zkmno = selectedKeyMan!.zkmno;
+              // t361.zskunnr = selectedKunnr!.zskunnr;
+              // t361.umode = 'U';
             }();
     };
 
-    // 기존 데이터 유지 .
     var isTable360NotEmpty = editModel!.table361!.isNotEmpty;
-
+    // 기존 데이터 유지 .
     if (isTable360NotEmpty) {
       // 현재활동과 매칭 되는 데이터 일단 뻬고
       editModel!.table361!.forEach((table) {
@@ -429,14 +425,15 @@ class AddActivityPageProvider extends ChangeNotifier {
     } else {
       var thisActivityData =
           editModel!.table361!.where((table) => isThisActivity(table)).toList();
-      if (thisActivityData.isEmpty && anotherSaller != null) {
-        await newT361(isFirstEntity: true).then((_) => t361List.add(t361));
-      }
-      if (thisActivityData.isNotEmpty && anotherSaller != null) {
-        await newT361(isFirstEntity: false, model: thisActivityData.single)
+      if (anotherSaller != null) {
+        await newT361(
+                isFirstEntity: thisActivityData.isEmpty,
+                model:
+                    thisActivityData.isEmpty ? null : thisActivityData.single)
             .then((_) => t361List.add(t361));
       }
     }
+    // 360table에 데이터가 있으면 base64로 전환.
     if (t361List.isNotEmpty) {
       temp.clear();
       temp.addAll([...t361List.map((table) => table.toJson())]);

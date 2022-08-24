@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart
  * Created Date: 2022-07-21 14:21:16
- * Last Modified: 2022-07-28 10:56:17
+ * Last Modified: 2022-08-24 17:34:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,22 +12,22 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/model/rfc/bulk_order_detail_amount_response_model.dart';
-import 'package:medsalesportal/model/rfc/bulk_order_detail_search_meta_price_model.dart';
-import 'package:medsalesportal/model/rfc/bulk_order_detail_search_meta_price_response_model.dart';
-import 'package:medsalesportal/model/rfc/bulk_order_detail_t_item_model.dart';
-import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
-import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_et_t_list_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_t_item_model.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_detail_response_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_amount_response_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_search_meta_price_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_search_meta_price_response_model.dart';
 
 class BulkOrderDetailProvider extends ChangeNotifier {
   BulkOrderDetailResponseModel? bulkOrderDetailResponseModel;

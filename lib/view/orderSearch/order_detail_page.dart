@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_detail_page.dart
  * Created Date: 2022-07-12 15:20:28
- * Last Modified: 2022-08-17 15:16:30
+ * Last Modified: 2022-08-24 17:33:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,20 +12,20 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/view/common/base_app_toast.dart';
-import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
-import 'package:medsalesportal/model/rfc/t_list_search_order_model.dart';
+import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
+import 'package:medsalesportal/model/rfc/t_list_search_order_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
+import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
+import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
 import 'package:medsalesportal/view/orderSearch/provider/order_detail_page_provider.dart';
-import 'package:provider/provider.dart';
 
 class OrderDetailPage extends StatelessWidget {
   const OrderDetailPage({Key? key}) : super(key: key);

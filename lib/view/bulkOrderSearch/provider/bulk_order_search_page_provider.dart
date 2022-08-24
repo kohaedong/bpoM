@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-07-24 16:28:02
+ * Last Modified: 2022-08-24 17:35:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,23 +12,23 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/account_type.dart';
-import 'package:medsalesportal/model/rfc/bulk_order_et_t_list_model.dart';
-import 'package:medsalesportal/model/rfc/bulk_order_response_model.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/enums/account_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_response_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_et_t_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 
 class BulkOrderSearchPageProvider extends ChangeNotifier {

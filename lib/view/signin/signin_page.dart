@@ -1,4 +1,3 @@
-import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,9 +9,10 @@ import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
-import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
-import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
+import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
+import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({Key? key}) : super(key: key);
