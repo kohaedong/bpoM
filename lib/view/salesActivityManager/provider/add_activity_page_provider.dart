@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-24 17:28:15
+ * Last Modified: 2022-08-24 18:19:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -268,7 +268,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     var t280List = <SalesActivityDayTable280>[];
     var t361List = <SalesActivityDayTable361>[];
     IsThisActivity isThisActivity = (SalesActivityDayTable361 table) {
-      return table.seqno == t260.seqno && table.bzactno == t260.seqno;
+      return table.seqno == t260.seqno;
     };
     var newT260 = ({required bool isFirstEntity}) async {
       isFirstEntity // first Activity
@@ -487,6 +487,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       var coordinateResponseModel =
           SalseActivityCoordinateResponseModel.fromJson(result.body['data']);
+      pr(coordinateResponseModel.toJson());
       var model = coordinateResponseModel.result;
       var newLatLonNotNull = model != null &&
           model.newLat != null &&
@@ -517,29 +518,37 @@ class AddActivityPageProvider extends ChangeNotifier {
   SalesActivityDayTable260 _getLastVisitModel(
       List<SalesActivityDayTable260> visitList) {
     var model = SalesActivityDayTable260();
-    visitList.forEach((item) {
-      var temp = 0;
-      var time = int.parse(item.aezet!);
-      if (time > temp) {
-        temp = time;
-        model = item;
-      }
-    });
+    if (visitList.isNotEmpty) {
+      visitList.forEach((item) {
+        var temp = 0;
+        var time = int.parse(item.aezet!);
+        if (time > temp) {
+          temp = time;
+          model = item;
+        }
+      });
+    } else {
+      var startLat = editModel!.table250!.single.sxLatitude;
+      var startLon = editModel!.table250!.single.syLongitude;
+      model.xLatitude = startLat;
+      model.yLongitude = startLon;
+    }
     return model;
   }
 
   Future<ResultModel> getDistance() async {
     assert(selectedKunnr != null && selectedKeyMan != null);
-    var isNewActivity = index == null;
-    var isTable260Null = editModel!.table260!.length == 0;
-    var latLonResult = await getAddressLatLon(selectedKunnr!.zaddName1!);
+    var isNewActivity = (index == null);
+    var isTable260Null = editModel!.table260!.isEmpty;
+
     var startX = '';
     var startY = '';
     var stopX = '';
     var stopY = '';
     var startKunnr = '';
     var stopKunnr = '';
-    var setStartLatLonFormTable250 = () {
+    var setStartLatLonFormTable250 = () async {
+      var latLonResult = await getAddressLatLon(selectedKunnr!.zaddName1!);
       startX = '${editModel!.table250!.single.sxLatitude!}';
       startY = '${editModel!.table250!.single.syLongitude!}';
       stopX = latLonResult.data['lat'];
@@ -547,39 +556,26 @@ class AddActivityPageProvider extends ChangeNotifier {
       startKunnr = '';
       stopKunnr = selectedKunnr!.zskunnr!;
     };
-    if (isNewActivity) {
-      if (isTable260Null) {
-        // 도착처리건 없으면 영업활동 첫건으로 판단해 table 250어서 영업활동 시작주소 가져옴.
-        setStartLatLonFormTable250.call();
-      } else {
-        var visitList =
-            editModel!.table260!.where((item) => item.xvisit == 'Y').toList();
-        // 도착처리건 있으면. 마지막 도착 지점의 lat & lon 가져온다.
-        if (visitList.isNotEmpty) {
-          var lastVisitModel = _getLastVisitModel(visitList);
-          startX = '${lastVisitModel.xLatitude}';
-          startY = '${lastVisitModel.yLongitude}';
-          stopX = latLonResult.data['lat'];
-          stopY = latLonResult.data['lon'];
-          startKunnr = lastVisitModel.zskunnr ?? '';
-          stopKunnr = selectedKunnr!.zskunnr!;
-        } else {
-          // 도착처리건 없으면 영업활동 첫건으로 판단해 table 250어서 영업활동 시작주소 가져옴.
-          setStartLatLonFormTable250.call();
-        }
-      }
+    if (isTable260Null) {
+      // 도착처리건 없으면 영업활동 첫건으로 판단해 table 250어서 영업활동 시작주소 가져옴.
+      setStartLatLonFormTable250.call();
     } else {
-      //  일별 영업활동 화면에서 List 클릭 후 진입시
-      var model = editModel!.table260![index!];
       var visitList =
           editModel!.table260!.where((item) => item.xvisit == 'Y').toList();
-      var lastVisitModel = _getLastVisitModel(visitList);
-      startX = '${lastVisitModel.xLatitude}';
-      startY = '${lastVisitModel.yLongitude}';
-      stopX = '${model.xLatitude!}';
-      stopY = '${model.yLongitude}';
-      startKunnr = lastVisitModel.zskunnr ?? '';
-      stopKunnr = selectedKunnr!.zskunnr!;
+      // 도착처리건 있으면. 마지막 도착 지점의 lat & lon 가져온다.
+      if (visitList.isNotEmpty) {
+        var lastVisitModel = visitList.first;
+        var latLonResult = await getAddressLatLon(selectedKunnr!.zaddName1!);
+        startX = '${lastVisitModel.xLatitude}';
+        startY = '${lastVisitModel.yLongitude}';
+        stopX = latLonResult.data['lat'];
+        stopY = latLonResult.data['lon'];
+        startKunnr = lastVisitModel.zskunnr ?? '';
+        stopKunnr = selectedKunnr!.zskunnr!;
+      } else {
+        // 도착처리건 없으면 영업활동 첫건으로 판단해 table 250어서 영업활동 시작주소 가져옴.
+        setStartLatLonFormTable250.call();
+      }
     }
     _api.init(RequestType.GET_DISTANCE);
     Map<String, dynamic> _body = {

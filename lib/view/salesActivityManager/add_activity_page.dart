@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-24 17:27:40
+ * Last Modified: 2022-08-24 18:22:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -958,13 +958,13 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                     defaultSpacing(),
                                     _buildIsVisitRow(context),
                                     defaultSpacing(),
+                                    _buildDistanceDiscription(context),
+                                    defaultSpacing(),
                                     _buildIsWithTeamLeader(context),
                                     defaultSpacing(times: 2),
                                     _buildIsWithAnotherSales(context),
                                     defaultSpacing(times: 2),
                                     _buildReasonForNotVisit(context),
-                                    defaultSpacing(times: 2),
-                                    _buildDistanceDiscription(context),
                                     defaultSpacing(),
                                     Selector<AddActivityPageProvider, bool>(
                                       selector: (context, provider) =>
