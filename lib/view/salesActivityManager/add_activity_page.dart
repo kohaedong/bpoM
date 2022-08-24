@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-24 09:56:51
+ * Last Modified: 2022-08-24 16:36:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -889,6 +890,15 @@ class _AddActivityPageState extends State<AddActivityPage> {
     );
   }
 
+  Widget _buildLoadingWidget(BuildContext context) {
+    return Selector<AddActivityPageProvider, bool>(
+      selector: (context, provider) => provider.isLoadData,
+      builder: (context, isLoadData, _) {
+        return BaseLoadingViewOnStackWidget.build(context, isLoadData);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var arguments =
@@ -1030,7 +1040,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                             ],
                           ),
                         ),
-                        _buildSubmmitButton(context)
+                        _buildSubmmitButton(context),
+                        _buildLoadingWidget(context),
                       ],
                     );
                   }

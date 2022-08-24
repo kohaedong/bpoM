@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-08-22 17:52:30
+ * Last Modified: 2022-08-24 16:32:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -106,6 +106,8 @@ class ActivityMenuProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> deletLastActivity() async {
+    isLoadData = true;
+    notifyListeners();
     assert(editModel!.table260!.isNotEmpty);
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
@@ -114,17 +116,17 @@ class ActivityMenuProvider extends ChangeNotifier {
     var temp = <Map<String, dynamic>>[];
     var t250 =
         SalesActivityDayTable250.fromJson(editModel!.table250!.single.toJson());
-    var t260 = <SalesActivityDayTable260>[];
+    var t260List = <SalesActivityDayTable260>[];
     temp.addAll([t250.toJson()]);
     t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
-    temp.clear();
+
     editModel!.table260!.forEach((tableItem) {
-      t260.add(SalesActivityDayTable260.fromJson(tableItem.toJson()));
+      t260List.add(SalesActivityDayTable260.fromJson(tableItem.toJson()));
     });
-    t260.removeLast();
-    t260.forEach((table) {
-      temp.add(table.toJson());
-    });
+    var deleteEntity = t260List[0];
+    deleteEntity.umode = 'D';
+    temp.clear();
+    temp.addAll([...t260List.map((table) => table.toJson())]);
     t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
@@ -139,13 +141,16 @@ class ActivityMenuProvider extends ChangeNotifier {
     };
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {
+      isLoadData = false;
+      notifyListeners();
       return ResultModel(false, errorMassage: result.errorMessage);
     }
     if (result != null && result.statusCode == 200) {
+      var beforeLength = editModel?.table260?.length;
       editModel = SalesActivityDayResponseModel.fromJson(result.body['data']);
-      pr(editModel?.toJson());
-      pr(editModel?.table260?.length);
+      pr('delete successful ????${beforeLength != editModel!.table260!.length}');
       isLoadData = false;
+      notifyListeners();
       return ResultModel(true);
     }
     return ResultModel(false, errorMassage: result!.errorMessage);

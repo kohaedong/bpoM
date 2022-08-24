@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-22 17:59:43
+ * Last Modified: 2022-08-24 16:09:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -572,13 +572,9 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         'index': index
       });
       if (naviResult != null) {
-        pr(naviResult);
         naviResult as bool;
-        p.setIsNeedUpdate(naviResult);
         if (naviResult) {
-          //!
-          pr('menuButtonNaviResult:: $naviResult');
-          Navigator.pop(context, p.isNeedUpdate);
+          Navigator.pop(context, naviResult);
         }
       }
     } else {

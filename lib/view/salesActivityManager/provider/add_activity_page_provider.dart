@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-24 10:32:08
+ * Last Modified: 2022-08-24 16:06:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -76,7 +76,6 @@ class AddActivityPageProvider extends ChangeNotifier {
       isVisit = temp.xvisit != null && temp.xvisit == 'Y';
       selectedKunnr = EtKunnrModel();
       selectedKunnr!.name = temp.zskunnrNm;
-      selectedKunnr!.kunnr = temp.zskunnr;
       selectedKunnr!.zskunnr = temp.zskunnr;
       selectedKunnr!.zaddName1 = temp.zaddr;
       selectedKunnr!.zstatus = temp.zstatus;
@@ -98,10 +97,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       // 동행 초기화.
       var saveAnotherSaller = () {
         IsThisActivity isThisActivity = (SalesActivityDayTable361 table) {
-          return table.bzactno == temp.bzactno &&
-              table.zkmno == temp.zkmno &&
-              table.zskunnr == temp.zskunnr &&
-              table.seqno == temp.seqno;
+          return table.bzactno == temp.bzactno && table.seqno == temp.seqno;
         };
         var temp361 = editModel!.table361!
             .where((table) => isThisActivity(table))
@@ -252,7 +248,6 @@ class AddActivityPageProvider extends ChangeNotifier {
   Future<ResultModel> saveTable() async {
     isLoadData = true;
     notifyListeners();
-
     var isLogin = CacheService.getIsLogin();
     var t250Base64 = ''; // 영업활동 시작/종료
     var t260Base64 = ''; // 영업활동 상세
@@ -273,7 +268,9 @@ class AddActivityPageProvider extends ChangeNotifier {
     var t260List = <SalesActivityDayTable260>[];
     var t280List = <SalesActivityDayTable280>[];
     var t361List = <SalesActivityDayTable361>[];
-
+    IsThisActivity isThisActivity = (SalesActivityDayTable361 table) {
+      return table.seqno == t260.seqno;
+    };
     var newT260 = ({required bool isFirstEntity}) async {
       isFirstEntity // first Activity
           ? () {
@@ -310,14 +307,15 @@ class AddActivityPageProvider extends ChangeNotifier {
             }();
 
       IncrementSeqNo incrementSeqno = () {
-        var lastSeqno = int.parse(editModel!.table260!.last.seqno!);
-        lastSeqno++;
-        var repairLenght = 4 - '$lastSeqno'.length;
+        var recentSeqno = int.parse(editModel!.table260!.first.seqno!); //
+        recentSeqno++;
+        var repairLenght = 4 - '$recentSeqno'.length;
         var newSeqno = '';
         for (var i = 0; i < repairLenght; i++) {
           newSeqno += '0';
         }
-        newSeqno = '$newSeqno$lastSeqno';
+        newSeqno = '$newSeqno$recentSeqno';
+
         return newSeqno;
       };
       // 화면 수정사항.
@@ -333,11 +331,12 @@ class AddActivityPageProvider extends ChangeNotifier {
           : index == null
               ? incrementSeqno()
               : t260.seqno;
-      t260.umode = isFirstEntity ? 'I' : 'U';
+      t260.umode = index == null ? 'I' : 'U';
       t260.isGps = 'X';
       t260.callType = 'M';
-      t260.zskunnr = selectedKunnr!.kunnr;
+      t260.zskunnr = selectedKunnr!.zskunnr;
       t260.zskunnrNm = selectedKunnr!.name;
+      t260.zaddr = selectedKunnr!.zaddName1;
       t260.zaddName1 = selectedKunnr!.zaddName1;
       t260.xvisit = isVisit ? 'Y' : 'N';
       t260.zstatus = selectedKunnr!.zstatus;
@@ -361,22 +360,33 @@ class AddActivityPageProvider extends ChangeNotifier {
               : withLeaderAndSaller
                   ? 'E002'
                   : '';
+      pr('26000000000${t260.toJson()}');
     };
 
     if (editModel!.table260!.isEmpty) {
       await newT260(isFirstEntity: true).then((_) => t260List.add(t260));
     } else {
-      editModel!.table260!.forEach((table) {
-        t260List.add(SalesActivityDayTable260.fromJson(table.toJson()));
-      });
+      if (index != null) {
+        // 기존 데이터 보류.
+        var currentActivity = editModel!.table260![index!];
+        editModel!.table260!.forEach((table) {
+          if (table != currentActivity) {
+            t260List.add(SalesActivityDayTable260.fromJson(table.toJson()));
+          } else {
+            pr('equlse');
+          }
+        });
+      }
       await newT260(isFirstEntity: false).then((_) => t260List.add(t260));
+      pr('t260List.length ${t260List.length}');
+      pr('t260List.last.seqno${t260List.last.seqno}');
     }
     temp.clear();
     temp.addAll([...t260List.map((table) => table.toJson())]);
     t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
-
     // 동행 처리 - 361 .
-    var newT361 = ({required bool isFirstEntity}) async {
+    var newT361 =
+        ({required bool isFirstEntity, SalesActivityDayTable361? model}) async {
       isFirstEntity
           ? () {
               // insert
@@ -391,34 +401,47 @@ class AddActivityPageProvider extends ChangeNotifier {
             }()
           : () {
               // update
+              t361 = SalesActivityDayTable361.fromJson(model!.toJson());
+              t361.logid = anotherSaller!.logid;
+              t361.sname = anotherSaller!.sname;
+              t361.zkmno = selectedKeyMan!.zkmno;
+              t361.zskunnr = selectedKunnr!.zskunnr;
+              t361.umode = 'U';
             }();
     };
 
     // 기존 데이터 유지 .
     var isTable360NotEmpty = editModel!.table361!.isNotEmpty;
+
     if (isTable360NotEmpty) {
+      // 현재활동과 매칭 되는 데이터 일단 뻬고
       editModel!.table361!.forEach((table) {
-        t361List.add(SalesActivityDayTable361.fromJson(table.toJson()));
+        !isThisActivity(table)
+            ? t361List.add(SalesActivityDayTable361.fromJson(table.toJson()))
+            : DoNothingAction();
       });
     }
     // 신규 데이터 추가.
-    if (anotherSaller != null) {
-      IsThisActivity isThisActivity = (SalesActivityDayTable361 table) {
-        return table.bzactno == t260.bzactno &&
-            table.zkmno == t260.zkmno &&
-            table.zskunnr == t260.zskunnr &&
-            table.seqno == t260.seqno;
-      };
-      var isFirstEntity = editModel!.table361!
-          .where((table) => isThisActivity(table))
-          .toList()
-          .isEmpty;
-      await newT361(isFirstEntity: isFirstEntity)
-          .then((_) => t361List.add(t361));
+    if (index == null) {
+      if (anotherSaller != null) {
+        await newT361(isFirstEntity: true).then((_) => t361List.add(t361));
+      }
+    } else {
+      var thisActivityData =
+          editModel!.table361!.where((table) => isThisActivity(table)).toList();
+      if (thisActivityData.isEmpty && anotherSaller != null) {
+        await newT361(isFirstEntity: true).then((_) => t361List.add(t361));
+      }
+      if (thisActivityData.isNotEmpty && anotherSaller != null) {
+        await newT361(isFirstEntity: false, model: thisActivityData.single)
+            .then((_) => t361List.add(t361));
+      }
     }
-    temp.clear();
-    temp.addAll([...t361List.map((table) => table.toJson())]);
-    t361Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    if (t361List.isNotEmpty) {
+      temp.clear();
+      temp.addAll([...t361List.map((table) => table.toJson())]);
+      t361Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    }
 
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     Map<String, dynamic> _body = {
@@ -442,9 +465,10 @@ class AddActivityPageProvider extends ChangeNotifier {
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
-      pr(result.body);
       editModel = SalesActivityDayResponseModel.fromJson(result.body['data']);
-      pr(editModel?.toJson());
+      pr('Result Last ::${editModel?.table260?.last.toJson()}');
+      pr(editModel?.table260?.length);
+      pr(editModel?.esReturn?.toJson());
       isLoadData = false;
       // notifyListeners();
       isUpdate = true;
@@ -524,7 +548,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       stopX = latLonResult.data['lat'];
       stopY = latLonResult.data['lon'];
       startKunnr = '';
-      stopKunnr = selectedKunnr!.kunnr!;
+      stopKunnr = selectedKunnr!.zskunnr!;
     };
     if (isNewActivity) {
       if (isTable260Null) {
@@ -541,7 +565,7 @@ class AddActivityPageProvider extends ChangeNotifier {
           stopX = latLonResult.data['lat'];
           stopY = latLonResult.data['lon'];
           startKunnr = lastVisitModel.zskunnr ?? '';
-          stopKunnr = selectedKunnr!.kunnr!;
+          stopKunnr = selectedKunnr!.zskunnr!;
         } else {
           // 도착처리건 없으면 영업활동 첫건으로 판단해 table 250어서 영업활동 시작주소 가져옴.
           setStartLatLonFormTable250.call();
@@ -558,7 +582,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       stopX = '${model.xLatitude!}';
       stopY = '${model.yLongitude}';
       startKunnr = lastVisitModel.zskunnr ?? '';
-      stopKunnr = selectedKunnr!.kunnr!;
+      stopKunnr = selectedKunnr!.zskunnr!;
     }
     _api.init(RequestType.GET_DISTANCE);
     Map<String, dynamic> _body = {
