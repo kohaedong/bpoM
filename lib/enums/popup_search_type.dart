@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/popup_search_type.dart
  * Created Date: 2021-09-10 21:38:04
- * Last Modified: 2022-08-19 12:14:41
+ * Last Modified: 2022-08-29 14:27:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -19,6 +19,7 @@ import 'popup_list_type.dart';
 // 팝업에 검색기능이 들어있을 경우 그 기능을 공통으로 사용 하기 위해 만든 enum.
 enum PopupSearchType {
   SEARCH_SALSE_PERSON, // 영업사원조회 화면
+  SEARCH_SALSE_PERSON_FOR_ACTIVITY, // 영업사원조회 화면
   SEARCH_CUSTOMER,
   SEARCH_SALLER,
   SEARCH_SALLER_FOR_BULK_ORDER,
@@ -26,6 +27,7 @@ enum PopupSearchType {
   SEARCH_KEY_MAN,
   SEARCH_SUGGETION_ITEM,
   SEARCH_PLANT, // 플랜트 조회 화면
+  DO_NOTHING
 }
 
 extension PopupSearchTypeExtension on PopupSearchType {
@@ -83,7 +85,9 @@ extension PopupSearchTypeExtension on PopupSearchType {
   List<OneCellType> get popupStrListType {
     switch (this) {
       case PopupSearchType.SEARCH_SALSE_PERSON:
-        return [OneCellType.SEARCH_SALSE_PERSON]; // 영업사원
+        return [OneCellType.SEARCH_SALSE_PERSON];
+      case PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY:
+        return [OneCellType.SEARCH_SALSE_PERSON];
       case PopupSearchType.SEARCH_SUGGETION_ITEM:
         return [OneCellType.SEARCH_SUGGETION_ITEM];
       case PopupSearchType.SEARCH_KEY_MAN:
@@ -91,11 +95,13 @@ extension PopupSearchTypeExtension on PopupSearchType {
       case PopupSearchType.SEARCH_END_CUSTOMER:
         return [OneCellType.SEARCH_END_CUSTOMER];
       case PopupSearchType.SEARCH_SALLER:
-        return [OneCellType.SEARCH_SALLER]; // 영업사원
+        return [OneCellType.SEARCH_SALLER];
       case PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER:
-        return [OneCellType.SEARCH_SALLER_FOR_BULK_ORDER]; // 영업사원
+        return [OneCellType.SEARCH_SALLER_FOR_BULK_ORDER];
       case PopupSearchType.SEARCH_CUSTOMER:
-        return [OneCellType.SEARCH_CUSTOMER]; // 영업사원
+        return [OneCellType.SEARCH_CUSTOMER];
+      case PopupSearchType.DO_NOTHING:
+        return [OneCellType.DO_NOTHING];
       case PopupSearchType.SEARCH_PLANT:
         return [
           OneCellType.SEARCH_ORG, // index[0]

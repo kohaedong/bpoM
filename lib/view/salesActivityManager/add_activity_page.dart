@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-24 18:40:40
+ * Last Modified: 2022-08-29 14:28:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/enums/popup_cell_type.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -509,7 +510,6 @@ class _AddActivityPageState extends State<AddActivityPage> {
         Selector<AddActivityPageProvider, int>(
             selector: (context, provider) => provider.isInterviewIndex,
             builder: (context, index, _) {
-              pr('build');
               return Row(
                 children: [
                   _buildBox(context, AppSize.defaultContentsWidth / 2,
@@ -610,7 +610,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   Widget _buildIsWithAnotherSales(BuildContext context) {
     final p = context.read<AddActivityPageProvider>();
-
+    var ismoutiAccount = CheckSuperAccount.isMultiAccountOrLeaderAccount();
     return Column(
       children: [
         _buildTitleRow(tr('with_another_saler'), isNotwithStart: true),
@@ -620,7 +620,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
             builder: (context, anotherSaler, _) {
               return BaseInputWidget(
                 context: context,
-                iconType: InputIconType.SEARCH,
+                bgColor: ismoutiAccount
+                    ? null
+                    : anotherSaler != null
+                        ? AppColors.unReadyButton
+                        : null,
+                iconType: anotherSaler == null ? InputIconType.SEARCH : null,
                 iconColor: anotherSaler != null
                     ? AppColors.defaultText
                     : AppColors.textFieldUnfoucsColor,
@@ -628,13 +633,19 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     ? anotherSaler.sname
                     : '${tr('plz_select_something_1', args: [tr('manager')])}',
                 // 팀장 일때 만 팀원선택후 삭제가능.
-                isShowDeleteForHintText: anotherSaler != null ? true : false,
+                isShowDeleteForHintText: ismoutiAccount
+                    ? anotherSaler != null
+                        ? true
+                        : false
+                    : false,
                 deleteIconCallback: () => p.setAnotherSaler(null),
                 width: AppSize.defaultContentsWidth,
                 hintTextStyleCallBack: () => anotherSaler != null
                     ? AppTextStyle.default_16
                     : AppTextStyle.hint_16,
-                popupSearchType: PopupSearchType.SEARCH_SALSE_PERSON,
+                popupSearchType: anotherSaler == null
+                    ? PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY
+                    : PopupSearchType.DO_NOTHING,
                 isSelectedStrCallBack: (persion) {
                   return p.setAnotherSaler(persion);
                 },
@@ -964,7 +975,6 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                     _buildSelectKeyMan(context),
                                     defaultSpacing(),
                                     _buildIsVisitRow(context),
-                                    defaultSpacing(),
                                     _buildDistanceDiscription(context),
                                     defaultSpacing(),
                                     _buildIsWithTeamLeader(context),

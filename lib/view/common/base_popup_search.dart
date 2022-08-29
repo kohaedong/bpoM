@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-08-17 22:15:12
+ * Last Modified: 2022-08-29 14:01:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -612,7 +612,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
               : Container(),
           // Padding(
           //     padding: EdgeInsets.only(top: AppSize.searchBarTitleSidePadding)),
-          widget.type == PopupSearchType.SEARCH_SALSE_PERSON
+          widget.type == PopupSearchType.SEARCH_SALSE_PERSON ||
+                  widget.type ==
+                      PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY
               ? _buildPersonSearchBar(context)
               : widget.type == PopupSearchType.SEARCH_CUSTOMER
                   ? _buildCustomerSearchBar(context)
@@ -686,7 +688,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                               padding:
                                   EdgeInsets.only(bottom: AppSize.appBarHeight),
                               itemCount: widget.type ==
-                                      PopupSearchType.SEARCH_SALSE_PERSON
+                                          PopupSearchType.SEARCH_SALSE_PERSON ||
+                                      widget.type ==
+                                          PopupSearchType
+                                              .SEARCH_SALSE_PERSON_FOR_ACTIVITY
                                   ? provider.staList!.staffList!.length
                                   : widget.type ==
                                           PopupSearchType.SEARCH_CUSTOMER
@@ -723,8 +728,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                           .length
                                                       : 0,
                               itemBuilder: (BuildContext context, int index) {
-                                return widget.type ==
-                                        PopupSearchType.SEARCH_SALSE_PERSON
+                                return widget.type == PopupSearchType.SEARCH_SALSE_PERSON ||
+                                        widget.type ==
+                                            PopupSearchType
+                                                .SEARCH_SALSE_PERSON_FOR_ACTIVITY
                                     ? _buildPersonContentsItem(
                                         context,
                                         provider.staList!.staffList![index],
@@ -742,8 +749,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                             index,
                                             !provider.hasMore &&
                                                 index ==
-                                                    provider.etKunnrResponseModel!
-                                                            .etKunnr!.length -
+                                                    provider.etKunnrResponseModel!.etKunnr!.length -
                                                         1)
                                         : widget.type == PopupSearchType.SEARCH_SALLER ||
                                                 widget.type ==
@@ -757,10 +763,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                 index,
                                                 !provider.hasMore &&
                                                     index ==
-                                                        provider
-                                                                .etCustomerResponseModel!
-                                                                .etCustomer!
-                                                                .length -
+                                                        provider.etCustomerResponseModel!.etCustomer!.length -
                                                             1)
                                             : widget.type ==
                                                     PopupSearchType
@@ -771,8 +774,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                         .etEndCustomerResponseModel!
                                                         .etCustList![index],
                                                     index,
-                                                    !provider.hasMore &&
-                                                        index == provider.etEndCustomerResponseModel!.etCustList!.length - 1)
+                                                    !provider.hasMore && index == provider.etEndCustomerResponseModel!.etCustList!.length - 1)
                                                 : widget.type == PopupSearchType.SEARCH_KEY_MAN
                                                     ? _buildKeymanContentsItem(context, provider.keyManResponseModel!.etList![index], index, !provider.hasMore && index == provider.keyManResponseModel!.etList!.length - 1)
                                                     : widget.type == PopupSearchType.SEARCH_SUGGETION_ITEM

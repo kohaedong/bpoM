@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-24 18:32:24
+ * Last Modified: 2022-08-29 11:20:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -315,7 +315,6 @@ class AddActivityPageProvider extends ChangeNotifier {
           newSeqno += '0';
         }
         newSeqno = '$newSeqno$recentSeqno';
-
         return newSeqno;
       };
       // 화면 수정사항.
@@ -365,7 +364,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     if (editModel!.table260!.isEmpty) {
       await newT260(isFirstEntity: true).then((_) => t260List.add(t260));
     } else {
-      // 기존 데이터 보류.
+      // 260 기준 데이터 보류.
       if (index != null) {
         var currentActivity = editModel!.table260![index!];
         editModel!.table260!.forEach((table) {
@@ -374,7 +373,7 @@ class AddActivityPageProvider extends ChangeNotifier {
           }
         });
       }
-      //  신규 데이터 추가.
+      // 260 신규 데이터 추가.
       await newT260(isFirstEntity: false).then((_) => t260List.add(t260));
     }
     temp.clear();
@@ -397,8 +396,7 @@ class AddActivityPageProvider extends ChangeNotifier {
               t361.umode = 'I';
             }()
           : () {
-              //! update   로직상 업데이트 불가처리 해 보류 함.
-              //! 서버단 update 가능시 추가 구현 가능.
+              //! 로직상 동행자 수정 불가로 되있어 업데이트 프로세스 보류 함.
               t361 = SalesActivityDayTable361.fromJson(model!.toJson());
               // t361.logid = anotherSaller!.logid;
               // t361.sname = anotherSaller!.sname;
@@ -409,7 +407,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     };
 
     var isTable360NotEmpty = editModel!.table361!.isNotEmpty;
-    // 기존 데이터 유지 .
+    // 기준 데이터 유지 .
     if (isTable360NotEmpty) {
       // 현재활동과 매칭 되는 데이터 일단 뻬고
       editModel!.table361!.forEach((table) {
@@ -516,30 +514,8 @@ class AddActivityPageProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  SalesActivityDayTable260 _getLastVisitModel(
-      List<SalesActivityDayTable260> visitList) {
-    var model = SalesActivityDayTable260();
-    if (visitList.isNotEmpty) {
-      visitList.forEach((item) {
-        var temp = 0;
-        var time = int.parse(item.aezet!);
-        if (time > temp) {
-          temp = time;
-          model = item;
-        }
-      });
-    } else {
-      var startLat = editModel!.table250!.single.sxLatitude;
-      var startLon = editModel!.table250!.single.syLongitude;
-      model.xLatitude = startLat;
-      model.yLongitude = startLon;
-    }
-    return model;
-  }
-
   Future<ResultModel> getDistance() async {
     assert(selectedKunnr != null && selectedKeyMan != null);
-    var isNewActivity = (index == null);
     var isTable260Null = editModel!.table260!.isEmpty;
 
     var startX = '';
@@ -559,7 +535,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     };
     if (isTable260Null) {
       // 도착처리건 없으면 영업활동 첫건으로 판단해 table 250어서 영업활동 시작주소 가져옴.
-      setStartLatLonFormTable250.call();
+      await setStartLatLonFormTable250.call();
     } else {
       var visitList =
           editModel!.table260!.where((item) => item.xvisit == 'Y').toList();
@@ -575,7 +551,7 @@ class AddActivityPageProvider extends ChangeNotifier {
         stopKunnr = selectedKunnr!.zskunnr!;
       } else {
         // 도착처리건 없으면 영업활동 첫건으로 판단해 table 250어서 영업활동 시작주소 가져옴.
-        setStartLatLonFormTable250.call();
+        await setStartLatLonFormTable250.call();
       }
     }
     _api.init(RequestType.GET_DISTANCE);

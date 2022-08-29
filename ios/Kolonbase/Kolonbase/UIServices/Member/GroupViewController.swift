@@ -210,7 +210,7 @@ extension GroupViewController: UITableViewDelegate {
 			
 			if existItems.count > 0 {
 				
-				// 기존 데이터 삭제
+				// 기준 데이터 삭제
 				groupList = groupList?.filter({ $0.fullPath?.range(of: path) == nil })
 			}
 			else {

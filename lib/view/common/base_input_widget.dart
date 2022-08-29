@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-08-19 12:14:34
+ * Last Modified: 2022-08-29 14:29:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,10 @@
  *                        Discription                         
  * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
  */
+import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
+
 import 'base_popup_cell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,6 +51,7 @@ class BaseInputWidget extends StatefulWidget {
   final String? initText;
   final String? dateStr;
   final Color? iconColor;
+  final Color? bgColor;
   final dynamic arguments;
   final Map<String, dynamic>? bodyMap;
   final TextStyle? textStyle;
@@ -83,6 +88,7 @@ class BaseInputWidget extends StatefulWidget {
       this.deleteIconCallback,
       this.onTap,
       this.hintText,
+      this.bgColor,
       this.focusNode,
       this.onSubmittedCallBack,
       this.isShowDeleteForHintText,
@@ -218,9 +224,31 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
         }
       }
       if (widget.popupSearchType != null) {
-        if (widget.threeCellType == ThreeCellType.DO_NOTHING) {
+        if (widget.threeCellType == ThreeCellType.DO_NOTHING ||
+            widget.popupSearchType == PopupSearchType.DO_NOTHING) {
           return;
         }
+        if (widget.popupSearchType ==
+            PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY) {
+          final dialogResult = await AppDialog.showPopup(
+              context,
+              buildDialogContents(
+                  context,
+                  Container(
+                    height: AppSize.singlePopupHeight - AppSize.buttonHeight,
+                    alignment: Alignment.center,
+                    child: AppText.text(tr('is_realy_with_another_saller'),
+                        style: AppTextStyle.default_16, maxLines: 4),
+                  ),
+                  false,
+                  AppSize.singlePopupHeight,
+                  leftButtonText: tr('cancel'),
+                  rightButtonText: tr('ok')));
+          if (dialogResult != null && !dialogResult) {
+            return;
+          }
+        }
+
         final result = await BasePopupSearch(
                 type: widget.popupSearchType, bodyMap: widget.bodyMap)
             .show(context);
@@ -307,7 +335,7 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
               enabled: widget.enable,
               maxLines: widget.maxLine ?? 1,
               decoration: InputDecoration(
-                fillColor: AppColors.whiteText,
+                fillColor: widget.bgColor ?? AppColors.whiteText,
                 hintMaxLines: 1,
                 errorMaxLines: 1,
                 filled: true,

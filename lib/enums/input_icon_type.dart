@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/input_icon_type.dart
  * Created Date: 2021-09-05 17:34:24
- * Last Modified: 2022-07-02 13:50:47
+ * Last Modified: 2022-08-29 11:18:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -34,7 +34,7 @@ extension InputIconTypeExtension on InputIconType {
       case InputIconType.SELECT:
         return AppImage.getImage(ImageType.SELECT, color: color);
       // 아이콘이 2개일 경우
-      // 기존 input widget 에서 제공되는 1개의 action widget callback으로는 컨트롤이 어려워
+      // 기준 input widget 에서 제공되는 1개의 action widget callback으로는 컨트롤이 어려워
       // action widget 내부에 icon widget 2개를 추가해 각각의 action callback을 구현 하였음.
       case InputIconType.DELETE_AND_SEARCH:
         return Row(

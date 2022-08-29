@@ -358,7 +358,7 @@
     "available_inventory":"가용재고",
     "sales_unit":"판매단위",
     "color":"COLOR",
-    "original_mat_number":"기존자재번호",
+    "original_mat_number":"기준자재번호",
     "sales_order_and_item":"판매오더/품목",
     "customer_purchase_order_number":"고객구매오더",
     "mat_grade":"제조등급",
@@ -545,6 +545,7 @@
     "other_info":"기타사항",
     "is_realy_delete_last_activity":"{} {} 담당자의 최종 콜 내역을 삭제하시겠습니까?",
     "is_visit":"방문여부",
-    "plz_enter_reason_for_interview_failure":"면담 실패 사유를 입력해주세요."
+    "plz_enter_reason_for_interview_failure":"면담 실패 사유를 입력해주세요.",
+    "is_realy_with_another_saller":"동행자는 입력 후 저장하면 이후 변경할수 없습니다. 동행자를 입력 하시겠습니까? "
    
 }
