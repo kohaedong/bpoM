@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-29 11:20:39
+ * Last Modified: 2022-08-29 21:52:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -37,7 +37,8 @@ import 'package:medsalesportal/model/rfc/add_activity_key_man_response_model.dar
 import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
 
 typedef IncrementSeqNo = String Function();
-typedef IsThisActivity = bool Function(SalesActivityDayTable361);
+typedef IsThisActivityFrom361 = bool Function(SalesActivityDayTable361);
+typedef IsThisActivityFrom280 = bool Function(SalesActivityDayTable280);
 
 class AddActivityPageProvider extends ChangeNotifier {
   AddActivityKeyManResponseModel? keyManResponseModel;
@@ -73,6 +74,8 @@ class AddActivityPageProvider extends ChangeNotifier {
     pr(activityStatus);
     index = indexx;
     if (index != null) {
+      pr(editModel!.table361!.length);
+      pr(editModel!.table280!.length);
       var temp = editModel!.table260![index!];
       isVisit = temp.xvisit != null && temp.xvisit == 'Y';
       selectedKunnr = EtKunnrModel();
@@ -97,11 +100,12 @@ class AddActivityPageProvider extends ChangeNotifier {
       isInterviewIndex = temp.xmeet == 'Y' ? 0 : 1;
       // 동행 초기화.
       var saveAnotherSaller = () {
-        IsThisActivity isThisActivity = (SalesActivityDayTable361 table) {
+        IsThisActivityFrom361 isThisActivityFor361 =
+            (SalesActivityDayTable361 table) {
           return table.bzactno == temp.bzactno && table.seqno == temp.seqno;
         };
         var temp361 = editModel!.table361!
-            .where((table) => isThisActivity(table))
+            .where((table) => isThisActivityFor361(table))
             .toList();
         if (temp361.isNotEmpty) {
           var model = SalesActivityDayTable361.fromJson(temp361.last.toJson());
@@ -110,6 +114,7 @@ class AddActivityPageProvider extends ChangeNotifier {
           anotherSaller!.logid = model.logid;
         }
       };
+
       // 동행 주요 로직.
       switch (temp.accompany?.trim()) {
         case 'E001':
@@ -124,6 +129,24 @@ class AddActivityPageProvider extends ChangeNotifier {
           break;
         default:
       }
+
+      var saveActivityType = () {
+        IsThisActivityFrom280 isThisActivityFor280 =
+            (SalesActivityDayTable280 table) {
+          return table.bzactno == temp.bzactno && table.seqno == temp.seqno;
+        };
+        var temp280 = editModel!.table280!
+            .where((table) => isThisActivityFor280(table))
+            .toList();
+        if (temp280.isNotEmpty) {
+          temp280.forEach((element) {
+            pr('!!!@!@!@!@!@!${element.toJson()}');
+          });
+          // var model = SalesActivityDayTable280.fromJson(temp280.last.toJson());
+          // anotherSaller = EtStaffListModel();
+        }
+      };
+      saveActivityType();
     }
     suggestedList = [];
 
@@ -268,7 +291,12 @@ class AddActivityPageProvider extends ChangeNotifier {
     var t260List = <SalesActivityDayTable260>[];
     var t280List = <SalesActivityDayTable280>[];
     var t361List = <SalesActivityDayTable361>[];
-    IsThisActivity isThisActivity = (SalesActivityDayTable361 table) {
+    IsThisActivityFrom361 isThisActivityFrom361 =
+        (SalesActivityDayTable361 table) {
+      return table.seqno == t260.seqno;
+    };
+    IsThisActivityFrom280 isThisActivityFrom280 =
+        (SalesActivityDayTable280 table) {
       return table.seqno == t260.seqno;
     };
     var newT260 = ({required bool isFirstEntity}) async {
@@ -409,21 +437,22 @@ class AddActivityPageProvider extends ChangeNotifier {
     var isTable360NotEmpty = editModel!.table361!.isNotEmpty;
     // 기준 데이터 유지 .
     if (isTable360NotEmpty) {
-      // 현재활동과 매칭 되는 데이터 일단 뻬고
+      // 현재 seqno와 매칭 되는 데이터 일단 뻬고
       editModel!.table361!.forEach((table) {
-        !isThisActivity(table)
+        !isThisActivityFrom361(table)
             ? t361List.add(SalesActivityDayTable361.fromJson(table.toJson()))
             : DoNothingAction();
       });
     }
-    // 신규 데이터 추가.
+    // 신규 360 데이터 추가.
     if (index == null) {
       if (anotherSaller != null) {
         await newT361(isFirstEntity: true).then((_) => t361List.add(t361));
       }
     } else {
-      var thisActivityData =
-          editModel!.table361!.where((table) => isThisActivity(table)).toList();
+      var thisActivityData = editModel!.table361!
+          .where((table) => isThisActivityFrom361(table))
+          .toList();
       if (anotherSaller != null) {
         await newT361(
                 isFirstEntity: thisActivityData.isEmpty,
@@ -438,7 +467,51 @@ class AddActivityPageProvider extends ChangeNotifier {
       temp.addAll([...t361List.map((table) => table.toJson())]);
       t361Base64 = await EncodingUtils.base64ConvertForListMap(temp);
     }
-
+    // 활동유형 처리 - 280 .
+    var newT280 =
+        ({required bool isFirstEntity, SalesActivityDayTable280? model}) async {
+      isFirstEntity
+          ? () {
+              // insert
+              t280.bzactno = t260.bzactno;
+              t280.seqno = t260.seqno;
+              t280.umode = 'I';
+            }()
+          : () {
+              t280 = SalesActivityDayTable280.fromJson(model!.toJson());
+            }();
+    };
+    var isTable280NotEmpty = editModel!.table280!.isNotEmpty;
+    if (isTable280NotEmpty) {
+      // 현재 seqno와 매칭 되는 데이터 일단 뻬고
+      editModel!.table280!.forEach((table) {
+        !isThisActivityFrom280(table)
+            ? t280List.add(SalesActivityDayTable280.fromJson(table.toJson()))
+            : DoNothingAction();
+      });
+    }
+    // 신규 280 데이터 추가.
+    if (index == null) {
+      if (anotherSaller != null) {
+        await newT280(isFirstEntity: true).then((_) => t280List.add(t280));
+      }
+    } else {
+      var thisActivityData = editModel!.table280!
+          .where((table) => isThisActivityFrom280(table))
+          .toList();
+      if (anotherSaller != null) {
+        await newT280(
+                isFirstEntity: thisActivityData.isEmpty,
+                model:
+                    thisActivityData.isEmpty ? null : thisActivityData.single)
+            .then((_) => t280List.add(t280));
+      }
+    }
+    if (t280List.isNotEmpty) {
+      temp.clear();
+      temp.addAll([...t280List.map((table) => table.toJson())]);
+      t280Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    }
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
@@ -448,6 +521,7 @@ class AddActivityPageProvider extends ChangeNotifier {
             DateUtil.getDateStr(DateTime.now().toIso8601String())),
         "T_ZLTSP0250S": t250Base64,
         "T_ZLTSP0260S": t260Base64,
+        "T_ZLTSP0280S": t280Base64,
         "T_ZLTSP0361S": t361Base64,
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
