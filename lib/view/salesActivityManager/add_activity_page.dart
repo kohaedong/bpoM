@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-08-29 20:15:25
+ * Last Modified: 2022-08-30 16:08:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -422,21 +422,26 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 AppTextStyle.menu_18(
                     canShow ? AppColors.whiteText : AppColors.hintText),
                 0,
-                selfHeight: AppSize.buttonHeight * 1.3, () {
+                selfHeight: AppSize.buttonHeight * 1.3, () async {
               final p = context.read<AddActivityPageProvider>();
+              pr('1111 pressed');
               if (p.activityStatus == ActivityStatus.STOPED ||
                   p.activityStatus == ActivityStatus.NONE) {
                 return;
               } else {
+                pr('222 pressed');
                 if (isToday && canShow) {
                   var notInterviewValidation = p.isInterviewIndex == 1
                       ? (p.reasonForinterviewFailure != null &&
                           p.reasonForinterviewFailure!.isNotEmpty)
                       : true;
                   if (notInterviewValidation) {
-                    p.saveTable().then((result) {
+                    await p.saveTable().then((result) {
                       if (result.isSuccessful) {
                         AppToast().show(context, tr('success'));
+                        if (index == null) {
+                          Navigator.pop(context, true);
+                        }
                       }
                     });
                   } else {
@@ -828,7 +833,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
               if (isCurrentMonthScenario) {
                 Navigator.pushNamed(context, CurruntMonthScenarioPage.routeName,
                     arguments: {
-                      'model': p.editModel!.table430,
+                      'model': p.fromParentResponseModel!.table430,
                       'zskunnr': p.selectedKunnr != null
                           ? p.selectedKunnr!.zskunnr
                           : '',
@@ -841,7 +846,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 Navigator.pushNamed(context, VisitResultHistoryPage.routeName,
                     arguments: {
                       'date': p.index != null
-                          ? p.editModel!.table260![p.index!].adate
+                          ? p.fromParentResponseModel!.table260![p.index!].adate
                           : DateUtil.getDateStr('', dt: DateTime.now()),
                       'zskunnr': p.selectedKunnr != null
                           ? p.selectedKunnr!.zskunnr
