@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-08-29 21:50:58
+ * Last Modified: 2022-08-29 23:05:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -130,11 +130,16 @@ class ActivityMenuProvider extends ChangeNotifier {
       t260List.add(SalesActivityDayTable260.fromJson(tableItem.toJson()));
     });
 
-    var deleteEntity = t260List[0];
+    var deleteEntity = t260List.first;
+    // deleteEntity.mandt = '100';
+    // deleteEntity.bzactno = editModel!.table250!.first.bzactno;
     deleteEntity.umode = 'D';
     temp.clear();
     temp.addAll([...t260List.map((table) => table.toJson())]);
-    t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+
+    if (t260List.isNotEmpty) {
+      t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    }
 
     editModel!.table280!.forEach((table) {
       if (table.bzactno == deleteEntity.bzactno &&
@@ -146,9 +151,14 @@ class ActivityMenuProvider extends ChangeNotifier {
     });
     temp.clear();
     temp.addAll([...t280List.map((table) => table.toJson())]);
+    if (t280List.isNotEmpty) {
+      t280Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    }
+
     editModel!.table361!.forEach((table) {
       if (table.bzactno == deleteEntity.bzactno &&
-          table.seqno == deleteEntity.seqno) {
+          table.zkmno == deleteEntity.zkmno &&
+          table.zskunnr == deleteEntity.zskunnr) {
         table.umode = 'D';
         pr('deleted2');
       }
@@ -156,6 +166,10 @@ class ActivityMenuProvider extends ChangeNotifier {
     });
     temp.clear();
     temp.addAll([...t361List.map((table) => table.toJson())]);
+    if (t361List.isNotEmpty) {
+      t361Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    }
+
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {
@@ -163,6 +177,7 @@ class ActivityMenuProvider extends ChangeNotifier {
         "T_ZLTSP0250S": t250Base64,
         "T_ZLTSP0260S": t260Base64,
         "T_ZLTSP0280S": t280Base64,
+        "T_ZLTSP0361S": t361Base64,
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
         "functionName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
