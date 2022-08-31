@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-29 23:08:51
+ * Last Modified: 2022-08-31 12:46:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -477,7 +477,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         : Container();
   }
 
-  void _showLocationPopup(BuildContext context) async {
+  Future<void> _showLocationPopup(BuildContext context) async {
     final p = context.read<ActivityMenuProvider>();
     final popupResult = await AppDialog.showPopup(
       context,
@@ -499,8 +499,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           var parentModel = popupResult.data as SalesActivityDayResponseModel;
           p.initData(parentModel, ActivityStatus.STARTED);
           AppToast().show(context, tr('activity_is_started'));
-          Navigator.pop(context, true);
-          _routeToAddActivityPage(context);
+          await _routeToAddActivityPage(context);
         }
       }
     }
@@ -531,6 +530,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           if (result.isSuccessful) {
             AppToast().show(context, tr('success'));
             Navigator.pop(context, true);
+            Navigator.pop(context, true);
           }
         });
       }
@@ -555,16 +555,24 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     if (result != null) {
       result as bool;
       if (result) {
-        _showLocationPopup(context);
+        await _showLocationPopup(context);
       }
     }
   }
 
-  void _routeToAddActivityPage(BuildContext context, {int? index}) async {
+  Future<void> _routeToAddActivityPage(BuildContext context,
+      {int? index}) async {
     //! context 가 다릅니다.
     //! [ActivityMenuProvider]  와  [SalseActivityManagerPageProvider] 구분 필요.
     if (index == null) {
       final p = context.read<ActivityMenuProvider>();
+      // await Navigator.popAndPushNamed(context, AddActivityPage.routeName,
+      //     arguments: {
+      //       'model': p.editModel,
+      //       'status': p.activityStatus,
+      //       'index': index
+      //     });
+
       final naviResult = await Navigator.pushNamed(
           context, AddActivityPage.routeName, arguments: {
         'model': p.editModel,
@@ -572,12 +580,13 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         'index': index
       });
       if (naviResult != null) {
+        pr('naviResult::::$naviResult');
         naviResult as bool;
         if (naviResult) {
           try {
             Navigator.pop(context, naviResult);
           } catch (e) {
-            pr(e);
+            pr('catch ::: $e');
           }
         }
       }
@@ -722,9 +731,9 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 });
             if (result != null) {
               result as bool;
-              //!   자식창에서 리턴된 데이터 isNeedUpdate ?
               //!   업데이트가 필요하면 최신 데이터 가져온다.
               if (result) {
+                pr(' ok update');
                 p.getDayData();
               }
             }
