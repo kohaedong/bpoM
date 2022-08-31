@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-08-31 13:29:14
+ * Last Modified: 2022-08-31 14:18:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -44,7 +44,7 @@ import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.
 
 class ActivityMenuProvider extends ChangeNotifier {
   SalesActivityDayResponseModel? editModel;
-  SalseActivityLocationResponseModel? locationResponseModel;
+  SalseActivityLocationResponseModel? officeAddressResponseModel;
   final _api = ApiService();
   bool isNeedUpdate = false;
   ActivityStatus? activityStatus;
@@ -65,45 +65,18 @@ class ActivityMenuProvider extends ChangeNotifier {
   }
 
   Future<void> initData(SalesActivityDayResponseModel fromParentWindowModel,
-      ActivityStatus? status) async {
-    await getOfficeAddress();
+      ActivityStatus? status,
+      {SalseActivityLocationResponseModel? officeAddress}) async {
     editModel =
         SalesActivityDayResponseModel.fromJson(fromParentWindowModel.toJson());
+    if (officeAddress != null) {
+      officeAddressResponseModel = officeAddress;
+    }
+    pr('??? status $status');
     activityStatus = status;
   }
 
   Future<ResultModel> addActivity() async {
-    return ResultModel(false);
-  }
-
-  Future<ResultModel> getOfficeAddress() async {
-    if (locationResponseModel != null) {
-      return ResultModel(true);
-    }
-    _api.init(RequestType.GET_OFFICE_ADDRESS);
-    final esLogin = CacheService.getEsLogin();
-    final isLogin = CacheService.getIsLogin();
-    Map<String, dynamic> _body = {
-      "methodName": RequestType.GET_OFFICE_ADDRESS.serverMethod,
-      "methodParamMap": {
-        "IV_ADDCAT": "",
-        "IV_PTYPE": "R",
-        "IV_VKGRP": esLogin!.vkgrp,
-        "IV_LOGID": esLogin.logid!.toUpperCase(),
-        "IS_LOGIN": isLogin,
-        "resultTables": RequestType.GET_OFFICE_ADDRESS.resultTable,
-        "functionName": RequestType.GET_OFFICE_ADDRESS.serverMethod
-      }
-    };
-    final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
-      return ResultModel(false);
-    }
-    if (result != null && result.statusCode == 200) {
-      locationResponseModel =
-          SalseActivityLocationResponseModel.fromJson(result.body['data']);
-      return ResultModel(true);
-    }
     return ResultModel(false);
   }
 

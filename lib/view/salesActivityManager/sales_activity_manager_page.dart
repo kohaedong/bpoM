@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-31 12:46:16
+ * Last Modified: 2022-08-31 14:22:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
@@ -483,7 +484,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       context,
       SelectLocationWidget(
           status: p.activityStatus,
-          locationList: p.locationResponseModel!.tList!,
+          locationList: p.officeAddressResponseModel!.tList!,
           model: p.editModel),
     );
     if (popupResult != null) {
@@ -497,7 +498,10 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         }
         if (p.activityStatus == ActivityStatus.INIT) {
           var parentModel = popupResult.data as SalesActivityDayResponseModel;
-          p.initData(parentModel, ActivityStatus.STARTED);
+          p.initData(
+            parentModel,
+            ActivityStatus.STARTED,
+          );
           AppToast().show(context, tr('activity_is_started'));
           await _routeToAddActivityPage(context);
         }
@@ -660,12 +664,14 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   Widget _buildDialogContents(
       BuildContext context,
       SalesActivityDayResponseModel fromParentWindowModel,
-      ActivityStatus? activityStatus) {
+      ActivityStatus? activityStatus,
+      SalseActivityLocationResponseModel officeAddress) {
     return ChangeNotifierProvider(
       create: (context) => ActivityMenuProvider(),
       builder: (context, _) {
         final p = context.read<ActivityMenuProvider>();
-        p.initData(fromParentWindowModel, activityStatus);
+        p.initData(fromParentWindowModel, activityStatus,
+            officeAddress: officeAddress);
         return Material(
           type: MaterialType.transparency,
           child: Stack(
@@ -726,8 +732,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 context: context,
                 builder: (context) {
                   // dialog 내부 provider model 전달.
-                  return _buildDialogContents(
-                      context, p.dayResponseModel!, p.activityStatus);
+                  return _buildDialogContents(context, p.dayResponseModel!,
+                      p.activityStatus, p.locationResponseModel!);
                 });
             if (result != null) {
               result as bool;

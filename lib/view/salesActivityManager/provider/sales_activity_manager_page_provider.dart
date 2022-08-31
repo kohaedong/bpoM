@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-08-23 09:33:23
+ * Last Modified: 2022-08-31 14:13:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
@@ -26,6 +27,7 @@ import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart'
 import 'package:medsalesportal/model/rfc/sales_activity_month_response_model.dart';
 
 class SalseActivityManagerPageProvider extends ChangeNotifier {
+  SalseActivityLocationResponseModel? locationResponseModel;
   SalesActivityMonthResponseModel? monthResponseModel;
   SalesActivityDayResponseModel? dayResponseModel;
   SearchKeyResponseModel? searchKeyResponseModel;
@@ -288,6 +290,44 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     }
   }
 
+  Future<ResultModel> getOfficeAddress() async {
+    if (locationResponseModel != null) {
+      return ResultModel(true);
+    }
+    isLoadData = true;
+    _api.init(RequestType.GET_OFFICE_ADDRESS);
+    final esLogin = CacheService.getEsLogin();
+    final isLogin = CacheService.getIsLogin();
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.GET_OFFICE_ADDRESS.serverMethod,
+      "methodParamMap": {
+        "IV_ADDCAT": "",
+        "IV_PTYPE": "R",
+        "IV_VKGRP": esLogin!.vkgrp,
+        "IV_LOGID": esLogin.logid!.toUpperCase(),
+        "IS_LOGIN": isLogin,
+        "resultTables": RequestType.GET_OFFICE_ADDRESS.resultTable,
+        "functionName": RequestType.GET_OFFICE_ADDRESS.serverMethod
+      }
+    };
+    final result = await _api.request(body: _body);
+    if (result != null && result.statusCode != 200) {
+      isLoadData = false;
+      notifyListeners();
+      return ResultModel(false);
+    }
+    if (result != null && result.statusCode == 200) {
+      locationResponseModel =
+          SalseActivityLocationResponseModel.fromJson(result.body['data']);
+      isLoadData = false;
+      notifyListeners();
+      return ResultModel(true);
+    }
+    isLoadData = false;
+    notifyListeners();
+    return ResultModel(false);
+  }
+
   Future<ResultModel> getHolidayListForMonth(DateTime date) async {
     if (holidayList.isEmpty ||
         (holidayList.isNotEmpty &&
@@ -428,6 +468,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     }
 
     await getHolidayListForMonth(selectedDay ?? DateTime.now());
+    await getOfficeAddress();
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
     Map<String, dynamic> _body = {
