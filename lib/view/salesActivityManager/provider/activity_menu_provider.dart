@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-08-31 15:37:01
+ * Last Modified: 2022-08-31 17:38:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,17 +12,13 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_280.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_361.dart';
-import 'package:medsalesportal/util/encoding_util.dart';
+import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_250.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
 
@@ -84,75 +80,19 @@ class ActivityMenuProvider extends ChangeNotifier {
     isLoadData = true;
     notifyListeners();
     assert(editModel!.table260!.isNotEmpty);
-    _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
+    _api.init(RequestType.DELETE_LAST_ACTIVITY);
     var isLogin = CacheService.getIsLogin();
-    var t250Base64 = '';
-    var t260Base64 = '';
-    var t280Base64 = '';
-    var t361Base64 = '';
-    var temp = <Map<String, dynamic>>[];
-    var t250 =
-        SalesActivityDayTable250.fromJson(editModel!.table250!.single.toJson());
-    var t260List = <SalesActivityDayTable260>[];
-    var t280List = <SalesActivityDayTable280>[];
-    var t361List = <SalesActivityDayTable361>[];
-    temp.addAll([t250.toJson()]);
-    t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
-    editModel!.table260!.forEach((tableItem) {
-      t260List.add(SalesActivityDayTable260.fromJson(tableItem.toJson()));
-    });
-
-    var deleteEntity = t260List.last;
-    // deleteEntity.mandt = '100';
-    // deleteEntity.bzactno = editModel!.table250!.first.bzactno;
-    deleteEntity.umode = 'D';
-    temp.clear();
-    temp.addAll([...t260List.map((table) => table.toJson())]);
-
-    if (t260List.isNotEmpty) {
-      t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
-    }
-
-    editModel!.table280!.forEach((table) {
-      if (table.bzactno == deleteEntity.bzactno &&
-          table.seqno == deleteEntity.seqno) {
-        table.umode = 'D';
-        pr('deleted');
-      }
-      t280List.add(SalesActivityDayTable280.fromJson(table.toJson()));
-    });
-    temp.clear();
-    temp.addAll([...t280List.map((table) => table.toJson())]);
-    if (t280List.isNotEmpty) {
-      t280Base64 = await EncodingUtils.base64ConvertForListMap(temp);
-    }
-
-    editModel!.table361!.forEach((table) {
-      if (table.bzactno == deleteEntity.bzactno &&
-          table.zkmno == deleteEntity.zkmno &&
-          table.zskunnr == deleteEntity.zskunnr) {
-        table.umode = 'D';
-        pr('deleted2');
-      }
-      t361List.add(SalesActivityDayTable361.fromJson(table.toJson()));
-    });
-    temp.clear();
-    temp.addAll([...t361List.map((table) => table.toJson())]);
-    if (t361List.isNotEmpty) {
-      t361Base64 = await EncodingUtils.base64ConvertForListMap(temp);
-    }
-
+    var esLogin = CacheService.getEsLogin();
     Map<String, dynamic> _body = {
-      "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
+      "methodName": RequestType.DELETE_LAST_ACTIVITY.serverMethod,
       "methodParamMap": {
-        "IV_PTYPE": "U",
-        "T_ZLTSP0250S": t250Base64,
-        "T_ZLTSP0260S": t260Base64,
-        "T_ZLTSP0280S": t280Base64,
-        "T_ZLTSP0361S": t361Base64,
+        "IV_SANUM": esLogin!.logid!.toUpperCase(),
+        "IV_PTYPE": "D",
+        "IV_ADATE": DateUtil.getDateStr(DateTime.now().toIso8601String()),
         "IS_LOGIN": isLogin,
-        "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
-        "functionName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
+        "resultTables": RequestType.DELETE_LAST_ACTIVITY.resultTable,
+        "functionName": RequestType.DELETE_LAST_ACTIVITY.serverMethod,
+        "confirmType": "Y"
       }
     };
     final result = await _api.request(body: _body);
@@ -162,13 +102,7 @@ class ActivityMenuProvider extends ChangeNotifier {
       return ResultModel(false, errorMassage: result.errorMessage);
     }
     if (result != null && result.statusCode == 200) {
-      var beforeLength = editModel?.table260?.length;
-      editModel = SalesActivityDayResponseModel.fromJson(result.body['data']);
-      editModel?.table260?.forEach((element) {
-        pr(element.toJson());
-      });
-      pr(' editModel?.table430.length;:::${editModel?.table430!.length}');
-      pr('delete successful ????${beforeLength != editModel!.table260!.length}');
+      pr(result.body);
       isLoadData = false;
       notifyListeners();
       return ResultModel(true);
