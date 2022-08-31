@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-08-31 14:43:30
+ * Last Modified: 2022-08-31 15:37:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -98,7 +98,6 @@ class ActivityMenuProvider extends ChangeNotifier {
     var t361List = <SalesActivityDayTable361>[];
     temp.addAll([t250.toJson()]);
     t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
-
     editModel!.table260!.forEach((tableItem) {
       t260List.add(SalesActivityDayTable260.fromJson(tableItem.toJson()));
     });
@@ -165,6 +164,10 @@ class ActivityMenuProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       var beforeLength = editModel?.table260?.length;
       editModel = SalesActivityDayResponseModel.fromJson(result.body['data']);
+      editModel?.table260?.forEach((element) {
+        pr(element.toJson());
+      });
+      pr(' editModel?.table430.length;:::${editModel?.table430!.length}');
       pr('delete successful ????${beforeLength != editModel!.table260!.length}');
       isLoadData = false;
       notifyListeners();

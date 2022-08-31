@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-31 14:36:03
+ * Last Modified: 2022-08-31 15:26:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -87,10 +87,11 @@ class AddActivityPageProvider extends ChangeNotifier {
     pr(activityStatus);
     index = indexx;
     if (index != null) {
-      // pr(fromParentResponseModel!.table361!.length);
-      // pr(fromParentResponseModel!.table280!.length);
-      // pr(fromParentResponseModel!.table250!.single.toJson());
-      // pr(fromParentResponseModel!.table260!.single.toJson());
+      pr(fromParentResponseModel!.table361!.length);
+      pr(fromParentResponseModel!.table280!.length);
+      pr('260 ???? ${fromParentResponseModel!.table260!.length}');
+      pr(fromParentResponseModel!.table250!.single.toJson());
+      pr(fromParentResponseModel!.table260!.single.toJson());
       var temp = fromParentResponseModel!.table260![index!];
       isVisit = temp.xvisit != null && temp.xvisit == 'Y';
       selectedKunnr = EtKunnrModel();
@@ -560,6 +561,7 @@ class AddActivityPageProvider extends ChangeNotifier {
           SalesActivityDayResponseModel.fromJson(result.body['data']);
       editModel260 = SalesActivityDayTable260.fromJson(
           fromParentResponseModel?.table260?.first.toJson());
+      pr('추가 한것 ${editModel260?.toJson()}');
       isLoadData = false;
       // notifyListeners();
       isUpdate = true;
