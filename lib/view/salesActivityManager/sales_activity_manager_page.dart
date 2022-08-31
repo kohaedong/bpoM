@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-31 14:22:24
+ * Last Modified: 2022-08-31 14:56:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -337,9 +337,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 final p = context.read<SalseActivityManagerPageProvider>();
                 p.setSelectedDate(p.previousWorkingDay!);
                 p.setIsResetDay(false);
-                p.getDayData(
-                  isWithLoading: true,
-                );
+                p.getDayData(isWithLoading: true);
                 if (_tabController.index == 0) {
                   _tabController.animateTo(1);
                   p.resetIsShowPopup();
@@ -498,10 +496,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         }
         if (p.activityStatus == ActivityStatus.INIT) {
           var parentModel = popupResult.data as SalesActivityDayResponseModel;
-          p.initData(
-            parentModel,
-            ActivityStatus.STARTED,
-          );
+          p.initData(parentModel, ActivityStatus.STARTED, isMounted: true);
+          p.setIsNeedUpdate(true);
           AppToast().show(context, tr('activity_is_started'));
           await _routeToAddActivityPage(context);
         }
@@ -588,7 +584,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         naviResult as bool;
         if (naviResult) {
           try {
-            Navigator.pop(context, naviResult);
+            Navigator.pop(context, p.isNeedUpdate);
           } catch (e) {
             pr('catch ::: $e');
           }
@@ -739,8 +735,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
               result as bool;
               //!   업데이트가 필요하면 최신 데이터 가져온다.
               if (result) {
-                pr(' ok update');
-                p.getDayData();
+                p.getDayData(isWithLoading: true);
               }
             }
           },

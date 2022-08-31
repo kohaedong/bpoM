@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-08-24 17:28:48
+ * Last Modified: 2022-08-31 14:34:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -139,6 +139,7 @@ class SelectLocationProvider extends ChangeNotifier {
     assert(lat != null && lon != null);
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
+    var esLogin = CacheService.getEsLogin();
     var t250Base64 = '';
     var temp = <Map<String, dynamic>>[];
     var t250 = SalesActivityDayTable250();
@@ -163,6 +164,7 @@ class SelectLocationProvider extends ChangeNotifier {
       t250.adate =
           FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now()));
       t250.saddcat = locationType;
+      t250.ernam = esLogin!.ename;
       t250.szaddr = selectedAddress!;
       t250.sxLatitude = double.parse(lat!.trim());
       t250.syLongitude = double.parse(lon!.trim());
