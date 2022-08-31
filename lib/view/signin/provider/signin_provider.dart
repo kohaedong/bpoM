@@ -453,7 +453,7 @@ class SigninProvider extends ChangeNotifier {
           notDisturbStartMine: '',
           notDisturbStopHour: '',
           notDisturbStopMine: '',
-          textScale: 'medium',
+          textScale: 'big',
         );
         return temp;
       }

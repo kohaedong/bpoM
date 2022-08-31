@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-08-30 17:20:45
+ * Last Modified: 2022-08-31 13:29:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -66,7 +66,7 @@ class ActivityMenuProvider extends ChangeNotifier {
 
   Future<void> initData(SalesActivityDayResponseModel fromParentWindowModel,
       ActivityStatus? status) async {
-    getOfficeAddress();
+    await getOfficeAddress();
     editModel =
         SalesActivityDayResponseModel.fromJson(fromParentWindowModel.toJson());
     activityStatus = status;
