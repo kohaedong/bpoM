@@ -7,7 +7,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.5
   shared_preferences: ^2.0.15  # flutter 공식지원
   webview_flutter: ^3.0.4 # flutter 공식지원
   connectivity_plus: ^2.3.5 # flutterCommunity 공식지원
@@ -29,7 +29,7 @@ dependencies:
   shimmer: ^2.0.0 # 유지보수 보통
   flutter_windowmanager: ^0.2.0 ### 유지보수 보통 ###
   flutter_screenutil: ^5.5.3+2 # 유지보수 양호
-  flutter_svg: ^1.1.0 # 유지보수 양호 
+  flutter_svg: ^1.1.4 # 유지보수 양호 
   fluttertoast: ^8.0.9 # 유지보수 양호
   open_file: ^3.2.1 #### 폐기의심,현재 까지 사용가능.####  .apk 파일 open 용
   logger: ^1.1.0 # 유지보수 양호

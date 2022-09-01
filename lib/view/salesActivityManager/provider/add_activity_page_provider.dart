@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-01 10:57:16
+ * Last Modified: 2022-09-01 13:58:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -150,15 +150,26 @@ class AddActivityPageProvider extends ChangeNotifier {
             (SalesActivityDayTable280 table) {
           return table.bzactno == temp.bzactno && table.seqno == temp.seqno;
         };
-        var temp280 = fromParentResponseModel!.table280!
+        var temp280List = fromParentResponseModel!.table280!
             .where((table) => isThisActivityFor280(table))
             .toList();
-        if (temp280.isNotEmpty) {
-          temp280.forEach((element) {
-            pr('!!!@!@!@!@!@!${element.toJson()}');
+        if (temp280List.isNotEmpty) {
+          suggestedList = [];
+          temp280List.asMap().entries.map((map) {
+            var model = AddActivitySuggetionItemModel();
+            var index = map.key;
+            model.matnr = index == 0
+                ? map.value.matnr1
+                : index == 1
+                    ? map.value.matnr2
+                    : map.value.matnr3;
+            model.maktx = index == 0
+                ? map.value.maktx1
+                : index == 1
+                    ? map.value.maktx2
+                    : map.value.maktx3;
+            suggestedList!.add(model);
           });
-          // var model = SalesActivityDayTable280.fromJson(temp280.last.toJson());
-          // anotherSaller = EtStaffListModel();
         }
       };
       saveActivityType();
@@ -472,7 +483,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     var isTable360NotEmpty = fromParentResponseModel!.table361!.isNotEmpty;
     // 기준 데이터 유지 .
     if (isTable360NotEmpty) {
-      // 현재 seqno와 매칭 되는 데이터 일단 뻬고
+      // 현재 seqno와 매칭 되는 데이터 제외 하고 .
       fromParentResponseModel!.table361!.forEach((table) {
         !isThisActivityFrom361(table)
             ? t361List.add(SalesActivityDayTable361.fromJson(table.toJson()))
@@ -499,6 +510,10 @@ class AddActivityPageProvider extends ChangeNotifier {
               var thisActivity280List = fromParentResponseModel!.table280!
                   .where((table) => isThisActivityFrom280(table))
                   .toList();
+              if (thisActivity280List.isNotEmpty) {
+                // 기존데이터
+                thisActivity280List.forEach((table) {});
+              }
               // insert
               // t280.bzactno = t260.bzactno;
               // t280.seqno = t260.seqno;
@@ -511,7 +526,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     };
     var isTable280NotEmpty = fromParentResponseModel!.table280!.isNotEmpty;
     if (isTable280NotEmpty) {
-      // 현재 seqno와 매칭 되는 데이터 일단 뻬고
+      // 현재 seqno와 매칭 되는 데이터 제외 하고 .
       fromParentResponseModel!.table280!.forEach((table) {
         !isThisActivityFrom280(table)
             ? t280List.add(SalesActivityDayTable280.fromJson(table.toJson()))
@@ -519,14 +534,14 @@ class AddActivityPageProvider extends ChangeNotifier {
       });
     }
     // 신규 280 데이터 추가.
-    await newT280(isEditMode: index == null ? false : true)
-        .then((_) => t280List.add(t280));
+    // await newT280(isEditMode: index == null ? false : true)
+    //     .then((_) => t280List.add(t280));
 
-    if (t280List.isNotEmpty) {
-      temp.clear();
-      temp.addAll([...t280List.map((table) => table.toJson())]);
-      t280Base64 = await EncodingUtils.base64ConvertForListMap(temp);
-    }
+    // if (t280List.isNotEmpty) {
+    //   temp.clear();
+    //   temp.addAll([...t280List.map((table) => table.toJson())]);
+    //   t280Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    // }
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
