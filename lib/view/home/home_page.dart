@@ -251,6 +251,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 color: AppColors.whiteText),
             child: Consumer<NoticeProvider>(builder: (context, provider, _) {
               return provider.homeNoticeResponseModel != null &&
+                      provider.homeNoticeResponseModel!.tZltsp0710 != null &&
                       provider.homeNoticeResponseModel!.tZltsp0710!.isNotEmpty
                   ? ListView.builder(
                       physics: NeverScrollableScrollPhysics(),

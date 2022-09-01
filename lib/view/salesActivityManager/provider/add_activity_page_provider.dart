@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-01 17:25:21
+ * Last Modified: 2022-09-01 18:07:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -201,6 +201,7 @@ class AddActivityPageProvider extends ChangeNotifier {
           await Future.forEach(suggestedList!, (item) async {
             item as AddActivitySuggetionItemModel;
             if (item.maktx!.isEmpty) {
+              // 옛날 버전 제품명 empty 대비 .
               item.maktx = await searchSuggetionItem(item.matnr!)
                   .then((model) => model != null ? model.maktx : '');
             }
@@ -325,6 +326,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+// 제안품목명 구하기 위한 api.
   Future<AddActivitySuggetionItemModel?> searchSuggetionItem(
       String matnr) async {
     var _api = ApiService();
