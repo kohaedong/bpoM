@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-08-22 09:47:32
+ * Last Modified: 2022-09-01 17:08:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -650,8 +650,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "IV_PTYPE": "R",
         "IV_MATNR": "",
         "IV_MAKTX": suggetionItemNameInputText ?? '', // input
-        "IV_MATKL": "",
-        "IV_WGBEZ": suggetionItemGroupInputText ?? '', // input
+        "IV_MATKL": suggetionItemGroupInputText ?? '', // input
+        "IV_WGBEZ": "",
         "IV_MTART": "",
         "pos": pos,
         "partial": partial,

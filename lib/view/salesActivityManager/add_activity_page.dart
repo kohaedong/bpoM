@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-01 10:39:58
+ * Last Modified: 2022-09-01 16:06:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -934,10 +934,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
       _interviewTextEditingController.text = model.table260![index].meetRmk!;
       _notVisitEditingController.text = model.table260![index].visitRmk!;
       _visitResultTextEditingController.text = model.table260![index].rslt!;
-      _leaderAdviceTextEditingController.text =
-          model.table260![index].comnt!; //! m??
+      _leaderAdviceTextEditingController.text = model.table260![index].comnt!;
       _amountEditingController.text = model.table280!.isNotEmpty
-          ? '${model.table280![index].amount1 ?? ''}'
+          //! 공용 amount1
+          ? '${model.table280!.first.amount1 ?? ''}'
           : '';
     }
 

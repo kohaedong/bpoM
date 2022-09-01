@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-01 13:58:41
+ * Last Modified: 2022-09-01 17:25:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/rfc/add_activity_suggetion_response_model.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
@@ -42,6 +43,7 @@ typedef IsThisActivityFrom280 = bool Function(SalesActivityDayTable280);
 
 class AddActivityPageProvider extends ChangeNotifier {
   AddActivityKeyManResponseModel? keyManResponseModel;
+  AddActivitySuggetionResponseModel? suggetionResponseModel;
   EtKunnrResponseModel? etKunnrResponseModel;
   SalesActivityDayResponseModel? fromParentResponseModel;
   SalesActivityDayTable260? editModel260;
@@ -92,6 +94,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       pr(fromParentResponseModel!.table250!.single.toJson());
       pr(fromParentResponseModel!.table260![index!].toJson());
       var temp = fromParentResponseModel!.table260![index!];
+      pr('260::::${temp.toJson()}');
       isVisit = temp.xvisit != null && temp.xvisit == 'Y';
       selectedKunnr = EtKunnrModel();
       selectedKunnr!.name = temp.zskunnrNm;
@@ -145,7 +148,8 @@ class AddActivityPageProvider extends ChangeNotifier {
         default:
       }
 
-      var saveActivityType = () {
+      // 활동 유형 및 제안제품 초기화.
+      var saveActivityType = () async {
         IsThisActivityFrom280 isThisActivityFor280 =
             (SalesActivityDayTable280 table) {
           return table.bzactno == temp.bzactno && table.seqno == temp.seqno;
@@ -155,26 +159,64 @@ class AddActivityPageProvider extends ChangeNotifier {
             .toList();
         if (temp280List.isNotEmpty) {
           suggestedList = [];
-          temp280List.asMap().entries.map((map) {
-            var model = AddActivitySuggetionItemModel();
-            var index = map.key;
-            model.matnr = index == 0
-                ? map.value.matnr1
-                : index == 1
-                    ? map.value.matnr2
-                    : map.value.matnr3;
-            model.maktx = index == 0
-                ? map.value.maktx1
-                : index == 1
-                    ? map.value.maktx2
-                    : map.value.maktx3;
-            suggestedList!.add(model);
+          // only one!
+          var data = temp280List.single;
+          pr('280  :: ${data.toJson()}');
+
+          List.generate(3, (index) async {
+            switch (index) {
+              case 0:
+                if (data.matnr1!.isNotEmpty) {
+                  var model = AddActivitySuggetionItemModel();
+
+                  model.matnr = data.matnr1;
+                  model.maktx = data.maktx1;
+                  model.matkl = data.zmatkl1;
+                  model.isChecked = data.xsampl1 == 'X';
+                  suggestedList!.add(model);
+                }
+                break;
+              case 1:
+                if (data.matnr2!.isNotEmpty) {
+                  var model = AddActivitySuggetionItemModel();
+                  model.matnr = data.matnr2;
+                  model.maktx = data.maktx2;
+                  model.matkl = data.zmatkl2;
+                  model.isChecked = data.xsampl2 == 'X';
+                  suggestedList!.add(model);
+                }
+                break;
+              case 2:
+                if (data.matnr3!.isNotEmpty) {
+                  var model = AddActivitySuggetionItemModel();
+                  model.matnr = data.matnr3;
+                  model.maktx = data.maktx3;
+                  model.matkl = data.zmatkl3;
+                  model.isChecked = data.xsampl3 == 'X';
+                  suggestedList!.add(model);
+                }
+                break;
+            }
+          });
+          await Future.forEach(suggestedList!, (item) async {
+            item as AddActivitySuggetionItemModel;
+            if (item.maktx!.isEmpty) {
+              item.maktx = await searchSuggetionItem(item.matnr!)
+                  .then((model) => model != null ? model.maktx : '');
+            }
           });
         }
       };
-      saveActivityType();
+      await saveActivityType();
+      if (temp.actcat1!.isNotEmpty) {
+        await getActivityType();
+        var tempStr = activityList!
+            .where((actity) => actity.contains(temp.actcat1!))
+            .single;
+        selectedActionType = tempStr.substring(0, tempStr.indexOf('-'));
+      }
     }
-    suggestedList = [];
+    suggestedList = suggestedList ?? [];
 
     return ResultModel(true);
   }
@@ -281,6 +323,38 @@ class AddActivityPageProvider extends ChangeNotifier {
   void setKeymanModel(AddActivityKeyManModel? model) {
     selectedKeyMan = model;
     notifyListeners();
+  }
+
+  Future<AddActivitySuggetionItemModel?> searchSuggetionItem(
+      String matnr) async {
+    var _api = ApiService();
+    _api.init(RequestType.SEARCH_SUGGETION_ITEM);
+    Map<String, dynamic>? _body;
+    _body = {
+      "methodName": RequestType.SEARCH_SUGGETION_ITEM.serverMethod,
+      "methodParamMap": {
+        "IV_PTYPE": "R",
+        "IV_MATNR": matnr,
+        "IV_MAKTX": "",
+        "IV_MATKL": "",
+        "IV_WGBEZ": "",
+        "IV_MTART": "",
+        "IS_LOGIN": CacheService.getIsLogin(),
+        "resultTables": RequestType.SEARCH_SUGGETION_ITEM.resultTable,
+        "functionName": RequestType.SEARCH_SUGGETION_ITEM.serverMethod
+      }
+    };
+    _api.init(RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER);
+    final result = await _api.request(body: _body);
+    if (result != null && result.statusCode != 200) {
+      return null;
+    }
+    if (result != null && result.statusCode == 200) {
+      suggetionResponseModel =
+          AddActivitySuggetionResponseModel.fromJson(result.body['data']);
+      return suggetionResponseModel!.etOutput!.single;
+    }
+    return null;
   }
 
   Future<List<String>> getActivityType() async {
