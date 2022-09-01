@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-08-31 15:09:26
+ * Last Modified: 2022-09-01 11:38:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -135,13 +135,15 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       BuildContext context, SalesActivitySingleDateModel model) {
     var holidayList =
         context.read<SalseActivityManagerPageProvider>().holidayList;
-    var isWorkDay = (int.parse(
-            model.column1 != null && model.column1!.isNotEmpty
-                ? model.column1!.trim()
-                : '0') !=
-        int.parse(model.column2 != null && model.column2!.isNotEmpty
-            ? model.column2!.trim()
-            : '0'));
+    var isDataNotEmpty = ((int.parse(
+                model.column1 != null && model.column1!.isNotEmpty
+                    ? model.column1!
+                    : '0') >
+            0) ||
+        (int.parse(model.column2 != null && model.column2!.isNotEmpty
+                ? model.column2!
+                : '0') >
+            0));
     return GestureDetector(
       onTap: () {
         if (model.dateStr != null && model.dateStr!.trim().isNotEmpty) {
@@ -190,12 +192,13 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                                           ? AppColors.primary
                                           : AppColors.defaultText)),
                         ),
+                  defaultSpacing(),
                   AppText.text(
                       model.column4 == 'C'
                           ? '확정'
                           : model.dateStr != null &&
                                   model.dateStr!.isNotEmpty &&
-                                  isWorkDay &&
+                                  isDataNotEmpty &&
                                   DateUtil.getDate(model.dateStr!)
                                       .isBefore(DateTime.now())
                               ? '미확정'
@@ -206,7 +209,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                               : AppColors.dangerColor,
                           fontWeight: FontWeight.bold)),
                   AppText.text(
-                      isWorkDay
+                      isDataNotEmpty
                           ? '${model.column1 != null && model.column1!.isNotEmpty ? model.column1!.trim() : '0'}/${model.column2 != null && model.column2!.isNotEmpty ? model.column2!.trim() : '0'}'
                           : '',
                       style: AppTextStyle.sub_12)

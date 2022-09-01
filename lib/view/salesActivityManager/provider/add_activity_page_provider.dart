@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-01 10:08:28
+ * Last Modified: 2022-09-01 10:57:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -442,7 +442,6 @@ class AddActivityPageProvider extends ChangeNotifier {
                 t361 = null;
               }
               //! 로직상 동행자 수정 불가로 되있어 업데이트 프로세스 보류 함.
-
               // t361.logid = anotherSaller!.logid;
               // t361.sname = anotherSaller!.sname;
               // t361.zkmno = selectedKeyMan!.zkmno;
@@ -492,52 +491,42 @@ class AddActivityPageProvider extends ChangeNotifier {
       temp.addAll([...t361List.map((table) => table.toJson())]);
       t361Base64 = await EncodingUtils.base64ConvertForListMap(temp);
     }
-    // // 활동유형 처리 - 280 .
-    // var newT280 =
-    //     ({required bool isFirstEntity, SalesActivityDayTable280? model}) async {
-    //   isFirstEntity
-    //       ? () {
-    //           // insert
-    //           // t280.bzactno = t260.bzactno;
-    //           // t280.seqno = t260.seqno;
-    //           // t280.umode = 'I';
-    //         }()
-    //       : () {
-    //           t280 = SalesActivityDayTable280.fromJson(model!.toJson());
-    //           t280.umode = 'D';
-    //         }();
-    // };
-    // var isTable280NotEmpty = fromParentResponseModel!.table280!.isNotEmpty;
-    // if (isTable280NotEmpty) {
-    //   // 현재 seqno와 매칭 되는 데이터 일단 뻬고
-    //   fromParentResponseModel!.table280!.forEach((table) {
-    //     !isThisActivityFrom280(table)
-    //         ? t280List.add(SalesActivityDayTable280.fromJson(table.toJson()))
-    //         : DoNothingAction();
-    //   });
-    // }
-    // // 신규 280 데이터 추가.
-    // if (index == null) {
-    //   if (anotherSaller != null) {
-    //     await newT280(isFirstEntity: true).then((_) => t280List.add(t280));
-    //   }
-    // } else {
-    //   var thisActivityData = fromParentResponseModel!.table280!
-    //       .where((table) => isThisActivityFrom280(table))
-    //       .toList();
-    //   if (anotherSaller != null) {
-    //     await newT280(
-    //             isFirstEntity: thisActivityData.isEmpty,
-    //             model:
-    //                 thisActivityData.isEmpty ? null : thisActivityData.single)
-    //         .then((_) => t280List.add(t280));
-    //   }
-    // }
-    // if (t280List.isNotEmpty) {
-    //   temp.clear();
-    //   temp.addAll([...t280List.map((table) => table.toJson())]);
-    //   t280Base64 = await EncodingUtils.base64ConvertForListMap(temp);
-    // }
+
+    // 활동유형 처리 - 280
+    var newT280 = ({required bool isEditMode}) async {
+      isEditMode
+          ? () {
+              var thisActivity280List = fromParentResponseModel!.table280!
+                  .where((table) => isThisActivityFrom280(table))
+                  .toList();
+              // insert
+              // t280.bzactno = t260.bzactno;
+              // t280.seqno = t260.seqno;
+              // t280.umode = 'I';
+            }()
+          : () {
+              // t280 = SalesActivityDayTable280.fromJson(model!.toJson());
+              // t280.umode = 'D';
+            }();
+    };
+    var isTable280NotEmpty = fromParentResponseModel!.table280!.isNotEmpty;
+    if (isTable280NotEmpty) {
+      // 현재 seqno와 매칭 되는 데이터 일단 뻬고
+      fromParentResponseModel!.table280!.forEach((table) {
+        !isThisActivityFrom280(table)
+            ? t280List.add(SalesActivityDayTable280.fromJson(table.toJson()))
+            : DoNothingAction();
+      });
+    }
+    // 신규 280 데이터 추가.
+    await newT280(isEditMode: index == null ? false : true)
+        .then((_) => t280List.add(t280));
+
+    if (t280List.isNotEmpty) {
+      temp.clear();
+      temp.addAll([...t280List.map((table) => table.toJson())]);
+      t280Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    }
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
@@ -616,6 +605,8 @@ class AddActivityPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> getDistance() async {
+    isLoadData = true;
+    notifyListeners();
     assert(selectedKunnr != null && selectedKeyMan != null);
     var isTable260Null = fromParentResponseModel!.table260!.isEmpty;
 
@@ -667,15 +658,19 @@ class AddActivityPageProvider extends ChangeNotifier {
     };
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {
+      isLoadData = false;
       notifyListeners();
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
       distanceModel = AddActivityDistanceModel.fromJson(result.body['data']);
       isVisit = true;
+      isLoadData = false;
       notifyListeners();
       return ResultModel(true);
     }
+    isLoadData = false;
+    notifyListeners();
     return ResultModel(false);
   }
 }
