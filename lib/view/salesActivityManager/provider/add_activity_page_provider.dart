@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-08-31 17:46:15
+ * Last Modified: 2022-09-01 10:08:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -337,7 +337,7 @@ class AddActivityPageProvider extends ChangeNotifier {
                 // 첫번째 데이터
                 if (isT260Empty) {
                   pr('empty????');
-                  t260.seqno = '0001';
+                  t260.seqno = '0002';
                   t260.erdat = t250.erdat;
                   t260.erzet = t250.erzet;
                   t260.ernam = t250.ernam;
@@ -348,8 +348,6 @@ class AddActivityPageProvider extends ChangeNotifier {
                   t260.aewid = t250.aewid;
                   t260.etime = DateUtil.getTimeNow(isNotWithColon: true);
                   t260.atime = DateUtil.getTimeNow(isNotWithColon: true);
-                  t260.mandt = t250.mandt;
-                  t260.bzactno = t250.bzactno;
                 } else {
                   pr('not empty????');
                   var lastSeqNo =
@@ -567,7 +565,7 @@ class AddActivityPageProvider extends ChangeNotifier {
           SalesActivityDayResponseModel.fromJson(result.body['data']);
       editModel260 = SalesActivityDayTable260.fromJson(
           fromParentResponseModel?.table260?.first.toJson());
-      pr('추가 한것 ${editModel260?.toJson()}');
+      pr('추가 ::: ${editModel260?.toJson()}');
       isLoadData = false;
       // notifyListeners();
       isUpdate = true;

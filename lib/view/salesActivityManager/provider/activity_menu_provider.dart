@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-08-31 17:38:21
+ * Last Modified: 2022-09-01 09:53:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -86,13 +86,13 @@ class ActivityMenuProvider extends ChangeNotifier {
     Map<String, dynamic> _body = {
       "methodName": RequestType.DELETE_LAST_ACTIVITY.serverMethod,
       "methodParamMap": {
-        "IV_SANUM": esLogin!.logid!.toUpperCase(),
         "IV_PTYPE": "D",
-        "IV_ADATE": DateUtil.getDateStr(DateTime.now().toIso8601String()),
+        "confirmType": "Y",
         "IS_LOGIN": isLogin,
+        "IV_SANUM": esLogin!.logid!.toUpperCase(),
+        "IV_ADATE": DateUtil.getDateStr(DateTime.now().toIso8601String()),
         "resultTables": RequestType.DELETE_LAST_ACTIVITY.resultTable,
-        "functionName": RequestType.DELETE_LAST_ACTIVITY.serverMethod,
-        "confirmType": "Y"
+        "functionName": RequestType.DELETE_LAST_ACTIVITY.serverMethod
       }
     };
     final result = await _api.request(body: _body);
