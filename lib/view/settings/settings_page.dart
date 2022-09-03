@@ -54,7 +54,6 @@ class SettingsPage extends StatelessWidget {
                                         AppSize.buttonHeight,
                                     alignment: Alignment.center,
                                     child: AppText.text(
-                                        //!빌드옵션 하드코딩! 앱 이름.
                                         '(개발)제약 영업포탈 ${tr('is_ready_to_logout')}',
                                         style: AppTextStyle.default_16)),
                                 successButtonText: '${tr('ok')}',
@@ -99,7 +98,8 @@ class SettingsPage extends StatelessWidget {
         Padding(padding: EdgeInsets.only(left: AppSize.versionInfoSpacing1)),
         AppText.text('${versionInfo.currentVersion}',
             style: AppTextStyle.hint_16),
-        Padding(padding: EdgeInsets.only(left: AppSize.versionInfoSpacing2)),
+        Padding(
+            padding: EdgeInsets.only(right: AppSize.defaultListItemSpacing)),
         versionInfo.result == 'OK'
             ? Container(
                 width: AppSize.secondButtonWidth,
@@ -116,8 +116,10 @@ class SettingsPage extends StatelessWidget {
                     child: Text(
                       '${tr('do_update')}',
                     )))
-            : AppText.text('${tr('is_latest_version')}',
-                style: AppTextStyle.default_14),
+            : Expanded(
+                child: AppText.text('${tr('is_latest_version')}',
+                    style: AppTextStyle.default_14, textAlign: TextAlign.end),
+              )
       ],
     );
   }

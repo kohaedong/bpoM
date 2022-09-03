@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-08-29 14:29:05
+ * Last Modified: 2022-09-02 14:26:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -269,7 +269,7 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
   @override
   Widget build(BuildContext context) {
     final iconMaxWidth = AppSize.customerTextFiledIconMaxWidth +
-        AppSize.customerTextFiledIconSidePadding / 2;
+        AppSize.customerTextFiledIconSidePadding;
     final iconMinWidth = AppSize.customerTextFiledIconMainWidth +
         AppSize.customerTextFiledIconSidePadding / 2;
     return Stack(

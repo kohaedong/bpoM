@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/flutter_source_code_calinda_datePicker.dart
  * Created Date: 2021-10-02 03:22:06
- * Last Modified: 2022-07-16 09:32:53
+ * Last Modified: 2022-09-02 11:50:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -513,7 +513,7 @@ class _DatePickerDialogState extends State<DatePickerDialog>
                   border: Border(
                       top: BorderSide(color: const Color(0xffcccccc)),
                       right: BorderSide(color: const Color(0xffcccccc)))),
-              width: (AppSize.defaultContentsWidth - AppSize.padding * 2) / 2,
+              width: _calendarPortraitDialogSize.width / 2,
               height: AppSize.secondButtonHeight,
               alignment: Alignment.center,
               child: Text(
@@ -535,7 +535,6 @@ class _DatePickerDialogState extends State<DatePickerDialog>
                 decoration: BoxDecoration(
                     border: Border(
                         top: BorderSide(color: const Color(0xffcccccc)))),
-                width: (AppSize.defaultContentsWidth - AppSize.padding * 2) / 2,
                 height: AppSize.secondButtonHeight,
                 alignment: Alignment.center,
                 child: Text(
