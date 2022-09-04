@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-08-31 17:13:16
+ * Last Modified: 2022-09-04 15:59:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -60,7 +60,8 @@ enum RequestType {
   SEARCH_PARTMENT_KEY_ZIBI,
   CHECK_HOLIDAY,
   GET_DISTANCE,
-  DELETE_LAST_ACTIVITY
+  DELETE_LAST_ACTIVITY,
+  SEARCH_RECENT_ORDER
 }
 
 // [KolonBuildConfig] 빌드 옵션에 따라 url가 변한다.
@@ -103,6 +104,8 @@ extension RequestTypeExtension on RequestType {
   String url({String? params}) {
     switch (this) {
       case RequestType.SEARCH_STAFF:
+        return '$rfcURL/common';
+      case RequestType.SEARCH_RECENT_ORDER:
         return '$rfcURL/common';
       case RequestType.DELETE_LAST_ACTIVITY:
         return '$rfcURL/common';
@@ -204,6 +207,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SEARCH_STAFF:
         return 'ES_RETURN,ET_STAFFLIST';
+      case RequestType.SEARCH_RECENT_ORDER:
+        return 'ES_RETURN,T_HEAD,T_ITEM,T_TEXT';
       case RequestType.DELETE_LAST_ACTIVITY:
         return 'ES_RETURN';
       case RequestType.GET_VISIT_HISTORY:
@@ -281,6 +286,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.CHECK_NOTICE:
         return "noticeAll";
+      case RequestType.SEARCH_RECENT_ORDER:
+        return "Z_LTSP_IF0089";
       case RequestType.DELETE_LAST_ACTIVITY:
         return "Z_LTSP_IF0137";
       case RequestType.GET_VISIT_HISTORY:
