@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-09-04 15:17:15
+ * Last Modified: 2022-09-04 17:01:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -515,12 +515,13 @@ class BasePopupSearchProvider extends ChangeNotifier {
     var vkgrp = productBusinessDataList
         ?.where((str) => str.contains(selectedSalesGroup!))
         .toList();
+
     _body = {
       "methodName": isBulkOrder != null && isBulkOrder
           ? RequestType.SEARCH_SALLER_FOR_BULK_ORDER.serverMethod
           : RequestType.SEARCH_SALLER.serverMethod,
       "methodParamMap": {
-        "IV_VTWEG": "10",
+        "IV_VTWEG": bodyMap?['vtweg'] ?? "10",
         "IV_VKORG": esLogin!.vkorg,
         "IV_SPART": spart != null && spart.isNotEmpty
             ? spart.first.substring(spart.first.indexOf('-') + 1)

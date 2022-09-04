@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/hive_service.dart
  * Created Date: 2021-08-17 13:17:07
- * Last Modified: 2022-09-04 13:07:45
+ * Last Modified: 2022-09-04 17:29:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,15 +12,14 @@
  */
 
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:medsalesportal/enums/common_code_return_type.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
+import 'package:medsalesportal/util/hive_select_data_util.dart';
 import 'package:medsalesportal/model/commonCode/t_code_model.dart';
+import 'package:medsalesportal/enums/common_code_return_type.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/commonCode/t_values_model.dart';
 import 'package:medsalesportal/model/commonCode/et_dd07v_customer_category_model.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/util/hive_select_data_util.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 
 typedef SearchEtDd07vCustomerConditional = bool Function(TCustomerCustomsModel);
 
@@ -331,6 +330,11 @@ class HiveService {
 // 처리상태
   static Future<List<String>?> getCustomerType(String cditm) async {
     return await getDataFromTCode('CUST_STAT', cditm: cditm);
+  }
+
+// 유통체널
+  static Future<List<String>?> getChannel() async {
+    return await getDataFromTCode('ZVTWEG', isWithCode: true);
   }
 
 // 활동유형

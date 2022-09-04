@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-04 15:25:17
+ * Last Modified: 2022-09-04 17:25:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -34,6 +34,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
   String? selectedProductFamily;
   String? selectedSalseOffice;
   String? deliveryConditionInputText;
+  String? channelCode;
   String? orderDescriptionDetailInputText;
   EtStaffListModel? selectedSalsePerson;
   EtCustomerModel? selectedCustomerModel;
@@ -41,21 +42,41 @@ class OrderManagerPageProvider extends ChangeNotifier {
   EtCustListModel? selectedEndCustomerModel;
   List<String>? groupDataList;
   List<String>? productFamilyDataList;
+  List<String>? channelList;
   bool? isSingleData;
   bool isLoadData = false;
   final _api = ApiService();
-  final channelList = ['내수-10', '수출-20', 'Local-30'];
 
   Future<ResultModel> initData() async {
+    groupDataList = await HiveService.getSalesGroup();
+    productFamilyDataList = await HiveService.getProductFamily();
+    channelList = await HiveService.getChannel();
+    pr(channelList);
     if (!CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
-      var temp = channelList.where((str) => str.contains('내수')).single;
+      var temp = channelList!.where((str) => str.contains('내수')).single;
       selectedSalseChannel = temp.substring(0, temp.indexOf('-'));
+      channelCode = temp.substring(temp.indexOf('-') + 1);
     } else {
       selectedSalseChannel = tr('all');
     }
-    groupDataList = await HiveService.getSalesGroup();
-    productFamilyDataList = await HiveService.getProductFamily();
     return ResultModel(true);
+  }
+
+  void resetData({required int? level}) {
+    switch (level) {
+      case 1:
+        selectedCustomerModel = null;
+        selectedEndCustomerModel = null;
+        selectedProductFamily = null;
+        break;
+      case 2:
+        selectedCustomerModel = null;
+        selectedEndCustomerModel = null;
+        break;
+      default:
+    }
+
+    isSingleData = null;
   }
 
   void setSalseGroup(String str) {
@@ -73,17 +94,32 @@ class OrderManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setChannelCode() {
+    var temp = channelList
+        ?.where((item) => item.contains(selectedSalseChannel ?? '내수'))
+        .single;
+    channelCode = temp!.substring(temp.indexOf('-') + 1);
+  }
+
   void setSalseChannel(String str) {
     selectedSalseChannel = str;
+    if (str == tr('all')) {
+      channelCode = '';
+    } else {
+      setChannelCode();
+    }
+    resetData(level: 1);
     notifyListeners();
   }
 
   void setProductFamily(String str) {
     selectedProductFamily = str;
+    resetData(level: 2);
     notifyListeners();
   }
 
   void setCustomerModel(dynamic map) async {
+    pr(map);
     if (map != null) {
       map as Map<String, dynamic>;
       selectedProductFamily = map['product_family'] as String?;
@@ -93,12 +129,13 @@ class OrderManagerPageProvider extends ChangeNotifier {
         selectedSalsePerson!.dptnm = map['dptnm'];
         searchPerson(dptnm: map['dptnm']);
       }
-      var model = map['model'] as EtCustomerModel?;
-      selectedCustomerModel = model;
-      var supplierResult = await searchSupplierAndEndCustomer(true);
-      var endCustomerResult = await searchSupplierAndEndCustomer(false);
-      isSingleData = supplierResult.data && endCustomerResult.data;
-      pr('isSingleData???? $isSingleData');
+      selectedCustomerModel = map['model'] as EtCustomerModel?;
+      if (selectedCustomerModel != null) {
+        var supplierResult = await searchSupplierAndEndCustomer(true);
+        var endCustomerResult = await searchSupplierAndEndCustomer(false);
+        isSingleData = supplierResult.data && endCustomerResult.data;
+        pr('isSingleData???? $isSingleData');
+      }
       notifyListeners();
     } else {
       selectedCustomerModel = null;
@@ -222,7 +259,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
 
   Future<List<String>?> getChannelFromDB() async {
     var dataStr = <String>[];
-    channelList.forEach((item) {
+    channelList!.forEach((item) {
       dataStr.add(item.substring(0, item.indexOf('-')));
     });
     return dataStr;

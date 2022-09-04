@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/recent_order_head_model.dart
  * Created Date: 2022-09-04 16:18:47
- * Last Modified: 2022-09-04 16:28:29
+ * Last Modified: 2022-09-04 17:28:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -141,4 +141,7 @@ class RecentOrderHeadModel {
       this.zstatus,
       this.zzkunnrEnd,
       this.zzkunnrEndNm});
+  factory RecentOrderHeadModel.fromJson(Object? json) =>
+      _$RecentOrderHeadModelFromJson(json as Map<String, dynamic>);
+  Map<String, dynamic> toJson() => _$RecentOrderHeadModelToJson(this);
 }

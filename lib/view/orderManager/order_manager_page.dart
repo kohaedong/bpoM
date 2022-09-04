@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-04 15:32:56
+ * Last Modified: 2022-09-04 17:09:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -218,9 +218,12 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
   Widget _buildSalseOfficeSelector(BuildContext context) {
     final p = context.read<OrderManagerPageProvider>();
     return Selector<OrderManagerPageProvider,
-        Tuple3<String?, EtCustomerModel?, EtStaffListModel?>>(
-      selector: (context, provider) => Tuple3(provider.selectedProductFamily,
-          provider.selectedCustomerModel, provider.selectedSalsePerson),
+        Tuple4<String?, EtCustomerModel?, EtStaffListModel?, String?>>(
+      selector: (context, provider) => Tuple4(
+          provider.selectedProductFamily,
+          provider.selectedCustomerModel,
+          provider.selectedSalsePerson,
+          provider.selectedSalseChannel),
       builder: (context, tuple, _) {
         return Column(
           children: [
@@ -257,6 +260,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 return p.setCustomerModel(customer);
               },
               bodyMap: {
+                'vtweg': p.channelCode,
                 'product_family': tuple.item1,
                 'staff': CheckSuperAccount.isMultiAccountOrLeaderAccount()
                     ? tuple.item3 != null
