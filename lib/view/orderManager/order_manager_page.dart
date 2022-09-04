@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-04 17:09:41
+ * Last Modified: 2022-09-04 18:00:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,14 +11,18 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:flutter/material.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
+import 'package:medsalesportal/view/orderManager/add_order_popup_widget.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -363,17 +367,56 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
   }
 
   Widget _buildAddButton(BuildContext context) {
-    return Container();
+    return InkWell(
+      onTap: () {
+        final result = AppDialog.showPopup(context, AddOrderPopupWidget());
+
+        pr('tap');
+      },
+      child: Container(
+        alignment: Alignment.centerLeft,
+        height: AppSize.smallButtonHeight,
+        width: AppSize.smallButtonWidth,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSize.radius4),
+            border:
+                Border.all(width: .5, color: AppColors.textFieldUnfoucsColor)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.add,
+              color: AppColors.textFieldUnfoucsColor,
+            ),
+            AppText.text(tr('add'),
+                style: AppTextStyle.h5.copyWith(color: AppColors.defaultText))
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildAddProductTitleRow(BuildContext context) {
     return Row(
-      children: [Container(), _buildAddButton(context)],
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        AppStyles.buildTitleRow(tr('order_items')),
+        _buildAddButton(context)
+      ],
     );
   }
 
   Widget _buildRecentOrderTextButton(BuildContext context) {
-    return Container();
+    return InkWell(
+        onTap: () {},
+        child: Row(
+          children: [
+            AppText.text(tr('get_recent_order'),
+                style: AppTextStyle.sub_12.copyWith(color: AppColors.primary)),
+            Icon(Icons.arrow_forward_ios_rounded,
+                size: AppSize.smallIconWidth, color: AppColors.primary),
+          ],
+        ));
   }
 
   Widget _buildProductItems(BuildContext context) {
