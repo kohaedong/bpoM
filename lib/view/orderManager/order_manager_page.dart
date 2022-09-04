@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-08-24 17:37:54
+ * Last Modified: 2022-09-04 15:32:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,14 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
+import 'package:medsalesportal/model/rfc/et_customer_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
+import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
+import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -90,7 +98,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                             : '${tr('plz_select_something_1', args: [
                                     tr('salse_group')
                                   ])}');
-                  })
+                  }),
+              defaultSpacing()
             ],
           )
         : Container();
@@ -98,10 +107,9 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
 
   Widget _buildStaffSelector(BuildContext context) {
     final p = context.read<OrderManagerPageProvider>();
-    return CheckSuperAccount.isMultiAccountOrLeaderAccount()
+    return CheckSuperAccount.isLeaderAccount()
         ? Column(
             children: [
-              defaultSpacing(),
               AppStyles.buildTitleRow(tr('manager')),
               defaultSpacing(isHalf: true),
               Selector<OrderManagerPageProvider, Tuple2<String?, String?>>(
@@ -132,7 +140,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       },
                       enable: false,
                     );
-                  })
+                  }),
+              defaultSpacing(),
             ],
           )
         : Container();
@@ -145,67 +154,206 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
       selector: (context, provider) =>
           Tuple2(provider.selectedSalseChannel, provider.selectedSalseGroup),
       builder: (context, tuple, _) {
-        return BaseInputWidget(
-          context: context,
-          onTap: () {
-            if (tuple.item2 == null) {
-              AppToast().show(
-                  context,
-                  tr('plz_enter_search_key_for_something_1',
-                      args: [tr('salse_group')]));
-            }
-          },
-          iconType: InputIconType.SELECT,
-          hintText: tuple.item1 != null ? tuple.item1 : '${tr('plz_select')}',
-          width: AppSize.defaultContentsWidth,
-          hintTextStyleCallBack: tuple.item1 != null
-              ? () => AppTextStyle.default_16
-              : () => AppTextStyle.hint_16,
-          commononeCellDataCallback: p.getChannelFromDB,
-          oneCellType: tuple.item2 == null
-              ? OneCellType.DO_NOTHING
-              : OneCellType.SEARCH_CIRCULATION_CHANNEL,
-          isSelectedStrCallBack: (channel) {
-            p.setSalseChannel(channel);
-          },
-          enable: false,
+        return Column(
+          children: [
+            AppStyles.buildTitleRow(tr('cannel')),
+            BaseInputWidget(
+              context: context,
+              onTap: () {},
+              iconType: InputIconType.SELECT,
+              hintText:
+                  tuple.item1 != null ? tuple.item1 : '${tr('plz_select')}',
+              width: AppSize.defaultContentsWidth,
+              hintTextStyleCallBack: tuple.item1 != null
+                  ? () => AppTextStyle.default_16
+                  : () => AppTextStyle.hint_16,
+              commononeCellDataCallback: () async => p.getChannelFromDB(),
+              oneCellType: OneCellType.SEARCH_CIRCULATION_CHANNEL,
+              isSelectedStrCallBack: (channel) {
+                p.setSalseChannel(channel);
+              },
+              enable: false,
+            ),
+            defaultSpacing()
+          ],
         );
       },
     );
   }
 
   Widget _buildProductFamilySelector(BuildContext context) {
-    return Selector<OrderManagerPageProvider, String?>(
-      selector: (context, provider) => provider.selectedProductFamily,
-      builder: (context, productFamily, _) {
-        return Container();
+    final p = context.read<OrderManagerPageProvider>();
+
+    return Selector<OrderManagerPageProvider, Tuple2<String?, String?>>(
+      selector: (context, provider) =>
+          Tuple2(provider.selectedProductFamily, provider.selectedSalseChannel),
+      builder: (context, tuple, _) {
+        return Column(
+          children: [
+            AppStyles.buildTitleRow(tr('product_family')),
+            BaseInputWidget(
+              context: context,
+              onTap: () {},
+              iconType: InputIconType.SELECT,
+              hintText:
+                  tuple.item1 != null ? tuple.item1 : '${tr('plz_select')}',
+              width: AppSize.defaultContentsWidth,
+              hintTextStyleCallBack: tuple.item1 != null
+                  ? () => AppTextStyle.default_16
+                  : () => AppTextStyle.hint_16,
+              commononeCellDataCallback: () async => p.getProductFamilyFromDB(),
+              oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,
+              isSelectedStrCallBack: (family) {
+                p.setProductFamily(family);
+              },
+              enable: false,
+            ),
+            defaultSpacing()
+          ],
+        );
       },
     );
   }
 
   Widget _buildSalseOfficeSelector(BuildContext context) {
-    return Selector<OrderManagerPageProvider, String?>(
-      selector: (context, provider) => provider.selectedSalseOffice,
-      builder: (context, salseOffice, _) {
-        return Container();
+    final p = context.read<OrderManagerPageProvider>();
+    return Selector<OrderManagerPageProvider,
+        Tuple3<String?, EtCustomerModel?, EtStaffListModel?>>(
+      selector: (context, provider) => Tuple3(provider.selectedProductFamily,
+          provider.selectedCustomerModel, provider.selectedSalsePerson),
+      builder: (context, tuple, _) {
+        return Column(
+          children: [
+            AppStyles.buildTitleRow(tr('sales_office')),
+            BaseInputWidget(
+              context: context,
+              onTap: tuple.item1 == null
+                  ? () {
+                      AppToast().show(
+                          context,
+                          tr('plz_select_something_1',
+                              args: [tr('product_family')]));
+                      return 'continue';
+                    }
+                  : null,
+              iconType: InputIconType.SEARCH,
+              iconColor: tuple.item1 != null
+                  ? AppColors.defaultText
+                  : AppColors.textFieldUnfoucsColor,
+              deleteIconCallback: () => p.setCustomerModel(null),
+              hintText: tuple.item2 != null
+                  ? tuple.item2!.kunnrNm
+                  : '${tr('plz_select_something_2', args: [
+                          tr('sales_office')
+                        ])}',
+              // 팀장 일때 만 팀원선택후 삭제가능.
+              isShowDeleteForHintText: tuple.item2 != null ? true : false,
+              width: AppSize.defaultContentsWidth,
+              hintTextStyleCallBack: () => tuple.item2 != null
+                  ? AppTextStyle.default_16
+                  : AppTextStyle.hint_16,
+              popupSearchType: PopupSearchType.SEARCH_SALLER,
+              isSelectedStrCallBack: (customer) {
+                return p.setCustomerModel(customer);
+              },
+              bodyMap: {
+                'product_family': tuple.item1,
+                'staff': CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                    ? tuple.item3 != null
+                        ? tuple.item3!.sname
+                        : tr('all')
+                    : CacheService.getEsLogin()!.ename,
+                'dptnm': CheckSuperAccount.isMultiAccount()
+                    ? tuple.item3 != null
+                        ? tuple.item3!.dptnm
+                        : CacheService.getEsLogin()!.dptnm
+                    : CacheService.getEsLogin()!.dptnm
+              },
+              enable: false,
+            ),
+            defaultSpacing()
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildSupplierAndEndCustomerInfoRow() {
+    return Selector<OrderManagerPageProvider,
+        Tuple3<bool?, EtCustListModel?, EtCustListModel?>>(
+      selector: (context, provider) => Tuple3(provider.isSingleData,
+          provider.selectedSupplierModel, provider.selectedEndCustomerModel),
+      builder: (context, tuple, _) {
+        return tuple.item1 != null && tuple.item1!
+            ? Column(
+                children: [
+                  BaseInfoRowByKeyAndValue.build(
+                      tr('supplier'), tuple.item2!.kunnrNm!),
+                  BaseInfoRowByKeyAndValue.build(
+                      tr('end_user'), tuple.item3!.kunnrNm!),
+                  defaultSpacing(),
+                ],
+              )
+            : Container();
       },
     );
   }
 
   Widget _buildSupplierSelector(BuildContext context) {
-    return Selector<OrderManagerPageProvider, String?>(
-      selector: (context, provider) => provider.selectedSupplier,
-      builder: (context, supplier, _) {
-        return Container();
+    final p = context.read<OrderManagerPageProvider>();
+    return Selector<OrderManagerPageProvider,
+        Tuple3<EtCustListModel?, bool?, EtCustomerModel?>>(
+      selector: (context, provider) => Tuple3(provider.selectedSupplierModel,
+          provider.isSingleData, provider.selectedCustomerModel),
+      builder: (context, tuple, _) {
+        return tuple.item2 == null
+            ? Container()
+            : tuple.item2!
+                ? Container()
+                : Column(
+                    children: [
+                      AppStyles.buildTitleRow(tr('supplier')),
+                      BaseInputWidget(
+                        context: context,
+                        iconType: InputIconType.SEARCH,
+                        iconColor: tuple.item1 != null
+                            ? AppColors.defaultText
+                            : AppColors.textFieldUnfoucsColor,
+                        deleteIconCallback: () => p.setSupplier(null),
+                        hintText: tuple.item1 != null
+                            ? tuple.item1!.kunnrNm
+                            : '${tr('plz_select_something_1', args: [
+                                    tr('supplier')
+                                  ])}',
+                        // 팀장 일때 만 팀원선택후 삭제가능.
+                        isShowDeleteForHintText:
+                            tuple.item1 != null ? true : false,
+                        width: AppSize.defaultContentsWidth,
+                        hintTextStyleCallBack: () => tuple.item1 != null
+                            ? AppTextStyle.default_16
+                            : AppTextStyle.hint_16,
+                        popupSearchType: PopupSearchType.SEARCH_SUPPLIER,
+                        isSelectedStrCallBack: (supplier) {
+                          return p.setSupplier(supplier);
+                        },
+                        bodyMap: {'kunnr': tuple.item3?.kunnr},
+                        enable: false,
+                      ),
+                    ],
+                  );
       },
     );
   }
 
   Widget _buildEndCustomerTextRow(BuildContext context) {
-    return Selector<OrderManagerPageProvider, String?>(
-      selector: (context, provider) => provider.selectedEndCustomer,
-      builder: (context, endCustomer, _) {
-        return Container();
+    return Selector<OrderManagerPageProvider, Tuple2<bool?, EtCustomerModel?>>(
+      selector: (context, provider) =>
+          Tuple2(provider.isSingleData, provider.selectedCustomerModel),
+      builder: (context, tuple, _) {
+        return tuple.item1 != null && !tuple.item1!
+            ? BaseInfoRowByKeyAndValue.build(
+                tr('end_user'), tuple.item2!.kunnrNm!)
+            : Container();
       },
     );
   }
@@ -226,7 +374,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
 
   Widget _buildProductItems(BuildContext context) {
     return Selector<OrderManagerPageProvider, String?>(
-      selector: (context, provider) => provider.selectedEndCustomer,
+      selector: (context, provider) => '',
       builder: (context, endCustomer, _) {
         return Container();
       },
@@ -251,6 +399,15 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
     );
   }
 
+  Widget _buildLoadingWidget(BuildContext context) {
+    return Selector<OrderManagerPageProvider, bool>(
+      selector: (context, provider) => provider.isLoadData,
+      builder: (context, isLoadData, _) {
+        return BaseLoadingViewOnStackWidget.build(context, isLoadData);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseLayout(
@@ -261,70 +418,80 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         child: ChangeNotifierProvider(
           create: (context) => OrderManagerPageProvider(),
           builder: (context, _) {
-            return Stack(
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      CustomerinfoWidget.buildSubTitle(
-                          context, '${tr('default_info')}'),
-                      Padding(
-                        padding: AppSize.defaultSidePadding,
-                        child: Column(
-                          children: [
-                            defaultSpacing(),
-                            _buildGroupSelector(context),
-                            defaultSpacing(),
-                            _buildStaffSelector(context),
-                            defaultSpacing(),
-                            _buildChannelSelector(context),
-                            defaultSpacing(),
-                            _buildProductFamilySelector(context),
-                            defaultSpacing(),
-                            _buildSalseOfficeSelector(context),
-                            defaultSpacing(),
-                            _buildSupplierSelector(context),
-                            defaultSpacing(),
-                            _buildEndCustomerTextRow(context),
-                            defaultSpacing(),
-                          ],
+            return FutureBuilder<ResultModel>(
+                future: context.read<OrderManagerPageProvider>().initData(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData &&
+                      snapshot.connectionState == ConnectionState.done) {
+                    return Stack(
+                      children: [
+                        SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              CustomerinfoWidget.buildSubTitle(
+                                  context, '${tr('default_info')}'),
+                              Padding(
+                                padding: AppSize.defaultSidePadding,
+                                child: Column(
+                                  children: [
+                                    defaultSpacing(),
+                                    _buildGroupSelector(context),
+                                    defaultSpacing(),
+                                    _buildStaffSelector(context),
+                                    defaultSpacing(),
+                                    _buildChannelSelector(context),
+                                    defaultSpacing(),
+                                    _buildProductFamilySelector(context),
+                                    defaultSpacing(),
+                                    _buildSalseOfficeSelector(context),
+                                    _buildSupplierAndEndCustomerInfoRow(),
+                                    _buildSupplierSelector(context),
+                                    defaultSpacing(),
+                                    _buildEndCustomerTextRow(context),
+                                    defaultSpacing(),
+                                  ],
+                                ),
+                              ),
+                              CustomerinfoWidget.buildSubTitle(
+                                  context, '${tr('order_product_info')}'),
+                              Padding(
+                                padding: AppSize.defaultSidePadding,
+                                child: Column(
+                                  children: [
+                                    defaultSpacing(),
+                                    _buildAddProductTitleRow(context),
+                                    defaultSpacing(),
+                                    _buildRecentOrderTextButton(context),
+                                    defaultSpacing(),
+                                    _buildProductItems(context),
+                                    defaultSpacing(),
+                                  ],
+                                ),
+                              ),
+                              CustomerinfoWidget.buildSubTitle(
+                                  context, '${tr('other_info')}'),
+                              Padding(
+                                padding: AppSize.defaultSidePadding,
+                                child: Column(
+                                  children: [
+                                    defaultSpacing(),
+                                    _buildDeliveryConditionInput(context),
+                                    defaultSpacing(),
+                                    _buildOrderDescriptionDetail(context),
+                                    defaultSpacing(),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      CustomerinfoWidget.buildSubTitle(
-                          context, '${tr('order_product_info')}'),
-                      Padding(
-                        padding: AppSize.defaultSidePadding,
-                        child: Column(
-                          children: [
-                            defaultSpacing(),
-                            _buildAddProductTitleRow(context),
-                            defaultSpacing(),
-                            _buildRecentOrderTextButton(context),
-                            defaultSpacing(),
-                            _buildProductItems(context),
-                            defaultSpacing(),
-                          ],
-                        ),
-                      ),
-                      CustomerinfoWidget.buildSubTitle(
-                          context, '${tr('other_info')}'),
-                      Padding(
-                        padding: AppSize.defaultSidePadding,
-                        child: Column(
-                          children: [
-                            defaultSpacing(),
-                            _buildDeliveryConditionInput(context),
-                            defaultSpacing(),
-                            _buildOrderDescriptionDetail(context),
-                            defaultSpacing(),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            );
+                        _buildLoadingWidget(context)
+                      ],
+                    );
+                  }
+                  return DefaultShimmer.buildDefaultPageShimmer(5,
+                      isWithSet: true, setLenght: 10);
+                });
           },
         ));
   }

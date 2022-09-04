@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/list_group_type.dart
  * Created Date: 2021-09-10 09:52:32
- * Last Modified: 2022-08-17 21:01:16
+ * Last Modified: 2022-09-04 15:09:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -27,6 +27,7 @@ enum OneCellType {
   SEARCH_SALLER,
   SEARCH_SALLER_FOR_BULK_ORDER,
   SEARCH_END_CUSTOMER,
+  SEARCH_SUPPLIER,
   SELECT_START_LOCATION,
   SELECT_STOP_LOCATION,
   SELECT_OFFICE_ADDRESS,
@@ -194,6 +195,8 @@ extension OneCellTypeExtension on OneCellType {
       case OneCellType.SALES_ORDER_PAGE_SPECIAL_PARTNER:
         return '${tr('special_partner')}';
       case OneCellType.SALES_ORDER_PAGE_SUPPLIER:
+        return '${tr('supplier')}';
+      case OneCellType.SEARCH_SUPPLIER:
         return '${tr('supplier')}';
       case OneCellType.SALES_ORDER_PAGE_SUPPLY_CONDITION:
         return '${tr('payment_condition')}';

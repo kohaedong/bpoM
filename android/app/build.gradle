@@ -52,10 +52,10 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.kolon.medsalesportaldev"
 
         // 빌드옵션 개발 및 운영 환경
         //applicationId "com.kolon.medsalesportal"
+        applicationId "com.kolon.medsalesportaldev"
         minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
         versionCode 90000000

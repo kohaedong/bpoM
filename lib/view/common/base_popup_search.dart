@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-08-29 14:01:44
+ * Last Modified: 2022-09-04 15:19:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,7 +13,7 @@
 
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart';
-import 'package:medsalesportal/model/rfc/et_end_customer_model.dart';
+import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:tuple/tuple.dart';
@@ -548,7 +548,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     ));
   }
 
-  Widget _buildEndCustomerBar(BuildContext context) {
+  Widget _buildEndCustomerAndSupplierBar(
+      BuildContext context, bool isSupplier) {
     final p = context.read<BasePopupSearchProvider>();
     return Column(
       children: [
@@ -581,7 +582,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   hintText: endCustomer != null
                       ? null
                       : '${tr('plz_enter_search_key_for_something_1', args: [
-                              '${tr('end_customer')}',
+                              isSupplier
+                                  ? '${tr('end_customer')}'
+                                  : '${tr('supplier')}',
                               ''
                             ])}');
             })
@@ -622,8 +625,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                           widget.type ==
                               PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER
                       ? _buildSallerSearchBar(context)
-                      : widget.type == PopupSearchType.SEARCH_END_CUSTOMER
-                          ? _buildEndCustomerBar(context)
+                      : widget.type == PopupSearchType.SEARCH_END_CUSTOMER ||
+                              widget.type == PopupSearchType.SEARCH_SUPPLIER
+                          ? _buildEndCustomerAndSupplierBar(context,
+                              widget.type == PopupSearchType.SEARCH_SUPPLIER)
                           : widget.type == PopupSearchType.SEARCH_KEY_MAN
                               ? _buildKeyManSearchBar(context)
                               : widget.type ==
@@ -653,11 +658,12 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                         provider.etCustomerResponseModel!.etCustomer != null &&
                         provider
                             .etCustomerResponseModel!.etCustomer!.isNotEmpty) ||
-                    (provider.etEndCustomerResponseModel != null &&
-                        provider.etEndCustomerResponseModel!.etCustList !=
+                    (provider.etEndCustomerOrSupplierResponseModel != null &&
+                        provider.etEndCustomerOrSupplierResponseModel!
+                                .etCustList !=
                             null &&
-                        provider.etEndCustomerResponseModel!.etCustList!
-                            .isNotEmpty) ||
+                        provider.etEndCustomerOrSupplierResponseModel!
+                            .etCustList!.isNotEmpty) ||
                     (provider.keyManResponseModel != null &&
                         provider.keyManResponseModel!.etList != null &&
                         provider.keyManResponseModel!.etList!.isNotEmpty) ||
@@ -697,19 +703,18 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                           PopupSearchType.SEARCH_CUSTOMER
                                       ? provider
                                           .etKunnrResponseModel!.etKunnr!.length
-                                      : widget.type ==
-                                                  PopupSearchType
-                                                      .SEARCH_SALLER ||
+                                      : widget.type == PopupSearchType.SEARCH_SALLER ||
                                               widget.type ==
                                                   PopupSearchType
                                                       .SEARCH_SALLER_FOR_BULK_ORDER
                                           ? provider.etCustomerResponseModel!
                                               .etCustomer!.length
-                                          : widget.type ==
-                                                  PopupSearchType
-                                                      .SEARCH_END_CUSTOMER
+                                          : widget.type == PopupSearchType.SEARCH_END_CUSTOMER ||
+                                                  widget.type ==
+                                                      PopupSearchType
+                                                          .SEARCH_SUPPLIER
                                               ? provider
-                                                  .etEndCustomerResponseModel!
+                                                  .etEndCustomerOrSupplierResponseModel!
                                                   .etCustList!
                                                   .length
                                               : widget.type ==
@@ -765,16 +770,15 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                     index ==
                                                         provider.etCustomerResponseModel!.etCustomer!.length -
                                                             1)
-                                            : widget.type ==
-                                                    PopupSearchType
-                                                        .SEARCH_END_CUSTOMER
+                                            : widget.type == PopupSearchType.SEARCH_END_CUSTOMER ||
+                                                    widget.type ==
+                                                        PopupSearchType
+                                                            .SEARCH_SUPPLIER
                                                 ? _buildEndCustomerContentsItem(
                                                     context,
-                                                    provider
-                                                        .etEndCustomerResponseModel!
-                                                        .etCustList![index],
+                                                    provider.etEndCustomerOrSupplierResponseModel!.etCustList![index],
                                                     index,
-                                                    !provider.hasMore && index == provider.etEndCustomerResponseModel!.etCustList!.length - 1)
+                                                    !provider.hasMore && index == provider.etEndCustomerOrSupplierResponseModel!.etCustList!.length - 1)
                                                 : widget.type == PopupSearchType.SEARCH_KEY_MAN
                                                     ? _buildKeymanContentsItem(context, provider.keyManResponseModel!.etList![index], index, !provider.hasMore && index == provider.keyManResponseModel!.etList!.length - 1)
                                                     : widget.type == PopupSearchType.SEARCH_SUGGETION_ITEM
@@ -946,7 +950,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
   }
 
   Widget _buildEndCustomerContentsItem(BuildContext context,
-      EtEndCustomerModel model, int index, bool isShowLastPageText) {
+      EtCustListModel model, int index, bool isShowLastPageText) {
     final p = context.read<BasePopupSearchProvider>();
     return InkWell(
       onTap: () {
@@ -962,8 +966,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   selector: (context, provider) => provider.isSingleData,
                   builder: (context, isSingleData, _) {
                     isSingleData != null && isSingleData
-                        ? Navigator.pop(context,
-                            p.etEndCustomerResponseModel!.etCustList!.single)
+                        ? Navigator.pop(
+                            context,
+                            p.etEndCustomerOrSupplierResponseModel!.etCustList!
+                                .single)
                         : DoNothingAction();
                     return Container();
                   }),
@@ -1019,8 +1025,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   selector: (context, provider) => provider.isSingleData,
                   builder: (context, isSingleData, _) {
                     isSingleData != null && isSingleData
-                        ? Navigator.pop(context,
-                            p.etEndCustomerResponseModel!.etCustList!.single)
+                        ? Navigator.pop(
+                            context,
+                            p.etEndCustomerOrSupplierResponseModel!.etCustList!
+                                .single)
                         : DoNothingAction();
                     return Container();
                   }),

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-07-27 19:13:33
+ * Last Modified: 2022-09-04 15:01:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
@@ -25,7 +26,6 @@ import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
-import 'package:medsalesportal/model/rfc/et_end_customer_model.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/trans_ledger_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
@@ -45,7 +45,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   String? customerName;
   String? endCustomerName;
   EtStaffListModel? selectedSalesPerson;
-  EtEndCustomerModel? selectedEndCustomerModel;
+  EtCustListModel? selectedEndCustomerModel;
   EtCustomerModel? selectedCustomerModel;
   TransLedgerResponseModel? transLedgerResponseModel;
 
@@ -179,7 +179,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   }
 
   void setEndCustomerModel(dynamic data) {
-    data as EtEndCustomerModel?;
+    data as EtCustListModel?;
     selectedEndCustomerModel = data;
     endCustomerName = selectedEndCustomerModel?.kunnrNm!;
     notifyListeners();

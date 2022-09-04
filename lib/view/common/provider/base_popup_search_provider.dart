@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-09-01 17:08:33
+ * Last Modified: 2022-09-04 15:17:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_response_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_suggetion_response_model.dart';
+import 'package:medsalesportal/model/rfc/et_cust_list_response_model.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
@@ -30,7 +31,6 @@ import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
-import 'package:medsalesportal/model/rfc/et_end_customer_response_model.dart';
 
 class BasePopupSearchProvider extends ChangeNotifier {
   bool isLoadData = false;
@@ -54,7 +54,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   EtStaffListResponseModel? staList;
   EtKunnrResponseModel? etKunnrResponseModel;
   EtCustomerResponseModel? etCustomerResponseModel;
-  EtEndCustomerResponseModel? etEndCustomerResponseModel;
+  EtCustListResponseModel? etEndCustomerOrSupplierResponseModel;
   AddActivityKeyManResponseModel? keyManResponseModel;
   AddActivitySuggetionResponseModel? suggetionResponseModel;
   OneCellType? type;
@@ -74,7 +74,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     pos = 0;
     etKunnrResponseModel = null;
     etCustomerResponseModel = null;
-    etEndCustomerResponseModel = null;
+    etEndCustomerOrSupplierResponseModel = null;
     keyManResponseModel = null;
     suggetionResponseModel = null;
     staList = null;
@@ -303,6 +303,10 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "pos": "$pos",
         "partial": "$partial",
       });
+    } else {
+      body.addAll({
+        "pos": "-1",
+      });
     }
     _api.init(RequestType.SEARCH_STAFF);
     final result = await _api.request(body: body);
@@ -504,7 +508,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();
     final esLogin = CacheService.getEsLogin();
-
     Map<String, dynamic>? _body;
     var spart = productFamilyDataList
         ?.where((str) => str.contains(selectedProductFamily!))
@@ -571,7 +574,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return BasePoupSearchResult(false);
   }
 
-  Future<BasePoupSearchResult> searchEndOrDeliveryCustomer(bool isMounted,
+  Future<BasePoupSearchResult> searchEndOrDeliveryCustomer(
+      bool isMounted, bool isSupplier,
       {bool? isDeliveryCustomer}) async {
     isLoadData = true;
     if (isMounted) {
@@ -592,7 +596,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "IV_KEYWORD": "",
         "IS_LOGIN": newIslogin,
         "pos": "0",
-        "IV_PARVW": "Z1",
+        "IV_PARVW": isSupplier ? "WE" : "Z1",
         "IV_KFM2": "",
         "groupid": "",
         "functionName":
@@ -604,27 +608,28 @@ class BasePopupSearchProvider extends ChangeNotifier {
     final result = await _api.request(body: _body);
     if (result == null || result.statusCode != 200) {
       isLoadData = false;
-      etEndCustomerResponseModel = null;
+      etEndCustomerOrSupplierResponseModel = null;
       notifyListeners();
       return BasePoupSearchResult(false);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
-      var temp = EtEndCustomerResponseModel.fromJson(result.body['data']);
+      var temp = EtCustListResponseModel.fromJson(result.body['data']);
       pr(temp.toJson());
       if (temp.etCustList!.length != partial) {
         hasMore = false;
       }
-      if (etEndCustomerResponseModel == null) {
-        etEndCustomerResponseModel = temp;
-        if (etEndCustomerResponseModel!.etCustList!.length == 1) {
+      if (etEndCustomerOrSupplierResponseModel == null) {
+        etEndCustomerOrSupplierResponseModel = temp;
+        if (etEndCustomerOrSupplierResponseModel!.etCustList!.length == 1) {
           isSingleData = true;
         }
       } else {
-        etEndCustomerResponseModel!.etCustList!.addAll(temp.etCustList!);
+        etEndCustomerOrSupplierResponseModel!.etCustList!
+            .addAll(temp.etCustList!);
       }
-      if (etEndCustomerResponseModel != null &&
-          etEndCustomerResponseModel!.etCustList == null) {
-        etEndCustomerResponseModel = null;
+      if (etEndCustomerOrSupplierResponseModel != null &&
+          etEndCustomerOrSupplierResponseModel!.etCustList == null) {
+        etEndCustomerOrSupplierResponseModel = null;
       }
 
       isLoadData = false;
@@ -720,7 +725,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
       case OneCellType.SEARCH_SALLER_FOR_BULK_ORDER:
         return await searchSallerCustomer(isMounted, isBulkOrder: true);
       case OneCellType.SEARCH_END_CUSTOMER:
-        return await searchEndOrDeliveryCustomer(isMounted);
+        return await searchEndOrDeliveryCustomer(isMounted, false);
+      case OneCellType.SEARCH_SUPPLIER:
+        return await searchEndOrDeliveryCustomer(isMounted, true);
       default:
         return BasePoupSearchResult(false);
     }
