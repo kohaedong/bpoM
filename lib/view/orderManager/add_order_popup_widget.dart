@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-04 18:13:44
+ * Last Modified: 2022-09-05 09:35:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,18 +11,17 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/styles/app_text.dart';
+import 'package:medsalesportal/enums/order_item_type.dart';
+import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/orderManager/provider/add_order_popup_provider.dart';
-import 'package:provider/provider.dart';
 
 class AddOrderPopupWidget extends StatefulWidget {
-  AddOrderPopupWidget({Key? key}) : super(key: key);
-
+  const AddOrderPopupWidget({Key? key, required this.type}) : super(key: key);
+  final OrderItemType type;
   @override
   State<AddOrderPopupWidget> createState() => _AddOrderPopupWidgetState();
 }

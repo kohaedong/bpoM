@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-04 18:00:53
+ * Last Modified: 2022-09-05 10:26:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/enums/order_item_type.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
@@ -369,9 +370,11 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
   Widget _buildAddButton(BuildContext context) {
     return InkWell(
       onTap: () {
-        final result = AppDialog.showPopup(context, AddOrderPopupWidget());
-
-        pr('tap');
+        final result = AppDialog.showPopup(
+            context, AddOrderPopupWidget(type: OrderItemType.NEW));
+        if (result != null) {
+          pr('tap');
+        }
       },
       child: Container(
         alignment: Alignment.centerLeft,
@@ -408,7 +411,10 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
 
   Widget _buildRecentOrderTextButton(BuildContext context) {
     return InkWell(
-        onTap: () {},
+        onTap: () {
+          final p = context.read<OrderManagerPageProvider>();
+          p.checkRecentOrders();
+        },
         child: Row(
           children: [
             AppText.text(tr('get_recent_order'),

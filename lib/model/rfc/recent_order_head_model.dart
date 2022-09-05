@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/recent_order_head_model.dart
  * Created Date: 2022-09-04 16:18:47
- * Last Modified: 2022-09-04 17:28:36
+ * Last Modified: 2022-09-05 10:42:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -93,9 +93,9 @@ class RecentOrderHeadModel {
   @JsonKey(name: 'XCONF_NM')
   String? xconfNm;
   @JsonKey(name: 'NETWR_SUM')
-  String? netwrSum;
+  double? netwrSum;
   @JsonKey(name: 'MWSBP_SUM')
-  String? mwsbpSum;
+  double? mwsbpSum;
   @JsonKey(name: 'WAERK')
   String? waerk;
 

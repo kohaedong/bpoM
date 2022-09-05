@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/recent_order_t_item_model.dart
  * Created Date: 2022-09-04 16:09:34
- * Last Modified: 2022-09-04 17:29:02
+ * Last Modified: 2022-09-05 10:49:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -26,23 +26,23 @@ class RecentOrderTItemModel {
   @JsonKey(name: 'WERKS')
   String? werks;
   @JsonKey(name: 'KWMENG')
-  String? kwmeng;
+  double? kwmeng;
   @JsonKey(name: 'ZNETPR')
-  String? znetpr;
+  double? znetpr;
   @JsonKey(name: 'NETPR')
-  String? netpr;
+  double? netpr;
   @JsonKey(name: 'ZDIS_RATE')
-  String? zdisRate;
+  double? zdisRate;
   @JsonKey(name: 'ZDIS_PRICE')
-  String? zdisPrice;
+  double? zdisPrice;
   @JsonKey(name: 'ZFREE_QTY')
-  String? zfreeQty;
+  double? zfreeQty;
   @JsonKey(name: 'VRKME')
   String? vrkme;
   @JsonKey(name: 'NETWR')
-  String? netwr;
+  double? netwr;
   @JsonKey(name: 'MWSBP')
-  String? mwsbp;
+  double? mwsbp;
   @JsonKey(name: 'WAERK')
   String? waerk;
   @JsonKey(name: 'VBELN')
@@ -50,7 +50,7 @@ class RecentOrderTItemModel {
   @JsonKey(name: 'POSNR')
   String? posnr;
   @JsonKey(name: 'ZMIN_QTY')
-  String? zminQty;
+  double? zminQty;
   @JsonKey(name: 'ZMESSAGE')
   String? zmessage;
   @JsonKey(name: 'ZMSG')

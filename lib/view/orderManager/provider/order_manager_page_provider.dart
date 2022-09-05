@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-04 17:25:56
+ * Last Modified: 2022-09-05 10:40:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -19,6 +19,10 @@ import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_cust_list_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
+import 'package:medsalesportal/model/rfc/recent_order_head_model.dart';
+import 'package:medsalesportal/model/rfc/recent_order_response_model.dart';
+import 'package:medsalesportal/model/rfc/recent_order_t_item_model.dart';
+import 'package:medsalesportal/model/rfc/recent_order_t_text_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
@@ -28,6 +32,7 @@ import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class OrderManagerPageProvider extends ChangeNotifier {
+  RecentOrderResponseModel? recentOrderResponseModel;
   String? selectedSalseGroup;
   String? selectedStaffName;
   String? selectedSalseChannel;
@@ -43,9 +48,19 @@ class OrderManagerPageProvider extends ChangeNotifier {
   List<String>? groupDataList;
   List<String>? productFamilyDataList;
   List<String>? channelList;
+  List<RecentOrderTItemModel>? items;
   bool? isSingleData;
   bool isLoadData = false;
   final _api = ApiService();
+
+  String getCode(List<String> list, String val) {
+    if (val != tr('all')) {
+      var data = list.where((item) => item.contains(val)).single;
+      return data.substring(data.indexOf('-') + 1);
+    }
+
+    return '';
+  }
 
   Future<ResultModel> initData() async {
     groupDataList = await HiveService.getSalesGroup();
@@ -77,6 +92,35 @@ class OrderManagerPageProvider extends ChangeNotifier {
     }
 
     isSingleData = null;
+  }
+
+  void insertItem(RecentOrderTItemModel model, {int? indexx}) {
+    items ??= [];
+    var insertIndex = items!.isEmpty ? 0 : items!.length;
+    items!.insert(indexx ?? insertIndex, model);
+  }
+
+  void updateItem(int indexx, {RecentOrderTItemModel? updateModel}) {
+    var temp = <RecentOrderTItemModel>[];
+    temp = [...items!];
+    var model = RecentOrderTItemModel();
+    if (updateModel == null) {
+      model = RecentOrderTItemModel.fromJson(temp[indexx].toJson());
+    } else {
+      model = RecentOrderTItemModel.fromJson(updateModel.toJson());
+    }
+    temp.removeAt(indexx);
+    temp.insert(indexx, model);
+    items = [...temp];
+    notifyListeners();
+  }
+
+  void removeItem(int indexx) {
+    var temp = <RecentOrderTItemModel>[];
+    temp = [...items!];
+    temp.removeAt(indexx);
+    items = [...temp];
+    notifyListeners();
   }
 
   void setSalseGroup(String str) {
@@ -172,6 +216,63 @@ class OrderManagerPageProvider extends ChangeNotifier {
     selectedSalsePerson = saler;
     selectedStaffName = selectedSalsePerson!.sname;
     notifyListeners();
+  }
+
+  Future<ResultModel> checkRecentOrders() async {
+    assert(selectedCustomerModel != null);
+    isLoadData = true;
+    notifyListeners();
+    var isLogin = CacheService.getIsLogin();
+    var tHead = RecentOrderHeadModel();
+    var tItem = RecentOrderTItemModel();
+    var tText = RecentOrderTTextModel();
+    var tHeadBase64 = '';
+    var tItemBase64 = '';
+    var tTextBase64 = '';
+    var temp = <Map<String, dynamic>>[];
+    temp.addAll([tHead.toJson()]);
+    tHeadBase64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([tItem.toJson()]);
+    tItemBase64 = await EncodingUtils.base64ConvertForListMap(temp);
+    temp.clear();
+    temp.addAll([tText.toJson()]);
+    tTextBase64 = await EncodingUtils.base64ConvertForListMap(temp);
+    _api.init(RequestType.CHECK_RECENT_ORDER);
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.CHECK_RECENT_ORDER.serverMethod,
+      "methodParamMap": {
+        "IV_KUNNR": selectedCustomerModel!.kunnr,
+        "IV_KUNWE": selectedSupplierModel != null
+            ? selectedSupplierModel!.kunnr
+            : selectedCustomerModel!.kunnr,
+        "IV_ZZKUNNR_END": selectedCustomerModel!.kunnr,
+        "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
+        "T_HEAD": tHeadBase64,
+        "T_ITEM": tItemBase64,
+        "T_TEXT": tTextBase64,
+        "IS_LOGIN": isLogin,
+        "resultTables": RequestType.CHECK_RECENT_ORDER.resultTable,
+        "functionName": RequestType.CHECK_RECENT_ORDER.serverMethod,
+      }
+    };
+    final result = await _api.request(body: _body);
+    if (result != null && result.statusCode != 200) {
+      isLoadData = false;
+      notifyListeners();
+      return ResultModel(false);
+    }
+    if (result != null && result.statusCode == 200) {
+      recentOrderResponseModel =
+          RecentOrderResponseModel.fromJson(result.body['data']);
+      pr(recentOrderResponseModel?.toJson());
+      isLoadData = false;
+      notifyListeners();
+      return ResultModel(true);
+    }
+    isLoadData = false;
+    notifyListeners();
+    return ResultModel(false);
   }
 
   Future<ResultModel> searchSupplierAndEndCustomer(bool isSupplier) async {
