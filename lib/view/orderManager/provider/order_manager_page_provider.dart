@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-05 15:30:29
+ * Last Modified: 2022-09-05 17:14:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -99,7 +99,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
     if (isfromRecentModel != null && isfromRecentModel) {
       model.kwmeng = 0.0;
       model.zfreeQty = 0.0;
-      model.isFromRecentOrder = true;
     }
     items ??= [];
     var insertIndex = items!.isEmpty ? 0 : items!.length;
@@ -213,6 +212,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     } else {
       selectedCustomerModel = null;
       isSingleData = null;
+      items = [];
       notifyListeners();
     }
   }
@@ -245,18 +245,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
     selectedSalsePerson = saler;
     selectedStaffName = selectedSalsePerson!.sname;
     notifyListeners();
-  }
-
-  bool checkIsFromRecentOrders() {
-    if (items == null || items!.isEmpty) {
-      return false;
-    } else {
-      return items!
-              .where((item) =>
-                  item.isFromRecentOrder != null && item.isFromRecentOrder!)
-              .length >
-          0;
-    }
   }
 
   Future<ResultModel> checkRecentOrders() async {
@@ -310,16 +298,24 @@ class OrderManagerPageProvider extends ChangeNotifier {
       isLoadData = false;
       notifyListeners();
       var orderList = recentOrderResponseModel!.tItem!;
-      var isExitsRecentOrder = orderList.isNotEmpty;
-
-      if (isExitsRecentOrder) {
-        pr(orderList.length);
-        pr('first data ${orderList.first.aedat}');
-        pr('last data ${orderList.last.aedat}');
-        pr('json ${orderList.last.toJson()}');
-        insertItem(orderList.first, isfromRecentModel: true);
+      RecentOrderTItemModel? lastItem;
+      var isExits = false;
+      if (orderList.isNotEmpty) {
+        lastItem = orderList.last;
+        items?.forEach((item) {
+          if (item.matnr == lastItem!.matnr) {
+            isExits = true;
+          }
+        });
       }
-      return ResultModel(true, data: isExitsRecentOrder);
+      if (!isExits) {
+        insertItem(lastItem!, isfromRecentModel: true);
+      }
+      return ResultModel(true, data: {
+        'isExits': isExits,
+        'isEmpty': orderList.isEmpty,
+        'model': lastItem
+      });
     }
     isLoadData = false;
     notifyListeners();

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-05 15:29:26
+ * Last Modified: 2022-09-05 17:08:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -413,25 +413,28 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
     return InkWell(
         onTap: () {
           final p = context.read<OrderManagerPageProvider>();
-          if (!p.checkIsFromRecentOrders()) {
-            if (p.selectedCustomerModel != null) {
-              p.checkRecentOrders().then((result) {
-                if (result.isSuccessful) {
-                  var isExitsRecentOrder = result.data as bool;
-                  if (!isExitsRecentOrder) {
-                    AppToast().show(context, tr('not_recent_order'));
-                  }
+          if (p.selectedCustomerModel != null) {
+            p.checkRecentOrders().then((result) {
+              if (result.isSuccessful) {
+                var map = result.data as Map<String, dynamic>;
+                var isExits = map['isExits'] as bool;
+                var isEmpty = map['isEmpty'] as bool;
+                var model = map['model'] as RecentOrderTItemModel?;
+
+                if (isEmpty) {
+                  AppToast().show(context, tr('not_recent_order'));
                 }
-              });
-            } else {
-              AppToast().show(context,
-                  tr('plz_select_something_2', args: [tr('sales_office')]));
-            }
+                if (isExits) {
+                  AppToast().show(
+                      context,
+                      tr('recent_order_is_getted',
+                          args: [model!.matnr!, model.maktx!]));
+                }
+              }
+            });
           } else {
-            AppToast().show(
-                context,
-                tr('recent_order_is_getted',
-                    args: [p.items!.first.matnr!, p.items!.first.maktx!]));
+            AppToast().show(context,
+                tr('plz_select_something_2', args: [tr('sales_office')]));
           }
         },
         child: Row(
