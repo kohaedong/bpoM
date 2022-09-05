@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_detail_page.dart
  * Created Date: 2022-07-12 15:20:28
- * Last Modified: 2022-08-24 17:33:44
+ * Last Modified: 2022-09-05 14:17:50
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -61,9 +61,10 @@ class OrderDetailPage extends StatelessWidget {
                   tr('mat_name'), model.maktx ?? '-'),
               BaseInfoRowByKeyAndValue.build(
                   tr('quantity'), model.kwmeng!.toInt().toString()),
-              BaseInfoRowByKeyAndValue.build(tr('salse_reason_quantity'),
+              BaseInfoRowByKeyAndValue.build(tr('salse_surcharge_quantity'),
                   model.zfreeQty!.toInt().toString()),
-              BaseInfoRowByKeyAndValue.build(tr('salse_reason_quantity_option'),
+              BaseInfoRowByKeyAndValue.build(
+                  tr('salse_surcharge_quantity_option'),
                   model.zfreeQtyIn!.toInt().toString()),
               FutureBuilder<String?>(
                   future: Future.delayed(Duration.zero, () async {

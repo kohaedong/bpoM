@@ -460,6 +460,7 @@
     "_all_":"전체",
     "price":"금액",
     "vat":"부가세",
+    "recent_order_is_getted":"중복된 제품이 있습니다. \n{}-{}",
     "total":"합계",
     "order_detail":"주문요청 상세",
     "bulk_order_detail":"도매주문 상세",
@@ -467,8 +468,8 @@
     "reqtuset_date":"등록일자",
     "processing_status":"처리상태",
     "reason_for_not_request_order":"주문미생성사유",
-    "salse_reason_quantity":"할증수량",
-    "salse_reason_quantity_option":"할증(추가입력)",
+    "salse_surcharge_quantity":"할증수량",
+    "salse_surcharge_quantity_option":"할증(추가입력)",
     "supply_price":"공급가",
     "unit_price":"단가",
     "discount_rate":"할인율(%)",
@@ -551,6 +552,7 @@
     "is_realy_delete_last_activity":"{} {} 담당자의 최종 콜 내역을 삭제하시겠습니까?",
     "is_visit":"방문여부",
     "plz_enter_reason_for_interview_failure":"면담 실패 사유를 입력해주세요.",
-    "is_realy_with_another_saller":"동행자는 입력 후 저장하면 이후 변경할수 없습니다. 동행자를 입력 하시겠습니까? "
+    "is_realy_with_another_saller":"동행자는 입력 후 저장하면 이후 변경할수 없습니다. 동행자를 입력 하시겠습니까? ",
+    "not_recent_order":"최근 주문 내역이 없습니다."
    
 }

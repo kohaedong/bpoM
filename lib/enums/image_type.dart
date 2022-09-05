@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/image_type.dart
  * Created Date: 2021-08-20 14:37:40
- * Last Modified: 2022-08-03 16:50:51
+ * Last Modified: 2022-09-05 13:33:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -44,7 +44,8 @@ enum ImageType {
   SCREEN_ROTATION,
   LAND_SPACE_PAGE_ICON,
   LAND_SPACE_PAGE_APPBAR_ICON,
-  L_ICON
+  L_ICON,
+  SELECT_RIGHT
 }
 
 extension RequestTypeExtension on ImageType {
@@ -52,6 +53,8 @@ extension RequestTypeExtension on ImageType {
     switch (this) {
       case ImageType.SCROLL_TO_TOP:
         return 'assets/images/icon_outlined_24_lg_2_go_to_top.svg';
+      case ImageType.SELECT_RIGHT:
+        return 'assets/images/icon_outlined_18_lg_3_right.svg';
       case ImageType.L_ICON:
         return 'assets/images/icon_outlined_18_lg_1_re.svg';
       case ImageType.LAND_SPACE_PAGE_ICON:

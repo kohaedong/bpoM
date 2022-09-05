@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-05 10:40:59
+ * Last Modified: 2022-09-05 15:30:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,8 +11,9 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/service/api_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
@@ -23,7 +24,6 @@ import 'package:medsalesportal/model/rfc/recent_order_head_model.dart';
 import 'package:medsalesportal/model/rfc/recent_order_response_model.dart';
 import 'package:medsalesportal/model/rfc/recent_order_t_item_model.dart';
 import 'package:medsalesportal/model/rfc/recent_order_t_text_model.dart';
-import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
@@ -94,10 +94,21 @@ class OrderManagerPageProvider extends ChangeNotifier {
     isSingleData = null;
   }
 
-  void insertItem(RecentOrderTItemModel model, {int? indexx}) {
+  void insertItem(RecentOrderTItemModel model,
+      {int? indexx, bool? isfromRecentModel}) {
+    if (isfromRecentModel != null && isfromRecentModel) {
+      model.kwmeng = 0.0;
+      model.zfreeQty = 0.0;
+      model.isFromRecentOrder = true;
+    }
     items ??= [];
     var insertIndex = items!.isEmpty ? 0 : items!.length;
-    items!.insert(indexx ?? insertIndex, model);
+    var temp = <RecentOrderTItemModel>[];
+
+    temp = [...items!];
+    temp.insert(indexx ?? insertIndex, model);
+    items = [...temp];
+    notifyListeners();
   }
 
   void updateItem(int indexx, {RecentOrderTItemModel? updateModel}) {
@@ -121,6 +132,22 @@ class OrderManagerPageProvider extends ChangeNotifier {
     temp.removeAt(indexx);
     items = [...temp];
     notifyListeners();
+  }
+
+  void setOrderQuantity(int indexx, double quantity) {
+    var tempModel = items![indexx];
+    pr('----- ${tempModel.kwmeng}');
+    tempModel.kwmeng = quantity;
+    pr('+++++ ${tempModel.kwmeng}');
+    updateItem(indexx, updateModel: tempModel);
+  }
+
+  void setSurchargeQuantity(int indexx, double quantity) {
+    var tempModel = items![indexx];
+    pr('----- ${tempModel.zfreeQty}');
+    tempModel.zfreeQty = quantity;
+    pr('+++++ ${tempModel.zfreeQty}');
+    updateItem(indexx, updateModel: tempModel);
   }
 
   void setSalseGroup(String str) {
@@ -179,6 +206,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
         var endCustomerResult = await searchSupplierAndEndCustomer(false);
         isSingleData = supplierResult.data && endCustomerResult.data;
         pr('isSingleData???? $isSingleData');
+      } else {
+        isSingleData = null;
       }
       notifyListeners();
     } else {
@@ -216,6 +245,18 @@ class OrderManagerPageProvider extends ChangeNotifier {
     selectedSalsePerson = saler;
     selectedStaffName = selectedSalsePerson!.sname;
     notifyListeners();
+  }
+
+  bool checkIsFromRecentOrders() {
+    if (items == null || items!.isEmpty) {
+      return false;
+    } else {
+      return items!
+              .where((item) =>
+                  item.isFromRecentOrder != null && item.isFromRecentOrder!)
+              .length >
+          0;
+    }
   }
 
   Future<ResultModel> checkRecentOrders() async {
@@ -268,7 +309,17 @@ class OrderManagerPageProvider extends ChangeNotifier {
       pr(recentOrderResponseModel?.toJson());
       isLoadData = false;
       notifyListeners();
-      return ResultModel(true);
+      var orderList = recentOrderResponseModel!.tItem!;
+      var isExitsRecentOrder = orderList.isNotEmpty;
+
+      if (isExitsRecentOrder) {
+        pr(orderList.length);
+        pr('first data ${orderList.first.aedat}');
+        pr('last data ${orderList.last.aedat}');
+        pr('json ${orderList.last.toJson()}');
+        insertItem(orderList.first, isfromRecentModel: true);
+      }
+      return ResultModel(true, data: isExitsRecentOrder);
     }
     isLoadData = false;
     notifyListeners();

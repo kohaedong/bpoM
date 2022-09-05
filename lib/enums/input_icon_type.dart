@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/input_icon_type.dart
  * Created Date: 2021-09-05 17:34:24
- * Last Modified: 2022-08-29 11:18:36
+ * Last Modified: 2022-09-05 13:31:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -23,6 +23,7 @@ enum InputIconType {
   DELETE_AND_SEARCH, // 삭제 아이콘 + 검색 아이콘 (input내부 값이 있을때 만 사용)
   DATA_PICKER, // 날짜 선텍 아이콘
   DELETE, // 삭제 아이콘
+  SELECT_RIGHT
 }
 
 // 유형별 이미지 사전 등록.
@@ -31,6 +32,8 @@ extension InputIconTypeExtension on InputIconType {
     switch (this) {
       case InputIconType.SEARCH:
         return AppImage.getImage(ImageType.SEARCH, color: color);
+      case InputIconType.SELECT_RIGHT:
+        return AppImage.getImage(ImageType.SELECT_RIGHT, color: color);
       case InputIconType.SELECT:
         return AppImage.getImage(ImageType.SELECT, color: color);
       // 아이콘이 2개일 경우

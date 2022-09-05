@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_toast.dart
  * Created Date: 2021-10-01 14:02:55
- * Last Modified: 2022-07-08 14:41:37
+ * Last Modified: 2022-09-05 11:15:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 

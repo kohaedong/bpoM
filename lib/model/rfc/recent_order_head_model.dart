@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/recent_order_head_model.dart
  * Created Date: 2022-09-04 16:18:47
- * Last Modified: 2022-09-05 10:42:30
+ * Last Modified: 2022-09-05 15:24:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -99,48 +99,49 @@ class RecentOrderHeadModel {
   @JsonKey(name: 'WAERK')
   String? waerk;
 
-  RecentOrderHeadModel(
-      {this.aedat,
-      this.aenam,
-      this.aewid,
-      this.bstkd,
-      this.bukrs,
-      this.dptcd,
-      this.empno,
-      this.erdat,
-      this.ernam,
-      this.erwid,
-      this.erzet,
-      this.kunnr,
-      this.kunnrNm,
-      this.kunwe,
-      this.kunweNm,
-      this.loevm,
-      this.loevmOr,
-      this.mwsbpSum,
-      this.netwrSum,
-      this.orerr,
-      this.orghk,
-      this.pernr,
-      this.pernrNm,
-      this.sanum,
-      this.sanumnm,
-      this.slnum,
-      this.spart,
-      this.umode,
-      this.vbeln,
-      this.vkgrp,
-      this.vkgrpNm,
-      this.vkorg,
-      this.vtweg,
-      this.waerk,
-      this.xconf,
-      this.xconfNm,
-      this.zreqDate,
-      this.zreqNo,
-      this.zstatus,
-      this.zzkunnrEnd,
-      this.zzkunnrEndNm});
+  RecentOrderHeadModel({
+    this.aedat,
+    this.aenam,
+    this.aewid,
+    this.bstkd,
+    this.bukrs,
+    this.dptcd,
+    this.empno,
+    this.erdat,
+    this.ernam,
+    this.erwid,
+    this.erzet,
+    this.kunnr,
+    this.kunnrNm,
+    this.kunwe,
+    this.kunweNm,
+    this.loevm,
+    this.loevmOr,
+    this.mwsbpSum,
+    this.netwrSum,
+    this.orerr,
+    this.orghk,
+    this.pernr,
+    this.pernrNm,
+    this.sanum,
+    this.sanumnm,
+    this.slnum,
+    this.spart,
+    this.umode,
+    this.vbeln,
+    this.vkgrp,
+    this.vkgrpNm,
+    this.vkorg,
+    this.vtweg,
+    this.waerk,
+    this.xconf,
+    this.xconfNm,
+    this.zreqDate,
+    this.zreqNo,
+    this.zstatus,
+    this.zzkunnrEnd,
+    this.zzkunnrEndNm,
+  });
   factory RecentOrderHeadModel.fromJson(Object? json) =>
       _$RecentOrderHeadModelFromJson(json as Map<String, dynamic>);
   Map<String, dynamic> toJson() => _$RecentOrderHeadModelToJson(this);
