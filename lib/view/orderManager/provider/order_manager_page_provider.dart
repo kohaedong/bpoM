@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-06 17:13:42
+ * Last Modified: 2022-09-06 20:05:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,8 +12,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/model/rfc/bulk_order_detail_amount_available_model.dart';
-import 'package:medsalesportal/model/rfc/bulk_order_detail_amount_response_model.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';
@@ -32,6 +30,7 @@ import 'package:medsalesportal/model/rfc/recent_order_t_text_model.dart';
 import 'package:medsalesportal/model/rfc/recent_order_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_cust_list_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_amount_response_model.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_detail_search_meta_price_model.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_detail_search_meta_price_response_model.dart';
 
@@ -171,16 +170,24 @@ class OrderManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setTableQuantity(int indexx, double quantity) async {
-    var tempModel = items![indexx];
-    tempModel.kwmeng = quantity;
+  void setTableQuantity(int indexx, double quantity,
+      {bool? isResetTotal}) async {
+    var tempModel = items?[indexx];
+    tempModel?.kwmeng = quantity;
+    if (isResetTotal != null) {
+      tempModel?.kwmeng = 0;
+      tempModel?.netpr = 0;
+      tempModel?.mwsbp = 0;
+    }
     updateItem(indexx, updateModel: tempModel);
+    notifyListeners();
   }
 
   void setSurchargeQuantity(int indexx, double quantity) {
     var tempModel = items![indexx];
     tempModel.zfreeQty = quantity;
     updateItem(indexx, updateModel: tempModel);
+    notifyListeners();
   }
 
   void setSalseGroup(String str) {
@@ -364,7 +371,11 @@ class OrderManagerPageProvider extends ChangeNotifier {
           result.body['data']);
       var isSuccess = temp.esReturn!.mtype == 'S';
       // netpr 단가.netwr 정가.
-      await updatePriceList(indexx, isSuccess ? temp.tList!.single : null);
+      await updatePriceList(
+          indexx,
+          isSuccess
+              ? temp.tList!.single
+              : BulkOrderDetailSearchMetaPriceModel());
       isLoadData = false;
       notifyListeners();
       return ResultModel(isSuccess,

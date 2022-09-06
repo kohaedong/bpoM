@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-09-06 13:53:47
+ * Last Modified: 2022-09-06 18:48:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -38,6 +38,7 @@ typedef IsSelectedCellCallBack = Function(CellModel);
 typedef HintTextStyleCallBack = TextStyle Function();
 typedef AddressSelectedCity = String Function();
 typedef CheckBoxDefaultValue = Future<List<bool>> Function();
+typedef UnFoucsCallBack = Future<void> Function();
 
 class BaseInputWidget extends StatefulWidget {
   final BuildContext context;
@@ -66,7 +67,7 @@ class BaseInputWidget extends StatefulWidget {
   final FocusNode? focusNode;
   final Function? defaultIconCallback;
   final Function? otherIconcallback;
-  final Function? unfoucsCallback;
+  final UnFoucsCallBack? unfoucsCallback;
   final IsSelectedStrCallBack? isSelectedStrCallBack;
   final IsSelectedCellCallBack? isSelectedCellCallBack;
   final OnChangeCallBack? onChangeCallBack;
@@ -141,13 +142,16 @@ class BaseInputWidget extends StatefulWidget {
 }
 
 class _BaseInputWidgetState extends State<BaseInputWidget> {
+  TextEditingController? textEditingController;
   @override
   void initState() {
+    textEditingController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
+    textEditingController?.dispose();
     super.dispose();
   }
 
@@ -292,7 +296,7 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
             height: widget.height ?? AppSize.defaultTextFieldHeight,
             width: widget.width,
             child: Focus(
-              onFocusChange: (hasFocus) {
+              onFocusChange: (hasFocus) async {
                 if (!hasFocus) {
                   widget.unfoucsCallback?.call();
                 }
@@ -329,7 +333,8 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                     ? false
                     : true,
                 style: widget.textStyle ?? AppTextStyle.default_16,
-                controller: widget.textEditingController,
+                controller:
+                    widget.textEditingController ?? textEditingController,
                 onTap: () {
                   widget.onTap != null
                       ? widget.onTap!.call()

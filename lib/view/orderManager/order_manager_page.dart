@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-06 17:22:57
+ * Last Modified: 2022-09-06 20:08:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/view/orderManager/text_controller_factory_widget.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -456,7 +457,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
     return Row(
       children: [
         SizedBox(
-          width: AppSize.defaultContentsWidth * .25,
+          width: AppSize.defaultContentsWidth * .3,
           child: AppText.text(text,
               style: AppTextStyle.sub_14, textAlign: TextAlign.left),
         ),
@@ -483,7 +484,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                     textStyle: AppTextStyle.default_14,
                     iconType: InputIconType.SELECT_RIGHT,
                     hintText: model.maktx,
-                    width: (AppSize.defaultContentsWidth * .75) * .85,
+                    width: (AppSize.defaultContentsWidth * .7) * .85,
                     enable: false)),
             InkWell(
               onTap: () {
@@ -491,7 +492,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               },
               child: Container(
                   alignment: Alignment.centerRight,
-                  width: (AppSize.defaultContentsWidth * .75) * .15,
+                  width: (AppSize.defaultContentsWidth * .7) * .15,
                   height: AppSize.defaultTextFieldHeight,
                   child: Container(
                     width: 30,
@@ -510,29 +511,63 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
           ],
         ),
         _buildTextAndInputWidget(
-            tr('quantity'),
-            BaseInputWidget(
-                context: context,
-                unfoucsCallback: () async {
-                  pr(p.priceModelList?.length);
-                  final result = await p.checkPrice(index);
-                  if (result.isSuccessful) {
-                    p.setTableQuantity(index, p.selectedQuantity![index]);
-                  } else {
-                    AppDialog.showSignglePopup(context, result.message!);
-                    p.setTableQuantity(index, 0);
-                  }
-                },
-                textStyle: AppTextStyle.default_14,
-                width: AppSize.defaultContentsWidth * .75,
-                onChangeCallBack: (t) async {
-                  if (double.tryParse(t) != null) {
-                    p.setQuantity(index, double.parse(t));
-                  } else if (t.isEmpty) {
-                    p.setQuantity(index, 0.0);
-                  }
-                },
-                enable: true)),
+          tr('quantity'),
+          TextControllerFactoryWidget(
+              giveTextEditControllerWidget: (controller) {
+            return Selector<OrderManagerPageProvider, List<double?>?>(
+              selector: (context, provider) => provider.selectedQuantity,
+              builder: (context, quantityList, _) {
+                var isNotEmpty = quantityList != null &&
+                    quantityList.isNotEmpty &&
+                    quantityList[index] != null &&
+                    quantityList[index] != 0.0;
+                return BaseInputWidget(
+                    context: context,
+                    onTap: () {
+                      if (isNotEmpty) {
+                        controller.text = '${quantityList[index]}';
+                      }
+                    },
+                    textEditingController: controller,
+                    unfoucsCallback: () async {
+                      final result = await p.checkPrice(index);
+                      if (result.isSuccessful) {
+                        p.setTableQuantity(index, p.selectedQuantity![index]);
+                      } else {
+                        AppDialog.showSignglePopup(context, result.message!);
+                        p.setQuantity(index, 0);
+                        p.setTableQuantity(index, 0);
+                        controller.clear();
+                      }
+                    },
+                    hintText: isNotEmpty
+                        ? '${quantityList[index] == 0 ? '' : quantityList[index]}'
+                        : '',
+                    keybordType: TextInputType.number,
+                    hintTextStyleCallBack: () => isNotEmpty
+                        ? AppTextStyle.default_16
+                        : AppTextStyle.hint_16,
+                    textStyle: AppTextStyle.default_14,
+                    defaultIconCallback: () {
+                      controller.text = '';
+                      p.setQuantity(index, 0);
+                      p.setTableQuantity(index, 0, isResetTotal: true);
+                      p.checkPrice(index);
+                    },
+                    iconType: isNotEmpty ? InputIconType.DELETE : null,
+                    width: AppSize.defaultContentsWidth * .7,
+                    onChangeCallBack: (t) async {
+                      if (double.tryParse(t) != null) {
+                        p.setQuantity(index, double.parse(t));
+                      } else if (t.isEmpty) {
+                        p.setQuantity(index, 0.0);
+                      }
+                    },
+                    enable: true);
+              },
+            );
+          }),
+        ),
         family.contains('비처방의약품') ||
                 family.contains('건강식품') ||
                 family.contains('처방의약품')
@@ -541,7 +576,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 BaseInputWidget(
                     context: context,
                     textStyle: AppTextStyle.default_14,
-                    width: AppSize.defaultContentsWidth * .75,
+                    width: AppSize.defaultContentsWidth * .7,
                     onChangeCallBack: (t) {
                       if (double.tryParse(t) != null) {
                         p.setSurchargeQuantity(index, double.parse(t));
@@ -571,39 +606,51 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
     );
   }
 
-  Widget _buildTotalInfo(BuildContext context,
-      List<BulkOrderDetailSearchMetaPriceModel?>? priceList) {
-    priceList?.removeWhere((item) => item == null);
-    var totalSupply = priceList != null && priceList.isNotEmpty
-        ? '${priceList.reduce((model, other) => BulkOrderDetailSearchMetaPriceModel(netwr: double.parse('${model != null ? model.netwr! : 0.0}') + double.parse('${other != null ? other.netwr! : 0.0}')))!.netwr}'
-        : '';
-    var vatTotal = priceList != null && priceList.isNotEmpty
-        ? '${priceList.reduce((model, other) => BulkOrderDetailSearchMetaPriceModel(mwsbp: double.parse('${model != null ? model.mwsbp! : 0.0}') + double.parse('${other != null ? other.mwsbp! : 0.0}')))!.mwsbp}'
-        : '';
-    var supplyAndVat = priceList != null && priceList.isNotEmpty
-        ? '${double.parse('$totalSupply') + double.parse('$vatTotal')}'
-        : '';
-    return Column(
-      children: [
-        _buildTextAndInputWidget(
-            tr('total_supply'), AppText.text(FormatUtil.addComma(totalSupply))),
-        defaultSpacing(),
-        _buildTextAndInputWidget(
-            tr('vat_total'), AppText.text(FormatUtil.addComma(vatTotal))),
-        defaultSpacing(),
-        _buildTextAndInputWidget(tr('supply_and_vat'),
-            AppText.text(FormatUtil.addComma(supplyAndVat))),
-        defaultSpacing(),
-        Selector<OrderManagerPageProvider, double?>(
-          selector: (context, provider) => provider.amountAvalible,
-          builder: (context, amountAvalible, _) {
-            return _buildTextAndInputWidget(
-                tr('amount_available_for_order_entry_1'),
-                AppText.text('${amountAvalible ?? ''}'));
-          },
-        ),
-        defaultSpacing(),
-      ],
+  Widget _buildTotalInfo(BuildContext context) {
+    // priceList?.removeWhere((item) => item == null);
+    return Selector<OrderManagerPageProvider,
+        List<BulkOrderDetailSearchMetaPriceModel?>?>(
+      selector: (context, provider) => provider.priceModelList,
+      builder: (context, priceList, _) {
+        return Builder(builder: (context) {
+          var totalSupply = priceList != null && priceList.isNotEmpty
+              ? '${priceList.reduce((model, other) => BulkOrderDetailSearchMetaPriceModel(netwr: double.parse('${model != null ? model.netwr! : 0.0}') + double.parse('${other != null ? other.netwr! : 0.0}')))?.netwr ?? ''}'
+              : '';
+          var vatTotal = priceList != null && priceList.isNotEmpty
+              ? '${priceList.reduce((model, other) => BulkOrderDetailSearchMetaPriceModel(mwsbp: double.parse('${model != null ? model.mwsbp! : 0.0}') + double.parse('${other != null ? other.mwsbp! : 0.0}')))?.mwsbp ?? ''}'
+              : '';
+          var supplyAndVat = priceList != null &&
+                  priceList.isNotEmpty &&
+                  totalSupply.isNotEmpty &&
+                  totalSupply != 'null' &&
+                  vatTotal.isNotEmpty &&
+                  vatTotal != 'null'
+              ? '${double.parse('$totalSupply') + double.parse('$vatTotal')}'
+              : '';
+          return Column(
+            children: [
+              _buildTextAndInputWidget(tr('total_supply'),
+                  AppText.text(FormatUtil.addComma(totalSupply))),
+              defaultSpacing(),
+              _buildTextAndInputWidget(
+                  tr('vat_total'), AppText.text(FormatUtil.addComma(vatTotal))),
+              defaultSpacing(),
+              _buildTextAndInputWidget(tr('supply_and_vat'),
+                  AppText.text(FormatUtil.addComma(supplyAndVat))),
+              defaultSpacing(),
+              Selector<OrderManagerPageProvider, double?>(
+                selector: (context, provider) => provider.amountAvalible,
+                builder: (context, amountAvalible, _) {
+                  return _buildTextAndInputWidget(
+                      tr('amount_available_for_order_entry_1'),
+                      AppText.text('${amountAvalible ?? ''}'));
+                },
+              ),
+              defaultSpacing(),
+            ],
+          );
+        });
+      },
     );
   }
 
@@ -615,6 +662,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
       selector: (context, provider) =>
           Tuple2(provider.items, provider.priceModelList),
       builder: (context, tuple, _) {
+        print('build ????');
         return tuple.item1 != null && tuple.item1!.isNotEmpty
             ? Column(
                 children: [
@@ -623,7 +671,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                   defaultSpacing(),
                   Divider(height: .5, color: AppColors.textFieldUnfoucsColor),
                   defaultSpacing(),
-                  _buildTotalInfo(context, tuple.item2)
+                  _buildTotalInfo(context)
                 ],
               )
             : Container();
