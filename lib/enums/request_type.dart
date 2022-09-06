@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-09-05 10:06:57
+ * Last Modified: 2022-09-05 18:10:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -61,7 +61,7 @@ enum RequestType {
   CHECK_HOLIDAY,
   GET_DISTANCE,
   DELETE_LAST_ACTIVITY,
-  CHECK_RECENT_ORDER
+  CHECK_RECENT_ORDER,
 }
 
 // [KolonBuildConfig] 빌드 옵션에 따라 url가 변한다.

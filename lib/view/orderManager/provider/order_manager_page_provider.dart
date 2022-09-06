@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-05 17:14:55
+ * Last Modified: 2022-09-06 17:13:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,32 +12,38 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/service/api_service.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_amount_available_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_amount_response_model.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/service/api_service.dart';
+import 'package:medsalesportal/service/hive_service.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
-import 'package:medsalesportal/model/rfc/et_cust_list_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
-import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/recent_order_head_model.dart';
-import 'package:medsalesportal/model/rfc/recent_order_response_model.dart';
 import 'package:medsalesportal/model/rfc/recent_order_t_item_model.dart';
 import 'package:medsalesportal/model/rfc/recent_order_t_text_model.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/service/hive_service.dart';
-import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
-import 'package:medsalesportal/util/encoding_util.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/model/rfc/recent_order_response_model.dart';
+import 'package:medsalesportal/model/rfc/et_cust_list_response_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_search_meta_price_model.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_search_meta_price_response_model.dart';
 
 class OrderManagerPageProvider extends ChangeNotifier {
+  List<BulkOrderDetailSearchMetaPriceModel?>? priceModelList;
   RecentOrderResponseModel? recentOrderResponseModel;
   String? selectedSalseGroup;
   String? selectedStaffName;
   String? selectedSalseChannel;
   String? selectedProductFamily;
   String? selectedSalseOffice;
+  List<double>? selectedQuantity;
   String? deliveryConditionInputText;
   String? channelCode;
   String? orderDescriptionDetailInputText;
@@ -51,11 +57,13 @@ class OrderManagerPageProvider extends ChangeNotifier {
   List<RecentOrderTItemModel>? items;
   bool? isSingleData;
   bool isLoadData = false;
+  double? amountAvalible;
   final _api = ApiService();
 
   String getCode(List<String> list, String val) {
     if (val != tr('all')) {
       var data = list.where((item) => item.contains(val)).single;
+      pr('${data.substring(data.indexOf('-') + 1)}');
       return data.substring(data.indexOf('-') + 1);
     }
 
@@ -74,6 +82,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     } else {
       selectedSalseChannel = tr('all');
     }
+
     return ResultModel(true);
   }
 
@@ -94,8 +103,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
     isSingleData = null;
   }
 
-  void insertItem(RecentOrderTItemModel model,
-      {int? indexx, bool? isfromRecentModel}) {
+  Future<void> insertItem(RecentOrderTItemModel model,
+      {int? indexx, bool? isfromRecentModel}) async {
     if (isfromRecentModel != null && isfromRecentModel) {
       model.kwmeng = 0.0;
       model.zfreeQty = 0.0;
@@ -107,7 +116,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
     temp = [...items!];
     temp.insert(indexx ?? insertIndex, model);
     items = [...temp];
-    notifyListeners();
+    await checkPrice(indexx ?? insertIndex);
+    await getAmountAvailableForOrderEntry();
   }
 
   void updateItem(int indexx, {RecentOrderTItemModel? updateModel}) {
@@ -130,22 +140,46 @@ class OrderManagerPageProvider extends ChangeNotifier {
     temp = [...items!];
     temp.removeAt(indexx);
     items = [...temp];
+    priceModelList!.removeAt(indexx);
     notifyListeners();
   }
 
-  void setOrderQuantity(int indexx, double quantity) {
+  Future<void> updatePriceList(
+      int indexx, BulkOrderDetailSearchMetaPriceModel? model) async {
+    priceModelList ??= [];
+    if (priceModelList!.isEmpty) {
+      priceModelList = [model];
+    } else {
+      var temp = <BulkOrderDetailSearchMetaPriceModel?>[];
+      temp = [...priceModelList!];
+      temp.removeAt(indexx);
+      temp..insert(indexx, model);
+      priceModelList = [...temp];
+    }
+  }
+
+  void setQuantity(int indexx, double quantity) {
+    if (selectedQuantity!.isEmpty) {
+      selectedQuantity = [quantity];
+    } else {
+      var temp = <double>[];
+      temp = [...selectedQuantity!];
+      temp.removeAt(indexx);
+      temp..insert(indexx, quantity);
+      selectedQuantity = [...temp];
+    }
+    notifyListeners();
+  }
+
+  void setTableQuantity(int indexx, double quantity) async {
     var tempModel = items![indexx];
-    pr('----- ${tempModel.kwmeng}');
     tempModel.kwmeng = quantity;
-    pr('+++++ ${tempModel.kwmeng}');
     updateItem(indexx, updateModel: tempModel);
   }
 
   void setSurchargeQuantity(int indexx, double quantity) {
     var tempModel = items![indexx];
-    pr('----- ${tempModel.zfreeQty}');
     tempModel.zfreeQty = quantity;
-    pr('+++++ ${tempModel.zfreeQty}');
     updateItem(indexx, updateModel: tempModel);
   }
 
@@ -247,6 +281,98 @@ class OrderManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<ResultModel> getAmountAvailableForOrderEntry() async {
+    _api.init(RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY);
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY.serverMethod,
+      "methodParamMap": {
+        "IV_VKORG": CheckSuperAccount.isMultiAccountOrLeaderAccount()
+            ? selectedSalsePerson != null
+                ? selectedSalsePerson!.orghk
+                : ''
+            : CacheService.getEsLogin()!.vkorg,
+        "IV_VTWEG": getCode(channelList!, selectedSalseChannel!),
+        "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
+        "IV_KUNNR": selectedCustomerModel!.kunnr,
+        "IS_LOGIN": CacheService.getIsLogin(),
+        "functionName":
+            RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY.serverMethod,
+        "resultTables": RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY.resultTable
+      }
+    };
+    final result = await _api.request(body: _body);
+    if (result != null && result.statusCode != 200) {
+      return ResultModel(false);
+    }
+    if (result != null && result.statusCode == 200) {
+      var temp =
+          BulkOrderDetailAmountResponseModel.fromJson(result.body['data']);
+      var isSuccess = temp.esReturn!.mtype == 'S';
+      pr(temp.toJson());
+      amountAvalible = double.tryParse(
+          temp.tCreditLimit!.single.amount!.replaceAll(',', ''));
+      pr(amountAvalible);
+      notifyListeners();
+      return ResultModel(isSuccess, message: temp.esReturn!.message);
+    }
+    return ResultModel(false);
+  }
+
+  Future<ResultModel> checkPrice(int indexx) async {
+    isLoadData = true;
+    notifyListeners();
+    // 한번만 호출.
+    selectedQuantity ??= [];
+    _api.init(RequestType.CHECK_META_PRICE_AND_STOCK);
+    var temp = BulkOrderDetailSearchMetaPriceModel();
+    temp.matnr = items![indexx].matnr;
+    temp.vrkme = items![indexx].vrkme;
+    // temp.kwmeng = items![indexx].kwmeng;
+    temp.kwmeng = selectedQuantity!.isNotEmpty ? selectedQuantity![indexx] : 0;
+    temp.zfreeQtyIn = items![indexx].zfreeQty;
+    var tListBase64 = await EncodingUtils.base64Convert(temp.toJson());
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.CHECK_META_PRICE_AND_STOCK.serverMethod,
+      "methodParamMap": {
+        "IV_VKORG": CheckSuperAccount.isMultiAccountOrLeaderAccount()
+            ? selectedSalsePerson != null
+                ? selectedSalsePerson!.orghk
+                : ''
+            : CacheService.getEsLogin()!.vkorg,
+        "IV_VTWEG": getCode(channelList!, selectedSalseChannel!),
+        "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
+        "IV_KUNNR": selectedCustomerModel!.kunnr,
+        "IV_ZZKUNNR_END": selectedCustomerModel!.kunnr,
+        "IV_KWMENG": items![indexx].kwmeng,
+        "IV_MATNR": items![indexx].matnr,
+        "IV_PRSDT": '',
+        "T_LIST": tListBase64,
+        "IS_LOGIN": CacheService.getIsLogin(),
+        "functionName": RequestType.CHECK_META_PRICE_AND_STOCK.serverMethod,
+        "resultTables": RequestType.CHECK_META_PRICE_AND_STOCK.resultTable,
+      }
+    };
+
+    final result = await _api.request(body: _body);
+    if (result != null && result.statusCode != 200) {
+      isLoadData = false;
+      notifyListeners();
+      return ResultModel(false);
+    }
+    if (result != null && result.statusCode == 200) {
+      var temp = BulkOrderDetailSearchMetaPriceResponseModel.fromJson(
+          result.body['data']);
+      var isSuccess = temp.esReturn!.mtype == 'S';
+      // netpr 단가.netwr 정가.
+      await updatePriceList(indexx, isSuccess ? temp.tList!.single : null);
+      isLoadData = false;
+      notifyListeners();
+      return ResultModel(isSuccess,
+          message: !isSuccess ? temp.tList!.single.zmsg : '');
+    }
+    return ResultModel(false, message: result?.errorMessage);
+  }
+
   Future<ResultModel> checkRecentOrders() async {
     assert(selectedCustomerModel != null);
     isLoadData = true;
@@ -309,7 +435,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
         });
       }
       if (!isExits) {
-        insertItem(lastItem!, isfromRecentModel: true);
+        await insertItem(lastItem!, isfromRecentModel: true);
       }
       return ResultModel(true, data: {
         'isExits': isExits,
@@ -372,7 +498,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     body = {
       "methodName": RequestType.SEARCH_STAFF.serverMethod,
       "methodParamMap": {
-        "IV_SALESM": "",
+        "IV_SALESM": '',
         "IV_SNAME": '',
         "IV_DPTNM": dptnm != null ? dptnm : esLogin!.dptnm,
         "IS_LOGIN": isLogin,

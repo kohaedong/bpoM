@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-09-02 14:26:22
+ * Last Modified: 2022-09-06 13:53:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -66,6 +66,7 @@ class BaseInputWidget extends StatefulWidget {
   final FocusNode? focusNode;
   final Function? defaultIconCallback;
   final Function? otherIconcallback;
+  final Function? unfoucsCallback;
   final IsSelectedStrCallBack? isSelectedStrCallBack;
   final IsSelectedCellCallBack? isSelectedCellCallBack;
   final OnChangeCallBack? onChangeCallBack;
@@ -114,6 +115,7 @@ class BaseInputWidget extends StatefulWidget {
       this.initDataCallback,
       this.maxLine,
       this.arguments,
+      this.unfoucsCallback,
       this.bodyMap,
       this.discountListCallback,
       this.selectedCity,
@@ -289,111 +291,123 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
             alignment: Alignment.center,
             height: widget.height ?? AppSize.defaultTextFieldHeight,
             width: widget.width,
-            child: TextField(
-              focusNode: widget.focusNode,
-              textInputAction:
-                  widget.iconType == InputIconType.DELETE_AND_SEARCH
-                      ? TextInputAction.search
-                      : null,
-              onSubmitted: widget.onSubmittedCallBack != null
-                  ? (str) => widget.onSubmittedCallBack!.call(str)
-                  : (str) {
-                      if (widget.iconType == InputIconType.DELETE_AND_SEARCH &&
-                          widget.defaultIconCallback != null) {
-                        return widget.defaultIconCallback!.call();
-                      } else {
-                        return;
-                      }
-                    },
-              inputFormatters: [LengthLimitingTextInputFormatter(200)],
-              keyboardType: widget.keybordType,
-              obscureText: widget.keybordType != null &&
-                      widget.keybordType == TextInputType.visiblePassword
-                  ? true
-                  : false,
-              enableSuggestions: widget.keybordType != null &&
-                      widget.keybordType == TextInputType.visiblePassword
-                  ? false
-                  : true,
-              autocorrect: widget.keybordType != null &&
-                      widget.keybordType == TextInputType.visiblePassword
-                  ? false
-                  : true,
-              style: widget.textStyle ?? AppTextStyle.default_16,
-              controller: widget.textEditingController,
-              onTap: () {
-                widget.onTap != null ? widget.onTap!.call() : DoNothingAction();
-                widget.initText != null
-                    ? widget.textEditingController!.text = widget.initText!
-                    : DoNothingAction();
-              },
-              onChanged: (text) {
-                if (widget.onChangeCallBack != null) {
-                  widget.onChangeCallBack!.call(text);
+            child: Focus(
+              onFocusChange: (hasFocus) {
+                if (!hasFocus) {
+                  widget.unfoucsCallback?.call();
                 }
               },
-              enabled: widget.enable,
-              maxLines: widget.maxLine ?? 1,
-              decoration: InputDecoration(
-                fillColor: widget.bgColor ?? AppColors.whiteText,
-                hintMaxLines: 1,
-                errorMaxLines: 1,
-                filled: true,
-                contentPadding: widget.height != null
-                    ? AppSize.defaultTextFieldPaddingWidthSigninPage(
-                        widget.textStyle != null
-                            ? widget.textStyle!.fontSize!
-                            : AppTextStyle.default_16.fontSize!,
-                        isSmallButton: widget.oneCellType ==
-                                OneCellType.SELECT_OFFICE_ADDRESS
-                            ? true
-                            : null)
-                    : AppSize.defaultTextFieldPadding,
-                border: widget._disabledBorder,
-                enabledBorder: widget._enabledBorder,
-                disabledBorder: widget.enable ? null : widget._disabledBorder,
-                focusedBorder: widget._focusedBorder,
-                suffixIconConstraints: BoxConstraints(
-                  maxHeight: widget.iconType != InputIconType.DELETE_AND_SEARCH
-                      ? iconMaxWidth
-                      : iconMaxWidth * 2,
-                  maxWidth: widget.iconType != InputIconType.DELETE_AND_SEARCH
-                      ? iconMaxWidth
-                      : iconMaxWidth * 2,
-                  minHeight: widget.iconType != InputIconType.DELETE_AND_SEARCH
-                      ? iconMinWidth
-                      : iconMinWidth * 2,
-                  minWidth: widget.iconType != InputIconType.DELETE_AND_SEARCH
-                      ? iconMinWidth
-                      : iconMinWidth * 2,
+              child: TextField(
+                focusNode: widget.focusNode,
+                textInputAction:
+                    widget.iconType == InputIconType.DELETE_AND_SEARCH
+                        ? TextInputAction.search
+                        : null,
+                onSubmitted: widget.onSubmittedCallBack != null
+                    ? (str) => widget.onSubmittedCallBack!.call(str)
+                    : (str) {
+                        if (widget.iconType ==
+                                InputIconType.DELETE_AND_SEARCH &&
+                            widget.defaultIconCallback != null) {
+                          return widget.defaultIconCallback!.call();
+                        } else {
+                          return;
+                        }
+                      },
+                inputFormatters: [LengthLimitingTextInputFormatter(200)],
+                keyboardType: widget.keybordType,
+                obscureText: widget.keybordType != null &&
+                        widget.keybordType == TextInputType.visiblePassword
+                    ? true
+                    : false,
+                enableSuggestions: widget.keybordType != null &&
+                        widget.keybordType == TextInputType.visiblePassword
+                    ? false
+                    : true,
+                autocorrect: widget.keybordType != null &&
+                        widget.keybordType == TextInputType.visiblePassword
+                    ? false
+                    : true,
+                style: widget.textStyle ?? AppTextStyle.default_16,
+                controller: widget.textEditingController,
+                onTap: () {
+                  widget.onTap != null
+                      ? widget.onTap!.call()
+                      : DoNothingAction();
+                  widget.initText != null
+                      ? widget.textEditingController!.text = widget.initText!
+                      : DoNothingAction();
+                },
+                onChanged: (text) {
+                  if (widget.onChangeCallBack != null) {
+                    widget.onChangeCallBack!.call(text);
+                  }
+                },
+                enabled: widget.enable,
+                maxLines: widget.maxLine ?? 1,
+                decoration: InputDecoration(
+                  fillColor: widget.bgColor ?? AppColors.whiteText,
+                  hintMaxLines: 1,
+                  errorMaxLines: 1,
+                  filled: true,
+                  contentPadding: widget.height != null
+                      ? AppSize.defaultTextFieldPaddingWidthSigninPage(
+                          widget.textStyle != null
+                              ? widget.textStyle!.fontSize!
+                              : AppTextStyle.default_16.fontSize!,
+                          isSmallButton: widget.oneCellType ==
+                                  OneCellType.SELECT_OFFICE_ADDRESS
+                              ? true
+                              : null)
+                      : AppSize.defaultTextFieldPadding,
+                  border: widget._disabledBorder,
+                  enabledBorder: widget._enabledBorder,
+                  disabledBorder: widget.enable ? null : widget._disabledBorder,
+                  focusedBorder: widget._focusedBorder,
+                  suffixIconConstraints: BoxConstraints(
+                    maxHeight:
+                        widget.iconType != InputIconType.DELETE_AND_SEARCH
+                            ? iconMaxWidth
+                            : iconMaxWidth * 2,
+                    maxWidth: widget.iconType != InputIconType.DELETE_AND_SEARCH
+                        ? iconMaxWidth
+                        : iconMaxWidth * 2,
+                    minHeight:
+                        widget.iconType != InputIconType.DELETE_AND_SEARCH
+                            ? iconMinWidth
+                            : iconMinWidth * 2,
+                    minWidth: widget.iconType != InputIconType.DELETE_AND_SEARCH
+                        ? iconMinWidth
+                        : iconMinWidth * 2,
+                  ),
+                  suffixIcon: widget.iconType != null
+                      ? widget.iconType != InputIconType.DELETE_AND_SEARCH
+                          ? InkWell(
+                              onTap: () => widget.defaultIconCallback!.call(),
+                              child: Padding(
+                                  padding: EdgeInsets.only(
+                                      right: AppSize
+                                          .customerTextFiledIconSidePadding),
+                                  child: SizedBox(
+                                      height: AppSize.iconSmallDefaultWidth,
+                                      child: widget.iconType!
+                                          .icon(color: widget.iconColor))))
+                          : Padding(
+                              padding: EdgeInsets.only(
+                                  right:
+                                      AppSize.customerTextFiledIconSidePadding),
+                              child: widget.iconType!.icon(
+                                  callback1: widget.defaultIconCallback,
+                                  callback2: widget.otherIconcallback,
+                                  color: widget.iconColor),
+                            )
+                      : null,
+                  hintText: widget.hintText,
+                  hintStyle: widget.hintTextStyleCallBack != null
+                      ? widget.hintTextStyleCallBack!.call()
+                      : AppTextStyle.hint_16,
+                  isDense: true,
                 ),
-                suffixIcon: widget.iconType != null
-                    ? widget.iconType != InputIconType.DELETE_AND_SEARCH
-                        ? InkWell(
-                            onTap: () => widget.defaultIconCallback!.call(),
-                            child: Padding(
-                                padding: EdgeInsets.only(
-                                    right: AppSize
-                                        .customerTextFiledIconSidePadding),
-                                child: SizedBox(
-                                    height: AppSize.iconSmallDefaultWidth,
-                                    child: widget.iconType!
-                                        .icon(color: widget.iconColor))))
-                        : Padding(
-                            padding: EdgeInsets.only(
-                                right:
-                                    AppSize.customerTextFiledIconSidePadding),
-                            child: widget.iconType!.icon(
-                                callback1: widget.defaultIconCallback,
-                                callback2: widget.otherIconcallback,
-                                color: widget.iconColor),
-                          )
-                    : null,
-                hintText: widget.hintText,
-                hintStyle: widget.hintTextStyleCallBack != null
-                    ? widget.hintTextStyleCallBack!.call()
-                    : AppTextStyle.hint_16,
-                isDense: true,
               ),
             ),
           ),

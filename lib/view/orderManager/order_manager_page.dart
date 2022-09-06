@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-05 17:08:44
+ * Last Modified: 2022-09-06 17:22:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,34 +11,36 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/order_item_type.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
-import 'package:medsalesportal/model/rfc/et_customer_model.dart';
-import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
-import 'package:medsalesportal/model/rfc/recent_order_t_item_model.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
-import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
-import 'package:medsalesportal/view/orderManager/add_order_popup_widget.dart';
 import 'package:tuple/tuple.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/enums/order_item_type.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/enums/popup_search_type.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
+import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
+import 'package:medsalesportal/model/rfc/et_customer_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
+import 'package:medsalesportal/model/rfc/recent_order_t_item_model.dart';
+import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
+import 'package:medsalesportal/view/orderManager/add_order_popup_widget.dart';
+import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
+import 'package:medsalesportal/model/rfc/bulk_order_detail_search_meta_price_model.dart';
 import 'package:medsalesportal/view/orderManager/provider/order_manager_page_provider.dart';
 
 class OrderManagerPage extends StatefulWidget {
@@ -410,41 +412,41 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
   }
 
   Widget _buildRecentOrderTextButton(BuildContext context) {
-    return InkWell(
-        onTap: () {
-          final p = context.read<OrderManagerPageProvider>();
-          if (p.selectedCustomerModel != null) {
-            p.checkRecentOrders().then((result) {
-              if (result.isSuccessful) {
-                var map = result.data as Map<String, dynamic>;
-                var isExits = map['isExits'] as bool;
-                var isEmpty = map['isEmpty'] as bool;
-                var model = map['model'] as RecentOrderTItemModel?;
+    return Row(
+      children: [
+        InkWell(
+            onTap: () {
+              final p = context.read<OrderManagerPageProvider>();
+              if (p.selectedCustomerModel != null) {
+                p.checkRecentOrders().then((result) {
+                  if (result.isSuccessful) {
+                    var map = result.data as Map<String, dynamic>;
+                    var isExits = map['isExits'] as bool;
+                    var isEmpty = map['isEmpty'] as bool;
+                    var model = map['model'] as RecentOrderTItemModel?;
 
-                if (isEmpty) {
-                  AppToast().show(context, tr('not_recent_order'));
-                }
-                if (isExits) {
-                  AppToast().show(
-                      context,
-                      tr('recent_order_is_getted',
-                          args: [model!.matnr!, model.maktx!]));
-                }
+                    if (isEmpty) {
+                      AppToast().show(context, tr('not_recent_order'));
+                    }
+                    if (isExits) {
+                      AppToast().show(
+                          context,
+                          tr('recent_order_is_getted',
+                              args: [model!.matnr!, model.maktx!]));
+                    }
+                  }
+                });
+              } else {
+                AppToast().show(context,
+                    tr('plz_select_something_2', args: [tr('sales_office')]));
               }
-            });
-          } else {
-            AppToast().show(context,
-                tr('plz_select_something_2', args: [tr('sales_office')]));
-          }
-        },
-        child: Row(
-          children: [
-            AppText.text(tr('get_recent_order'),
-                style: AppTextStyle.sub_12.copyWith(color: AppColors.primary)),
-            Icon(Icons.arrow_forward_ios_rounded,
-                size: AppSize.smallIconWidth, color: AppColors.primary),
-          ],
-        ));
+            },
+            child: AppText.text(tr('get_recent_order'),
+                style: AppTextStyle.sub_12.copyWith(color: AppColors.primary))),
+        Icon(Icons.arrow_forward_ios_rounded,
+            size: AppSize.smallIconWidth, color: AppColors.primary),
+      ],
+    );
   }
 
   Widget _buildTextAndInputWidget(
@@ -464,8 +466,12 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
   }
 
   Widget _buildOrderItem(
-      BuildContext context, int index, RecentOrderTItemModel model) {
+      BuildContext context,
+      int index,
+      RecentOrderTItemModel model,
+      List<BulkOrderDetailSearchMetaPriceModel?>? priceList) {
     final p = context.read<OrderManagerPageProvider>();
+    var family = p.selectedProductFamily!;
     return Column(
       children: [
         Row(
@@ -507,47 +513,117 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
             tr('quantity'),
             BaseInputWidget(
                 context: context,
+                unfoucsCallback: () async {
+                  pr(p.priceModelList?.length);
+                  final result = await p.checkPrice(index);
+                  if (result.isSuccessful) {
+                    p.setTableQuantity(index, p.selectedQuantity![index]);
+                  } else {
+                    AppDialog.showSignglePopup(context, result.message!);
+                    p.setTableQuantity(index, 0);
+                  }
+                },
                 textStyle: AppTextStyle.default_14,
                 width: AppSize.defaultContentsWidth * .75,
-                onChangeCallBack: (t) {
+                onChangeCallBack: (t) async {
                   if (double.tryParse(t) != null) {
-                    p.setOrderQuantity(index, double.parse(t));
+                    p.setQuantity(index, double.parse(t));
+                  } else if (t.isEmpty) {
+                    p.setQuantity(index, 0.0);
                   }
                 },
                 enable: true)),
-        _buildTextAndInputWidget(
-            tr('salse_surcharge_quantity'),
-            BaseInputWidget(
-                context: context,
-                textStyle: AppTextStyle.default_14,
-                width: AppSize.defaultContentsWidth * .75,
-                onChangeCallBack: (t) {
-                  if (double.tryParse(t) != null) {
-                    p.setSurchargeQuantity(index, double.parse(t));
-                  }
-                },
-                enable: true)),
+        family.contains('비처방의약품') ||
+                family.contains('건강식품') ||
+                family.contains('처방의약품')
+            ? _buildTextAndInputWidget(
+                tr('salse_surcharge_quantity'),
+                BaseInputWidget(
+                    context: context,
+                    textStyle: AppTextStyle.default_14,
+                    width: AppSize.defaultContentsWidth * .75,
+                    onChangeCallBack: (t) {
+                      if (double.tryParse(t) != null) {
+                        p.setSurchargeQuantity(index, double.parse(t));
+                      }
+                      if (t.isEmpty) {
+                        p.setSurchargeQuantity(index, 0);
+                      }
+                    },
+                    enable: true))
+            : Container(),
         defaultSpacing(),
         _buildTextAndInputWidget(
             '${tr('supply_price')}/${tr('vat')}',
-            Container(
-              child:
-                  AppText.text('${model.netwr}', style: AppTextStyle.blod_16),
-            )),
+            priceList != null &&
+                    priceList.isNotEmpty &&
+                    priceList[index] != null &&
+                    priceList[index]!.netpr != 0.0 &&
+                    model.kwmeng != 0.0
+                ? Container(
+                    child: AppText.text(
+                        '${FormatUtil.addComma('${priceList[index]!.netwr!}')} / ${FormatUtil.addComma('${priceList[index]!.mwsbp!}')} ',
+                        style: AppTextStyle.h4),
+                  )
+                : Container()),
+        defaultSpacing(),
+      ],
+    );
+  }
+
+  Widget _buildTotalInfo(BuildContext context,
+      List<BulkOrderDetailSearchMetaPriceModel?>? priceList) {
+    priceList?.removeWhere((item) => item == null);
+    var totalSupply = priceList != null && priceList.isNotEmpty
+        ? '${priceList.reduce((model, other) => BulkOrderDetailSearchMetaPriceModel(netwr: double.parse('${model != null ? model.netwr! : 0.0}') + double.parse('${other != null ? other.netwr! : 0.0}')))!.netwr}'
+        : '';
+    var vatTotal = priceList != null && priceList.isNotEmpty
+        ? '${priceList.reduce((model, other) => BulkOrderDetailSearchMetaPriceModel(mwsbp: double.parse('${model != null ? model.mwsbp! : 0.0}') + double.parse('${other != null ? other.mwsbp! : 0.0}')))!.mwsbp}'
+        : '';
+    var supplyAndVat = priceList != null && priceList.isNotEmpty
+        ? '${double.parse('$totalSupply') + double.parse('$vatTotal')}'
+        : '';
+    return Column(
+      children: [
+        _buildTextAndInputWidget(
+            tr('total_supply'), AppText.text(FormatUtil.addComma(totalSupply))),
+        defaultSpacing(),
+        _buildTextAndInputWidget(
+            tr('vat_total'), AppText.text(FormatUtil.addComma(vatTotal))),
+        defaultSpacing(),
+        _buildTextAndInputWidget(tr('supply_and_vat'),
+            AppText.text(FormatUtil.addComma(supplyAndVat))),
+        defaultSpacing(),
+        Selector<OrderManagerPageProvider, double?>(
+          selector: (context, provider) => provider.amountAvalible,
+          builder: (context, amountAvalible, _) {
+            return _buildTextAndInputWidget(
+                tr('amount_available_for_order_entry_1'),
+                AppText.text('${amountAvalible ?? ''}'));
+          },
+        ),
         defaultSpacing(),
       ],
     );
   }
 
   Widget _buildOrderItemList(BuildContext context) {
-    return Selector<OrderManagerPageProvider, List<RecentOrderTItemModel>?>(
-      selector: (context, provider) => provider.items,
-      builder: (context, items, _) {
-        return items != null && items.isNotEmpty
+    return Selector<
+        OrderManagerPageProvider,
+        Tuple2<List<RecentOrderTItemModel>?,
+            List<BulkOrderDetailSearchMetaPriceModel?>?>>(
+      selector: (context, provider) =>
+          Tuple2(provider.items, provider.priceModelList),
+      builder: (context, tuple, _) {
+        return tuple.item1 != null && tuple.item1!.isNotEmpty
             ? Column(
                 children: [
-                  ...items.asMap().entries.map(
-                      (map) => _buildOrderItem(context, map.key, map.value))
+                  ...tuple.item1!.asMap().entries.map((map) => _buildOrderItem(
+                      context, map.key, map.value, tuple.item2)),
+                  defaultSpacing(),
+                  Divider(height: .5, color: AppColors.textFieldUnfoucsColor),
+                  defaultSpacing(),
+                  _buildTotalInfo(context, tuple.item2)
                 ],
               )
             : Container();
@@ -584,15 +660,15 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(
-        hasForm: true,
-        appBar: MainAppBar(context,
-            titleText: AppText.text('${tr('salse_order_manager')}',
-                style: AppTextStyle.w500_22)),
-        child: ChangeNotifierProvider(
-          create: (context) => OrderManagerPageProvider(),
-          builder: (context, _) {
-            return FutureBuilder<ResultModel>(
+    return ChangeNotifierProvider(
+      create: (context) => OrderManagerPageProvider(),
+      builder: (context, _) {
+        return BaseLayout(
+            hasForm: true,
+            appBar: MainAppBar(context,
+                titleText: AppText.text('${tr('salse_order_manager')}',
+                    style: AppTextStyle.w500_22)),
+            child: FutureBuilder<ResultModel>(
                 future: context.read<OrderManagerPageProvider>().initData(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData &&
@@ -665,8 +741,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                   }
                   return DefaultShimmer.buildDefaultPageShimmer(5,
                       isWithSet: true, setLenght: 10);
-                });
-          },
-        ));
+                }));
+      },
+    );
   }
 }

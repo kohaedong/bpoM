@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_widget.dart
  * Created Date: 2021-08-19 11:37:50
- * Last Modified: 2022-07-18 14:17:57
+ * Last Modified: 2022-09-06 12:55:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -27,6 +27,7 @@ class BaseLayout extends StatelessWidget {
       this.isShowAppBarCallBack,
       this.bgColog,
       required this.child,
+      this.unFoucsCallback,
       Key? key})
       : super(key: key);
   final Widget child;
@@ -37,6 +38,7 @@ class BaseLayout extends StatelessWidget {
   final bool? isResizeToAvoidBottomInset;
   final Color? bgColog;
   final bool? isWithWillPopScope;
+  final Function? unFoucsCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +57,12 @@ class BaseLayout extends StatelessWidget {
                   right: isWithBottomSafeArea ?? false,
                   child: GestureDetector(
                       onTap: () {
-                        hasForm ? hideKeyboard(context) : DoNothingAction();
+                        hasForm
+                            ? () {
+                                hideKeyboard(context);
+                                unFoucsCallback?.call();
+                              }()
+                            : DoNothingAction();
                       },
                       child: child)),
               onWillPop: () async => false)
@@ -63,7 +70,12 @@ class BaseLayout extends StatelessWidget {
               bottom: isWithBottomSafeArea ?? false,
               child: GestureDetector(
                   onTap: () {
-                    hasForm ? hideKeyboard(context) : DoNothingAction();
+                    hasForm
+                        ? () {
+                            hideKeyboard(context);
+                            unFoucsCallback?.call();
+                          }()
+                        : DoNothingAction();
                   },
                   child: child)),
     );

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-08-07 17:55:58
+ * Last Modified: 2022-09-06 11:26:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -188,14 +188,13 @@ class AppDialog {
                 child: Container(
                   width: AppSize.defaultContentsWidth,
                   child: Center(
-                    child: AppText.text(
-                      '$contents',
-                      style: context
-                          .read<AppThemeProvider>()
-                          .themeData
-                          .textTheme
-                          .headline3!,
-                    ),
+                    child: AppText.text('$contents',
+                        style: context
+                            .read<AppThemeProvider>()
+                            .themeData
+                            .textTheme
+                            .headline3!,
+                        maxLines: 3),
                   ),
                 )),
             true,

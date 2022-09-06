@@ -553,6 +553,10 @@
     "is_visit":"방문여부",
     "plz_enter_reason_for_interview_failure":"면담 실패 사유를 입력해주세요.",
     "is_realy_with_another_saller":"동행자는 입력 후 저장하면 이후 변경할수 없습니다. 동행자를 입력 하시겠습니까? ",
-    "not_recent_order":"최근 주문 내역이 없습니다."
+    "not_recent_order":"최근 주문 내역이 없습니다.",
+    "total_supply":"공급가 합계",
+    "vat_total":"부가세 합계",
+    "supply_and_vat":"공급가+부가세",
+    "amount_available_for_order_entry_1":"주문입력가능액"
    
 }
