@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-06 20:08:20
+ * Last Modified: 2022-09-07 10:13:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -372,10 +372,12 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
 
   Widget _buildAddButton(BuildContext context) {
     return InkWell(
-      onTap: () {
-        final result = AppDialog.showPopup(
+      onTap: () async {
+        final p = context.read<OrderManagerPageProvider>();
+        final result = await AppDialog.showPopup(
             context, AddOrderPopupWidget(type: OrderItemType.NEW));
         if (result != null) {
+          p.insertItem(RecentOrderTItemModel());
           pr('tap');
         }
       },
@@ -467,10 +469,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
   }
 
   Widget _buildOrderItem(
-      BuildContext context,
-      int index,
-      RecentOrderTItemModel model,
-      List<BulkOrderDetailSearchMetaPriceModel?>? priceList) {
+      BuildContext context, int index, RecentOrderTItemModel model) {
     final p = context.read<OrderManagerPageProvider>();
     var family = p.selectedProductFamily!;
     return Column(
@@ -525,7 +524,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                     context: context,
                     onTap: () {
                       if (isNotEmpty) {
-                        controller.text = '${quantityList[index]}';
+                        controller.text = '${quantityList[index]!.toInt()}';
                       }
                     },
                     textEditingController: controller,
@@ -541,7 +540,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       }
                     },
                     hintText: isNotEmpty
-                        ? '${quantityList[index] == 0 ? '' : quantityList[index]}'
+                        ? '${quantityList[index] == 0 ? '' : quantityList[index]!.toInt()}'
                         : '',
                     keybordType: TextInputType.number,
                     hintTextStyleCallBack: () => isNotEmpty
@@ -589,18 +588,25 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
             : Container(),
         defaultSpacing(),
         _buildTextAndInputWidget(
-            '${tr('supply_price')}/${tr('vat')}',
-            priceList != null &&
-                    priceList.isNotEmpty &&
-                    priceList[index] != null &&
-                    priceList[index]!.netpr != 0.0 &&
-                    model.kwmeng != 0.0
-                ? Container(
-                    child: AppText.text(
-                        '${FormatUtil.addComma('${priceList[index]!.netwr!}')} / ${FormatUtil.addComma('${priceList[index]!.mwsbp!}')} ',
-                        style: AppTextStyle.h4),
-                  )
-                : Container()),
+          '${tr('supply_price')}/${tr('vat')}',
+          Selector<OrderManagerPageProvider,
+              List<BulkOrderDetailSearchMetaPriceModel?>?>(
+            selector: (context, provider) => provider.priceModelList,
+            builder: (context, priceList, _) {
+              return priceList != null &&
+                      priceList.isNotEmpty &&
+                      priceList[index] != null &&
+                      priceList[index]!.netpr != 0.0 &&
+                      model.kwmeng != 0.0
+                  ? Container(
+                      child: AppText.text(
+                          '${FormatUtil.addComma('${priceList[index]!.netwr!}')} / ${FormatUtil.addComma('${priceList[index]!.mwsbp!}')} ',
+                          style: AppTextStyle.h4),
+                    )
+                  : Container();
+            },
+          ),
+        ),
         defaultSpacing(),
       ],
     );
@@ -655,19 +661,15 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
   }
 
   Widget _buildOrderItemList(BuildContext context) {
-    return Selector<
-        OrderManagerPageProvider,
-        Tuple2<List<RecentOrderTItemModel>?,
-            List<BulkOrderDetailSearchMetaPriceModel?>?>>(
-      selector: (context, provider) =>
-          Tuple2(provider.items, provider.priceModelList),
-      builder: (context, tuple, _) {
+    return Selector<OrderManagerPageProvider, List<RecentOrderTItemModel>?>(
+      selector: (context, provider) => provider.items,
+      builder: (context, items, _) {
         print('build ????');
-        return tuple.item1 != null && tuple.item1!.isNotEmpty
+        return items != null && items.isNotEmpty
             ? Column(
                 children: [
-                  ...tuple.item1!.asMap().entries.map((map) => _buildOrderItem(
-                      context, map.key, map.value, tuple.item2)),
+                  ...items.asMap().entries.map(
+                      (map) => _buildOrderItem(context, map.key, map.value)),
                   defaultSpacing(),
                   Divider(height: .5, color: AppColors.textFieldUnfoucsColor),
                   defaultSpacing(),
