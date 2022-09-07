@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-06 20:05:04
+ * Last Modified: 2022-09-07 13:05:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -35,14 +35,15 @@ import 'package:medsalesportal/model/rfc/bulk_order_detail_search_meta_price_mod
 import 'package:medsalesportal/model/rfc/bulk_order_detail_search_meta_price_response_model.dart';
 
 class OrderManagerPageProvider extends ChangeNotifier {
-  List<BulkOrderDetailSearchMetaPriceModel?>? priceModelList;
+  List<BulkOrderDetailSearchMetaPriceModel?> priceModelList = [];
+  List<double> selectedQuantityList = [];
+  List<double> selectedSurchargeList = [];
   RecentOrderResponseModel? recentOrderResponseModel;
   String? selectedSalseGroup;
   String? selectedStaffName;
   String? selectedSalseChannel;
   String? selectedProductFamily;
   String? selectedSalseOffice;
-  List<double>? selectedQuantity;
   String? deliveryConditionInputText;
   String? channelCode;
   String? orderDescriptionDetailInputText;
@@ -58,6 +59,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   double? amountAvalible;
   final _api = ApiService();
+  RecentOrderTItemModel? test;
 
   String getCode(List<String> list, String val) {
     if (val != tr('all')) {
@@ -98,36 +100,48 @@ class OrderManagerPageProvider extends ChangeNotifier {
         break;
       default:
     }
-
     isSingleData = null;
+  }
+
+  void resetOrderItem() {
+    items = [];
+    priceModelList = [];
+    selectedQuantityList = [];
   }
 
   Future<void> insertItem(RecentOrderTItemModel model,
       {int? indexx, bool? isfromRecentModel}) async {
-    if (isfromRecentModel != null && isfromRecentModel) {
-      model.kwmeng = 0.0;
-      model.zfreeQty = 0.0;
-    }
-    items ??= [];
-    var insertIndex = items!.isEmpty ? 0 : items!.length;
-    var temp = <RecentOrderTItemModel>[];
-
-    temp = [...items!];
-    temp.insert(indexx ?? insertIndex, model);
-    items = [...temp];
-    await checkPrice(indexx ?? insertIndex);
-    await getAmountAvailableForOrderEntry();
+    isLoadData = true;
+    notifyListeners();
+    await Future.delayed(Duration.zero, () async {
+      if (isfromRecentModel != null && isfromRecentModel) {
+        model.kwmeng = 0.0;
+        model.zfreeQty = 0.0;
+      }
+      items ??= [];
+      var insertIndex = items!.isEmpty ? 0 : items!.length;
+      var temp = <RecentOrderTItemModel>[];
+      temp = [...items!];
+      temp.insert(indexx ?? insertIndex, model);
+      items = [...temp];
+      insertPriceList(BulkOrderDetailSearchMetaPriceModel());
+      insertSurchargeQuantityList(0);
+      insertQuantityList(0);
+      await checkPrice(indexx ?? insertIndex, isNotifier: false);
+      await getAmountAvailableForOrderEntry(isNotifier: false);
+    }).whenComplete(() {
+      isLoadData = false;
+      notifyListeners();
+    }).catchError((e) {
+      isLoadData = false;
+      notifyListeners();
+    });
   }
 
-  void updateItem(int indexx, {RecentOrderTItemModel? updateModel}) {
+  void updateItem(int indexx, RecentOrderTItemModel updateModel) {
     var temp = <RecentOrderTItemModel>[];
     temp = [...items!];
-    var model = RecentOrderTItemModel();
-    if (updateModel == null) {
-      model = RecentOrderTItemModel.fromJson(temp[indexx].toJson());
-    } else {
-      model = RecentOrderTItemModel.fromJson(updateModel.toJson());
-    }
+    var model = RecentOrderTItemModel.fromJson(updateModel.toJson());
     temp.removeAt(indexx);
     temp.insert(indexx, model);
     items = [...temp];
@@ -139,54 +153,119 @@ class OrderManagerPageProvider extends ChangeNotifier {
     temp = [...items!];
     temp.removeAt(indexx);
     items = [...temp];
-    priceModelList!.removeAt(indexx);
+    removePriceList(indexx);
+    removeQuantityList(indexx);
+    removeSurchargeQuantityList(indexx);
     notifyListeners();
+  }
+
+  Future<void> insertPriceList(BulkOrderDetailSearchMetaPriceModel model,
+      {int? indexx, bool? isNotifier}) async {
+    var insertIndex = priceModelList.isEmpty ? 0 : priceModelList.length;
+    var temp = <BulkOrderDetailSearchMetaPriceModel?>[];
+    temp = [...priceModelList];
+    temp.insert(indexx ?? insertIndex, model);
+    priceModelList = [...temp];
+    if (isNotifier != null && isNotifier) {
+      notifyListeners();
+    }
+  }
+
+  void removePriceList(int indexx, {bool? isNotifier}) {
+    priceModelList.removeAt(indexx);
+    if (isNotifier != null && isNotifier) {
+      notifyListeners();
+    }
   }
 
   Future<void> updatePriceList(
-      int indexx, BulkOrderDetailSearchMetaPriceModel? model) async {
-    priceModelList ??= [];
-    if (priceModelList!.isEmpty) {
-      priceModelList = [model];
-    } else {
-      var temp = <BulkOrderDetailSearchMetaPriceModel?>[];
-      temp = [...priceModelList!];
-      temp.removeAt(indexx);
-      temp..insert(indexx, model);
-      priceModelList = [...temp];
+      int indexx, BulkOrderDetailSearchMetaPriceModel updateModel,
+      {bool? isNotifier}) async {
+    var temp = <BulkOrderDetailSearchMetaPriceModel?>[];
+    temp = [...priceModelList];
+    var model =
+        BulkOrderDetailSearchMetaPriceModel.fromJson(updateModel.toJson());
+    temp.removeAt(indexx);
+    temp..insert(indexx, model);
+    priceModelList = [...temp];
+    if (isNotifier != null && isNotifier) {
+      notifyListeners();
     }
   }
 
-  void setQuantity(int indexx, double quantity) {
-    if (selectedQuantity!.isEmpty) {
-      selectedQuantity = [quantity];
-    } else {
-      var temp = <double>[];
-      temp = [...selectedQuantity!];
-      temp.removeAt(indexx);
-      temp..insert(indexx, quantity);
-      selectedQuantity = [...temp];
+  void insertQuantityList(double quantity, {int? indexx, bool? isNotifier}) {
+    var insertIndex =
+        selectedQuantityList.isEmpty ? 0 : selectedQuantityList.length;
+    var temp = <double>[];
+    temp = [...selectedQuantityList];
+    temp.insert(indexx ?? insertIndex, quantity);
+    selectedQuantityList = [...temp];
+    if (isNotifier != null && isNotifier) {
+      notifyListeners();
     }
-    notifyListeners();
+  }
+
+  void updateQuantityList(int indexx, double quantity) {
+    var temp = <double>[];
+    temp = [...selectedQuantityList];
+    temp.removeAt(indexx);
+    temp..insert(indexx, quantity);
+    selectedQuantityList = [...temp];
+  }
+
+  void removeQuantityList(int indexx, {bool? isNotifier}) {
+    selectedQuantityList.removeAt(indexx);
+    if (isNotifier != null && isNotifier) {
+      notifyListeners();
+    }
+  }
+
+  void insertSurchargeQuantityList(double quantity,
+      {int? indexx, bool? isNotifier}) {
+    var insertIndex =
+        selectedSurchargeList.isEmpty ? 0 : selectedSurchargeList.length;
+    var temp = <double>[];
+    temp = [...selectedSurchargeList];
+    pr('insertIndex???!!!!!! $insertIndex');
+    temp.insert(indexx ?? insertIndex, quantity);
+    selectedSurchargeList = [...temp];
+    if (isNotifier != null && isNotifier) {
+      notifyListeners();
+    }
+  }
+
+  void updateSurchargeQuantityList(int indexx, double quantity) {
+    var temp = <double>[];
+    temp = [...selectedSurchargeList];
+    temp.removeAt(indexx);
+    temp..insert(indexx, quantity);
+    selectedSurchargeList = [...temp];
+  }
+
+  void removeSurchargeQuantityList(int indexx, {bool? isNotifier}) {
+    selectedSurchargeList.removeAt(indexx);
+    if (isNotifier != null && isNotifier) {
+      notifyListeners();
+    }
   }
 
   void setTableQuantity(int indexx, double quantity,
       {bool? isResetTotal}) async {
-    var tempModel = items?[indexx];
-    tempModel?.kwmeng = quantity;
+    var tempModel = items![indexx];
+    tempModel.kwmeng = quantity;
     if (isResetTotal != null) {
-      tempModel?.kwmeng = 0;
-      tempModel?.netpr = 0;
-      tempModel?.mwsbp = 0;
+      tempModel.kwmeng = 0;
+      tempModel.netpr = 0;
+      tempModel.mwsbp = 0;
     }
-    updateItem(indexx, updateModel: tempModel);
+    updateItem(indexx, tempModel);
     notifyListeners();
   }
 
-  void setSurchargeQuantity(int indexx, double quantity) {
+  void setTableSurchargeQuantity(int indexx, double quantity) {
     var tempModel = items![indexx];
     tempModel.zfreeQty = quantity;
-    updateItem(indexx, updateModel: tempModel);
+    updateItem(indexx, tempModel);
     notifyListeners();
   }
 
@@ -253,7 +332,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     } else {
       selectedCustomerModel = null;
       isSingleData = null;
-      items = [];
+      resetOrderItem();
       notifyListeners();
     }
   }
@@ -288,7 +367,15 @@ class OrderManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<ResultModel> getAmountAvailableForOrderEntry() async {
+  Future<ResultModel> getAmountAvailableForOrderEntry(
+      {required bool isNotifier}) async {
+    if (amountAvalible != null) {
+      return ResultModel(true);
+    }
+    if (isNotifier) {
+      isLoadData = true;
+      notifyListeners();
+    }
     _api.init(RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY);
     Map<String, dynamic> _body = {
       "methodName": RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY.serverMethod,
@@ -309,6 +396,10 @@ class OrderManagerPageProvider extends ChangeNotifier {
     };
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {
+      if (isNotifier) {
+        isLoadData = false;
+        notifyListeners();
+      }
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
@@ -319,23 +410,28 @@ class OrderManagerPageProvider extends ChangeNotifier {
       amountAvalible = double.tryParse(
           temp.tCreditLimit!.single.amount!.replaceAll(',', ''));
       pr(amountAvalible);
-      notifyListeners();
+      if (isNotifier) {
+        isLoadData = false;
+        notifyListeners();
+      }
       return ResultModel(isSuccess, message: temp.esReturn!.message);
     }
     return ResultModel(false);
   }
 
-  Future<ResultModel> checkPrice(int indexx) async {
-    isLoadData = true;
-    notifyListeners();
+  Future<ResultModel> checkPrice(int indexx, {required bool isNotifier}) async {
+    if (isNotifier) {
+      isLoadData = true;
+      notifyListeners();
+    }
     // 한번만 호출.
-    selectedQuantity ??= [];
     _api.init(RequestType.CHECK_META_PRICE_AND_STOCK);
     var temp = BulkOrderDetailSearchMetaPriceModel();
     temp.matnr = items![indexx].matnr;
     temp.vrkme = items![indexx].vrkme;
     // temp.kwmeng = items![indexx].kwmeng;
-    temp.kwmeng = selectedQuantity!.isNotEmpty ? selectedQuantity![indexx] : 0;
+    temp.kwmeng =
+        selectedQuantityList.isNotEmpty ? selectedQuantityList[indexx] : 0;
     temp.zfreeQtyIn = items![indexx].zfreeQty;
     var tListBase64 = await EncodingUtils.base64Convert(temp.toJson());
     Map<String, dynamic> _body = {
@@ -362,8 +458,10 @@ class OrderManagerPageProvider extends ChangeNotifier {
 
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {
-      isLoadData = false;
-      notifyListeners();
+      if (isNotifier) {
+        isLoadData = false;
+        notifyListeners();
+      }
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
@@ -376,10 +474,16 @@ class OrderManagerPageProvider extends ChangeNotifier {
           isSuccess
               ? temp.tList!.single
               : BulkOrderDetailSearchMetaPriceModel());
-      isLoadData = false;
-      notifyListeners();
+      if (isNotifier) {
+        isLoadData = false;
+        notifyListeners();
+      }
       return ResultModel(isSuccess,
           message: !isSuccess ? temp.tList!.single.zmsg : '');
+    }
+    if (isNotifier) {
+      isLoadData = false;
+      notifyListeners();
     }
     return ResultModel(false, message: result?.errorMessage);
   }
@@ -431,11 +535,15 @@ class OrderManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       recentOrderResponseModel =
           RecentOrderResponseModel.fromJson(result.body['data']);
-      pr(recentOrderResponseModel?.toJson());
+
       isLoadData = false;
       notifyListeners();
       var orderList = recentOrderResponseModel!.tItem!;
       RecentOrderTItemModel? lastItem;
+      if (orderList.length > 1) {
+        pr('@!@!@!@!@!@!@!@!');
+        test = RecentOrderTItemModel.fromJson(orderList.first.toJson());
+      }
       var isExits = false;
       if (orderList.isNotEmpty) {
         lastItem = orderList.last;
@@ -445,6 +553,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
           }
         });
       }
+
       if (!isExits) {
         await insertItem(lastItem!, isfromRecentModel: true);
       }
