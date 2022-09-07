@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-07 13:31:35
+ * Last Modified: 2022-09-07 16:42:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -541,9 +541,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         controller.clear();
                       }
                     },
-                    hintText: isNotEmpty
-                        ? '${quantityList[index] == 0 ? '' : quantityList[index].toInt()}'
-                        : '',
+                    hintText: isNotEmpty ? '' : tr('plz_enter'),
                     keybordType: TextInputType.number,
                     hintTextStyleCallBack: () => isNotEmpty
                         ? AppTextStyle.default_16
@@ -584,9 +582,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                     return BaseInputWidget(
                         context: context,
                         textStyle: AppTextStyle.default_14,
-                        hintText: isNotEmpty
-                            ? '${surchargeList[index] == 0 ? '' : surchargeList[index].toInt()}'
-                            : '',
+                        hintText: isNotEmpty ? '' : tr('plz_enter'),
                         defaultIconCallback: () {
                           controller.text = '';
                           p.updateSurchargeQuantityList(index, 0);
