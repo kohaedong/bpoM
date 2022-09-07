@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-07 13:13:41
+ * Last Modified: 2022-09-07 13:28:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -377,8 +377,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         final result = await AppDialog.showPopup(
             context, AddOrderPopupWidget(type: OrderItemType.NEW));
         if (result != null) {
-          p.insertItem(p.test!);
-          pr('tap');
+          // p.insertItem(p.test!);
         }
       },
       child: Container(

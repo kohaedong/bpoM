@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-07 13:05:07
+ * Last Modified: 2022-09-07 13:28:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -119,7 +119,11 @@ class OrderManagerPageProvider extends ChangeNotifier {
         model.zfreeQty = 0.0;
       }
       items ??= [];
-      var insertIndex = items!.isEmpty ? 0 : items!.length;
+      var insertIndex = (isfromRecentModel != null && isfromRecentModel)
+          ? 0
+          : items!.isEmpty
+              ? 0
+              : items!.length;
       var temp = <RecentOrderTItemModel>[];
       temp = [...items!];
       temp.insert(indexx ?? insertIndex, model);
