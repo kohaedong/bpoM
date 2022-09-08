@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-08 13:32:28
+ * Last Modified: 2022-09-08 15:24:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -30,10 +30,14 @@ import 'package:medsalesportal/view/orderManager/provider/add_order_popup_provid
 
 class AddOrderPopupWidget extends StatefulWidget {
   const AddOrderPopupWidget(
-      {Key? key, required this.type, required this.productFamily})
+      {Key? key,
+      required this.type,
+      required this.bodyMap,
+      required this.productFamily})
       : super(key: key);
   final OrderItemType type;
   final String productFamily;
+  final Map<String, dynamic> bodyMap;
   @override
   State<AddOrderPopupWidget> createState() => _AddOrderPopupWidgetState();
 }
@@ -70,7 +74,6 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                   : AppColors.textFieldUnfoucsColor,
               hintText: mate != null ? mate.maktx : tr('plz_select'),
               popupSearchType: PopupSearchType.SEARCH_MATERIAL,
-
               // 팀장 일때 만 팀원선택후 삭제가능.
               width: AppSize.defaultContentsWidth,
               hintTextStyleCallBack: () =>
@@ -151,35 +154,45 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
     return ChangeNotifierProvider(
       create: (context) => AddOrderPopupProvider(),
       builder: (context, _) {
-        return Selector<AddOrderPopupProvider, double>(
-          selector: (context, provider) => provider.height,
-          builder: (context, height, _) {
-            return buildDialogContents(
-                context,
-                GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    hideKeyboard(context);
-                  },
-                  child: Container(
-                      alignment: Alignment.center,
-                      height: height - AppSize.buttonHeight * 2,
-                      child: Column(
-                        children: [
-                          defaultSpacing(),
-                          _buildMatSelector(context),
-                          _buildQuantityInput(context),
-                          _buildSurChargeInput(context),
-                        ],
-                      )),
-                ),
-                false,
-                height,
-                iswithTitle: true,
-                titleText: tr('add_order'),
-                rightButtonText: tr('add'));
-          },
-        );
+        return FutureBuilder(
+            future:
+                context.read<AddOrderPopupProvider>().initData(widget.bodyMap),
+            builder: (context, snapshot) {
+              final p = context.read<AddOrderPopupProvider>();
+              return Selector<AddOrderPopupProvider, double>(
+                selector: (context, provider) => provider.height,
+                builder: (context, height, _) {
+                  return buildDialogContents(
+                      context,
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          hideKeyboard(context);
+                        },
+                        child: Container(
+                            alignment: Alignment.center,
+                            height: height - AppSize.buttonHeight * 2,
+                            child: Column(
+                              children: [
+                                defaultSpacing(),
+                                _buildMatSelector(context),
+                                _buildQuantityInput(context),
+                                p.spart!.contains('비처방의약품') ||
+                                        p.spart!.contains('건강식품') ||
+                                        p.spart!.contains('처방의약품')
+                                    ? _buildSurChargeInput(context)
+                                    : Container(),
+                              ],
+                            )),
+                      ),
+                      false,
+                      height,
+                      iswithTitle: true,
+                      titleText: tr('add_order'),
+                      rightButtonText: tr('add'));
+                },
+              );
+            });
       },
     );
   }

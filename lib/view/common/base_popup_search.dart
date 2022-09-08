@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-08 14:22:14
+ * Last Modified: 2022-09-08 14:25:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -16,6 +16,7 @@ import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart'
 import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
 import 'package:medsalesportal/model/rfc/order_manager_material_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
@@ -1210,9 +1211,14 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                 children: [
                   AppText.listViewText(model.matnr ?? '',
                       style: AppTextStyle.sub_12),
-                  AppStyles.buildPipe(),
-                  AppText.listViewText(model.kbetr2 ?? '',
-                      style: AppTextStyle.sub_12),
+                  model.kbetr2!.trim().isNotEmpty
+                      ? AppStyles.buildPipe()
+                      : Container(),
+                  model.kbetr2!.trim().isNotEmpty
+                      ? AppText.listViewText(
+                          FormatUtil.addComma(model.kbetr2!.trim()),
+                          style: AppTextStyle.sub_12)
+                      : Container(),
                 ],
               ),
               isShowLastPageText ? lastPageText() : Container()

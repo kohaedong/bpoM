@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-07 13:28:15
+ * Last Modified: 2022-09-08 14:39:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -67,7 +67,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
       pr('${data.substring(data.indexOf('-') + 1)}');
       return data.substring(data.indexOf('-') + 1);
     }
-
     return '';
   }
 
@@ -583,10 +582,10 @@ class OrderManagerPageProvider extends ChangeNotifier {
     Map<String, dynamic> _body = {
       "methodName": RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER.serverMethod,
       "methodParamMap": {
-        "IV_VTWEG": "10",
+        "IV_VTWEG": getCode(channelList!, selectedSalseChannel!),
         "IV_KEYWORD": "",
         "IS_LOGIN": newIslogin,
-        "pos": "0",
+        "pos": "-1",
         "IV_PARVW": isSupplier ? 'WE' : 'Z1',
         "IV_KFM2": "",
         "groupid": "",
