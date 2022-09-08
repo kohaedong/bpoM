@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_list.dart
  * Created Date: 2021-09-10 09:48:38
- * Last Modified: 2022-07-12 10:36:24
+ * Last Modified: 2022-09-08 13:58:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -36,7 +36,8 @@ typedef CheckBoxDefaultValue = Future<List<bool>> Function();
 class BasePopupList {
   final OneCellType type;
   final InputIconType? iconType;
-  BasePopupList(this.type, this.iconType);
+  final bool? isNotInsertAll;
+  BasePopupList(this.type, this.iconType, {this.isNotInsertAll});
   Widget selectBoxContents(
       BuildContext context,
       List<String> contents,
@@ -128,13 +129,16 @@ class BasePopupList {
   }
 
   Widget listContents(
-      BuildContext ctx, Future<List<String>?> Function()? contentsCallback) {
+      BuildContext ctx, Future<List<String>?> Function()? contentsCallback,
+      {bool? isNotInsert}) {
     return FutureBuilder<List<String>?>(
         future: contentsCallback != null
             ? iconType == InputIconType.SELECT
                 ? Future.delayed(Duration.zero, () async {
                     var temp = await contentsCallback.call();
-                    temp!.insert(0, '${tr('all')}');
+                    if (isNotInsert == null) {
+                      temp!.insert(0, '${tr('all')}');
+                    }
                     return temp;
                   })
                 : contentsCallback.call()
@@ -224,10 +228,8 @@ class BasePopupList {
                 type == OneCellType.CONSULTATION_REPORT_TYPE
                     ? selectBoxContents(context, contents!, checkBoxCallback!,
                         checkBoxDefaultValue, checkBoxType)
-                    : listContents(
-                        context,
-                        commononeCellDataCallback,
-                      ),
+                    : listContents(context, commononeCellDataCallback,
+                        isNotInsert: isNotInsertAll),
                 true,
                 type.contentsHeight,
                 signgleButtonText: type.buttonText,

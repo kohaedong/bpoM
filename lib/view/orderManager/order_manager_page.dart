@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-07 16:42:46
+ * Last Modified: 2022-09-08 14:00:50
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -32,7 +32,6 @@ import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:medsalesportal/model/rfc/recent_order_t_item_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
@@ -104,7 +103,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         hintText: salesGroup != null
                             ? salesGroup
                             : '${tr('plz_select_something_1', args: [
-                                    tr('salse_group')
+                                    tr('salse_group'),
+                                    ''
                                   ])}');
                   }),
               defaultSpacing()
@@ -164,10 +164,9 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
       builder: (context, tuple, _) {
         return Column(
           children: [
-            AppStyles.buildTitleRow(tr('cannel')),
+            AppStyles.buildTitleRow(tr('channel')),
             BaseInputWidget(
               context: context,
-              onTap: () {},
               iconType: InputIconType.SELECT,
               hintText:
                   tuple.item1 != null ? tuple.item1 : '${tr('plz_select')}',
@@ -201,7 +200,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
             AppStyles.buildTitleRow(tr('product_family')),
             BaseInputWidget(
               context: context,
-              onTap: () {},
+              isNotInsertAll: true,
               iconType: InputIconType.SELECT,
               hintText:
                   tuple.item1 != null ? tuple.item1 : '${tr('plz_select')}',
@@ -243,7 +242,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       AppToast().show(
                           context,
                           tr('plz_select_something_1',
-                              args: [tr('product_family')]));
+                              args: [tr('product_family'), '']));
                       return 'continue';
                     }
                   : null,
@@ -255,7 +254,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               hintText: tuple.item2 != null
                   ? tuple.item2!.kunnrNm
                   : '${tr('plz_select_something_2', args: [
-                          tr('sales_office')
+                          tr('sales_office'),
+                          ''
                         ])}',
               // 팀장 일때 만 팀원선택후 삭제가능.
               isShowDeleteForHintText: tuple.item2 != null ? true : false,
@@ -335,7 +335,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         hintText: tuple.item1 != null
                             ? tuple.item1!.kunnrNm
                             : '${tr('plz_select_something_1', args: [
-                                    tr('supplier')
+                                    tr('supplier'),
+                                    ''
                                   ])}',
                         // 팀장 일때 만 팀원선택후 삭제가능.
                         isShowDeleteForHintText:
@@ -376,13 +377,17 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         final p = context.read<OrderManagerPageProvider>();
         if (p.selectedCustomerModel != null) {
           final result = await AppDialog.showPopup(
-              context, AddOrderPopupWidget(type: OrderItemType.NEW));
+              context,
+              AddOrderPopupWidget(
+                type: OrderItemType.NEW,
+                productFamily: p.selectedProductFamily!,
+              ));
           if (result != null) {
             // p.insertItem(p.test!);
           }
         } else {
           AppToast().show(context,
-              tr('plz_select_something_2', args: [tr('sales_office')]));
+              tr('plz_select_something_2', args: [tr('sales_office'), '']));
         }
       },
       child: Container(
@@ -444,8 +449,10 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                   }
                 });
               } else {
-                AppToast().show(context,
-                    tr('plz_select_something_2', args: [tr('sales_office')]));
+                AppToast().show(
+                    context,
+                    tr('plz_select_something_2',
+                        args: [tr('sales_office'), '']));
               }
             },
             child: AppText.text(tr('get_recent_order'),

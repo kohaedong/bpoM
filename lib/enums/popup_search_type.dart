@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/popup_search_type.dart
  * Created Date: 2021-09-10 21:38:04
- * Last Modified: 2022-09-04 15:10:16
+ * Last Modified: 2022-09-08 09:37:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -28,6 +28,7 @@ enum PopupSearchType {
   SEARCH_KEY_MAN,
   SEARCH_SUGGETION_ITEM,
   SEARCH_PLANT, // 플랜트 조회 화면
+  SEARCH_MATERIAL,
   DO_NOTHING
 }
 
@@ -87,6 +88,8 @@ extension PopupSearchTypeExtension on PopupSearchType {
     switch (this) {
       case PopupSearchType.SEARCH_SALSE_PERSON:
         return [OneCellType.SEARCH_SALSE_PERSON];
+      case PopupSearchType.SEARCH_MATERIAL:
+        return [OneCellType.SEARCH_MATERIAL];
       case PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY:
         return [OneCellType.SEARCH_SALSE_PERSON];
       case PopupSearchType.SEARCH_SUGGETION_ITEM:
@@ -149,6 +152,11 @@ extension PopupSearchTypeExtension on PopupSearchType {
       case PopupSearchType.SEARCH_SALLER:
         return AppSize.defaultTextFieldHeight * 4 +
             AppSize.defaultListItemSpacing * 6 +
+            AppSize.appBarHeight +
+            AppSize.secondButtonHeight;
+      case PopupSearchType.SEARCH_MATERIAL:
+        return AppSize.defaultTextFieldHeight * 2 +
+            AppSize.defaultListItemSpacing * 3 +
             AppSize.appBarHeight +
             AppSize.secondButtonHeight;
       case PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER:

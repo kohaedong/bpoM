@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-09-05 11:14:21
+ * Last Modified: 2022-09-08 10:31:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -183,7 +183,8 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: staffName ??
                                           '${tr('plz_select_something_1', args: [
-                                                tr('manager')
+                                                tr('manager'),
+                                                ''
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       isShowDeleteForHintText: CheckSuperAccount
@@ -235,7 +236,8 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: status ??
                                           '${tr('plz_select_something_2', args: [
-                                                tr('product_process_status')
+                                                tr('product_process_status'),
+                                                ''
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       width: AppSize.defaultContentsWidth,
@@ -269,7 +271,8 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: family ??
                                           '${tr('plz_select_something_1', args: [
-                                                tr('product_family')
+                                                tr('product_family'),
+                                                ''
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       isShowDeleteForHintText: false,
@@ -307,7 +310,8 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                                   context,
                                                   tr('plz_select_something_1',
                                                       args: [
-                                                        tr('product_family')
+                                                        tr('product_family'),
+                                                        ''
                                                       ]));
                                               return 'continue';
                                             }
@@ -320,7 +324,8 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           p.setCustomerName(null),
                                       hintText: tuple.item1 ??
                                           '${tr('plz_select_something_2', args: [
-                                                tr('sales_office')
+                                                tr('sales_office'),
+                                                ''
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       isShowDeleteForHintText:

@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-09-06 18:48:27
+ * Last Modified: 2022-09-08 13:50:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -43,6 +43,7 @@ typedef UnFoucsCallBack = Future<void> Function();
 class BaseInputWidget extends StatefulWidget {
   final BuildContext context;
   final bool enable;
+  final bool? isNotInsertAll;
   final bool? isShowDeleteForHintText;
   final double width;
   final double? height;
@@ -116,6 +117,7 @@ class BaseInputWidget extends StatefulWidget {
       this.initDataCallback,
       this.maxLine,
       this.arguments,
+      this.isNotInsertAll,
       this.unfoucsCallback,
       this.bodyMap,
       this.discountListCallback,
@@ -194,9 +196,10 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
         }
         if (widget.oneCellType == OneCellType.CONSULTATION_REPORT_TYPE) {
           print(widget.checkBoxCallBack.runtimeType);
-          final result =
-              await BasePopupList(widget.oneCellType!, widget.iconType).show(
-                  context,
+          final result = await BasePopupList(
+                  widget.oneCellType!, widget.iconType,
+                  isNotInsertAll: widget.isNotInsertAll)
+              .show(context,
                   checkBoxCallback: widget.checkBoxCallBack,
                   checkBoxDefaultValue: widget.checkBoxDefaultValue,
                   checkBoxType: widget.checkBoxType);
@@ -205,8 +208,10 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
           }
         } else if (widget.oneCellType == OneCellType.ADDRESS_CITY ||
             widget.oneCellType == OneCellType.ADDRESS_CITY_AREA) {
-          final result =
-              await BasePopupList(widget.oneCellType!, widget.iconType).show(
+          final result = await BasePopupList(
+                  widget.oneCellType!, widget.iconType,
+                  isNotInsertAll: widget.isNotInsertAll)
+              .show(
             context,
             selectedCity: widget.selectedCity,
           );
@@ -215,15 +220,18 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
           }
         } else {
           final result = widget.commononeCellDataCallback != null
-              ? await BasePopupList(widget.oneCellType!, widget.iconType).show(
-                  context,
-                  commononeCellDataCallback: widget.commononeCellDataCallback,
-                  textEditingController: widget.textEditingController,
-                  selectedDateStr: widget.dateStr)
-              : await BasePopupList(widget.oneCellType!, widget.iconType).show(
-                  context,
-                  discountListCallback: widget.discountListCallback,
-                  selectedDateStr: widget.dateStr);
+              ? await BasePopupList(widget.oneCellType!, widget.iconType,
+                      isNotInsertAll: widget.isNotInsertAll)
+                  .show(context,
+                      commononeCellDataCallback:
+                          widget.commononeCellDataCallback,
+                      textEditingController: widget.textEditingController,
+                      selectedDateStr: widget.dateStr)
+              : await BasePopupList(widget.oneCellType!, widget.iconType,
+                      isNotInsertAll: widget.isNotInsertAll)
+                  .show(context,
+                      discountListCallback: widget.discountListCallback,
+                      selectedDateStr: widget.dateStr);
           if (result != null) {
             widget.isSelectedStrCallBack!.call(result);
           }

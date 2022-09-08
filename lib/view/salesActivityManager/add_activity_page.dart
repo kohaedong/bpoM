@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-05 11:14:15
+ * Last Modified: 2022-09-08 10:29:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -636,7 +636,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     : AppColors.textFieldUnfoucsColor,
                 hintText: anotherSaler != null
                     ? anotherSaler.sname
-                    : '${tr('plz_select_something_1', args: [tr('manager')])}',
+                    : '${tr('plz_select_something_1', args: [
+                            tr('manager'),
+                            ''
+                          ])}',
                 // 팀장 일때 만 팀원선택후 삭제가능.
                 isShowDeleteForHintText: ismoutiAccount
                     ? anotherSaler != null
@@ -726,7 +729,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                           keybordType: TextInputType.number,
                           hintText: amount == null || amount.isEmpty
                               ? tr('plz_enter_search_key_for_something_1',
-                                  args: [tr('expected_amount')])
+                                  args: [tr('expected_amount'), ''])
                               : amount,
                           hintTextStyleCallBack: () =>
                               amount == null || amount.isEmpty
@@ -791,8 +794,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 AppToast().show(context, tr('only_three_can_be_added'));
               }
             } else {
-              AppToast().show(context,
-                  tr('plz_select_something_1', args: [tr('activity_type_2')]));
+              AppToast().show(
+                  context,
+                  tr('plz_select_something_1',
+                      args: [tr('activity_type_2'), '']));
             }
           },
           child: Container(

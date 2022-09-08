@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-05 11:13:47
+ * Last Modified: 2022-09-08 10:31:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -193,7 +193,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: family ??
                                           '${tr('plz_select_something_1', args: [
-                                                tr('product_family')
+                                                tr('product_family'),
+                                                ''
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       isShowDeleteForHintText: false,
@@ -231,7 +232,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: staffName ??
                                           '${tr('plz_select_something_1', args: [
-                                                tr('manager')
+                                                tr('manager'),
+                                                ''
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       isShowDeleteForHintText: CheckSuperAccount
@@ -287,7 +289,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                                 context,
                                                 tr('plz_select_something_1',
                                                     args: [
-                                                      tr('product_family')
+                                                      tr('product_family'),
+                                                      ''
                                                     ]));
                                             return 'continue';
                                           }
@@ -300,7 +303,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                         p.setCustomerName(null),
                                     hintText: tuple.item1 ??
                                         '${tr('plz_select_something_2', args: [
-                                              tr('sales_office')
+                                              tr('sales_office'),
+                                              ''
                                             ])}',
                                     // 팀장 일때 만 팀원선택후 삭제가능.
                                     isShowDeleteForHintText:
@@ -353,7 +357,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                                     context,
                                                     tr('plz_select_something_2',
                                                         args: [
-                                                          tr('sales_office')
+                                                          tr('sales_office'),
+                                                          ''
                                                         ]));
                                                 return 'continue';
                                               }
@@ -366,7 +371,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                             p.setEndCustomerModel(null),
                                         hintText: tuple.item1 ??
                                             '${tr('plz_select_something_1', args: [
-                                                  tr('end_customer')
+                                                  tr('end_customer'),
+                                                  ''
                                                 ])}',
                                         // 팀장 일때 만 팀원선택후 삭제가능.
                                         isShowDeleteForHintText:

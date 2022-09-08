@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-05 11:15:20
+ * Last Modified: 2022-09-08 14:22:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart';
 import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
+import 'package:medsalesportal/model/rfc/order_manager_material_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:tuple/tuple.dart';
@@ -86,6 +87,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
   late TextEditingController _endCustomerInputController;
   late TextEditingController _suggetionNameInputController;
   late TextEditingController _suggetionGroupInputController;
+  late TextEditingController _materialQuantityInputController;
   late ScrollController _scrollController;
   @override
   void initState() {
@@ -96,6 +98,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     _personInputController = TextEditingController();
     _customerInputController = TextEditingController();
     _endCustomerInputController = TextEditingController();
+    _materialQuantityInputController = TextEditingController();
   }
 
   @override
@@ -105,6 +108,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     _endCustomerInputController.dispose();
     _suggetionNameInputController.dispose();
     _suggetionGroupInputController.dispose();
+    _materialQuantityInputController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -143,7 +147,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   hintText: personInputText != null
                       ? null
                       : '${tr('plz_enter_search_key_for_something_1', args: [
-                              '${tr('name')}'
+                              '${tr('name')}',
+                              ''
                             ])}');
             })
       ],
@@ -183,7 +188,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   hintText: name != null
                       ? null
                       : '${tr('plz_enter_search_key_for_something_1', args: [
-                              '${tr('materials_name')}'
+                              '${tr('materials_name')}',
+                              ''
                             ])}');
             }),
         defaultSpacing(),
@@ -215,7 +221,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   hintText: group != null
                       ? null
                       : '${tr('plz_enter_search_key_for_something_1', args: [
-                              '${tr('materials_group')}'
+                              '${tr('materials_group')}',
+                              ''
                             ])}');
             }),
         defaultSpacing(),
@@ -268,7 +275,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   hintText: keymanInputText != null
                       ? null
                       : '${tr('plz_enter_search_key_for_something_1', args: [
-                              '${tr('name')}'
+                              '${tr('name')}',
+                              ''
                             ])}');
             })
       ],
@@ -308,7 +316,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       hintText: selectedProductCategory != null
                           ? selectedProductCategory
                           : '${tr('plz_select_something_1', args: [
-                                  tr('products_category')
+                                  tr('products_category'),
+                                  ''
                                 ])}');
                 }),
           ],
@@ -339,7 +348,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       hintText: selectedProductFamily != null
                           ? selectedProductFamily
                           : '${tr('plz_select_something_1', args: [
-                                  tr('product_family')
+                                  tr('product_family'),
+                                  ''
                                 ])}');
                 }),
           ],
@@ -376,7 +386,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                           ? null
                           : '${tr('plz_enter_search_key_for_something_1', args: [
                                   '${tr('customer_name')}',
-                                  '*'
+                                  '(*)'
                                 ])}');
                 }),
           ],
@@ -414,13 +424,18 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   iconColor: selectedProductFamily == null
                       ? AppColors.textFieldUnfoucsColor
                       : null,
+                  isNotInsertAll:
+                      CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                          ? true
+                          : false,
                   commononeCellDataCallback: p.getProductFamily,
                   oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,
                   isSelectedStrCallBack: (str) => p.setProductsFamily(str),
                   hintText: selectedProductFamily != null
                       ? selectedProductFamily
                       : '${tr('plz_select_something_1', args: [
-                              tr('product_family')
+                              tr('product_family'),
+                              ''
                             ])}');
             }),
         defaultSpacing(),
@@ -454,7 +469,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? salesGroup != null
                           ? salesGroup
                           : '${tr('plz_select_something_1', args: [
-                                  tr('salse_group')
+                                  tr('salse_group'),
+                                  ''
                                 ])}'
                       : CacheService.getEsLogin()!.dptnm);
             }),
@@ -532,7 +548,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? null
                       : '${tr('plz_enter_search_key_for_something_1', args: [
                               '${tr('customer_name')}',
-                              '*'
+                              '(*)'
                             ])}');
             }),
         defaultSpacing(),
@@ -542,6 +558,81 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
             AppToast().show(context, tr('keyword_must_not_null'));
           } else {
             p.refresh();
+          }
+        }, doNotWithPadding: true),
+      ],
+    ));
+  }
+
+  Widget _buildMateRialSearchBar(BuildContext context) {
+    final p = context.read<BasePopupSearchProvider>();
+    return Expanded(
+        child: Column(
+      children: [
+        defaultSpacing(),
+        Selector<BasePopupSearchProvider, String?>(
+            selector: (context, provider) => provider.seletedMateriaFamily,
+            builder: (context, itemType, _) {
+              return BaseInputWidget(
+                  context: context,
+                  bgColor: AppColors.unReadySigninBg,
+                  width: (AppSize.defaultContentsWidth - AppSize.padding * 2),
+                  enable: false,
+                  hintTextStyleCallBack: () => AppTextStyle.hint_16,
+                  // iconType: InputIconType.SELECT,
+                  iconColor:
+                      itemType == null ? AppColors.textFieldUnfoucsColor : null,
+                  commononeCellDataCallback: p.getMateralItemType,
+                  // oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,
+                  oneCellType: OneCellType.DO_NOTHING,
+                  isSelectedStrCallBack: (str) => p.setMeatrialItemType(str),
+                  hintText: itemType != null
+                      ? itemType
+                      : '${tr('plz_select_something_1', args: [
+                              '${tr('product_family')}',
+                              '(*)'
+                            ])}');
+            }),
+        defaultSpacing(),
+        Selector<BasePopupSearchProvider, String?>(
+            selector: (context, provider) => provider.seletedMaterialSearchKey,
+            builder: (context, key, _) {
+              return BaseInputWidget(
+                context: context,
+                textEditingController: _materialQuantityInputController,
+                width: (AppSize.defaultContentsWidth - AppSize.padding * 2),
+                iconType: key != null ? InputIconType.DELETE : null,
+                defaultIconCallback: () {
+                  p.setMeatrialSearchKeyInputText(null);
+                  _materialQuantityInputController.text = '';
+                },
+                hintText: key != null
+                    ? ''
+                    : '${tr('plz_enter_search_key_for_something_2', args: [
+                            '${tr('search_by_keywords')}',
+                            ''
+                          ])}',
+                hintTextStyleCallBack: CheckSuperAccount.isMultiAccount()
+                    ? key != null
+                        ? () => AppTextStyle.default_16
+                        : () => AppTextStyle.hint_16
+                    : () => AppTextStyle.hint_16,
+                onChangeCallBack: (t) => p.setMeatrialSearchKeyInputText(t),
+                enable: true,
+              );
+            }),
+        defaultSpacing(),
+        AppStyles.buildSearchButton(context, tr('search'), () {
+          final p = context.read<BasePopupSearchProvider>();
+          if (p.seletedMateriaFamily != null &&
+              p.seletedMaterialSearchKey != null) {
+            if (p.seletedMaterialSearchKey!.isEmpty) {
+              AppToast().show(context, tr('keyword_must_not_null'));
+            } else {
+              p.refresh();
+            }
+          } else {
+            AppToast().show(context, tr('plz_check_essential_option'));
           }
         }, doNotWithPadding: true),
       ],
@@ -634,7 +725,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                               : widget.type ==
                                       PopupSearchType.SEARCH_SUGGETION_ITEM
                                   ? _buildSuggetionItemSearchBar(context)
-                                  : Container(),
+                                  : widget.type ==
+                                          PopupSearchType.SEARCH_MATERIAL
+                                      ? _buildMateRialSearchBar(context)
+                                      : Container(),
         ],
       ),
     );
@@ -669,7 +763,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                         provider.keyManResponseModel!.etList!.isNotEmpty) ||
                     (provider.suggetionResponseModel != null &&
                         provider.suggetionResponseModel!.etOutput != null &&
-                        provider.suggetionResponseModel!.etOutput!.isNotEmpty)
+                        provider
+                            .suggetionResponseModel!.etOutput!.isNotEmpty) ||
+                    (provider.metarialResponseModel != null &&
+                        provider.metarialResponseModel!.etOutput != null &&
+                        provider.metarialResponseModel!.etOutput!.isNotEmpty)
                 ? Padding(
                     padding: AppSize.defaultSearchPopupSidePadding,
                     child: Container(
@@ -731,7 +829,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                           .suggetionResponseModel!
                                                           .etOutput!
                                                           .length
-                                                      : 0,
+                                                      : widget.type == PopupSearchType.SEARCH_MATERIAL
+                                                          ? provider.metarialResponseModel!.etOutput!.length
+                                                          : 0,
                               itemBuilder: (BuildContext context, int index) {
                                 return widget.type == PopupSearchType.SEARCH_SALSE_PERSON ||
                                         widget.type ==
@@ -783,7 +883,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                                     ? _buildKeymanContentsItem(context, provider.keyManResponseModel!.etList![index], index, !provider.hasMore && index == provider.keyManResponseModel!.etList!.length - 1)
                                                     : widget.type == PopupSearchType.SEARCH_SUGGETION_ITEM
                                                         ? _buildSuggetionContentsItem(context, provider.suggetionResponseModel!.etOutput![index], index, !provider.hasMore && index == provider.suggetionResponseModel!.etOutput!.length - 1)
-                                                        : Container();
+                                                        : widget.type == PopupSearchType.SEARCH_MATERIAL
+                                                            ? _buildMaterialContentsItem(context, provider.metarialResponseModel!.etOutput![index], index, !provider.hasMore && index == provider.metarialResponseModel!.etOutput!.length - 1)
+                                                            : Container();
                               },
                             ),
                             // 수정 ! nextPage ->  refresh
@@ -1072,6 +1174,46 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     AppText.text(model.kbetr1!),
                   ],
                 ),
+              ),
+              isShowLastPageText ? lastPageText() : Container()
+            ],
+          )),
+    );
+  }
+
+  Widget _buildMaterialContentsItem(BuildContext context,
+      OrderManagerMaterialModel model, int index, bool isShowLastPageText) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context, model);
+      },
+      child: Padding(
+          padding: index == 0
+              ? AppSize.searchPopupListPadding.copyWith(top: 0)
+              : AppSize.searchPopupListPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _horizontalRow(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    AppText.listViewText(model.maktx ?? '',
+                        style: AppTextStyle.h4
+                            .copyWith(fontWeight: FontWeight.bold)),
+                    SizedBox(width: AppSize.defaultShimmorSpacing),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  AppText.listViewText(model.matnr ?? '',
+                      style: AppTextStyle.sub_12),
+                  AppStyles.buildPipe(),
+                  AppText.listViewText(model.kbetr2 ?? '',
+                      style: AppTextStyle.sub_12),
+                ],
               ),
               isShowLastPageText ? lastPageText() : Container()
             ],

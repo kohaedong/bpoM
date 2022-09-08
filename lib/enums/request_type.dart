@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-09-05 18:10:16
+ * Last Modified: 2022-09-08 10:44:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -35,6 +35,7 @@ enum RequestType {
   GET_OFFICE_ADDRESS,
   GET_LAT_AND_LON,
   SEARCH_KEY_MAN,
+  SEARCH_MATERIAL,
   SEARCH_SUGGETION_ITEM,
   GET_VISIT_HISTORY,
   // --------------
@@ -104,6 +105,8 @@ extension RequestTypeExtension on RequestType {
   String url({String? params}) {
     switch (this) {
       case RequestType.SEARCH_STAFF:
+        return '$rfcURL/common';
+      case RequestType.SEARCH_MATERIAL:
         return '$rfcURL/common';
       case RequestType.CHECK_RECENT_ORDER:
         return '$rfcURL/common';
@@ -207,6 +210,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SEARCH_STAFF:
         return 'ES_RETURN,ET_STAFFLIST';
+      case RequestType.SEARCH_MATERIAL:
+        return 'ES_RETURN,ET_OUTPUT';
       case RequestType.CHECK_RECENT_ORDER:
         return 'ES_RETURN,T_HEAD,T_ITEM,T_TEXT';
       case RequestType.DELETE_LAST_ACTIVITY:
@@ -286,6 +291,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.CHECK_NOTICE:
         return "noticeAll";
+      case RequestType.SEARCH_MATERIAL:
+        return "Z_LTSP_IF0320";
       case RequestType.CHECK_RECENT_ORDER:
         return "Z_LTSP_IF0089";
       case RequestType.DELETE_LAST_ACTIVITY:

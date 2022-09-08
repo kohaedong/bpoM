@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-09-04 17:01:46
+ * Last Modified: 2022-09-08 14:20:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -16,6 +16,7 @@ import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_response_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_suggetion_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_cust_list_response_model.dart';
+import 'package:medsalesportal/model/rfc/order_manager_metarial_response_model.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/enums/hive_box_type.dart';
@@ -46,9 +47,13 @@ class BasePopupSearchProvider extends ChangeNotifier {
   String? selectedProductCategory;
   String? selectedProductFamily;
   String? selectedSalesGroup;
+  String? seletedMaterialSearchKey;
+  String? seletedMateriaFamily;
+
   List<String>? productCategoryDataList;
   List<String>? productBusinessDataList;
   List<String>? productFamilyDataList;
+  List<String>? materalItemDataList;
   IsLoginModel? isLoginModel;
   EtStaffListModel? selectedSalesPerson;
   EtStaffListResponseModel? staList;
@@ -57,6 +62,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   EtCustListResponseModel? etEndCustomerOrSupplierResponseModel;
   AddActivityKeyManResponseModel? keyManResponseModel;
   AddActivitySuggetionResponseModel? suggetionResponseModel;
+  OrderManagerMetarialResponseModel? metarialResponseModel;
   OneCellType? type;
   Map<String, dynamic>? bodyMap;
 
@@ -77,6 +83,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     etEndCustomerOrSupplierResponseModel = null;
     keyManResponseModel = null;
     suggetionResponseModel = null;
+    metarialResponseModel = null;
     staList = null;
     hasMore = true;
     onSearch(type!, true);
@@ -90,7 +97,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return null;
   }
 
-  Future<void> initData() async {
+  Future<void> initData({String? productFamilyy}) async {
     // data(String) 를 map으로 받아와 조건에 맞는 model로 초기화 해준다.
     // 제품군 / 영업사원
     if (isFirestRun && bodyMap != null) {
@@ -120,6 +127,22 @@ class BasePopupSearchProvider extends ChangeNotifier {
       }
       notifyListeners();
     }
+  }
+
+  void setMeatrialSearchKeyInputText(String? value) {
+    seletedMaterialSearchKey = value;
+    if (value == null || (value.length == 1) || value == '') {
+      if (value == '*') {
+        seletedMaterialSearchKey = ' ';
+      }
+      pr(value);
+      notifyListeners();
+    }
+  }
+
+  void setMeatrialItemType(String? value) {
+    seletedMateriaFamily = value;
+    notifyListeners();
   }
 
   void setSuggetionItemGroupInputText(String? value) {
@@ -226,6 +249,15 @@ class BasePopupSearchProvider extends ChangeNotifier {
     }
     var dataStr = <String>[];
     productBusinessDataList!.forEach((data) {
+      dataStr.add(data.substring(0, data.indexOf('-')));
+    });
+    return dataStr;
+  }
+
+  Future<List<String>?> getMateralItemType() async {
+    materalItemDataList = await HiveService.getProductType();
+    var dataStr = <String>[];
+    materalItemDataList!.forEach((data) {
       dataStr.add(data.substring(0, data.indexOf('-')));
     });
     return dataStr;
@@ -348,9 +380,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return BasePoupSearchResult(false);
   }
 
-  Future<BasePoupSearchResult> searchKeyMan(
-    bool isMounted,
-  ) async {
+  Future<BasePoupSearchResult> searchKeyMan(bool isMounted) async {
     isLoadData = true;
     if (isMounted) {
       // notifyListeners();
@@ -393,6 +423,70 @@ class BasePopupSearchProvider extends ChangeNotifier {
       }
       if (keyManResponseModel != null && keyManResponseModel!.etList == null) {
         keyManResponseModel = null;
+      }
+      pr(temp.toJson());
+      isLoadData = false;
+      notifyListeners();
+      return BasePoupSearchResult(true);
+    }
+    isLoadData = false;
+    notifyListeners();
+    return BasePoupSearchResult(false);
+  }
+
+  Future<BasePoupSearchResult> searchMaterial() async {
+    assert(seletedMateriaFamily != null);
+    isLoadData = true;
+    notifyListeners();
+    var _api = ApiService();
+    final isLogin = CacheService.getIsLogin();
+    var spart = '';
+    await getMateralItemType();
+    if (seletedMateriaFamily != tr('all')) {
+      var temp = materalItemDataList!
+          .where((data) => data.contains(seletedMateriaFamily!))
+          .toList();
+      if (temp.isNotEmpty) {
+        spart = temp.first.substring(temp.first.indexOf('-') + 1);
+      }
+    }
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.SEARCH_MATERIAL.serverMethod,
+      "methodParamMap": {
+        "IV_MATNR": "",
+        "IV_MATKL": "",
+        "IV_WGBEZ": "",
+        "IV_PTYPE": "R",
+        "IV_MAKTX": seletedMaterialSearchKey,
+        "IV_SPART": spart,
+        "pos": pos,
+        "partial": partial,
+        "IS_LOGIN": isLogin,
+        "resultTables": RequestType.SEARCH_MATERIAL.resultTable,
+        "functionName": RequestType.SEARCH_MATERIAL.serverMethod,
+      }
+    };
+    _api.init(RequestType.SEARCH_MATERIAL);
+    final result = await _api.request(body: _body);
+    if (result == null || result.statusCode != 200) {
+      isLoadData = false;
+      notifyListeners();
+      return BasePoupSearchResult(false);
+    }
+    if (result.statusCode == 200 && result.body['data'] != null) {
+      var temp =
+          OrderManagerMetarialResponseModel.fromJson(result.body['data']);
+      if (temp.etOutput!.length != partial) {
+        hasMore = false;
+      }
+      if (metarialResponseModel == null) {
+        metarialResponseModel = temp;
+      } else {
+        metarialResponseModel!.etOutput!.addAll(temp.etOutput!);
+      }
+      if (metarialResponseModel != null &&
+          metarialResponseModel!.etOutput!.isEmpty) {
+        metarialResponseModel = null;
       }
       pr(temp.toJson());
       isLoadData = false;
@@ -707,6 +801,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
       {Map<String, dynamic>? bodyMaps}) async {
     if (bodyMaps != null && bodyMaps != bodyMap) {
       this.bodyMap = bodyMaps;
+      if (bodyMaps['productFamily'] != null) {
+        seletedMateriaFamily = bodyMaps['productFamily'];
+      }
     }
     this.type = type;
     setIsLoginModel();
@@ -729,6 +826,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
         return await searchEndOrDeliveryCustomer(isMounted, false);
       case OneCellType.SEARCH_SUPPLIER:
         return await searchEndOrDeliveryCustomer(isMounted, true);
+      case OneCellType.SEARCH_MATERIAL:
+        return await searchMaterial();
       default:
         return BasePoupSearchResult(false);
     }

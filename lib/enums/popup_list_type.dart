@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/list_group_type.dart
  * Created Date: 2021-09-10 09:52:32
- * Last Modified: 2022-09-04 15:09:40
+ * Last Modified: 2022-09-08 13:54:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -35,6 +35,7 @@ enum OneCellType {
   SEARCH_KEY_MAN,
   SEARCH_ACTIVITY_TYPE,
   SEARCH_SUGGETION_ITEM,
+  SEARCH_MATERIAL,
   // -------------
   SEARCH_CUSTOMER_CONDITION,
   SEARCH_CUSOMER_TYPE,
@@ -45,6 +46,7 @@ enum OneCellType {
   SEARCH_ORG,
   SEARCH_PRODUCT_FAMILY,
   SEARCH_BUSINESS_PLACE,
+  SEARCH_ITEML_TYPE,
   SEARCH_BUSINESS_GROUP,
   SEARCH_CITY,
   SEARCH_CITY_AREA,
@@ -104,8 +106,12 @@ extension OneCellTypeExtension on OneCellType {
     switch (this) {
       case OneCellType.SEARCH_SALLER:
         return '${tr('sales_office')}';
+      case OneCellType.SEARCH_MATERIAL:
+        return '${tr('search_material')}';
       case OneCellType.SEARCH_SUGGETION_ITEM:
         return '${tr('suggested_item')}';
+      case OneCellType.SEARCH_ITEML_TYPE:
+        return '${tr('item_type')}';
       case OneCellType.SEARCH_ACTIVITY_TYPE:
         return '${tr('activity_type_2')}';
       case OneCellType.SEARCH_KEY_MAN:
@@ -135,7 +141,7 @@ extension OneCellTypeExtension on OneCellType {
       case OneCellType.SEARCH_PLANT_CONDITION:
         return '${tr('search_condition')}';
       case OneCellType.SEARCH_CIRCULATION_CHANNEL:
-        return '${tr('circulaton_cannel')}';
+        return '${tr('circulaton_channel')}';
       case OneCellType.SEARCH_SALES_AREA:
         return '${tr('sales_area')}';
       case OneCellType.SEARCH_PRODUCT_FAMILY:
@@ -175,7 +181,7 @@ extension OneCellTypeExtension on OneCellType {
       case OneCellType.SALES_ORDER_PAGE_BUSINESS_PLACE:
         return '${tr('business_place')}';
       case OneCellType.SALES_ORDER_PAGE_CIRCULATION_CHANNEL:
-        return '${tr('circulaton_cannel')}';
+        return '${tr('circulaton_channel')}';
       case OneCellType.SALES_ORDER_PAGE_CURRENCY_UNIT:
         return '${tr('currency_unit')}';
       case OneCellType.SALES_ORDER_PAGE_DELIVERY_CONDITION:
