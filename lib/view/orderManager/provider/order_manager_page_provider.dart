@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-08 14:39:10
+ * Last Modified: 2022-09-08 15:47:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -422,6 +422,17 @@ class OrderManagerPageProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
+  Map<String, dynamic> get commonBodyMap => {
+        "IV_VKORG": CheckSuperAccount.isMultiAccountOrLeaderAccount()
+            ? selectedSalsePerson != null
+                ? selectedSalsePerson!.orghk
+                : ''
+            : CacheService.getEsLogin()!.vkorg,
+        "IV_VTWEG": getCode(channelList!, selectedSalseChannel!),
+        "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
+        "IV_KUNNR": selectedCustomerModel!.kunnr,
+        "IV_ZZKUNNR_END": selectedCustomerModel!.kunnr,
+      };
   Future<ResultModel> checkPrice(int indexx, {required bool isNotifier}) async {
     if (isNotifier) {
       isLoadData = true;
@@ -440,15 +451,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
     Map<String, dynamic> _body = {
       "methodName": RequestType.CHECK_META_PRICE_AND_STOCK.serverMethod,
       "methodParamMap": {
-        "IV_VKORG": CheckSuperAccount.isMultiAccountOrLeaderAccount()
-            ? selectedSalsePerson != null
-                ? selectedSalsePerson!.orghk
-                : ''
-            : CacheService.getEsLogin()!.vkorg,
-        "IV_VTWEG": getCode(channelList!, selectedSalseChannel!),
-        "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
-        "IV_KUNNR": selectedCustomerModel!.kunnr,
-        "IV_ZZKUNNR_END": selectedCustomerModel!.kunnr,
         "IV_KWMENG": items![indexx].kwmeng,
         "IV_MATNR": items![indexx].matnr,
         "IV_PRSDT": '',
@@ -458,6 +460,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
         "resultTables": RequestType.CHECK_META_PRICE_AND_STOCK.resultTable,
       }
     };
+    _body.addAll(commonBodyMap);
 
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {

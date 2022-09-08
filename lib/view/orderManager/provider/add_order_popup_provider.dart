@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/add_order_popup_provider.dart
  * Created Date: 2022-09-04 17:56:07
- * Last Modified: 2022-09-08 15:21:33
+ * Last Modified: 2022-09-08 15:50:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,7 +11,6 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
@@ -29,18 +28,10 @@ class AddOrderPopupProvider extends ChangeNotifier {
   OrderManagerMaterialModel? selectedMateria;
   String? quantity;
   String? surcharge;
-  String? vkorg;
-  String? vtweg;
-  String? kunnr;
-  String? spart;
-  String? zzKunnrEnd;
+  Map<String, dynamic>? _bodyMap;
 
   Future<void> initData(Map<String, dynamic> bodyMap) async {
-    vkorg = bodyMap['vkorg'];
-    vtweg = bodyMap['vtweg'];
-    kunnr = bodyMap['kunnr'];
-    spart = bodyMap['spart'];
-    zzKunnrEnd = bodyMap['zzKunnrEnd'];
+    _bodyMap = bodyMap;
   }
 
   void setHeight(double val) {
@@ -80,11 +71,6 @@ class AddOrderPopupProvider extends ChangeNotifier {
     Map<String, dynamic> _body = {
       "methodName": RequestType.CHECK_META_PRICE_AND_STOCK.serverMethod,
       "methodParamMap": {
-        "IV_VKORG": vkorg,
-        "IV_VTWEG": vtweg,
-        "IV_SPART": spart,
-        "IV_KUNNR": kunnr,
-        "IV_ZZKUNNR_END": zzKunnrEnd,
         "IV_KWMENG": quantity,
         "IV_MATNR": selectedMateria!.matnr,
         "IV_PRSDT": '',
@@ -94,7 +80,7 @@ class AddOrderPopupProvider extends ChangeNotifier {
         "resultTables": RequestType.CHECK_META_PRICE_AND_STOCK.resultTable,
       }
     };
-
+    _body.addAll(_bodyMap!);
     return ResultModel(false);
   }
 }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-08 15:24:04
+ * Last Modified: 2022-09-08 15:46:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -177,9 +177,9 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                                 defaultSpacing(),
                                 _buildMatSelector(context),
                                 _buildQuantityInput(context),
-                                p.spart!.contains('비처방의약품') ||
-                                        p.spart!.contains('건강식품') ||
-                                        p.spart!.contains('처방의약품')
+                                widget.productFamily.contains('비처방의약품') ||
+                                        widget.productFamily.contains('건강식품') ||
+                                        widget.productFamily.contains('처방의약품')
                                     ? _buildSurChargeInput(context)
                                     : Container(),
                               ],

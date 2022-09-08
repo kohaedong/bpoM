@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-08 15:23:38
+ * Last Modified: 2022-09-08 15:47:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -384,7 +384,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 type: OrderItemType.NEW,
                 productFamily: p.selectedProductFamily!,
                 //!
-                bodyMap: {'': ''},
+                bodyMap: p.commonBodyMap,
               ));
           if (result != null) {
             // p.insertItem(p.test!);
