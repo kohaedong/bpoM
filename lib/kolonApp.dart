@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/kolonApp.dart
  * Created Date: 2022-07-02 14:46:59
- * Last Modified: 2022-09-07 15:08:43
+ * Last Modified: 2022-09-13 10:37:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,15 +11,13 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/globalProvider/timer_provider.dart';
-import 'package:medsalesportal/view/orderManager/order_manager_page.dart';
-
 import 'service/key_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:medsalesportal/globalProvider/timer_provider.dart';
 import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 import 'package:medsalesportal/view/commonLogin/common_login_page.dart';
 import 'package:medsalesportal/globalProvider/water_marke_provider.dart';

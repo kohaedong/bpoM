@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-08 15:47:01
+ * Last Modified: 2022-09-13 09:49:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -422,7 +422,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  Map<String, dynamic> get commonBodyMap => {
+  Map<String, dynamic>? get commonBodyMap => {
         "IV_VKORG": CheckSuperAccount.isMultiAccountOrLeaderAccount()
             ? selectedSalsePerson != null
                 ? selectedSalsePerson!.orghk
@@ -443,7 +443,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
     var temp = BulkOrderDetailSearchMetaPriceModel();
     temp.matnr = items![indexx].matnr;
     temp.vrkme = items![indexx].vrkme;
-    // temp.kwmeng = items![indexx].kwmeng;
     temp.kwmeng =
         selectedQuantityList.isNotEmpty ? selectedQuantityList[indexx] : 0;
     temp.zfreeQtyIn = items![indexx].zfreeQty;
@@ -460,7 +459,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
         "resultTables": RequestType.CHECK_META_PRICE_AND_STOCK.resultTable,
       }
     };
-    _body.addAll(commonBodyMap);
+    _body['methodParamMap'].addAll(commonBodyMap);
 
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {
@@ -474,6 +473,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
       var temp = BulkOrderDetailSearchMetaPriceResponseModel.fromJson(
           result.body['data']);
       var isSuccess = temp.esReturn!.mtype == 'S';
+      pr(temp.toJson());
       // netpr 단가.netwr 정가.
       await updatePriceList(
           indexx,
@@ -485,7 +485,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
         notifyListeners();
       }
       return ResultModel(isSuccess,
-          message: !isSuccess ? temp.tList!.single.zmsg : '');
+          message: !isSuccess ? temp.esReturn!.message! : '');
     }
     if (isNotifier) {
       isLoadData = false;

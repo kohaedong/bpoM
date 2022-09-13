@@ -560,6 +560,11 @@
     "total_supply":"공급가 합계",
     "vat_total":"부가세 합계",
     "supply_and_vat":"공급가+부가세",
-    "amount_available_for_order_entry_1":"주문입력가능액"
+    "supply_and_vat_2":"공급가/부가세",
+    "amount_available_for_order_entry_1":"주문입력가능액",
+    "add_quantity":"추가수량",
+    "unit_and_standart_price":"기준단가/단기",
+    "discount_rate_and_price":"할인율(%)/할인가격"
+
    
 }

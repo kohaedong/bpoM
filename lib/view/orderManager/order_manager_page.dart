@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-08 15:47:01
+ * Last Modified: 2022-09-13 09:37:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -384,9 +385,10 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 type: OrderItemType.NEW,
                 productFamily: p.selectedProductFamily!,
                 //!
-                bodyMap: p.commonBodyMap,
+                bodyMap: p.commonBodyMap!,
               ));
           if (result != null) {
+            pr(result);
             // p.insertItem(p.test!);
           }
         } else {
@@ -495,7 +497,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 '${tr('mat_name')}${index + 1}',
                 BaseInputWidget(
                     context: context,
-                    textStyle: AppTextStyle.default_14,
+                    hintTextStyleCallBack: () => AppTextStyle.hint_16,
                     iconType: InputIconType.SELECT_RIGHT,
                     hintText: model.maktx,
                     width: (AppSize.defaultContentsWidth * .7) * .85,
@@ -522,6 +524,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
             )
           ],
         ),
+        defaultSpacing(isHalf: true),
         _buildTextAndInputWidget(
           tr('quantity'),
           TextControllerFactoryWidget(
@@ -557,7 +560,6 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                     hintTextStyleCallBack: () => isNotEmpty
                         ? AppTextStyle.default_16
                         : AppTextStyle.hint_16,
-                    textStyle: AppTextStyle.default_14,
                     defaultIconCallback: () {
                       controller.text = '';
                       p.updateQuantityList(index, 0);
@@ -578,6 +580,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
             );
           }),
         ),
+        defaultSpacing(isHalf: true),
         family.contains('비처방의약품') ||
                 family.contains('건강식품') ||
                 family.contains('처방의약품')
@@ -592,13 +595,15 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         surchargeList.isNotEmpty && surchargeList[index] != 0.0;
                     return BaseInputWidget(
                         context: context,
-                        textStyle: AppTextStyle.default_14,
                         hintText: isNotEmpty ? '' : tr('plz_enter'),
                         defaultIconCallback: () {
                           controller.text = '';
                           p.updateSurchargeQuantityList(index, 0);
                           p.setTableSurchargeQuantity(index, 0);
                         },
+                        hintTextStyleCallBack: () => isNotEmpty
+                            ? AppTextStyle.default_16
+                            : AppTextStyle.hint_16,
                         iconType: isNotEmpty ? InputIconType.DELETE : null,
                         width: AppSize.defaultContentsWidth * .7,
                         onChangeCallBack: (t) async {

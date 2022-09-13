@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-09-08 14:20:32
+ * Last Modified: 2022-09-13 04:22:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -434,10 +434,12 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return BasePoupSearchResult(false);
   }
 
-  Future<BasePoupSearchResult> searchMaterial() async {
+  Future<BasePoupSearchResult> searchMaterial(bool isMounted) async {
     assert(seletedMateriaFamily != null);
     isLoadData = true;
-    notifyListeners();
+    if (isMounted) {
+      notifyListeners();
+    }
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();
     var spart = '';
@@ -827,7 +829,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
       case OneCellType.SEARCH_SUPPLIER:
         return await searchEndOrDeliveryCustomer(isMounted, true);
       case OneCellType.SEARCH_MATERIAL:
-        return await searchMaterial();
+        return await searchMaterial(isMounted);
       default:
         return BasePoupSearchResult(false);
     }

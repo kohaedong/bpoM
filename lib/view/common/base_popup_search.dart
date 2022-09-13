@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-08 14:25:48
+ * Last Modified: 2022-09-13 09:59:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -235,7 +235,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   p.suggetionItemNameInputText!.isNotEmpty))) {
             AppToast().show(context, tr('keyword_must_not_null'));
           } else {
-            p.refresh();
+            p.refresh().then((value) => hideKeyboard(context));
           }
         }, doNotWithPadding: true),
       ],
@@ -398,7 +398,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
           if (p.customerInputText == null || p.customerInputText!.isEmpty) {
             AppToast().show(context, tr('keyword_must_not_null'));
           } else {
-            p.refresh();
+            p.refresh().then((value) => hideKeyboard(context));
           }
         }, doNotWithPadding: true),
       ],
@@ -558,7 +558,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
           if (p.customerInputText == null || p.customerInputText!.isEmpty) {
             AppToast().show(context, tr('keyword_must_not_null'));
           } else {
-            p.refresh();
+            p.refresh().then((value) => hideKeyboard(context));
           }
         }, doNotWithPadding: true),
       ],
@@ -630,7 +630,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
             if (p.seletedMaterialSearchKey!.isEmpty) {
               AppToast().show(context, tr('keyword_must_not_null'));
             } else {
-              p.refresh();
+              p.refresh().then((value) => hideKeyboard(context));
             }
           } else {
             AppToast().show(context, tr('plz_check_essential_option'));

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-09-08 10:31:30
+ * Last Modified: 2022-09-13 09:59:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -366,7 +366,9 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                 context, '${tr('search')}', () {
                               if (p.isValidate) {
                                 _panelSwich.value = false;
-                                p.refresh();
+                                p
+                                    .refresh()
+                                    .then((value) => hideKeyboard(context));
                               } else {
                                 AppToast().show(context,
                                     '${tr('essential_option')}${tr('selecte_first')}');

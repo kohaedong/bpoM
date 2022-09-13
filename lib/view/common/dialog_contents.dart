@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-09-08 09:01:56
+ * Last Modified: 2022-09-08 16:31:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -16,6 +16,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 
 typedef SuccessCallback = String Function();
+typedef PopContextDataCallback = Future<dynamic> Function();
 Widget withTitleContents(String title) {
   return Column(
     children: [
@@ -37,7 +38,7 @@ Widget withTitleContents(String title) {
 }
 
 Widget popUpTwoButton(BuildContext context, String rightText, String leftText,
-    {double? radius}) {
+    {double? radius, PopContextDataCallback? callback}) {
   return Row(
     children: [
       Expanded(
@@ -45,7 +46,8 @@ Widget popUpTwoButton(BuildContext context, String rightText, String leftText,
           child: popUpSignleButton(context, '$leftText', isLeftButton: true)),
       Expanded(
         flex: 1,
-        child: popUpSignleButton(context, '$rightText', isLeftButton: false),
+        child: popUpSignleButton(context, '$rightText',
+            isLeftButton: false, callback: callback),
       ),
     ],
   );
@@ -59,7 +61,8 @@ Widget buildDialogContents(BuildContext context, Widget widget,
     bool? iswithTitle,
     String? titleText,
     bool? isNotPadding,
-    double? radius}) {
+    double? radius,
+    PopContextDataCallback? dataCallback}) {
   return Container(
       decoration:
           BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -88,13 +91,16 @@ Widget buildDialogContents(BuildContext context, Widget widget,
                   isWithBottomRadius: true)
               : popUpTwoButton(context, rightButtonText ?? tr('ok'),
                   leftButtonText ?? tr('cancel'),
-                  radius: radius)
+                  radius: radius, callback: dataCallback)
         ],
       ));
 }
 
 Widget popUpSignleButton(BuildContext context, String buttonText,
-    {bool? isLeftButton, bool? isWithBottomRadius, double? radius}) {
+    {bool? isLeftButton,
+    bool? isWithBottomRadius,
+    double? radius,
+    PopContextDataCallback? callback}) {
   return Container(
     alignment: Alignment.center,
     decoration: BoxDecoration(
@@ -117,11 +123,13 @@ Widget popUpSignleButton(BuildContext context, String buttonText,
         radius ?? 25, () {
       Navigator.pop(
           context,
-          isLeftButton != null
-              ? isLeftButton
-                  ? false
+          callback == null
+              ? isLeftButton != null
+                  ? isLeftButton
+                      ? false
+                      : true
                   : true
-              : true);
+              : callback.call());
     }, isLeft: isLeftButton, isWithBottomRadius: isWithBottomRadius),
   );
 }
