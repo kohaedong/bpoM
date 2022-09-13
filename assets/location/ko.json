@@ -349,7 +349,6 @@
     "essential":"필수",
     "essential_option":"필수사항",
     "plz_check_essential_option":"필수사항을 확인해주세요.",
-   
     "plz_enter_comments":"의견을 입력해주세요.",
     "to_do_approval":"으로 승인합니다.",
     "approval_with_new_customer_number":"신규 고객코드로 생성됩니다.",
@@ -564,7 +563,8 @@
     "amount_available_for_order_entry_1":"주문입력가능액",
     "add_quantity":"추가수량",
     "unit_and_standart_price":"기준단가/단기",
-    "discount_rate_and_price":"할인율(%)/할인가격"
+    "discount_rate_and_price":"할인율(%)/할인가격",
+    "item_exits":"중복된 제품이 있습니다.\n  {}"
 
    
 }

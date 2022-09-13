@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-13 09:37:09
+ * Last Modified: 2022-09-13 14:35:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,7 +11,6 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -388,8 +387,26 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 bodyMap: p.commonBodyMap!,
               ));
           if (result != null) {
-            pr(result);
-            // p.insertItem(p.test!);
+            result as Map<String, dynamic>;
+            var itemModel = result['orderItemModel'] as RecentOrderTItemModel;
+            var priceModel = result['priceModel'];
+
+            if (p.items == null) {
+              p.insertItem(itemModel, priceModel: priceModel);
+            } else {
+              var isSameModelExists = p.items!
+                  .where((item) => item.matnr == itemModel.matnr)
+                  .toList()
+                  .isNotEmpty;
+              if (isSameModelExists) {
+                AppToast().show(
+                    context,
+                    tr('item_exits',
+                        args: ['${itemModel.matnr}-${itemModel.maktx}']));
+              } else {
+                p.insertItem(itemModel, priceModel: priceModel);
+              }
+            }
           }
         } else {
           AppToast().show(context,
@@ -555,7 +572,9 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         controller.clear();
                       }
                     },
-                    hintText: isNotEmpty ? '' : tr('plz_enter'),
+                    hintText: isNotEmpty
+                        ? quantityList[index].toString()
+                        : tr('plz_enter'),
                     keybordType: TextInputType.number,
                     hintTextStyleCallBack: () => isNotEmpty
                         ? AppTextStyle.default_16

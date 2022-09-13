@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/add_order_popup_provider.dart
  * Created Date: 2022-09-04 17:56:07
- * Last Modified: 2022-09-13 11:12:36
+ * Last Modified: 2022-09-13 13:33:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -71,8 +71,44 @@ class AddOrderPopupProvider extends ChangeNotifier {
 
   Future<RecentOrderTItemModel> createOrderItemModel() async {
     var temp = RecentOrderTItemModel();
-    // temp.
-    return RecentOrderTItemModel();
+    temp.kwmeng = double.parse(quantity!);
+    temp.matnr = priceModel!.matnr;
+    temp.maktx = priceModel!.maktx;
+    temp.mwsbp = priceModel!.mwsbp; // 세액(전표 통화)
+    temp.netpr = priceModel!.netpr; // 단가.
+    temp.netwr = priceModel!.netwr; //정가(전표 통화)
+    temp.vrkme = priceModel!.vrkme; // 판매 단위
+    temp.waerk = priceModel!.waerk;
+    temp.werks = priceModel!.werks;
+    temp.werksNm = priceModel!.werksNm;
+    temp.zdisPrice = priceModel!.zdisPrice;
+    temp.zdisRate = priceModel!.zdisRate;
+    temp.zerr = priceModel!.zerr;
+    temp.zfreeQty = priceModel!.zfreeQty;
+    temp.zminQty = priceModel!.mainQty; // 제약 주문 최소 수량
+    temp.zmsg = priceModel!.zmsg; // 메시지
+    temp.znetpr = priceModel!.znetpr; // 기준판가.
+    temp.erdat = ''; // 생성일
+    temp.ernam = ''; // 생성자 이름
+    temp.erwid = ''; // 생성자 id
+    temp.erzet = ''; // 생성 시간
+    temp.umode = 'I';
+    // temp.aenam = ''; // 변경자 이름
+    // temp.aewid = ''; // 변경자 id
+    // temp.aezet = ''; // 변경시간
+    // temp.loevm = ''; // 삭제지시자.
+    // temp.loevmOr = ''; // 삭제지시자2
+    // temp.orerr = ''; // 주문생성상태 (' ':미생성 or 정상, 'X':주문생성오류)
+    // temp.posnr = ''; // SD 문서의 품목 번호
+    // temp.vbeln = ''; // 판매 관리 문서 번호
+    // temp.zfree = ''; // 무상 여부
+    // temp.zfreeChk = ''; //단일 문자 표시
+    // temp.zmessage = ''; //주문 미생성 사유
+    // temp.zreqNo = ''; // 주문요청번호
+    // temp.zreqpo = ''; // 주문요청번호 (아이템)
+    // temp.zstatus = ''; // 주문처리 상태코드
+    // temp.zststx = ''; // 주문상태 텍스트(아이템)
+    return temp;
   }
 
   Future<ResultModel> checkPrice() async {

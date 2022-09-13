@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-13 09:49:08
+ * Last Modified: 2022-09-13 14:41:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -109,7 +109,9 @@ class OrderManagerPageProvider extends ChangeNotifier {
   }
 
   Future<void> insertItem(RecentOrderTItemModel model,
-      {int? indexx, bool? isfromRecentModel}) async {
+      {int? indexx,
+      bool? isfromRecentModel,
+      BulkOrderDetailSearchMetaPriceModel? priceModel}) async {
     isLoadData = true;
     notifyListeners();
     await Future.delayed(Duration.zero, () async {
@@ -127,10 +129,13 @@ class OrderManagerPageProvider extends ChangeNotifier {
       temp = [...items!];
       temp.insert(indexx ?? insertIndex, model);
       items = [...temp];
-      insertPriceList(BulkOrderDetailSearchMetaPriceModel());
-      insertSurchargeQuantityList(0);
-      insertQuantityList(0);
-      await checkPrice(indexx ?? insertIndex, isNotifier: false);
+      insertPriceList(
+          priceModel ?? BulkOrderDetailSearchMetaPriceModel(), insertIndex);
+      insertSurchargeQuantityList(model.zfreeQty!);
+      insertQuantityList(model.kwmeng!, insertIndex);
+      if (priceModel == null) {
+        await checkPrice(indexx ?? insertIndex, isNotifier: false);
+      }
       await getAmountAvailableForOrderEntry(isNotifier: false);
     }).whenComplete(() {
       isLoadData = false;
@@ -162,12 +167,12 @@ class OrderManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> insertPriceList(BulkOrderDetailSearchMetaPriceModel model,
-      {int? indexx, bool? isNotifier}) async {
-    var insertIndex = priceModelList.isEmpty ? 0 : priceModelList.length;
+  Future<void> insertPriceList(
+      BulkOrderDetailSearchMetaPriceModel model, int indexx,
+      {bool? isNotifier}) async {
     var temp = <BulkOrderDetailSearchMetaPriceModel?>[];
     temp = [...priceModelList];
-    temp.insert(indexx ?? insertIndex, model);
+    temp.insert(indexx, model);
     priceModelList = [...temp];
     if (isNotifier != null && isNotifier) {
       notifyListeners();
@@ -196,13 +201,12 @@ class OrderManagerPageProvider extends ChangeNotifier {
     }
   }
 
-  void insertQuantityList(double quantity, {int? indexx, bool? isNotifier}) {
-    var insertIndex =
-        selectedQuantityList.isEmpty ? 0 : selectedQuantityList.length;
+  void insertQuantityList(double quantity, int indexx, {bool? isNotifier}) {
     var temp = <double>[];
     temp = [...selectedQuantityList];
-    temp.insert(indexx ?? insertIndex, quantity);
+    temp.insert(indexx, quantity);
     selectedQuantityList = [...temp];
+    pr('sb????${selectedQuantityList}');
     if (isNotifier != null && isNotifier) {
       notifyListeners();
     }
@@ -485,7 +489,9 @@ class OrderManagerPageProvider extends ChangeNotifier {
         notifyListeners();
       }
       return ResultModel(isSuccess,
-          message: !isSuccess ? temp.esReturn!.message! : '');
+          message: !isSuccess
+              ? '${temp.esReturn!.message!.replaceAll('  ', '')}'
+              : '');
     }
     if (isNotifier) {
       isLoadData = false;

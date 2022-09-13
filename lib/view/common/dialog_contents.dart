@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-09-08 16:31:51
+ * Last Modified: 2022-09-13 13:57:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,9 +14,11 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 
 typedef SuccessCallback = String Function();
 typedef PopContextDataCallback = Future<dynamic> Function();
+typedef CanPopCallBack = Future<bool> Function();
 Widget withTitleContents(String title) {
   return Column(
     children: [
@@ -37,8 +39,14 @@ Widget withTitleContents(String title) {
   );
 }
 
-Widget popUpTwoButton(BuildContext context, String rightText, String leftText,
-    {double? radius, PopContextDataCallback? callback}) {
+Widget popUpTwoButton(
+  BuildContext context,
+  String rightText,
+  String leftText, {
+  double? radius,
+  PopContextDataCallback? callback,
+  CanPopCallBack? canPopCallBackk,
+}) {
   return Row(
     children: [
       Expanded(
@@ -47,7 +55,9 @@ Widget popUpTwoButton(BuildContext context, String rightText, String leftText,
       Expanded(
         flex: 1,
         child: popUpSignleButton(context, '$rightText',
-            isLeftButton: false, callback: callback),
+            isLeftButton: false,
+            callback: callback,
+            canPopCallBackk: canPopCallBackk),
       ),
     ],
   );
@@ -62,6 +72,7 @@ Widget buildDialogContents(BuildContext context, Widget widget,
     String? titleText,
     bool? isNotPadding,
     double? radius,
+    CanPopCallBack? canPopCallBackk,
     PopContextDataCallback? dataCallback}) {
   return Container(
       decoration:
@@ -91,7 +102,9 @@ Widget buildDialogContents(BuildContext context, Widget widget,
                   isWithBottomRadius: true)
               : popUpTwoButton(context, rightButtonText ?? tr('ok'),
                   leftButtonText ?? tr('cancel'),
-                  radius: radius, callback: dataCallback)
+                  radius: radius,
+                  callback: dataCallback,
+                  canPopCallBackk: canPopCallBackk)
         ],
       ));
 }
@@ -100,7 +113,8 @@ Widget popUpSignleButton(BuildContext context, String buttonText,
     {bool? isLeftButton,
     bool? isWithBottomRadius,
     double? radius,
-    PopContextDataCallback? callback}) {
+    PopContextDataCallback? callback,
+    CanPopCallBack? canPopCallBackk}) {
   return Container(
     alignment: Alignment.center,
     decoration: BoxDecoration(
@@ -120,16 +134,31 @@ Widget popUpSignleButton(BuildContext context, String buttonText,
                 ? AppColors.defaultText
                 : AppColors.primary
             : AppColors.primary),
-        radius ?? 25, () {
-      Navigator.pop(
-          context,
-          callback == null
-              ? isLeftButton != null
-                  ? isLeftButton
-                      ? false
+        radius ?? 25, () async {
+      if (canPopCallBackk == null) {
+        Navigator.pop(
+            context,
+            callback == null
+                ? isLeftButton != null
+                    ? isLeftButton
+                        ? false
+                        : true
+                    : true
+                : callback.call());
+      } else {
+        var isCanPop = await canPopCallBackk.call();
+        if (isCanPop) {
+          Navigator.pop(
+              context,
+              callback == null
+                  ? isLeftButton != null
+                      ? isLeftButton
+                          ? false
+                          : true
                       : true
-                  : true
-              : callback.call());
+                  : await callback.call());
+        }
+      }
     }, isLeft: isLeftButton, isWithBottomRadius: isWithBottomRadius),
   );
 }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-13 11:32:23
+ * Last Modified: 2022-09-13 14:08:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -179,7 +180,6 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                     hintTextStyleCallBack: () => surcharge != null
                         ? AppTextStyle.default_16
                         : AppTextStyle.hint_16,
-                    isSelectedStrCallBack: (mate) {},
                     enable: true,
                   );
                 }),
@@ -303,8 +303,30 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                         titleText: tr('add_order'),
                         rightButtonText: widget.type == OrderItemType.NEW
                             ? tr('add')
-                            : tr('save'),
-                        dataCallback: p.createOrderItemModel);
+                            : tr('save'), dataCallback: () async {
+                      if (p.selectedMateria == null || p.quantity == null) {
+                        AppToast()
+                            .show(context, tr('plz_check_essential_option'));
+                        return null;
+                      } else {
+                        var orderItemModel = await p.createOrderItemModel();
+                        var priceModel = p.priceModel;
+                        return {
+                          'orderItemModel': orderItemModel,
+                          'priceModel': priceModel
+                        };
+                      }
+                    }, canPopCallBackk: () async {
+                      if (p.selectedMateria == null || p.quantity == null) {
+                        AppToast()
+                            .show(context, tr('plz_check_essential_option'));
+                        return false;
+                      }
+                      if (p.selectedMateria != null && p.quantity != null) {
+                        return true;
+                      }
+                      return false;
+                    });
                   },
                 );
               }
