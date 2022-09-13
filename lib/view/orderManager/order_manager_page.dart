@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-13 14:35:04
+ * Last Modified: 2022-09-13 15:17:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:flutter/services.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -731,22 +732,63 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
     );
   }
 
-  Widget _buildDeliveryConditionInput(BuildContext context) {
+  Widget _buildTextFieldInput(BuildContext context, int type, String title) {
     return Selector<OrderManagerPageProvider, String?>(
-      selector: (context, provider) => provider.deliveryConditionInputText,
+      selector: (context, provider) => type == 1
+          ? provider.deliveryConditionInputText
+          : provider.orderDescriptionDetailInputText,
       builder: (context, input, _) {
-        return Container();
+        return Column(
+          children: [
+            AppStyles.buildTitleRow(title, isNotwithStart: true),
+            defaultSpacing(isHalf: true),
+            TextFormField(
+              controller: type == 1
+                  ? _deliveryConditionInputController
+                  : _orderDescriptionInputController,
+              onChanged: (text) {
+                final p = context.read<OrderManagerPageProvider>();
+                type == 1
+                    ? p.setDeliveryCondition(text)
+                    : p.setOrderDescriptionDetai(text);
+              },
+              autofocus: false,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(200),
+              ],
+              autocorrect: false,
+              keyboardType: TextInputType.multiline,
+              maxLines: 8,
+              style: AppTextStyle.default_16,
+              decoration: InputDecoration(
+                  fillColor: AppColors.whiteText,
+                  hintText: '${tr('suggestion_hint')}',
+                  hintStyle: AppTextStyle.hint_16,
+                  border: OutlineInputBorder(
+                      gapPadding: 0,
+                      borderSide: BorderSide(
+                          color: AppColors.unReadyButtonBorderColor, width: 1),
+                      borderRadius: BorderRadius.circular(AppSize.radius5)),
+                  focusedBorder: OutlineInputBorder(
+                      gapPadding: 0,
+                      borderSide:
+                          BorderSide(color: AppColors.primary, width: 1),
+                      borderRadius: BorderRadius.circular(AppSize.radius5))),
+            )
+          ],
+        );
       },
     );
   }
 
-  Widget _buildOrderDescriptionDetail(BuildContext context) {
-    return Selector<OrderManagerPageProvider, String?>(
-      selector: (context, provider) => provider.orderDescriptionDetailInputText,
-      builder: (context, input, _) {
-        return Container();
-      },
-    );
+  Widget _buildDeliveryConditionInput(
+      BuildContext context, int type, String title) {
+    return _buildTextFieldInput(context, type, title);
+  }
+
+  Widget _buildOrderDescriptionDetail(
+      BuildContext context, int type, String title) {
+    return _buildTextFieldInput(context, type, title);
   }
 
   Widget _buildLoadingWidget(BuildContext context) {
@@ -754,6 +796,26 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
       selector: (context, provider) => provider.isLoadData,
       builder: (context, isLoadData, _) {
         return BaseLoadingViewOnStackWidget.build(context, isLoadData);
+      },
+    );
+  }
+
+  Widget _buildSubmmitButton(BuildContext context) {
+    return Selector<OrderManagerPageProvider, bool>(
+      selector: (context, provider) => provider.isValidate,
+      builder: (context, isValidate, _) {
+        return Positioned(
+            left: 0,
+            bottom: 0,
+            child: AppStyles.buildButton(
+                context,
+                tr('register'),
+                AppSize.realWidth,
+                isValidate ? AppColors.primary : AppColors.unReadyButton,
+                AppTextStyle.menu_18(
+                    isValidate ? AppColors.whiteText : AppColors.hintText),
+                0,
+                () {}));
       },
     );
   }
@@ -825,16 +887,20 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                                 child: Column(
                                   children: [
                                     defaultSpacing(),
-                                    _buildDeliveryConditionInput(context),
+                                    _buildDeliveryConditionInput(context, 1,
+                                        tr('special_delivery_condition')),
                                     defaultSpacing(),
-                                    _buildOrderDescriptionDetail(context),
+                                    _buildOrderDescriptionDetail(context, 2,
+                                        tr('order_reason_discription')),
                                     defaultSpacing(),
                                   ],
                                 ),
                               ),
+                              defaultSpacing(height: AppSize.appBarHeight * 1.5)
                             ],
                           ),
                         ),
+                        _buildSubmmitButton(context),
                         _buildLoadingWidget(context)
                       ],
                     );

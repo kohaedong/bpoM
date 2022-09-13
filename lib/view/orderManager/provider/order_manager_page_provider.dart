@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-13 14:41:06
+ * Last Modified: 2022-09-13 15:20:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -60,6 +60,15 @@ class OrderManagerPageProvider extends ChangeNotifier {
   double? amountAvalible;
   final _api = ApiService();
   RecentOrderTItemModel? test;
+
+  bool get isValidate =>
+      selectedCustomerModel != null &&
+      selectedEndCustomerModel != null &&
+      selectedProductFamily != null &&
+      selectedSalseChannel != null &&
+      items != null &&
+      items!.isNotEmpty &&
+      items!.where((item) => item.kwmeng == 0.0).toList().isEmpty;
 
   String getCode(List<String> list, String val) {
     if (val != tr('all')) {
@@ -129,10 +138,10 @@ class OrderManagerPageProvider extends ChangeNotifier {
       temp = [...items!];
       temp.insert(indexx ?? insertIndex, model);
       items = [...temp];
-      insertPriceList(
-          priceModel ?? BulkOrderDetailSearchMetaPriceModel(), insertIndex);
-      insertSurchargeQuantityList(model.zfreeQty!);
-      insertQuantityList(model.kwmeng!, insertIndex);
+      insertPriceList(priceModel ?? BulkOrderDetailSearchMetaPriceModel(),
+          indexx ?? insertIndex);
+      insertSurchargeQuantityList(model.zfreeQty!, indexx ?? insertIndex);
+      insertQuantityList(model.kwmeng!, indexx ?? insertIndex);
       if (priceModel == null) {
         await checkPrice(indexx ?? insertIndex, isNotifier: false);
       }
@@ -227,14 +236,11 @@ class OrderManagerPageProvider extends ChangeNotifier {
     }
   }
 
-  void insertSurchargeQuantityList(double quantity,
-      {int? indexx, bool? isNotifier}) {
-    var insertIndex =
-        selectedSurchargeList.isEmpty ? 0 : selectedSurchargeList.length;
+  void insertSurchargeQuantityList(double quantity, int indexx,
+      {bool? isNotifier}) {
     var temp = <double>[];
     temp = [...selectedSurchargeList];
-    pr('insertIndex???!!!!!! $insertIndex');
-    temp.insert(indexx ?? insertIndex, quantity);
+    temp.insert(indexx, quantity);
     selectedSurchargeList = [...temp];
     if (isNotifier != null && isNotifier) {
       notifyListeners();
@@ -478,7 +484,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
           result.body['data']);
       var isSuccess = temp.esReturn!.mtype == 'S';
       pr(temp.toJson());
-      // netpr 단가.netwr 정가.
+
       await updatePriceList(
           indexx,
           isSuccess

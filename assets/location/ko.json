@@ -564,7 +564,8 @@
     "add_quantity":"추가수량",
     "unit_and_standart_price":"기준단가/단기",
     "discount_rate_and_price":"할인율(%)/할인가격",
-    "item_exits":"중복된 제품이 있습니다.\n  {}"
-
+    "item_exits":"중복된 제품이 있습니다.\n  {}",
+    "order_reason_discription":"오더사유 상세설명",
+    "register":"등록"
    
 }
