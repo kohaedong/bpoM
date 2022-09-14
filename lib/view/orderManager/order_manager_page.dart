@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-14 14:50:14
+ * Last Modified: 2022-09-14 15:31:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -392,23 +392,30 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
             if (result is Map<String, dynamic>) {
               var itemModel = result['orderItemModel'] as RecentOrderTItemModel;
               var priceModel = result['priceModel'];
-
-              if (p.items == null) {
-                p.insertItem(itemModel, priceModel: priceModel);
-              } else {
-                var isSameModelExists = p.items!
-                    .where((item) => item.matnr == itemModel.matnr)
-                    .toList()
-                    .isNotEmpty;
-                if (isSameModelExists) {
-                  AppToast().show(
-                      context,
-                      tr('item_exits',
-                          args: ['${itemModel.matnr}-${itemModel.maktx}']));
+              p.getAmountAvailableForOrderEntry(isNotifier: false).then((_) {
+                var sum = p.totalPrice + itemModel.netwr!;
+                if (p.amountAvalible! > sum) {
+                  if (p.items == null) {
+                    p.insertItem(itemModel, priceModel: priceModel);
+                  } else {
+                    var isSameModelExists = p.items!
+                        .where((item) => item.matnr == itemModel.matnr)
+                        .toList()
+                        .isNotEmpty;
+                    if (isSameModelExists) {
+                      AppToast().show(
+                          context,
+                          tr('item_exits',
+                              args: ['${itemModel.matnr}-${itemModel.maktx}']));
+                    } else {
+                      p.insertItem(itemModel, priceModel: priceModel);
+                    }
+                  }
                 } else {
-                  p.insertItem(itemModel, priceModel: priceModel);
+                  AppDialog.showSignglePopup(
+                      context, tr('insufficient_balance'));
                 }
-              }
+              });
             }
           }
         } else {
