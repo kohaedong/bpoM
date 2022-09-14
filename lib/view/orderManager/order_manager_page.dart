@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-14 09:36:26
+ * Last Modified: 2022-09-14 10:15:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -77,7 +77,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
 
   Widget _buildGroupSelector(BuildContext context) {
     final p = context.read<OrderManagerPageProvider>();
-    return CheckSuperAccount.isMultiAccountOrLeaderAccount()
+    return CheckSuperAccount.isMultiAccount()
         ? Column(
             children: [
               AppStyles.buildTitleRow(tr('salse_group')),
@@ -145,7 +145,9 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       isSelectedStrCallBack: (persion) {
                         return p.setSalsePerson(persion);
                       },
-                      bodyMap: {'dptnm': tuple.item2 ?? ''},
+                      bodyMap: CheckSuperAccount.isMultiAccount()
+                          ? {'dptnm': tuple.item2 ?? ''}
+                          : {'dptnm': CacheService.getEsLogin()!.dptnm},
                       enable: false,
                     );
                   }),
@@ -277,7 +279,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         ? tuple.item3!.sname
                         : tr('all')
                     : CacheService.getEsLogin()!.ename,
-                'dptnm': CheckSuperAccount.isMultiAccount()
+                'dptnm': CheckSuperAccount.isMultiAccountOrLeaderAccount()
                     ? tuple.item3 != null
                         ? tuple.item3!.dptnm
                         : CacheService.getEsLogin()!.dptnm
@@ -387,24 +389,25 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 bodyMap: p.commonBodyMap!,
               ));
           if (result != null) {
-            result as Map<String, dynamic>;
-            var itemModel = result['orderItemModel'] as RecentOrderTItemModel;
-            var priceModel = result['priceModel'];
+            if (result is Map<String, dynamic>) {
+              var itemModel = result['orderItemModel'] as RecentOrderTItemModel;
+              var priceModel = result['priceModel'];
 
-            if (p.items == null) {
-              p.insertItem(itemModel, priceModel: priceModel);
-            } else {
-              var isSameModelExists = p.items!
-                  .where((item) => item.matnr == itemModel.matnr)
-                  .toList()
-                  .isNotEmpty;
-              if (isSameModelExists) {
-                AppToast().show(
-                    context,
-                    tr('item_exits',
-                        args: ['${itemModel.matnr}-${itemModel.maktx}']));
-              } else {
+              if (p.items == null) {
                 p.insertItem(itemModel, priceModel: priceModel);
+              } else {
+                var isSameModelExists = p.items!
+                    .where((item) => item.matnr == itemModel.matnr)
+                    .toList()
+                    .isNotEmpty;
+                if (isSameModelExists) {
+                  AppToast().show(
+                      context,
+                      tr('item_exits',
+                          args: ['${itemModel.matnr}-${itemModel.maktx}']));
+                } else {
+                  p.insertItem(itemModel, priceModel: priceModel);
+                }
               }
             }
           }

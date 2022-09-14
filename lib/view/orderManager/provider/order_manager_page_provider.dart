@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-13 15:20:59
+ * Last Modified: 2022-09-14 10:29:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -97,14 +97,24 @@ class OrderManagerPageProvider extends ChangeNotifier {
 
   void resetData({required int? level}) {
     switch (level) {
+      case 0:
+        selectedSalsePerson = null;
+        selectedSalseChannel = null;
+        selectedCustomerModel = null;
+        selectedEndCustomerModel = null;
+        selectedProductFamily = null;
+        resetOrderItem();
+        break;
       case 1:
         selectedCustomerModel = null;
         selectedEndCustomerModel = null;
         selectedProductFamily = null;
+        resetOrderItem();
         break;
       case 2:
         selectedCustomerModel = null;
         selectedEndCustomerModel = null;
+        resetOrderItem();
         break;
       default:
     }
@@ -115,6 +125,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     items = [];
     priceModelList = [];
     selectedQuantityList = [];
+    selectedSurchargeList = [];
   }
 
   Future<void> insertItem(RecentOrderTItemModel model,
@@ -215,7 +226,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
     temp = [...selectedQuantityList];
     temp.insert(indexx, quantity);
     selectedQuantityList = [...temp];
-    pr('sb????${selectedQuantityList}');
     if (isNotifier != null && isNotifier) {
       notifyListeners();
     }
@@ -284,6 +294,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
 
   void setSalseGroup(String str) {
     selectedSalseGroup = str;
+    resetData(level: 0);
     notifyListeners();
   }
 
@@ -294,6 +305,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
 
   void setStaffName(String? str) {
     selectedStaffName = str;
+    resetData(level: 0);
     notifyListeners();
   }
 
@@ -345,7 +357,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     } else {
       selectedCustomerModel = null;
       isSingleData = null;
-      resetOrderItem();
+      resetData(level: 2);
       notifyListeners();
     }
   }
@@ -433,12 +445,14 @@ class OrderManagerPageProvider extends ChangeNotifier {
   }
 
   Map<String, dynamic>? get commonBodyMap => {
-        "IV_VKORG": CheckSuperAccount.isMultiAccountOrLeaderAccount()
+        "IV_VKORG": CheckSuperAccount.isMultiAccount()
             ? selectedSalsePerson != null
                 ? selectedSalsePerson!.orghk
-                : ''
+                : CacheService.getEsLogin()!.vkorg
             : CacheService.getEsLogin()!.vkorg,
-        "IV_VTWEG": getCode(channelList!, selectedSalseChannel!),
+        "IV_VTWEG": selectedSalseChannel != tr('all')
+            ? getCode(channelList!, selectedSalseChannel!)
+            : '',
         "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
         "IV_KUNNR": selectedCustomerModel!.kunnr,
         "IV_ZZKUNNR_END": selectedCustomerModel!.kunnr,
@@ -617,11 +631,14 @@ class OrderManagerPageProvider extends ChangeNotifier {
     }
     if (result != null && result.statusCode == 200) {
       var temp = EtCustListResponseModel.fromJson(result.body['data']);
-      if (isSupplier) {
-        selectedSupplierModel = temp.etCustList!.first;
-      } else {
-        selectedEndCustomerModel = temp.etCustList!.first;
+      if (temp.esReturn!.mtype == 'S') {
+        if (isSupplier) {
+          selectedSupplierModel = temp.etCustList!.first;
+        } else {
+          selectedEndCustomerModel = temp.etCustList!.first;
+        }
       }
+
       isLoadData = false;
       notifyListeners();
       return ResultModel(true, data: temp.etCustList!.length == 1);

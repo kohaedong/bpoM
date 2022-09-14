@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-13 14:08:41
+ * Last Modified: 2022-09-14 10:33:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -70,21 +70,27 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
     final p = context.read<AddOrderPopupProvider>();
     return BaseColumWithTitleAndTextFiled.build(
         tr('mat_name'),
-        Selector<AddOrderPopupProvider, OrderManagerMaterialModel?>(
-          selector: (context, provider) => provider.selectedMateria,
-          builder: (context, mate, _) {
+        Selector<AddOrderPopupProvider,
+            Tuple2<OrderManagerMaterialModel?, bool>>(
+          selector: (context, provider) =>
+              Tuple2(provider.selectedMateria, provider.isLoadData),
+          builder: (context, tuple, _) {
             return BaseInputWidget(
               context: context,
               iconType: InputIconType.SELECT,
-              iconColor: mate != null
+              iconColor: tuple.item1 != null
                   ? AppColors.defaultText
                   : AppColors.textFieldUnfoucsColor,
-              hintText: mate != null ? mate.maktx : tr('plz_select'),
-              popupSearchType: PopupSearchType.SEARCH_MATERIAL,
+              hintText:
+                  tuple.item1 != null ? tuple.item1!.maktx : tr('plz_select'),
+              popupSearchType: tuple.item2
+                  ? PopupSearchType.DO_NOTHING
+                  : PopupSearchType.SEARCH_MATERIAL,
               // 팀장 일때 만 팀원선택후 삭제가능.
               width: AppSize.defaultContentsWidth,
-              hintTextStyleCallBack: () =>
-                  mate != null ? AppTextStyle.default_16 : AppTextStyle.hint_16,
+              hintTextStyleCallBack: () => tuple.item1 != null
+                  ? AppTextStyle.default_16
+                  : AppTextStyle.hint_16,
               isSelectedStrCallBack: (mat) {
                 p.setQuantity(null, isNotNotifier: true);
                 p.setMaterial(mat);
