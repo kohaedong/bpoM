@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/add_order_popup_provider.dart
  * Created Date: 2022-09-04 17:56:07
- * Last Modified: 2022-09-14 11:24:25
+ * Last Modified: 2022-09-14 13:38:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -102,7 +102,7 @@ class AddOrderPopupProvider extends ChangeNotifier {
     temp.zdisPrice = priceModel!.zdisPrice;
     temp.zdisRate = priceModel!.zdisRate;
     temp.zerr = priceModel!.zerr;
-    temp.zfreeQty = priceModel!.zfreeQty;
+    temp.zfreeQty = surcharge != null ? double.parse(surcharge!) : 0.0;
     temp.zminQty = priceModel!.mainQty; // 제약 주문 최소 수량
     temp.zmsg = priceModel!.zmsg; // 메시지
     temp.znetpr = priceModel!.znetpr; // 기준판가.

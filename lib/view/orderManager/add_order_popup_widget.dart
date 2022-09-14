@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-14 11:23:21
+ * Last Modified: 2022-09-14 13:25:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -278,7 +278,10 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
       builder: (context, _) {
         final p = context.read<AddOrderPopupProvider>();
         return FutureBuilder(
-            future: p.initData(widget.bodyMap, editModell: widget.editModel),
+            future: p.initData(
+              widget.bodyMap,
+              editModell: widget.editModel,
+            ),
             builder: (context, snapshot) {
               if (snapshot.hasData &&
                   snapshot.connectionState == ConnectionState.done) {

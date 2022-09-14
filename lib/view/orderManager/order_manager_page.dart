@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-14 11:25:15
+ * Last Modified: 2022-09-14 14:50:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -457,6 +457,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               final p = context.read<OrderManagerPageProvider>();
               if (p.selectedCustomerModel != null) {
                 p.checkRecentOrders().then((result) {
+                  pr('SSSSBBBB');
                   if (result.isSuccessful) {
                     var map = result.data as Map<String, dynamic>;
                     var isExits = map['isExits'] as bool;
@@ -533,12 +534,16 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         var itemModel =
                             result['orderItemModel'] as RecentOrderTItemModel;
                         var priceModel = result['priceModel'];
-                        p.updateItem(index, itemModel);
-                        p.updatePriceList(index, priceModel);
-                        p.updateQuantityList(index, itemModel.kwmeng!);
-                        p.updateSurchargeQuantityList(
-                            index, itemModel.zfreeQty!,
-                            isNotifier: true);
+                        p
+                            .getAmountAvailableForOrderEntry(isNotifier: false)
+                            .then((_) {
+                          p.updateItem(index, itemModel);
+                          p.updatePriceList(index, priceModel);
+                          p.updateQuantityList(index, itemModel.kwmeng!);
+                          p.updateSurchargeQuantityList(
+                              index, itemModel.zfreeQty!,
+                              isNotifier: true);
+                        });
                       }
                     }
                   },
@@ -729,7 +734,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 return _buildTextAndInputWidget(
                     tr('amount_available_for_order_entry_1'),
                     AppText.text(
-                        '${FormatUtil.addComma('${amountAvalible ?? ''}')}'));
+                        '${FormatUtil.addComma('${amountAvalible ?? ''}', isReturnZero: true)}'));
               },
             ),
             defaultSpacing(),

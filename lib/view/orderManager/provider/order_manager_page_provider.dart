@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-14 10:57:59
+ * Last Modified: 2022-09-14 15:22:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -59,8 +59,12 @@ class OrderManagerPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   double? amountAvalible;
   final _api = ApiService();
-  RecentOrderTItemModel? test;
-
+  double get totalPrice => items != null && items!.isNotEmpty
+      ? items!
+          .reduce((left, right) => RecentOrderTItemModel(
+              netwr: (left.netwr ?? 0) + (right.netwr ?? 0)))
+          .netwr!
+      : 0;
   bool get isValidate =>
       selectedCustomerModel != null &&
       selectedEndCustomerModel != null &&
@@ -438,7 +442,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
       var temp =
           BulkOrderDetailAmountResponseModel.fromJson(result.body['data']);
       var isSuccess = temp.esReturn!.mtype == 'S';
-      pr(temp.toJson());
       amountAvalible = double.tryParse(
           temp.tCreditLimit!.single.amount!.replaceAll(',', ''));
       pr(amountAvalible);
@@ -459,7 +462,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
             : CacheService.getEsLogin()!.vkorg,
         "IV_VTWEG": selectedSalseChannel != tr('all')
             ? getCode(channelList!, selectedSalseChannel!)
-            : '',
+            : '10', // default 10
         "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
         "IV_KUNNR": selectedCustomerModel!.kunnr,
         "IV_ZZKUNNR_END": selectedCustomerModel!.kunnr,
@@ -504,21 +507,29 @@ class OrderManagerPageProvider extends ChangeNotifier {
       var temp = BulkOrderDetailSearchMetaPriceResponseModel.fromJson(
           result.body['data']);
       var isSuccess = temp.esReturn!.mtype == 'S';
-      pr(temp.toJson());
-
-      await updatePriceList(
-          indexx,
-          isSuccess
-              ? temp.tList!.single
-              : BulkOrderDetailSearchMetaPriceModel());
+      var message = '';
+      if (isSuccess) {
+        var model = temp.tList!.single;
+        pr(temp.toJson());
+        await getAmountAvailableForOrderEntry(isNotifier: false)
+            .then((_) async {
+          var sum = totalPrice + model.netwr!;
+          if (amountAvalible! > sum) {
+            await updatePriceList(indexx,
+                isSuccess ? model : BulkOrderDetailSearchMetaPriceModel());
+          } else {
+            isSuccess = false;
+            message = tr('insufficient_balance');
+          }
+        });
+      } else {
+        message = '${temp.esReturn!.message!.replaceAll('  ', '')}';
+      }
       if (isNotifier) {
         isLoadData = false;
         notifyListeners();
       }
-      return ResultModel(isSuccess,
-          message: !isSuccess
-              ? '${temp.esReturn!.message!.replaceAll('  ', '')}'
-              : '');
+      return ResultModel(isSuccess, message: !isSuccess ? message : '');
     }
     if (isNotifier) {
       isLoadData = false;
@@ -574,33 +585,31 @@ class OrderManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       recentOrderResponseModel =
           RecentOrderResponseModel.fromJson(result.body['data']);
-
+      pr(recentOrderResponseModel?.toJson());
+      var isExits = false;
+      var isEmpty = true;
+      RecentOrderTItemModel? lastModel;
+      if (recentOrderResponseModel!.esReturn!.mtype == 'S') {
+        isEmpty = recentOrderResponseModel!.tItem!.isEmpty;
+        if (!isEmpty) {
+          lastModel = recentOrderResponseModel!.tItem!.last;
+          if (items != null && items!.isNotEmpty) {
+            isExits = items!
+                .where((item) => item.matnr == lastModel!.matnr)
+                .toList()
+                .isNotEmpty;
+            if (!isExits) {
+              await insertItem(lastModel, isfromRecentModel: true);
+            }
+          } else {
+            await insertItem(lastModel, isfromRecentModel: true);
+          }
+        }
+      }
       isLoadData = false;
       notifyListeners();
-      var orderList = recentOrderResponseModel!.tItem!;
-      RecentOrderTItemModel? lastItem;
-      if (orderList.length > 1) {
-        pr('@!@!@!@!@!@!@!@!');
-        test = RecentOrderTItemModel.fromJson(orderList.first.toJson());
-      }
-      var isExits = false;
-      if (orderList.isNotEmpty) {
-        lastItem = orderList.last;
-        items?.forEach((item) {
-          if (item.matnr == lastItem!.matnr) {
-            isExits = true;
-          }
-        });
-      }
-
-      if (!isExits) {
-        await insertItem(lastItem!, isfromRecentModel: true);
-      }
-      return ResultModel(true, data: {
-        'isExits': isExits,
-        'isEmpty': orderList.isEmpty,
-        'model': lastItem
-      });
+      return ResultModel(true,
+          data: {'isExits': isExits, 'isEmpty': isEmpty, 'model': lastModel});
     }
     isLoadData = false;
     notifyListeners();
