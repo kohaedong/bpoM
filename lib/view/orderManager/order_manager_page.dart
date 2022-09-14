@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-13 15:17:43
+ * Last Modified: 2022-09-14 09:36:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/services.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -116,7 +117,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
 
   Widget _buildStaffSelector(BuildContext context) {
     final p = context.read<OrderManagerPageProvider>();
-    return CheckSuperAccount.isLeaderAccount()
+    return CheckSuperAccount.isMultiAccountOrLeaderAccount()
         ? Column(
             children: [
               AppStyles.buildTitleRow(tr('manager')),
@@ -144,9 +145,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       isSelectedStrCallBack: (persion) {
                         return p.setSalsePerson(persion);
                       },
-                      bodyMap: {
-                        'dptnm': tuple.item2 != null ? tuple.item2 : ''
-                      },
+                      bodyMap: {'dptnm': tuple.item2 ?? ''},
                       enable: false,
                     );
                   }),
