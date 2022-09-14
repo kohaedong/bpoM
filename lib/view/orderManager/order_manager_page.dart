@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-14 15:31:35
+ * Last Modified: 2022-09-14 15:55:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,6 @@
  */
 
 import 'package:flutter/services.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,8 +29,9 @@ import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
+import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
@@ -122,9 +122,11 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
             children: [
               AppStyles.buildTitleRow(tr('manager')),
               defaultSpacing(isHalf: true),
-              Selector<OrderManagerPageProvider, Tuple2<String?, String?>>(
+              Selector<OrderManagerPageProvider,
+                      Tuple2<EtStaffListModel?, String?>>(
                   selector: (context, provider) => Tuple2(
-                      provider.selectedStaffName, provider.selectedSalseGroup),
+                      provider.selectedSalsePerson,
+                      provider.selectedSalseGroup),
                   builder: (context, tuple, _) {
                     return BaseInputWidget(
                       context: context,
@@ -133,17 +135,19 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       iconColor: tuple.item1 != null
                           ? AppColors.defaultText
                           : AppColors.textFieldUnfoucsColor,
-                      hintText: tuple.item1 ?? tr('plz_select'),
+                      hintText: tuple.item1 != null
+                          ? tuple.item1!.sname!
+                          : tr('plz_select'),
                       // 팀장 일때 만 팀원선택후 삭제가능.
                       isShowDeleteForHintText:
                           tuple.item1 != null ? true : false,
-                      deleteIconCallback: () => p.setStaffName(null),
+                      deleteIconCallback: () => p.setSalsePerson(null),
                       hintTextStyleCallBack: () => tuple.item1 != null
                           ? AppTextStyle.default_16
                           : AppTextStyle.hint_16,
                       popupSearchType: PopupSearchType.SEARCH_SALSE_PERSON,
-                      isSelectedStrCallBack: (persion) {
-                        return p.setSalsePerson(persion);
+                      isSelectedStrCallBack: (person) {
+                        return p.setSalsePerson(person);
                       },
                       bodyMap: CheckSuperAccount.isMultiAccount()
                           ? {'dptnm': tuple.item2 ?? ''}
@@ -464,13 +468,11 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               final p = context.read<OrderManagerPageProvider>();
               if (p.selectedCustomerModel != null) {
                 p.checkRecentOrders().then((result) {
-                  pr('SSSSBBBB');
                   if (result.isSuccessful) {
                     var map = result.data as Map<String, dynamic>;
                     var isExits = map['isExits'] as bool;
                     var isEmpty = map['isEmpty'] as bool;
                     var model = map['model'] as RecentOrderTItemModel?;
-
                     if (isEmpty) {
                       AppToast().show(context, tr('not_recent_order'));
                     }
@@ -554,7 +556,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       }
                     }
                   },
-                  hintTextStyleCallBack: () => AppTextStyle.hint_16,
+                  hintTextStyleCallBack: () => AppTextStyle.default_16,
                   iconType: InputIconType.SELECT_RIGHT,
                   hintText: model.maktx,
                   width: (AppSize.defaultContentsWidth * .7) * .85,

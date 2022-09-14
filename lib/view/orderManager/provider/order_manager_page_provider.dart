@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-14 15:22:48
+ * Last Modified: 2022-09-14 15:46:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -40,7 +40,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
   List<double> selectedSurchargeList = [];
   RecentOrderResponseModel? recentOrderResponseModel;
   String? selectedSalseGroup;
-  String? selectedStaffName;
+  // String? selectedStaffName;
   String? selectedSalseChannel;
   String? selectedProductFamily;
   String? selectedSalseOffice;
@@ -314,11 +314,11 @@ class OrderManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setStaffName(String? str) {
-    selectedStaffName = str;
-    resetData(level: 0);
-    notifyListeners();
-  }
+  // void setStaffName(String? str) {
+  //   selectedStaffName = str;
+  //   resetData(level: 0);
+  //   notifyListeners();
+  // }
 
   void setChannelCode() {
     var temp = channelList
@@ -399,7 +399,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
   void setSalsePerson(saler) {
     saler as EtStaffListModel?;
     selectedSalsePerson = saler;
-    selectedStaffName = selectedSalsePerson!.sname;
+    // selectedStaffName = selectedSalsePerson!.sname;
     notifyListeners();
   }
 

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-08 10:29:33
+ * Last Modified: 2022-09-14 16:50:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -404,7 +404,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
     var index = arguments['index'] as int?;
     var isNewActivity = (index == null);
     var isToday = DateUtil.equlse(
-        DateUtil.getDate(model.table250!.first.adate!), DateTime.now());
+        DateUtil.getDate(model.table260!.first.adate!), DateTime.now());
     return Positioned(
         bottom: 0,
         left: 0,

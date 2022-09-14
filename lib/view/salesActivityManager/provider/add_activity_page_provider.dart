@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-01 18:07:39
+ * Last Modified: 2022-09-14 16:49:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -89,10 +89,10 @@ class AddActivityPageProvider extends ChangeNotifier {
     pr(activityStatus);
     index = indexx;
     if (index != null) {
-      pr(fromParentResponseModel!.table361!.length);
-      pr('260 ???? ${fromParentResponseModel!.table260!.length}');
-      pr(fromParentResponseModel!.table250!.single.toJson());
-      pr(fromParentResponseModel!.table260![index!].toJson());
+      // pr(fromParentResponseModel!.table361!.length);
+      // pr('260 ???? ${fromParentResponseModel!.table260!.length}');
+      // pr(fromParentResponseModel!.table250!.single.toJson());
+      // pr(fromParentResponseModel!.table260![index!].toJson());
       var temp = fromParentResponseModel!.table260![index!];
       pr('260::::${temp.toJson()}');
       isVisit = temp.xvisit != null && temp.xvisit == 'Y';
