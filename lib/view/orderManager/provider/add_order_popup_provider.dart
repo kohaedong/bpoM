@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/add_order_popup_provider.dart
  * Created Date: 2022-09-04 17:56:07
- * Last Modified: 2022-09-13 13:33:14
+ * Last Modified: 2022-09-14 11:24:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -26,6 +26,7 @@ import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class AddOrderPopupProvider extends ChangeNotifier {
   BulkOrderDetailSearchMetaPriceModel? priceModel;
+  RecentOrderTItemModel? editModel;
   bool isLoadData = false;
   final _api = ApiService();
   double height = AppSize.realHeight * .5;
@@ -34,10 +35,25 @@ class AddOrderPopupProvider extends ChangeNotifier {
   String? surcharge;
   Map<String, String> bodyMap = {};
 
-  Future<bool> initData(Map<String, dynamic> bodyMapp) async {
+  Future<bool> initData(Map<String, dynamic> bodyMapp,
+      {RecentOrderTItemModel? editModell,
+      BulkOrderDetailSearchMetaPriceModel? priceModell}) async {
     bodyMapp.forEach((key, value) {
       bodyMap.putIfAbsent(key, () => '$value');
     });
+    if (editModell != null) {
+      editModel = editModell;
+      selectedMateria = OrderManagerMaterialModel.fromJson(editModell.toJson());
+      pr(selectedMateria?.toJson());
+    }
+    if (priceModell != null) {
+      priceModel =
+          BulkOrderDetailSearchMetaPriceModel.fromJson(priceModell.toJson());
+      pr(selectedMateria?.toJson());
+      quantity = priceModel!.kwmeng != 0.0 ? '${priceModel!.kwmeng}' : null;
+      surcharge =
+          priceModel!.zfreeQty != 0.0 ? '${priceModel!.zfreeQty}' : null;
+    }
     return true;
   }
 
@@ -70,7 +86,9 @@ class AddOrderPopupProvider extends ChangeNotifier {
   }
 
   Future<RecentOrderTItemModel> createOrderItemModel() async {
-    var temp = RecentOrderTItemModel();
+    var temp = editModel != null
+        ? RecentOrderTItemModel.fromJson(editModel!.toJson())
+        : RecentOrderTItemModel();
     temp.kwmeng = double.parse(quantity!);
     temp.matnr = priceModel!.matnr;
     temp.maktx = priceModel!.maktx;

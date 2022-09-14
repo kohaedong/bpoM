@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-14 10:15:08
+ * Last Modified: 2022-09-14 11:25:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -514,14 +514,40 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         Row(
           children: [
             _buildTextAndInputWidget(
-                '${tr('mat_name')}${index + 1}',
-                BaseInputWidget(
-                    context: context,
-                    hintTextStyleCallBack: () => AppTextStyle.hint_16,
-                    iconType: InputIconType.SELECT_RIGHT,
-                    hintText: model.maktx,
-                    width: (AppSize.defaultContentsWidth * .7) * .85,
-                    enable: false)),
+              '${tr('mat_name')}${index + 1}',
+              BaseInputWidget(
+                  context: context,
+                  onTap: () async {
+                    final result = await AppDialog.showPopup(
+                        context,
+                        AddOrderPopupWidget(
+                          type: OrderItemType.EDIT,
+                          productFamily: p.selectedProductFamily!,
+                          //!
+                          bodyMap: p.commonBodyMap!,
+                          editModel: p.items![index],
+                          priceModel: p.priceModelList[index],
+                        ));
+                    if (result != null) {
+                      if (result is Map<String, dynamic>) {
+                        var itemModel =
+                            result['orderItemModel'] as RecentOrderTItemModel;
+                        var priceModel = result['priceModel'];
+                        p.updateItem(index, itemModel);
+                        p.updatePriceList(index, priceModel);
+                        p.updateQuantityList(index, itemModel.kwmeng!);
+                        p.updateSurchargeQuantityList(
+                            index, itemModel.zfreeQty!,
+                            isNotifier: true);
+                      }
+                    }
+                  },
+                  hintTextStyleCallBack: () => AppTextStyle.hint_16,
+                  iconType: InputIconType.SELECT_RIGHT,
+                  hintText: model.maktx,
+                  width: (AppSize.defaultContentsWidth * .7) * .85,
+                  enable: false),
+            ),
             InkWell(
               onTap: () => p.removeItem(index),
               child: Container(

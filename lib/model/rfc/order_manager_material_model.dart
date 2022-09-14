@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/order_manager_material_model.dart
  * Created Date: 2022-09-08 11:01:26
- * Last Modified: 2022-09-08 12:30:52
+ * Last Modified: 2022-09-14 11:08:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -58,7 +58,7 @@ class OrderManagerMaterialModel {
   String? ean11;
 
   OrderManagerMaterialModel(
-      this.boxUmrez,
+      {this.boxUmrez,
       this.ean11,
       this.kbetr1,
       this.kbetr2,
@@ -77,7 +77,7 @@ class OrderManagerMaterialModel {
       this.zreMinQty,
       this.zwhConsol,
       this.zwhMaxQty,
-      this.zwhMinWty);
+      this.zwhMinWty});
   factory OrderManagerMaterialModel.fromJson(Object? json) =>
       _$OrderManagerMaterialModelFromJson(json as Map<String, dynamic>);
   Map<String, dynamic> toJson() => _$OrderManagerMaterialModelToJson(this);

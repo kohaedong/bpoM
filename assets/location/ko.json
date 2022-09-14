@@ -566,6 +566,7 @@
     "discount_rate_and_price":"할인율(%)/할인가격",
     "item_exits":"중복된 제품이 있습니다.\n  {}",
     "order_reason_discription":"오더사유 상세설명",
-    "register":"등록"
+    "register":"등록",
+    "save":"저장"
    
 }

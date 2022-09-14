@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-14 10:33:58
+ * Last Modified: 2022-09-14 11:23:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/rfc/recent_order_t_item_model.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:provider/provider.dart';
@@ -37,11 +38,15 @@ class AddOrderPopupWidget extends StatefulWidget {
       {Key? key,
       required this.type,
       required this.bodyMap,
-      required this.productFamily})
+      required this.productFamily,
+      this.editModel,
+      this.priceModel})
       : super(key: key);
   final OrderItemType type;
   final String productFamily;
   final Map<String, dynamic> bodyMap;
+  final RecentOrderTItemModel? editModel;
+  final BulkOrderDetailSearchMetaPriceModel? priceModel;
   @override
   State<AddOrderPopupWidget> createState() => _AddOrderPopupWidgetState();
 }
@@ -273,7 +278,7 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
       builder: (context, _) {
         final p = context.read<AddOrderPopupProvider>();
         return FutureBuilder(
-            future: p.initData(widget.bodyMap),
+            future: p.initData(widget.bodyMap, editModell: widget.editModel),
             builder: (context, snapshot) {
               if (snapshot.hasData &&
                   snapshot.connectionState == ConnectionState.done) {

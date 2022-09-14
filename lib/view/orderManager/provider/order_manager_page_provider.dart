@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-14 10:29:05
+ * Last Modified: 2022-09-14 10:57:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -166,14 +166,17 @@ class OrderManagerPageProvider extends ChangeNotifier {
     });
   }
 
-  void updateItem(int indexx, RecentOrderTItemModel updateModel) {
+  void updateItem(int indexx, RecentOrderTItemModel updateModel,
+      {bool? isNotifier}) {
     var temp = <RecentOrderTItemModel>[];
     temp = [...items!];
     var model = RecentOrderTItemModel.fromJson(updateModel.toJson());
     temp.removeAt(indexx);
     temp.insert(indexx, model);
     items = [...temp];
-    notifyListeners();
+    if (isNotifier != null && isNotifier) {
+      notifyListeners();
+    }
   }
 
   void removeItem(int indexx) {
@@ -257,12 +260,16 @@ class OrderManagerPageProvider extends ChangeNotifier {
     }
   }
 
-  void updateSurchargeQuantityList(int indexx, double quantity) {
+  void updateSurchargeQuantityList(int indexx, double surcharge,
+      {bool? isNotifier}) {
     var temp = <double>[];
     temp = [...selectedSurchargeList];
     temp.removeAt(indexx);
-    temp..insert(indexx, quantity);
+    temp..insert(indexx, surcharge);
     selectedSurchargeList = [...temp];
+    if (isNotifier != null && isNotifier) {
+      notifyListeners();
+    }
   }
 
   void removeSurchargeQuantityList(int indexx, {bool? isNotifier}) {
