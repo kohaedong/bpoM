@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-15 10:09:57
+ * Last Modified: 2022-09-15 13:38:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -129,7 +129,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     return SizedBox(
       height: AppSize.weekDayHeight * .5,
       width: AppSize.calendarWidth / 7,
-      child: AppText.text(weekdayName, style: AppTextStyle.sub_14),
+      child: AppText.text(weekdayName, style: AppTextStyle.sub_16),
     );
   }
 
@@ -172,7 +172,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                             backgroundColor: AppColors.primary,
                             child: AppText.text(
                                 '${DateUtil.getDate(model.dateStr!).day}',
-                                style: AppTextStyle.default_14
+                                style: AppTextStyle.default_16
                                     .copyWith(color: AppColors.whiteText)),
                           ),
                         )
@@ -181,7 +181,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                           height: AppSize.weekDayNumberBoxHeight,
                           child: AppText.text(
                               '${DateUtil.getDate(model.dateStr!).day}',
-                              style: AppTextStyle.default_14.copyWith(
+                              style: AppTextStyle.default_16.copyWith(
                                   color: DateUtil.getDate(model.dateStr!)
                                                   .weekday ==
                                               7 ||
@@ -205,7 +205,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                                       .isBefore(DateTime.now())
                               ? '미확정'
                               : '',
-                      style: AppTextStyle.default_14.copyWith(
+                      style: AppTextStyle.default_16.copyWith(
                           color: model.column4 == 'C'
                               ? AppColors.primary
                               : AppColors.dangerColor,
@@ -214,7 +214,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                       isDataNotEmpty
                           ? '${model.column1 != null && model.column1!.isNotEmpty ? model.column1!.trim() : '0'}/${model.column2 != null && model.column2!.isNotEmpty ? model.column2!.trim() : '0'}'
                           : '',
-                      style: AppTextStyle.sub_12)
+                      style: AppTextStyle.sub_14)
                 ],
               )
             : Container(),
@@ -289,9 +289,12 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
               selector: (context, provider) => provider.selectedMonth,
               builder: (context, month, _) {
                 return Container(
-                  child: AppText.text(month != null
-                      ? DateUtil.getMonthStrForKR(month)
-                      : '${DateUtil.getMonthStrForKR(DateTime.now())}'),
+                  child: AppText.text(
+                      month != null
+                          ? DateUtil.getMonthStrForKR(month)
+                          : '${DateUtil.getMonthStrForKR(DateTime.now())}',
+                      style: AppTextStyle.default_18
+                          .copyWith(fontWeight: FontWeight.w500)),
                 );
               },
             )
@@ -299,9 +302,12 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
               selector: (context, provider) => provider.selectedDay,
               builder: (context, day, _) {
                 return Container(
-                  child: AppText.text(day != null
-                      ? DateUtil.getDateStrForKR(day)
-                      : '${DateUtil.getMonthStrForKR(DateTime.now())}'),
+                  child: AppText.text(
+                      day != null
+                          ? DateUtil.getDateStrForKR(day)
+                          : '${DateUtil.getMonthStrForKR(DateTime.now())}',
+                      style: AppTextStyle.default_18
+                          .copyWith(fontWeight: FontWeight.w500)),
                 );
               },
             ),
@@ -373,17 +379,14 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                       defaultSpacing(),
                       Divider(),
                       _buildWeekTitle(),
-                      Padding(
-                        padding: AppSize.defaultSidePadding,
-                        child: Column(
-                          children: [
-                            ...weeks
-                                .asMap()
-                                .entries
-                                .map((map) => _buildWeekRow(context, map.value))
-                                .toList()
-                          ],
-                        ),
+                      Column(
+                        children: [
+                          ...weeks
+                              .asMap()
+                              .entries
+                              .map((map) => _buildWeekRow(context, map.value))
+                              .toList()
+                        ],
                       )
                     ],
                   )
@@ -880,12 +883,16 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   var isLock = false;
                   if ((p.isResetDay == null && !p.isLoadDayData && !isLock)) {
                     isLock = true;
-                    p.setSelectedDate(DateTime.now());
+                    if (p.dayResponseModel == null) {
+                      p.setSelectedDate(DateTime.now());
+                    }
                   }
                   if (!p.isLoadDayData) {
-                    p
-                        .getDayData(isWithLoading: true)
-                        .whenComplete(() => isLock = false);
+                    if (p.dayResponseModel == null) {
+                      p
+                          .getDayData(isWithLoading: true)
+                          .whenComplete(() => isLock = false);
+                    }
                   }
                 }
               }),
@@ -904,18 +911,18 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         defaultSpacing(),
         Divider(),
         _buildWeekTitle(),
-        Builder(builder: (context) {
-          if (resultModel != null && !resultModel.isSuccessful) {
-            Future.delayed(Duration.zero, () async {
-              var result = await AppDialog.showSignglePopup(
-                  context, tr('permission_denied'));
-              if (result != null) {
-                Navigator.pop(context);
-              }
-            });
-          }
-          return Container();
-        }),
+        // Builder(builder: (context) {
+        //   if (resultModel != null && !resultModel.isSuccessful) {
+        //     Future.delayed(Duration.zero, () async {
+        //       var result = await AppDialog.showSignglePopup(
+        //           context, tr('permission_denied'));
+        //       if (result != null) {
+        //         Navigator.pop(context);
+        //       }
+        //     });
+        //   }
+        //   return Container();
+        // }),
         Padding(
             padding: AppSize.defaultSidePadding,
             child: DefaultShimmer.buildCalindaShimmer())
@@ -966,7 +973,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                         Divider(color: AppColors.textGrey, height: 0),
                         hasData
                             ? _buildTapBarView(context)
-                            : _buildShimmerView(context, snapshot.data),
+                            : _buildShimmerView(
+                                context, hasData ? snapshot.data : null),
                       ],
                     );
                   }));

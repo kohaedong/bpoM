@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/model/buildConfig/kolon_build_config.dart
  * Created Date: 2022-07-04 13:56:13
- * Last Modified: 2022-09-15 09:36:35
+ * Last Modified: 2022-09-15 13:38:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
