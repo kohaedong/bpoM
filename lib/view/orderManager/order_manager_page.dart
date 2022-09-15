@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-15 14:13:31
+ * Last Modified: 2022-09-15 17:08:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,8 @@
 
 import 'package:flutter/services.dart';
 import 'package:medsalesportal/globalProvider/timer_provider.dart';
+import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -528,31 +530,48 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               BaseInputWidget(
                   context: context,
                   onTap: () async {
-                    final result = await AppDialog.showPopup(
-                        context,
-                        AddOrderPopupWidget(
-                          type: OrderItemType.EDIT,
-                          productFamily: p.selectedProductFamily!,
-                          //!
-                          bodyMap: p.commonBodyMap!,
-                          editModel: p.items![index],
-                          priceModel: p.priceModelList[index],
-                        ));
-                    if (result != null) {
-                      if (result is Map<String, dynamic>) {
-                        var itemModel =
-                            result['orderItemModel'] as RecentOrderTItemModel;
-                        var priceModel = result['priceModel'];
-                        p
-                            .getAmountAvailableForOrderEntry(isNotifier: false)
-                            .then((_) {
-                          p.updateItem(index, itemModel);
-                          p.updatePriceList(index, priceModel);
-                          p.updateQuantityList(index, itemModel.kwmeng!);
-                          p.updateSurchargeQuantityList(
-                              index, itemModel.zfreeQty!,
-                              isNotifier: true);
-                        });
+                    var currentFocus = FocusScope.of(context);
+                    if (!currentFocus.hasFocus) {
+                      final result = await AppDialog.showPopup(
+                          context,
+                          AddOrderPopupWidget(
+                            type: OrderItemType.EDIT,
+                            productFamily: p.selectedProductFamily!,
+                            //!
+                            bodyMap: p.commonBodyMap!,
+                            editModel: p.items![index],
+                            priceModel: p.priceModelList[index],
+                          ));
+                      if (result != null) {
+                        if (result is Map<String, dynamic>) {
+                          var itemModel =
+                              result['orderItemModel'] as RecentOrderTItemModel;
+                          var priceModel = result['priceModel']
+                              as BulkOrderDetailSearchMetaPriceModel;
+                          p
+                              .getAmountAvailableForOrderEntry(
+                                  isNotifier: false)
+                              .then((_) {
+                            p.updateItem(
+                                index,
+                                RecentOrderTItemModel.fromJson(
+                                    itemModel.toJson()));
+                            p.updatePriceList(
+                                index,
+                                BulkOrderDetailSearchMetaPriceModel.fromJson(
+                                    priceModel.toJson()));
+                            p.updateQuantityList(
+                              index,
+                              itemModel.kwmeng!,
+                            );
+                            p.setTableQuantity(index, itemModel.kwmeng!);
+                            p.setTableSurchargeQuantity(
+                                index, itemModel.zfreeQty!);
+                            p.updateSurchargeQuantityList(
+                                index, itemModel.zfreeQty!,
+                                isNotifier: true);
+                          });
+                        }
                       }
                     }
                   },
@@ -592,6 +611,12 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
             return Selector<OrderManagerPageProvider, List<double>>(
               selector: (context, provider) => provider.selectedQuantityList,
               builder: (context, quantityList, _) {
+                pr('build quantity');
+                if (controller.text != '${quantityList[index].toInt()}') {
+                  if (quantityList[index].toInt() != 0) {
+                    controller.text = '${quantityList[index].toInt()}';
+                  }
+                }
                 var isNotEmpty =
                     quantityList.isNotEmpty && quantityList[index] != 0.0;
                 return BaseInputWidget(
@@ -616,7 +641,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       }
                     },
                     hintText: isNotEmpty
-                        ? quantityList[index].toString()
+                        ? '${quantityList[index].toInt()}'
                         : tr('plz_enter'),
                     keybordType: TextInputType.number,
                     hintTextStyleCallBack: () => isNotEmpty
@@ -633,6 +658,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                     onChangeCallBack: (t) async {
                       if (double.tryParse(t) != null) {
                         p.updateQuantityList(index, double.parse(t));
+                        p.setTableQuantity(index, double.parse(t));
                       } else if (t.isEmpty) {
                         p.updateQuantityList(index, 0);
                       }

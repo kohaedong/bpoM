@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/add_order_popup_provider.dart
  * Created Date: 2022-09-04 17:56:07
- * Last Modified: 2022-09-14 15:50:10
+ * Last Modified: 2022-09-15 17:25:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -41,12 +41,14 @@ class AddOrderPopupProvider extends ChangeNotifier {
     bodyMapp.forEach((key, value) {
       bodyMap.putIfAbsent(key, () => '$value');
     });
+
     if (editModell != null) {
       editModel = editModell;
       selectedMateria = OrderManagerMaterialModel.fromJson(editModell.toJson());
       pr(selectedMateria?.toJson());
     }
-    if (priceModell != null) {
+    if (priceModell != null && priceModell.kwmeng != 0.0) {
+      height = AppSize.realHeight * .8;
       priceModel =
           BulkOrderDetailSearchMetaPriceModel.fromJson(priceModell.toJson());
       pr(selectedMateria?.toJson());
@@ -60,7 +62,9 @@ class AddOrderPopupProvider extends ChangeNotifier {
   void setHeight(double val, {bool? isNotNotifier}) {
     height = val;
     if (isNotNotifier == null) {
-      notifyListeners();
+      try {
+        notifyListeners();
+      } catch (e) {}
     }
   }
 
@@ -82,6 +86,9 @@ class AddOrderPopupProvider extends ChangeNotifier {
 
   void setSurcharge(String? str) {
     surcharge = str;
+    if (str != null) {
+      editModel!.zfreeQty = double.parse(str);
+    }
     notifyListeners();
   }
 
@@ -137,7 +144,8 @@ class AddOrderPopupProvider extends ChangeNotifier {
     var temp = BulkOrderDetailSearchMetaPriceModel();
     temp.matnr = selectedMateria!.matnr;
     temp.vrkme = selectedMateria!.vrkme ?? '0';
-    temp.kwmeng = double.parse(quantity ?? '0');
+    temp.kwmeng =
+        quantity == null || quantity!.isEmpty ? 0 : double.parse(quantity!);
     temp.zfreeQtyIn = double.parse(surcharge ?? '0');
     var tListBase64 = await EncodingUtils.base64Convert(temp.toJson());
     Map<String, dynamic> _body = {
@@ -167,7 +175,9 @@ class AddOrderPopupProvider extends ChangeNotifier {
       }
       // netpr 단가.netwr 정가.
       isLoadData = false;
-      notifyListeners();
+      try {
+        notifyListeners();
+      } catch (e) {}
       return ResultModel(isSuccess,
           message: !isSuccess ? temp.esReturn!.message! : '');
     }

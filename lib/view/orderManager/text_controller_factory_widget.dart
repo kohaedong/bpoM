@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/text_controller_factory.dart
  * Created Date: 2022-09-06 18:26:48
- * Last Modified: 2022-09-06 18:45:48
+ * Last Modified: 2022-09-15 16:55:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -20,6 +20,7 @@ class TextControllerFactoryWidget extends StatefulWidget {
       {required this.giveTextEditControllerWidget, Key? key})
       : super(key: key);
   final GiveTextEditControllerWidget? giveTextEditControllerWidget;
+
   @override
   State<TextControllerFactoryWidget> createState() =>
       _TextControllerFactoryWidgetState();

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-15 13:40:27
+ * Last Modified: 2022-09-15 16:28:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -259,6 +259,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     temp.removeAt(indexx);
     temp..insert(indexx, quantity);
     selectedQuantityList = [...temp];
+    notifyListeners();
   }
 
   void removeQuantityList(int indexx, {bool? isNotifier}) {

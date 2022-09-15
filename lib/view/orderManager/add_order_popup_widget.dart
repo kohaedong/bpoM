@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-15 09:33:04
+ * Last Modified: 2022-09-15 17:28:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -130,7 +130,12 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                             AppDialog.showSignglePopup(
                                 context, result.message!);
                           } else {
-                            p.setHeight(AppSize.realHeight * .8);
+                            if (p.quantity != null && p.quantity!.isNotEmpty) {
+                              p.setHeight(AppSize.realHeight * .8);
+                            } else {
+                              p.setQuantity(null);
+                              p.setHeight(AppSize.realHeight * .5);
+                            }
                           }
                         });
                       }
@@ -217,31 +222,30 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
 
   Widget _buildOrderInfo(BuildContext context) {
     return Selector<AddOrderPopupProvider,
-        Tuple2<BulkOrderDetailSearchMetaPriceModel?, String?>>(
-      selector: (context, provider) =>
-          Tuple2(provider.priceModel, provider.quantity),
-      builder: (context, tuple, _) {
-        return tuple.item1 != null && tuple.item2 != null
+        BulkOrderDetailSearchMetaPriceModel?>(
+      selector: (context, provider) => provider.priceModel,
+      builder: (context, model, _) {
+        return model != null
             ? Column(
                 children: [
-                  orderInfoRow(context, tr('add_quantity'), tuple.item2!),
+                  orderInfoRow(
+                      context, tr('add_quantity'), '${model.kwmeng!.toInt()}'),
                   defaultSpacing(),
                   orderInfoRow(context, tr('supply_and_vat_2'),
-                      '${FormatUtil.addComma('${tuple.item1!.netwr}')}/${FormatUtil.addComma('${tuple.item1!.mwsbp}')}'),
+                      '${FormatUtil.addComma('${model.netwr}')}/${FormatUtil.addComma('${model.mwsbp}')}'),
                   defaultSpacing(),
                   orderInfoRow(context, tr('unit_and_standart_price'),
-                      '${FormatUtil.addComma('${tuple.item1!.znetpr}')}/${FormatUtil.addComma('${tuple.item1!.netpr}')}'),
+                      '${FormatUtil.addComma('${model.znetpr}')}/${FormatUtil.addComma('${model.netpr}')}'),
                   defaultSpacing(),
                   orderInfoRow(context, tr('discount_rate_and_price'),
-                      '${FormatUtil.addComma('${tuple.item1!.zdisRate}', isReturnZero: true)}/${FormatUtil.addComma('${tuple.item1!.zdisPrice}', isReturnZero: true)}'),
+                      '${FormatUtil.addComma('${model.zdisRate}', isReturnZero: true)}/${FormatUtil.addComma('${model.zdisPrice}', isReturnZero: true)}'),
                   defaultSpacing(),
-                  orderInfoRow(context, tr('unit'), '${tuple.item1!.vrkme}'),
-                  defaultSpacing(),
-                  orderInfoRow(
-                      context, tr('currency_unit_2'), '${tuple.item1!.waerk}'),
+                  orderInfoRow(context, tr('unit'), '${model.vrkme}'),
                   defaultSpacing(),
                   orderInfoRow(
-                      context, tr('plant_'), '${tuple.item1!.werksNm}'),
+                      context, tr('currency_unit_2'), '${model.waerk}'),
+                  defaultSpacing(),
+                  orderInfoRow(context, tr('plant_'), '${model.werksNm}'),
                 ],
               )
             : Container();
@@ -278,11 +282,16 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
       builder: (context, _) {
         final p = context.read<AddOrderPopupProvider>();
         return FutureBuilder(
-            future: p.initData(
-              widget.bodyMap,
-              editModell: widget.editModel,
-            ),
+            future: p.initData(widget.bodyMap,
+                editModell: widget.editModel, priceModell: widget.priceModel),
             builder: (context, snapshot) {
+              if (widget.type == OrderItemType.EDIT) {
+                if (widget.editModel!.kwmeng != 0.0 &&
+                    _productQuantityInputController.text == '') {
+                  _productQuantityInputController.text =
+                      '${widget.editModel!.kwmeng!.toInt()}';
+                }
+              }
               if (snapshot.hasData &&
                   snapshot.connectionState == ConnectionState.done) {
                 return Selector<AddOrderPopupProvider, double>(
