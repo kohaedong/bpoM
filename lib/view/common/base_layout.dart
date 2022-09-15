@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_widget.dart
  * Created Date: 2021-08-19 11:37:50
- * Last Modified: 2022-09-06 12:55:03
+ * Last Modified: 2022-09-15 09:58:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -10,6 +10,8 @@
  * 												Discription													
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
+
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
@@ -53,8 +55,9 @@ class BaseLayout extends StatelessWidget {
       body: isWithWillPopScope != null
           ? WillPopScope(
               child: SafeArea(
-                  bottom: isWithBottomSafeArea ?? false,
-                  right: isWithBottomSafeArea ?? false,
+                  bottom: Platform.isIOS
+                      ? isWithBottomSafeArea ?? false
+                      : isWithBottomSafeArea ?? true,
                   child: GestureDetector(
                       onTap: () {
                         hasForm
@@ -67,7 +70,9 @@ class BaseLayout extends StatelessWidget {
                       child: child)),
               onWillPop: () async => false)
           : SafeArea(
-              bottom: isWithBottomSafeArea ?? false,
+              bottom: Platform.isIOS
+                  ? isWithBottomSafeArea ?? false
+                  : isWithBottomSafeArea ?? true,
               child: GestureDetector(
                   onTap: () {
                     hasForm

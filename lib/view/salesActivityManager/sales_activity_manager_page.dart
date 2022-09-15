@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-08 13:48:40
+ * Last Modified: 2022-09-14 17:16:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -675,43 +675,47 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             officeAddress: officeAddress);
         return Material(
           type: MaterialType.transparency,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Positioned(
-                  right: AppSize.padding,
-                  bottom: (AppSize.defaultListItemSpacing * 2) +
-                      AppSize.buttonHeight * 2,
-                  child: Column(
-                    children: [
-                      _buildMenuItem(
-                          context, '최종콜 삭제', MenuType.ACTIVITY_DELETE),
-                      defaultSpacing(times: 2),
-                      _buildMenuItem(context, '신규활동 추가', MenuType.ACTIVITY_ADD),
-                      defaultSpacing(times: 2),
-                      _buildMenuItem(context, '', MenuType.ACTIVITY_STATUS),
-                    ],
-                  )),
-              Positioned(
-                  right: AppSize.padding,
-                  bottom: AppSize.buttonHeight,
-                  child: FloatingActionButton(
-                    backgroundColor: AppColors.primary,
-                    onPressed: () {
-                      Navigator.pop(context, p.isNeedUpdate);
-                    },
-                    child: Icon(Icons.close, color: AppColors.whiteText),
-                  )),
-              Positioned(
-                  left: 0,
-                  bottom: 0,
-                  child: Selector<ActivityMenuProvider, bool>(
-                      selector: (context, provider) => provider.isLoadData,
-                      builder: (context, isLoadData, _) {
-                        return BaseLoadingViewOnStackWidget.build(
-                            context, isLoadData);
-                      }))
-            ],
+          child: SafeArea(
+            bottom: true,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                    right: AppSize.padding,
+                    bottom: (AppSize.defaultListItemSpacing * 2) +
+                        AppSize.buttonHeight * 2,
+                    child: Column(
+                      children: [
+                        _buildMenuItem(
+                            context, '최종콜 삭제', MenuType.ACTIVITY_DELETE),
+                        defaultSpacing(times: 2),
+                        _buildMenuItem(
+                            context, '신규활동 추가', MenuType.ACTIVITY_ADD),
+                        defaultSpacing(times: 2),
+                        _buildMenuItem(context, '', MenuType.ACTIVITY_STATUS),
+                      ],
+                    )),
+                Positioned(
+                    right: AppSize.padding,
+                    bottom: AppSize.buttonHeight,
+                    child: FloatingActionButton(
+                      backgroundColor: AppColors.primary,
+                      onPressed: () {
+                        Navigator.pop(context, p.isNeedUpdate);
+                      },
+                      child: Icon(Icons.close, color: AppColors.whiteText),
+                    )),
+                Positioned(
+                    left: 0,
+                    bottom: 0,
+                    child: Selector<ActivityMenuProvider, bool>(
+                        selector: (context, provider) => provider.isLoadData,
+                        builder: (context, isLoadData, _) {
+                          return BaseLoadingViewOnStackWidget.build(
+                              context, isLoadData);
+                        }))
+              ],
+            ),
           ),
         );
       },

@@ -43,7 +43,7 @@ void setSystemOverlay() {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-      overlays: [SystemUiOverlay.top]);
+      overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
 }
 

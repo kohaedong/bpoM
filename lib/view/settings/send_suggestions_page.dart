@@ -139,7 +139,6 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
   Widget build(BuildContext context) {
     return BaseLayout(
         hasForm: true,
-        isWithBottomSafeArea: false,
         isResizeToAvoidBottomInset: true,
         appBar: MainAppBar(
           context,

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-14 15:55:36
+ * Last Modified: 2022-09-14 17:47:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -856,8 +856,13 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 isValidate ? AppColors.primary : AppColors.unReadyButton,
                 AppTextStyle.menu_18(
                     isValidate ? AppColors.whiteText : AppColors.hintText),
-                0,
-                () {}));
+                0, () {
+              if (isValidate) {
+                final p = context.read<OrderManagerPageProvider>();
+                p.onSubmmit();
+                //
+              }
+            }));
       },
     );
   }

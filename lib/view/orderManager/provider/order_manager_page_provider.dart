@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-14 15:46:03
+ * Last Modified: 2022-09-15 09:29:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -73,6 +73,20 @@ class OrderManagerPageProvider extends ChangeNotifier {
       items != null &&
       items!.isNotEmpty &&
       items!.where((item) => item.kwmeng == 0.0).toList().isEmpty;
+
+  Map<String, dynamic>? get commonBodyMap => {
+        "IV_VKORG": CheckSuperAccount.isMultiAccount()
+            ? selectedSalsePerson != null
+                ? selectedSalsePerson!.orghk
+                : CacheService.getEsLogin()!.vkorg
+            : CacheService.getEsLogin()!.vkorg,
+        "IV_VTWEG": selectedSalseChannel != tr('all')
+            ? getCode(channelList!, selectedSalseChannel!)
+            : '10', // default 10
+        "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
+        "IV_KUNNR": selectedCustomerModel!.kunnr,
+        "IV_ZZKUNNR_END": selectedCustomerModel!.kunnr,
+      };
 
   String getCode(List<String> list, String val) {
     if (val != tr('all')) {
@@ -364,6 +378,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
       } else {
         isSingleData = null;
       }
+      resetOrderItem();
       notifyListeners();
     } else {
       selectedCustomerModel = null;
@@ -454,19 +469,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  Map<String, dynamic>? get commonBodyMap => {
-        "IV_VKORG": CheckSuperAccount.isMultiAccount()
-            ? selectedSalsePerson != null
-                ? selectedSalsePerson!.orghk
-                : CacheService.getEsLogin()!.vkorg
-            : CacheService.getEsLogin()!.vkorg,
-        "IV_VTWEG": selectedSalseChannel != tr('all')
-            ? getCode(channelList!, selectedSalseChannel!)
-            : '10', // default 10
-        "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
-        "IV_KUNNR": selectedCustomerModel!.kunnr,
-        "IV_ZZKUNNR_END": selectedCustomerModel!.kunnr,
-      };
   Future<ResultModel> checkPrice(int indexx, {required bool isNotifier}) async {
     if (isNotifier) {
       isLoadData = true;
@@ -690,6 +692,25 @@ class OrderManagerPageProvider extends ChangeNotifier {
       selectedSalsePerson = staffList.isNotEmpty ? staffList.first : null;
       return ResultModel(true);
     }
+    return ResultModel(false);
+  }
+
+  Future<ResultModel> onSubmmit() async {
+    _api.init(RequestType.CREATE_ORDER);
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.CREATE_ORDER.serverMethod,
+      "methodParamMap": {
+        "IV_PTYPE": "C",
+        "IS_LOGIN": CacheService.getIsLogin(),
+        "resultTables": RequestType.CREATE_ORDER.resultTable,
+        "T_HEAD": "",
+        "T_ITEM": "",
+        "IV_ZREQNO": "",
+        "T_TEXT": "",
+        "functionName": RequestType.CREATE_ORDER.serverMethod
+      }
+    };
+    _api.request(body: _body);
     return ResultModel(false);
   }
 

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-14 13:25:26
+ * Last Modified: 2022-09-15 09:33:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -323,12 +323,14 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                             .show(context, tr('plz_check_essential_option'));
                         return null;
                       } else {
-                        var orderItemModel = await p.createOrderItemModel();
-                        var priceModel = p.priceModel;
-                        return {
-                          'orderItemModel': orderItemModel,
-                          'priceModel': priceModel
-                        };
+                        if (!p.isLoadData) {
+                          var orderItemModel = await p.createOrderItemModel();
+                          var priceModel = p.priceModel;
+                          return {
+                            'orderItemModel': orderItemModel,
+                            'priceModel': priceModel
+                          };
+                        }
                       }
                     }, canPopCallBackk: () async {
                       if (p.selectedMateria == null || p.quantity == null) {
@@ -336,7 +338,9 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                             .show(context, tr('plz_check_essential_option'));
                         return false;
                       }
-                      if (p.selectedMateria != null && p.quantity != null) {
+                      if (p.selectedMateria != null &&
+                          p.quantity != null &&
+                          !p.isLoadData) {
                         return true;
                       }
                       return false;
