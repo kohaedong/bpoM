@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-14 17:16:27
+ * Last Modified: 2022-09-15 10:09:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -10,6 +10,8 @@
  * 												Discription													
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
+
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
@@ -676,7 +678,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         return Material(
           type: MaterialType.transparency,
           child: SafeArea(
-            bottom: true,
+            bottom: Platform.isIOS ? false : true,
             child: Stack(
               alignment: Alignment.center,
               children: [

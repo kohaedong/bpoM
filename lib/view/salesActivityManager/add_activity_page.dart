@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-14 16:50:44
+ * Last Modified: 2022-09-15 10:24:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -422,7 +422,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 AppTextStyle.menu_18(
                     canShow ? AppColors.whiteText : AppColors.hintText),
                 0,
-                selfHeight: AppSize.buttonHeight * 1.3, () async {
+                selfHeight: AppSize.bottomButtonHeight, () async {
               final p = context.read<AddActivityPageProvider>();
               pr('1111 pressed');
               if (p.activityStatus == ActivityStatus.STOPED ||
@@ -450,7 +450,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   }
                 }
               }
-            });
+            }, isBottomButton: true);
           },
         ));
   }

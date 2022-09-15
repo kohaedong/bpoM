@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'app_colors.dart';
 import 'app_text_style.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +54,7 @@ class AppStyles {
   static Widget buildButton(BuildContext context, String text, double width,
       Color bgColor, TextStyle style, double radius, VoidCallback callback,
       {bool? isLeft,
+      bool? isBottomButton,
       bool? isWithBottomRadius,
       double? selfHeight,
       bool? isWithBorder,
@@ -61,7 +64,11 @@ class AppStyles {
       onTap: callback.call,
       child: Container(
           alignment: Alignment.center,
-          height: selfHeight ?? AppSize.buttonHeight,
+          height: isBottomButton == null
+              ? selfHeight ?? AppSize.buttonHeight
+              : Platform.isIOS
+                  ? AppSize.bottomButtonHeight
+                  : AppSize.buttonHeight,
           width: width,
           decoration: BoxDecoration(
               color: bgColor,

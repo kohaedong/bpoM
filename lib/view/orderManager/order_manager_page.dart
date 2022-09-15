@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-14 17:47:56
+ * Last Modified: 2022-09-15 10:29:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -31,7 +31,6 @@ import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
@@ -862,7 +861,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 p.onSubmmit();
                 //
               }
-            }));
+            }, isBottomButton: true));
       },
     );
   }
