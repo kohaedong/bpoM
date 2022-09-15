@@ -50,7 +50,7 @@ RecentOrderHeadModel _$RecentOrderHeadModelFromJson(
       zstatus: json['ZSTATUS'] as String?,
       zzkunnrEnd: json['ZZKUNNR_END'] as String?,
       zzkunnrEndNm: json['ZZKUNNR_END_NM'] as String?,
-    );
+    )..aezet = json['AEZET'] as String?;
 
 Map<String, dynamic> _$RecentOrderHeadModelToJson(
         RecentOrderHeadModel instance) =>
@@ -86,6 +86,7 @@ Map<String, dynamic> _$RecentOrderHeadModelToJson(
       'SANUMNM': instance.sanumnm,
       'KUNNR_NM': instance.kunnrNm,
       'KUNWE_NM': instance.kunweNm,
+      'AEZET': instance.aezet,
       'ZZKUNNR_END_NM': instance.zzkunnrEndNm,
       'EMPNO': instance.empno,
       'UMODE': instance.umode,

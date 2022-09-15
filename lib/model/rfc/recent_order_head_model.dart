@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/recent_order_head_model.dart
  * Created Date: 2022-09-04 16:18:47
- * Last Modified: 2022-09-05 15:24:22
+ * Last Modified: 2022-09-15 12:53:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -78,6 +78,8 @@ class RecentOrderHeadModel {
   String? kunnrNm;
   @JsonKey(name: 'KUNWE_NM')
   String? kunweNm;
+  @JsonKey(name: 'AEZET')
+  String? aezet;
   @JsonKey(name: 'ZZKUNNR_END_NM')
   String? zzkunnrEndNm;
   @JsonKey(name: 'EMPNO')

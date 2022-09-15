@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-15 09:29:54
+ * Last Modified: 2022-09-15 13:11:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,8 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';
@@ -685,9 +687,18 @@ class OrderManagerPageProvider extends ChangeNotifier {
       return ResultModel(false);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
+      pr(result.body);
       var temp = EtStaffListResponseModel.fromJson(result.body['data']);
       var staffList = temp.staffList!
-          .where((model) => model.sname == selectedSalsePerson!.sname)
+          .where((model) =>
+              model.sname ==
+                  (selectedSalsePerson != null
+                      ? selectedSalsePerson!.sname
+                      : esLogin!.ename) &&
+              model.logid ==
+                  (selectedSalsePerson != null
+                      ? selectedSalsePerson!.logid
+                      : esLogin!.logid))
           .toList();
       selectedSalsePerson = staffList.isNotEmpty ? staffList.first : null;
       return ResultModel(true);
@@ -710,7 +721,65 @@ class OrderManagerPageProvider extends ChangeNotifier {
         "functionName": RequestType.CREATE_ORDER.serverMethod
       }
     };
-    _api.request(body: _body);
+
+    var headList = <RecentOrderHeadModel>[];
+    var itemList = <RecentOrderTItemModel>[];
+    var textList = <RecentOrderTTextModel>[];
+
+    var head = RecentOrderHeadModel();
+    var esLogin = CacheService.getEsLogin();
+    if (!CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
+      await searchPerson();
+    }
+    var getGroupName = () {
+      var data = groupDataList!
+          .where((group) => selectedSalsePerson != null
+              ? group.contains(selectedSalsePerson!.vkgrp!)
+              : group.contains(esLogin!.vkgrp!))
+          .single;
+      return data.substring(0, data.indexOf('-'));
+    };
+    head.dptcd = selectedSalsePerson!.dptcd;
+    head.orghk = selectedSalsePerson!.orghk;
+    head.vkorg = selectedSalsePerson!.vkorg;
+    head.vkgrp = selectedSalsePerson!.vkgrp;
+    head.empno = selectedSalsePerson!.empno;
+    head.pernr = selectedSalsePerson!.pernr;
+    head.vkgrpNm = getGroupName();
+
+    head.zreqDate = DateUtil.getDateStr(DateTime.now().toIso8601String());
+    head.vtweg = getCode(channelList!, selectedSalseChannel!);
+    head.spart = getCode(productFamilyDataList!, selectedProductFamily!);
+
+    head.kunnr = selectedCustomerModel!.kunnr;
+    head.kunnrNm = selectedCustomerModel!.kunnrNm;
+    head.kunwe = selectedSupplierModel!.kunnr;
+    head.kunweNm = selectedSupplierModel!.kunnrNm;
+    head.zzkunnrEnd = selectedEndCustomerModel!.kunnr;
+    head.zzkunnrEndNm = selectedEndCustomerModel!.kunnrNm;
+    head.xconf = 'X';
+    head.umode = 'I';
+    head.bukrs = esLogin!.bukrs;
+
+    head.bstkd = '';
+    head.vbeln = '';
+    head.loevm = '';
+    head.orerr = '';
+    head.loevmOr = '';
+    head.sanum = '';
+    head.sanumnm = '';
+    head.slnum = '';
+    head.erdat = '';
+    head.erzet = '';
+    head.ernam = '';
+    head.erwid = '';
+    head.aezet = '';
+    head.aedat = '';
+    head.aenam = '';
+    head.aewid = '';
+
+    final result = await _api.request(body: _body);
+
     return ResultModel(false);
   }
 

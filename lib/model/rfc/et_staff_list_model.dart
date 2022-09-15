@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/model/rfc/et_staff_list_model.dart
  * Created Date: 2021-09-23 11:36:54
- * Last Modified: 2022-08-24 09:24:49
+ * Last Modified: 2022-09-15 11:08:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -19,7 +19,7 @@ class EtStaffListModel {
   @JsonKey(name: 'ORGHK')
   String? orghk;
   @JsonKey(name: 'DPTCD')
-  String? dptck;
+  String? dptcd;
   @JsonKey(name: 'DPTNM')
   String? dptnm;
   @JsonKey(name: 'LOGID')
@@ -30,6 +30,14 @@ class EtStaffListModel {
   String? empno;
   @JsonKey(name: 'SNAME')
   String? sname;
+  @JsonKey(name: 'IKENID')
+  String? ikenId;
+  @JsonKey(name: 'SALEM')
+  String? salem;
+  @JsonKey(name: 'VKGRP')
+  String? vkgrp;
+  @JsonKey(name: 'VKORG')
+  String? vkorg;
   @JsonKey(name: 'PERNR')
   String? pernr;
   String? rStatus;
@@ -37,7 +45,7 @@ class EtStaffListModel {
   String? rSeq;
 
   EtStaffListModel(
-      {this.dptck,
+      {this.dptcd,
       this.dptnm,
       this.empno,
       this.levelcdnm,

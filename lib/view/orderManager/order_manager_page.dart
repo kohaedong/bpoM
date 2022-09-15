@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-15 10:29:12
+ * Last Modified: 2022-09-15 10:35:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/services.dart';
+import 'package:medsalesportal/globalProvider/timer_provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -858,6 +859,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 0, () {
               if (isValidate) {
                 final p = context.read<OrderManagerPageProvider>();
+                final tp = context.read<TimerProvider>();
+
                 p.onSubmmit();
                 //
               }
