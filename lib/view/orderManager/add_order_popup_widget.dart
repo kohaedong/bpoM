@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-15 17:28:46
+ * Last Modified: 2022-09-15 18:19:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -174,7 +174,7 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
     var isMatch = widget.productFamily.contains('비처방의약품') ||
         widget.productFamily.contains('건강식품') ||
         widget.productFamily.contains('처방의약품');
-
+    final p = context.read<AddOrderPopupProvider>();
     return !isMatch
         ? Container()
         : BaseColumWithTitleAndTextFiled.build(
@@ -191,6 +191,9 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                         : AppColors.textFieldUnfoucsColor,
                     hintText: surcharge ?? tr('plz_enter'),
                     keybordType: TextInputType.number,
+                    onChangeCallBack: (str) {
+                      p.setSurcharge(str);
+                    },
                     // 팀장 일때 만 팀원선택후 삭제가능.
                     width: AppSize.defaultContentsWidth,
                     hintTextStyleCallBack: () => surcharge != null
@@ -290,6 +293,11 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                     _productQuantityInputController.text == '') {
                   _productQuantityInputController.text =
                       '${widget.editModel!.kwmeng!.toInt()}';
+                }
+                if (widget.editModel!.zfreeQty != 0.0 &&
+                    _surchargeQuantityInputController.text == '') {
+                  _surchargeQuantityInputController.text =
+                      '${widget.editModel!.zfreeQty!.toInt()}';
                 }
               }
               if (snapshot.hasData &&

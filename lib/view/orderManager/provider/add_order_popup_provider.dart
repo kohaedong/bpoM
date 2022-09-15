@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/add_order_popup_provider.dart
  * Created Date: 2022-09-04 17:56:07
- * Last Modified: 2022-09-15 17:25:40
+ * Last Modified: 2022-09-15 18:17:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -53,8 +53,8 @@ class AddOrderPopupProvider extends ChangeNotifier {
           BulkOrderDetailSearchMetaPriceModel.fromJson(priceModell.toJson());
       pr(selectedMateria?.toJson());
       quantity = priceModel!.kwmeng != 0.0 ? '${priceModel!.kwmeng}' : null;
-      surcharge =
-          priceModel!.zfreeQty != 0.0 ? '${priceModel!.zfreeQty}' : null;
+      surcharge = editModel!.zfreeQty != 0.0 ? '${editModel!.zfreeQty}' : null;
+      pr('@!@!@!@!@!@!@!@!@$surcharge');
     }
     return true;
   }
@@ -86,9 +86,6 @@ class AddOrderPopupProvider extends ChangeNotifier {
 
   void setSurcharge(String? str) {
     surcharge = str;
-    if (str != null) {
-      editModel!.zfreeQty = double.parse(str);
-    }
     notifyListeners();
   }
 
@@ -110,6 +107,7 @@ class AddOrderPopupProvider extends ChangeNotifier {
     temp.zdisRate = priceModel!.zdisRate;
     temp.zerr = priceModel!.zerr;
     temp.zfreeQty = surcharge != null ? double.parse(surcharge!) : 0.0;
+    pr('sbsbv   ${temp.zfreeQty}');
     temp.zminQty = priceModel!.mainQty; // 제약 주문 최소 수량
     temp.zmsg = priceModel!.zmsg; // 메시지
     temp.znetpr = priceModel!.znetpr; // 기준판가.
@@ -133,6 +131,7 @@ class AddOrderPopupProvider extends ChangeNotifier {
     // temp.zreqpo = ''; // 주문요청번호 (아이템)
     // temp.zstatus = ''; // 주문처리 상태코드
     // temp.zststx = ''; // 주문상태 텍스트(아이템)
+
     return temp;
   }
 

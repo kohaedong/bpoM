@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-15 17:08:14
+ * Last Modified: 2022-09-15 18:05:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -546,6 +546,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         if (result is Map<String, dynamic>) {
                           var itemModel =
                               result['orderItemModel'] as RecentOrderTItemModel;
+                          pr(itemModel.toJson());
                           var priceModel = result['priceModel']
                               as BulkOrderDetailSearchMetaPriceModel;
                           p
@@ -565,11 +566,11 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                               itemModel.kwmeng!,
                             );
                             p.setTableQuantity(index, itemModel.kwmeng!);
-                            p.setTableSurchargeQuantity(
-                                index, itemModel.zfreeQty!);
                             p.updateSurchargeQuantityList(
                                 index, itemModel.zfreeQty!,
                                 isNotifier: true);
+                            p.setTableSurchargeQuantity(
+                                index, itemModel.zfreeQty!);
                           });
                         }
                       }
@@ -679,10 +680,22 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                   selector: (context, provider) =>
                       provider.selectedSurchargeList,
                   builder: (context, surchargeList, _) {
+                    if (controller.text != '${surchargeList[index].toInt()}') {
+                      if (surchargeList[index].toInt() != 0) {
+                        controller.text = '${surchargeList[index].toInt()}';
+                      }
+                    }
                     var isNotEmpty =
                         surchargeList.isNotEmpty && surchargeList[index] != 0.0;
                     return BaseInputWidget(
                         context: context,
+                        textEditingController: controller,
+                        keybordType: TextInputType.number,
+                        onTap: () {
+                          if (isNotEmpty) {
+                            controller.text = '${surchargeList[index].toInt()}';
+                          }
+                        },
                         hintText: isNotEmpty ? '' : tr('plz_enter'),
                         defaultIconCallback: () {
                           controller.text = '';
@@ -698,8 +711,10 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                           if (double.tryParse(t) != null) {
                             p.updateSurchargeQuantityList(
                                 index, double.parse(t));
+                            p.setTableSurchargeQuantity(index, double.parse(t));
                           } else if (t.isEmpty) {
                             p.updateSurchargeQuantityList(index, 0);
+                            p.setTableSurchargeQuantity(index, 0);
                           }
                         },
                         enable: true);
