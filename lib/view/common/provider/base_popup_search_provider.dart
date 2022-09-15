@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-09-15 11:05:32
+ * Last Modified: 2022-09-15 15:08:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -157,7 +157,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   void setKeymanInputText(String? value) {
     keymanInputText = value;
-    if (value == null || (value.length == 1) || value == '') {
+    if (value == null || (value.length == 1)) {
       if (value == '*') {
         keymanInputText = ' ';
       }
@@ -195,7 +195,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   void setCustomerInputText(String? value) {
     customerInputText = value;
-    if (value == null || (value.length == 1) || value == '') {
+    if (value == null || (value.length == 1)) {
       if (value == '*') {
         customerInputText = ' ';
       }
@@ -205,7 +205,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   void setEndCustomerInputText(String? value) {
     endCustomerInputText = value;
-    if (value == null || (value.length == 1) || value == '') {
+    if (value == null || (value.length == 1)) {
       if (value == '*') {
         endCustomerInputText = ' ';
       }
@@ -503,7 +503,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   Future<BasePoupSearchResult> searchCustomer(bool isMounted,
       {bool? isAddActivityPage}) async {
-    if (isFirestRun) {
+    if (isFirestRun || !isMounted) {
       isFirestRun = false;
       return BasePoupSearchResult(false);
     }
@@ -593,11 +593,12 @@ class BasePopupSearchProvider extends ChangeNotifier {
       {bool? isBulkOrder}) async {
     // 검색 하기 전에 popup body 에는  '조회결관가 없습니다.' 문구만 보여주기 위해.
     // 첫 진입시 data 초기화 작업만 해주고 BasePoupSearchResult(false) 로 return 한다;
-    if (isFirestRun) {
+    if (isFirestRun || !isMounted) {
       await initData();
       isFirestRun = false;
       return BasePoupSearchResult(false);
     }
+
     isLoadData = true;
     if (isMounted) {
       notifyListeners();
@@ -644,31 +645,35 @@ class BasePopupSearchProvider extends ChangeNotifier {
         ? RequestType.SEARCH_SALLER_FOR_BULK_ORDER
         : RequestType.SEARCH_SALLER);
     final result = await _api.request(body: _body);
-    if (result == null || result.statusCode != 200) {
+    if (result != null && result.statusCode != 200) {
       isLoadData = false;
       staList = null;
       notifyListeners();
       return BasePoupSearchResult(false);
     }
-    if (result.statusCode == 200 && result.body['data'] != null) {
+    if (result != null && result.statusCode == 200) {
       var temp = EtCustomerResponseModel.fromJson(result.body['data']);
-      if (temp.etCustomer!.length != partial) {
-        hasMore = false;
+      if (temp.esReturn!.mtype == 'S') {
+        pr(result.body);
+        if (temp.etCustomer!.length != partial) {
+          hasMore = false;
+        }
+        if (etCustomerResponseModel == null) {
+          etCustomerResponseModel = temp;
+        } else {
+          etCustomerResponseModel!.etCustomer!.addAll(temp.etCustomer!);
+        }
+        if (etCustomerResponseModel != null &&
+            etCustomerResponseModel!.etCustomer == null) {
+          etCustomerResponseModel = null;
+        }
+        isLoadData = false;
+        notifyListeners();
+        return BasePoupSearchResult(true);
       }
-      if (etCustomerResponseModel == null) {
-        etCustomerResponseModel = temp;
-      } else {
-        etCustomerResponseModel!.etCustomer!.addAll(temp.etCustomer!);
-      }
-      if (etCustomerResponseModel != null &&
-          etCustomerResponseModel!.etCustomer == null) {
-        etCustomerResponseModel = null;
-      }
-      isLoadData = false;
-      notifyListeners();
-      return BasePoupSearchResult(true);
     }
     isLoadData = false;
+    notifyListeners();
     return BasePoupSearchResult(false);
   }
 

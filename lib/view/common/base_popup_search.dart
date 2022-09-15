@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-14 10:40:10
+ * Last Modified: 2022-09-15 15:03:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,6 +18,7 @@ import 'package:medsalesportal/model/rfc/order_manager_material_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -685,6 +686,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
   }
 
   Widget _buildSearchBar(BuildContext context) {
+    pr('buildBar');
     return Container(
       height: widget.type.appBarHeight,
       child: Column(
@@ -1235,6 +1237,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         ChangeNotifierProvider(create: (context) => NextPageLoadingProvider()),
       ],
       builder: (context, _) {
+        pr('build page');
         return Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(AppSize.radius8))),
