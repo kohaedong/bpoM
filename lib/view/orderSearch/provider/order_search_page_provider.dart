@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-08-24 17:33:21
+ * Last Modified: 2022-09-16 00:31:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -112,11 +112,12 @@ class OrderSearchPageProvider extends ChangeNotifier {
 
   Future<void> initPageData() async {
     setIsLoginModel();
-    searchPerson(dptnm: CheckSuperAccount.isMultiAccount() ? '' : null);
+    await searchPerson(dptnm: CheckSuperAccount.isMultiAccount() ? '' : null);
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
     selectedProductsFamily = selectedProcessingStatus = tr('all');
     isFirstRun = false;
+    onSearch(false);
   }
 
   void setIsLoginModel() async {

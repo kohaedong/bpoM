@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-15 18:13:15
+ * Last Modified: 2022-09-16 00:26:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -45,8 +45,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
   String? selectedSalseChannel;
   String? selectedProductFamily;
   String? selectedSalseOffice;
-  String? deliveryConditionInputText;
   String? channelCode;
+  String? deliveryConditionInputText;
   String? orderDescriptionDetailInputText;
   EtStaffListModel? selectedSalsePerson;
   EtCustomerModel? selectedCustomerModel;
@@ -594,6 +594,23 @@ class OrderManagerPageProvider extends ChangeNotifier {
       pr(recentOrderResponseModel?.toJson());
       var isExits = false;
       var isEmpty = true;
+      var createModel = (RecentOrderTItemModel model) {
+        model.zreqNo = '';
+        model.zreqpo = '';
+        model.vbeln = '';
+        model.posnr = '';
+        model.erdat = '';
+        model.erzet = '';
+        model.ernam = '';
+        model.erwid = '';
+        model.aedat = '';
+        model.aezet = '';
+        model.aenam = '';
+        model.aewid = '';
+        model.zstatus = '';
+        model.umode = '';
+        return model;
+      };
       RecentOrderTItemModel? lastModel;
       if (recentOrderResponseModel!.esReturn!.mtype == 'S') {
         isEmpty = recentOrderResponseModel!.tItem!.isEmpty;
@@ -605,10 +622,10 @@ class OrderManagerPageProvider extends ChangeNotifier {
                 .toList()
                 .isNotEmpty;
             if (!isExits) {
-              await insertItem(lastModel, isfromRecentModel: true);
+              await insertItem(createModel(lastModel), isfromRecentModel: true);
             }
           } else {
-            await insertItem(lastModel, isfromRecentModel: true);
+            await insertItem(createModel(lastModel), isfromRecentModel: true);
           }
         }
       }
@@ -691,17 +708,20 @@ class OrderManagerPageProvider extends ChangeNotifier {
     if (result.statusCode == 200 && result.body['data'] != null) {
       pr(result.body);
       var temp = EtStaffListResponseModel.fromJson(result.body['data']);
-      var staffList = temp.staffList!
-          .where((model) =>
-              model.sname ==
-                  (selectedSalsePerson != null
-                      ? selectedSalsePerson!.sname
-                      : esLogin!.ename) &&
-              model.logid ==
-                  (selectedSalsePerson != null
-                      ? selectedSalsePerson!.logid
-                      : esLogin!.logid))
-          .toList();
+      var staffList = <EtStaffListModel>[];
+      if (CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
+        staffList = temp.staffList!
+            .where((model) =>
+                model.sname == selectedSalsePerson!.sname &&
+                model.logid == selectedSalsePerson!.logid)
+            .toList();
+      } else {
+        staffList = temp.staffList!
+            .where((model) =>
+                model.sname == esLogin!.ename && model.logid == esLogin.logid)
+            .toList();
+      }
+
       selectedSalsePerson = staffList.isNotEmpty ? staffList.first : null;
       return ResultModel(true);
     }
@@ -709,25 +729,12 @@ class OrderManagerPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> onSubmmit() async {
-    _api.init(RequestType.CREATE_ORDER);
-    Map<String, dynamic> _body = {
-      "methodName": RequestType.CREATE_ORDER.serverMethod,
-      "methodParamMap": {
-        "IV_PTYPE": "C",
-        "IS_LOGIN": CacheService.getIsLogin(),
-        "resultTables": RequestType.CREATE_ORDER.resultTable,
-        "T_HEAD": "",
-        "T_ITEM": "",
-        "IV_ZREQNO": "",
-        "T_TEXT": "",
-        "functionName": RequestType.CREATE_ORDER.serverMethod
-      }
-    };
-
-    var headList = <RecentOrderHeadModel>[];
-    var itemList = <RecentOrderTItemModel>[];
-    var textList = <RecentOrderTTextModel>[];
-
+    isLoadData = true;
+    notifyListeners();
+    var temp = <Map<String, dynamic>>[];
+    var headBase64 = '';
+    var itemBase64 = '';
+    var textBase64 = '';
     var head = RecentOrderHeadModel();
     var esLogin = CacheService.getEsLogin();
     if (!CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
@@ -741,13 +748,16 @@ class OrderManagerPageProvider extends ChangeNotifier {
           .single;
       return data.substring(0, data.indexOf('-'));
     };
-    head.dptcd = selectedSalsePerson!.dptcd;
-    head.orghk = selectedSalsePerson!.orghk;
-    head.vkorg = selectedSalsePerson!.vkorg;
-    head.vkgrp = selectedSalsePerson!.vkgrp;
-    head.empno = selectedSalsePerson!.empno;
-    head.pernr = selectedSalsePerson!.pernr;
-    head.vkgrpNm = getGroupName();
+    if (selectedSalsePerson != null) {
+      pr(selectedSalsePerson!.toJson());
+      head.dptcd = selectedSalsePerson!.dptcd;
+      head.orghk = selectedSalsePerson!.orghk;
+      head.vkorg = selectedSalsePerson!.vkorg;
+      head.vkgrp = selectedSalsePerson!.vkgrp;
+      head.empno = selectedSalsePerson!.empno;
+      head.pernr = selectedSalsePerson!.pernr;
+      head.vkgrpNm = getGroupName();
+    }
 
     head.zreqDate = DateUtil.getDateStr(DateTime.now().toIso8601String());
     head.vtweg = getCode(channelList!, selectedSalseChannel!);
@@ -763,25 +773,89 @@ class OrderManagerPageProvider extends ChangeNotifier {
     head.umode = 'I';
     head.bukrs = esLogin!.bukrs;
 
-    head.bstkd = '';
-    head.vbeln = '';
-    head.loevm = '';
-    head.orerr = '';
-    head.loevmOr = '';
-    head.sanum = '';
-    head.sanumnm = '';
-    head.slnum = '';
-    head.erdat = '';
-    head.erzet = '';
-    head.ernam = '';
-    head.erwid = '';
-    head.aezet = '';
-    head.aedat = '';
-    head.aenam = '';
-    head.aewid = '';
+    head.erdat = DateUtil.getDateStr(DateTime.now().toIso8601String());
+    head.erzet = DateUtil.getTimeNow(isNotWithColon: true);
+    head.ernam = selectedSalsePerson!.sname;
+    head.erwid = selectedSalsePerson!.logid;
+    head.sanum = selectedSalsePerson!.sname;
+    head.slnum = selectedSalsePerson!.sname;
+    temp.addAll([head.toJson()]);
+    headBase64 = await EncodingUtils.base64ConvertForListMap(temp);
 
+    var createItemModel = (int indexx, RecentOrderTItemModel item) async {
+      item = RecentOrderTItemModel.fromJson(priceModelList[indexx]!.toJson());
+      item.kwmeng = selectedQuantityList[indexx];
+      item.zfreeQty = selectedSurchargeList[indexx];
+      item.erdat = DateUtil.getDateStr(DateTime.now().toIso8601String());
+      item.erzet = DateUtil.getTimeNow(isNotWithColon: true);
+      item.ernam = selectedSalsePerson!.sname;
+      item.erwid = selectedSalsePerson!.logid;
+      item.zmsg = '';
+      item.umode = 'I';
+      return item;
+    };
+
+    temp.clear();
+    await Future.forEach(items!.asMap().entries, (map) async {
+      map as MapEntry<int, RecentOrderTItemModel>;
+      var model = await createItemModel(map.key, map.value);
+      temp.add(model.toJson());
+    });
+    itemBase64 = await EncodingUtils.base64ConvertForListMap(temp);
+
+    temp.clear();
+    if (deliveryConditionInputText != null &&
+        deliveryConditionInputText!.isNotEmpty) {
+      var textModel = RecentOrderTTextModel();
+      textModel.cdgrp = 'TEXTID';
+      textModel.cditm = 'Z003';
+      textModel.seqno = '001';
+      textModel.umode = 'U';
+      textModel.ztext = deliveryConditionInputText;
+      temp.add(textModel.toJson());
+    }
+    if (orderDescriptionDetailInputText != null &&
+        orderDescriptionDetailInputText!.isNotEmpty) {
+      var textModel = RecentOrderTTextModel();
+      textModel.cdgrp = 'TEXTID';
+      textModel.cditm = 'Z004';
+      textModel.seqno = '001';
+      textModel.umode = 'U';
+      textModel.ztext = orderDescriptionDetailInputText;
+      temp.add(textModel.toJson());
+    }
+    if (temp.isNotEmpty) {
+      textBase64 = await EncodingUtils.base64ConvertForListMap(temp);
+    }
+    _api.init(RequestType.CREATE_ORDER);
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.CREATE_ORDER.serverMethod,
+      "methodParamMap": {
+        "IV_PTYPE": "C",
+        "IS_LOGIN": CacheService.getIsLogin(),
+        "resultTables": RequestType.CREATE_ORDER.resultTable,
+        "T_HEAD": headBase64,
+        "T_ITEM": itemBase64,
+        "T_TEXT": textBase64,
+        "IV_ZREQNO": "",
+        "functionName": RequestType.CREATE_ORDER.serverMethod
+      }
+    };
     final result = await _api.request(body: _body);
-
+    if (result != null && result.statusCode != 200) {
+      isLoadData = false;
+      notifyListeners();
+      return ResultModel(false);
+    }
+    if (result != null && result.statusCode == 200) {
+      isLoadData = false;
+      notifyListeners();
+      return ResultModel(true);
+    }
+    isLoadData = false;
+    try {
+      notifyListeners();
+    } catch (e) {}
     return ResultModel(false);
   }
 
