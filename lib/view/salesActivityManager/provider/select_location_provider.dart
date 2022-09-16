@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-08-31 14:34:44
+ * Last Modified: 2022-09-16 17:06:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -127,45 +127,63 @@ class SelectLocationProvider extends ChangeNotifier {
     return dist;
   }
 
-  Future<ResultModel> startOrStopActivity() async {
+  Future<ResultModel> startOrStopActivity(int indexx) async {
     isLoadData = true;
     notifyListeners();
     if (selectedAddress != null) {
       await getAddressLatLon(selectedAddress!);
     } else {
       pr('???');
-      lat = lon = '0.00';
+      lat = '0.00';
+      lon = '0.00';
     }
     assert(lat != null && lon != null);
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
     var esLogin = CacheService.getEsLogin();
     var t250Base64 = '';
+    var t260Base64 = '';
     var temp = <Map<String, dynamic>>[];
     var t250 = SalesActivityDayTable250();
-    var t260 = SalesActivityDayTable260();
 
     var time = DateUtil.getTimeNow();
     if (activityStatus == ActivityStatus.STARTED) {
-      final totalDistance = await _getTable260TotalDistance();
+      final t260TotalDistance = await _getTable260TotalDistance();
+      // if (indexx != 2) {
+      //   var t260 = editDayModel!.table260!;
+      //   // 거래처 혹은 숙박 아니면 최종 영업종료지점 까지의 거리 계산하기.
+      //   if (t260.isNotEmpty) {
+      //     var index = 0;
+      //     t260
+      //         .where((table) => table.xvisit == 'Y')
+      //         .toList()
+      //         .asMap()
+      //         .entries
+      //         .forEach((map) {
+      //       if (int.parse(time) > int.parse(map.value.aezet!)) {
+      //         index = map.key;
+      //       }
+      //     });
+      //   }
+      // }
       // 영업활동 시작 하였으면 >>>  영업활동 종료
       t250 = SalesActivityDayTable250.fromJson(
           editDayModel!.table250!.first.toJson());
-      t250.totDist = totalDistance; // 총 거리 계산.
+      t250.totDist = t260TotalDistance; // 총 거리 계산.
       t250.umode = 'U';
       t250.fcallType = 'M';
-      t250.faddcat = locationType;
+      t250.faddcat = indexx != 2 ? locationType : 'C';
       t250.fxLatitude = double.parse(lat!.trim());
       t250.fylongitude = double.parse(lon!.trim());
       t250.ftime = DateUtil.getTimeNow();
-      t250.fzaddr = selectedAddress;
+      t250.fzaddr = indexx != 2 ? selectedAddress : '';
     } else {
       // 영업활동 시작 하지 않았으면. >>> 영업활동 시작. table 신규 추가.
       t250.adate =
           FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now()));
-      t250.saddcat = locationType;
+      t250.saddcat = indexx != 2 ? locationType : 'C';
+      t250.szaddr = indexx != 2 ? selectedAddress : '';
       t250.ernam = esLogin!.ename;
-      t250.szaddr = selectedAddress!;
       t250.sxLatitude = double.parse(lat!.trim());
       t250.syLongitude = double.parse(lon!.trim());
       t250.stime = time;
@@ -176,14 +194,17 @@ class SelectLocationProvider extends ChangeNotifier {
     }
     temp.addAll([t250.toJson()]);
     t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
-    temp.clear();
-    temp.addAll([t260.toJson()]);
+    if (editDayModel!.table260!.isNotEmpty) {
+      temp.clear();
+      temp.addAll([...editDayModel!.table260!.map((e) => e.toJson())]);
+      t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    }
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {
         "IV_PTYPE": "U",
         "T_ZLTSP0250S": t250Base64,
-        "T_ZLTSP0260S": "",
+        "T_ZLTSP0260S": t260Base64,
         "IV_ADATE":
             FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now())),
         "IS_LOGIN": isLogin,
