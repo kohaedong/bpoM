@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-16 15:47:04
+ * Last Modified: 2022-09-16 17:28:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -69,6 +69,8 @@ class AddActivityPageProvider extends ChangeNotifier {
   int isInterviewIndex = 0;
   final _api = ApiService();
 
+  String get dptnm => CacheService.getEsLogin()!.dptnm!;
+
   IncrementSeqNo incrementSeqno = (String seqno) {
     var recentSeqno = int.parse(seqno); //
     recentSeqno++;
@@ -81,7 +83,6 @@ class AddActivityPageProvider extends ChangeNotifier {
     return newSeqno;
   };
 
-  String get dptnm => CacheService.getEsLogin()!.dptnm!;
   Future<ResultModel> initData(SalesActivityDayResponseModel fromParentModel,
       ActivityStatus status, int? indexx) async {
     fromParentResponseModel =
@@ -91,6 +92,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     index = indexx;
     if (index != null) {
       var temp = fromParentResponseModel!.table260![index!];
+      pr(temp.toJson());
       isVisit = temp.xvisit != null && temp.xvisit == 'Y';
       selectedKunnr = EtKunnrModel();
       selectedKunnr!.name = temp.zskunnrNm;
@@ -111,7 +113,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       visitResultInput = temp.rslt ?? '';
       leaderAdviceInput = temp.comnt ?? '';
       isVisit = temp.xvisit == 'Y';
-      isInterviewIndex = temp.xmeet == 'Y' ? 0 : 1;
+      isInterviewIndex = temp.xmeet == 'S' ? 0 : 1;
       suggestedItemList ??= [];
 
       // 동행 초기화.
