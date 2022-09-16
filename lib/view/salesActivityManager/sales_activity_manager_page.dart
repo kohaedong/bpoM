@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-15 13:41:25
+ * Last Modified: 2022-09-16 17:43:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,6 +15,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
@@ -920,6 +921,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
 
   @override
   Widget build(BuildContext context) {
+    pr('엉업사원 맞나 ?${CacheService.getEsLogin()!.salem}');
     return ChangeNotifierProvider(
         create: (context) => SalseActivityManagerPageProvider(),
         builder: (context, _) {
