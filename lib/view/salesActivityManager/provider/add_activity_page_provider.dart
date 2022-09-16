@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-16 14:58:02
+ * Last Modified: 2022-09-16 15:43:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -112,6 +112,8 @@ class AddActivityPageProvider extends ChangeNotifier {
       leaderAdviceInput = temp.comnt ?? '';
       isVisit = temp.xvisit == 'Y';
       isInterviewIndex = temp.xmeet == 'Y' ? 0 : 1;
+      suggestedItemList ??= [];
+
       // 동행 초기화.
       var saveAnotherSaller = () {
         IsThisActivityFrom361 isThisActivityFor361 =
@@ -127,7 +129,6 @@ class AddActivityPageProvider extends ChangeNotifier {
           anotherSaller!.sname = model.sname;
           anotherSaller!.logid = model.logid;
         }
-        suggestedItemList ??= [];
       };
 
       // 동행 주요 로직.
@@ -143,6 +144,15 @@ class AddActivityPageProvider extends ChangeNotifier {
           saveAnotherSaller();
           break;
         default:
+      }
+      // 활동유형. 초기화.(제안품목이 3개라도 활동유형은 1개  --- actcat2..actcat3 비움.)
+      if (temp.actcat1!.isNotEmpty) {
+        getActivityType().then((_) {
+          var tempStr = activityList!
+              .where((actity) => actity.contains(temp.actcat1!))
+              .single;
+          selectedActionType = tempStr.substring(0, tempStr.indexOf('-'));
+        });
       }
 
       // 활동 유형 및 제안제품 초기화.
@@ -203,15 +213,6 @@ class AddActivityPageProvider extends ChangeNotifier {
         }
       };
       await saveActivityType().then((value) => pr(suggestedItemList));
-      // 활동유형. 초기화.(제안품목이 3개라도 활동유형은 1개  --- actcat2..actcat3 비움.)
-      if (temp.actcat1!.isNotEmpty) {
-        getActivityType().then((_) {
-          var tempStr = activityList!
-              .where((actity) => actity.contains(temp.actcat1!))
-              .single;
-          selectedActionType = tempStr.substring(0, tempStr.indexOf('-'));
-        });
-      }
     }
 
     return ResultModel(true);
@@ -392,7 +393,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     var t260List = <SalesActivityDayTable260>[];
     var t280List = <SalesActivityDayTable280>[];
     var t361List = <SalesActivityDayTable361>[];
-    SalesActivityDayTable280? t280; // data 무조건 1개 밖에 없음.
+    var t280 = SalesActivityDayTable280(); // data 무조건 1개 밖에 없음.
     SalesActivityDayTable361? t361; // data 무조건 1개 밖에 없음.
     var esLogin = CacheService.getEsLogin();
     var now = DateTime.now();
@@ -585,31 +586,28 @@ class AddActivityPageProvider extends ChangeNotifier {
         suggestedItemList!.asMap().entries.forEach((map) {
           switch (map.key) {
             case 0:
-              t280!.matnr1 = map.value.matnr;
-              t280!.maktx1 = map.value.maktx;
-              t280!.zmatkl1 = map.value.matkl;
-              t280!.xsampl1 =
-                  map.value.isChecked != null && map.value.isChecked!
-                      ? 'X'
-                      : '';
+              t280.matnr1 = map.value.matnr;
+              t280.maktx1 = map.value.maktx;
+              t280.zmatkl1 = map.value.matkl;
+              t280.xsampl1 = map.value.isChecked != null && map.value.isChecked!
+                  ? 'X'
+                  : '';
               break;
             case 1:
-              t280!.matnr2 = map.value.matnr;
-              t280!.maktx2 = map.value.maktx;
-              t280!.zmatkl2 = map.value.matkl;
-              t280!.xsampl2 =
-                  map.value.isChecked != null && map.value.isChecked!
-                      ? 'X'
-                      : '';
+              t280.matnr2 = map.value.matnr;
+              t280.maktx2 = map.value.maktx;
+              t280.zmatkl2 = map.value.matkl;
+              t280.xsampl2 = map.value.isChecked != null && map.value.isChecked!
+                  ? 'X'
+                  : '';
               break;
             case 2:
-              t280!.matnr3 = map.value.matnr;
-              t280!.maktx3 = map.value.maktx;
-              t280!.zmatkl3 = map.value.matkl;
-              t280!.xsampl3 =
-                  map.value.isChecked != null && map.value.isChecked!
-                      ? 'X'
-                      : '';
+              t280.matnr3 = map.value.matnr;
+              t280.maktx3 = map.value.maktx;
+              t280.zmatkl3 = map.value.matkl;
+              t280.xsampl3 = map.value.isChecked != null && map.value.isChecked!
+                  ? 'X'
+                  : '';
               break;
           }
         });
@@ -619,36 +617,24 @@ class AddActivityPageProvider extends ChangeNotifier {
     var newT280 = ({required bool isEditMode}) async {
       isEditMode
           ? () {
-              var thisActivity280List = fromParentResponseModel!.table280!
-                  .where((table) => isThisActivityFrom280(table))
-                  .toList();
-              if (thisActivity280List.isNotEmpty) {
-                pr('hive');
-                // 기존데이터
-                t280 = SalesActivityDayTable280.fromJson(
-                    thisActivity280List.single.toJson());
-                _dataCombination();
-                t280!.umode = 'U';
-              } else {
-                pr('not hive');
-                t280 = null;
-              }
+              _dataCombination();
+              t280.umode = 'U';
             }()
           : () {
               t280 = SalesActivityDayTable280();
               _dataCombination();
-              t280?.umode = 'I';
-              t280?.ernam = esLogin.ename;
-              t280?.erwid = esLogin.logid;
-              t280?.erdat = DateUtil.getDateStr(now.toIso8601String());
-              t280?.erzet = DateUtil.getTimeNow(isNotWithColon: true);
+              t280.umode = 'I';
+              t280.ernam = esLogin.ename;
+              t280.erwid = esLogin.logid;
+              t280.erdat = DateUtil.getDateStr(now.toIso8601String());
+              t280.erzet = DateUtil.getTimeNow(isNotWithColon: true);
             }();
-      t280?.bzactno = t260.bzactno;
-      t280?.seqno = t260.seqno;
-      t280?.aedat = DateUtil.getDateStr(now.toIso8601String());
-      t280?.aezet = DateUtil.getTimeNow(isNotWithColon: true);
-      t280?.aenam = esLogin.ename;
-      t280?.amount1 = double.parse(seletedAmount ?? '0');
+      t280.bzactno = t260.bzactno;
+      t280.seqno = t260.seqno;
+      t280.aedat = DateUtil.getDateStr(now.toIso8601String());
+      t280.aezet = DateUtil.getTimeNow(isNotWithColon: true);
+      t280.aenam = esLogin.ename;
+      t280.amount1 = double.parse(seletedAmount ?? '0');
     };
 
 // -------------------------------------------------------------------------------
@@ -663,8 +649,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       });
     }
     if (suggestedItemList != null && suggestedItemList!.isNotEmpty) {
-      await newT280(isEditMode: index != null)
-          .then((_) => t280 != null ? t280List.add(t280!) : DoNothingAction());
+      await newT280(isEditMode: index != null).then((_) => t280List.add(t280));
     }
 
     // 360 base64
