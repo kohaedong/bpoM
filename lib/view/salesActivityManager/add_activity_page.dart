@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-15 10:24:23
+ * Last Modified: 2022-09-16 10:21:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -403,8 +403,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
     var model = arguments['model'] as SalesActivityDayResponseModel;
     var index = arguments['index'] as int?;
     var isNewActivity = (index == null);
-    var isToday = DateUtil.equlse(
-        DateUtil.getDate(model.table260!.first.adate!), DateTime.now());
+    var isToday = model.table250 != null
+        ? DateUtil.equlse(
+            DateUtil.getDate(model.table250!.first.adate!), DateTime.now())
+        : DateUtil.equlse(
+            DateUtil.getDate(model.table260!.first.adate!), DateTime.now());
     return Positioned(
         bottom: 0,
         left: 0,
@@ -764,7 +767,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
     return Selector<AddActivityPageProvider,
         Tuple2<List<AddActivitySuggetionItemModel>?, String?>>(
       selector: (context, provider) =>
-          Tuple2(provider.suggestedList, provider.selectedActionType),
+          Tuple2(provider.suggestedItemList, provider.selectedActionType),
       builder: (context, tuple, _) {
         return tuple.item1 == null
             ? Container()
@@ -788,7 +791,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
           onTap: () {
             final p = context.read<AddActivityPageProvider>();
             if (p.selectedActionType != null) {
-              if (p.suggestedList!.length < 3) {
+              if (p.suggestedItemList!.length < 3) {
                 p.insertToSuggestedList();
               } else {
                 AppToast().show(context, tr('only_three_can_be_added'));

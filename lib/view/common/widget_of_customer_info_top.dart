@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/customer_info_top_widget.dart
  * Created Date: 2021-09-16 11:49:56
- * Last Modified: 2022-07-13 11:06:16
+ * Last Modified: 2022-09-16 10:19:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -56,7 +56,7 @@ class CustomerinfoWidget {
         color: AppColors.homeBgColor,
         child: Padding(
             padding: AppSize.defaultSidePadding,
-            child: AppText.text(text, style: AppTextStyle.w500_16)));
+            child: AppText.text(text, style: AppTextStyle.blod_16)));
   }
 
   static Widget buildDividingLine() {
