@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-16 17:42:53
+ * Last Modified: 2022-09-17 12:25:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -70,9 +70,12 @@ class AddActivityPageProvider extends ChangeNotifier {
   final _api = ApiService();
 
   String get dptnm => CacheService.getEsLogin()!.dptnm!;
-
+  bool get isDoNothing =>
+      activityStatus == ActivityStatus.NONE ||
+      activityStatus == ActivityStatus.FINISH;
   IncrementSeqNo incrementSeqno = (String seqno) {
     var recentSeqno = int.parse(seqno); //
+
     recentSeqno++;
     var repairLenght = 4 - '$recentSeqno'.length;
     var newSeqno = '';

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-16 17:45:36
+ * Last Modified: 2022-09-17 14:33:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -109,13 +109,19 @@ class _AddActivityPageState extends State<AddActivityPage> {
               hintTextStyleCallBack: () => model != null
                   ? AppTextStyle.default_16
                   : AppTextStyle.hint_16,
-              popupSearchType: PopupSearchType.SEARCH_CUSTOMER,
+              popupSearchType: p.isDoNothing
+                  ? PopupSearchType.DO_NOTHING
+                  : PopupSearchType.SEARCH_CUSTOMER,
               isSelectedStrCallBack: (costomerModel) {
                 return p.setCustomerModel(costomerModel);
               },
-              isShowDeleteForHintText: model != null ? true : false,
+              isShowDeleteForHintText: p.isDoNothing
+                  ? false
+                  : model != null
+                      ? true
+                      : false,
               deleteIconCallback: () => p.setCustomerModel(null),
-              iconType: InputIconType.SEARCH,
+              iconType: p.isDoNothing ? null : InputIconType.SEARCH,
               iconColor: model != null ? null : AppColors.unReadyText,
               defaultIconCallback: () => p.setCustomerModel(null),
               hintText: model != null ? model.name : tr('plz_select'),
@@ -185,15 +191,19 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 tuple.item1 != null && tuple.item1!.zkmnoNm != null
                     ? AppTextStyle.default_16
                     : AppTextStyle.hint_16,
-            popupSearchType:
-                tuple.item2 == null ? null : PopupSearchType.SEARCH_KEY_MAN,
+            popupSearchType: p.isDoNothing
+                ? PopupSearchType.DO_NOTHING
+                : tuple.item2 == null
+                    ? null
+                    : PopupSearchType.SEARCH_KEY_MAN,
             isSelectedStrCallBack: (keymanModel) {
               return p.setKeymanModel(keymanModel);
             },
             deleteIconCallback: () => p.setKeymanModel(null),
-            iconType: InputIconType.SELECT,
-            isShowDeleteForHintText:
-                tuple.item1 != null && tuple.item1!.zkmnoNm != null
+            iconType: p.isDoNothing ? null : InputIconType.SELECT,
+            isShowDeleteForHintText: p.isDoNothing
+                ? false
+                : tuple.item1 != null && tuple.item1!.zkmnoNm != null
                     ? true
                     : false,
             iconColor: tuple.item1 != null ? null : AppColors.unReadyText,
@@ -319,12 +329,14 @@ class _AddActivityPageState extends State<AddActivityPage> {
         borderSide: BorderSide(color: AppColors.primary, width: .5),
         borderRadius: BorderRadius.circular(AppSize.radius5));
     return TextFormField(
-      readOnly: type == AddActivityPageInputType.LEADER_ADVICE
-          ? accountType == AccountType.MULTI ||
-                  accountType == AccountType.LEADER
-              ? false
-              : true
-          : false,
+      readOnly: p.isDoNothing
+          ? true
+          : type == AddActivityPageInputType.LEADER_ADVICE
+              ? accountType == AccountType.MULTI ||
+                      accountType == AccountType.LEADER
+                  ? false
+                  : true
+              : false,
       controller: type == AddActivityPageInputType.INTERVIEW
           ? _interviewTextEditingController
           : type == AddActivityPageInputType.NOT_VISIT
@@ -368,12 +380,14 @@ class _AddActivityPageState extends State<AddActivityPage> {
           hintText: '${tr('suggestion_hint')}',
           hintStyle: AppTextStyle.hint_16,
           border: defaultBorder,
-          focusedBorder: type == AddActivityPageInputType.LEADER_ADVICE
-              ? accountType == AccountType.MULTI ||
-                      accountType == AccountType.LEADER
-                  ? focusedBorder
-                  : defaultBorder
-              : focusedBorder),
+          focusedBorder: p.isDoNothing
+              ? defaultBorder
+              : type == AddActivityPageInputType.LEADER_ADVICE
+                  ? accountType == AccountType.MULTI ||
+                          accountType == AccountType.LEADER
+                      ? focusedBorder
+                      : defaultBorder
+                  : focusedBorder),
     );
   }
 
@@ -398,6 +412,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
   }
 
   Widget _buildSubmmitButton(BuildContext context) {
+    final p = context.read<AddActivityPageProvider>();
     var arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     var model = arguments['model'] as SalesActivityDayResponseModel;
@@ -421,14 +436,24 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 context,
                 isNewActivity ? tr('submmit') : tr('order_save'),
                 AppSize.realWidth,
-                canShow ? AppColors.primary : AppColors.unReadyButton,
+                p.activityStatus == ActivityStatus.FINISH ||
+                        p.activityStatus == ActivityStatus.NONE
+                    ? AppColors.unReadyButton
+                    : canShow
+                        ? AppColors.primary
+                        : AppColors.unReadyButton,
                 AppTextStyle.menu_18(
-                    canShow ? AppColors.whiteText : AppColors.hintText),
+                    p.activityStatus == ActivityStatus.FINISH ||
+                            p.activityStatus == ActivityStatus.NONE
+                        ? AppColors.hintText
+                        : canShow
+                            ? AppColors.whiteText
+                            : AppColors.hintText),
                 0,
                 selfHeight: AppSize.bottomButtonHeight, () async {
               final p = context.read<AddActivityPageProvider>();
               pr('1111 pressed');
-              if (p.activityStatus == ActivityStatus.STOPED ||
+              if (p.activityStatus == ActivityStatus.FINISH ||
                   p.activityStatus == ActivityStatus.NONE) {
                 return;
               } else {
@@ -490,7 +515,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
     return GestureDetector(
         onTap: () {
           final p = context.read<AddActivityPageProvider>();
-          p.setIsInterviewIndex(index);
+          if (!p.isDoNothing) {
+            p.setIsInterviewIndex(index);
+          }
         },
         behavior: HitTestBehavior.opaque,
         child: Container(
@@ -565,7 +592,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
             defaultSpacing(isHalf: true),
             BaseInputWidget(
                 context: context,
-                oneCellType: OneCellType.SEARCH_ACTIVITY_TYPE,
+                oneCellType: p.isDoNothing
+                    ? OneCellType.DO_NOTHING
+                    : OneCellType.SEARCH_ACTIVITY_TYPE,
                 hintText: type ?? tr('plz_select'),
                 hintTextStyleCallBack: () => type == null
                     ? AppTextStyle.hint_16
@@ -591,6 +620,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
           value: isChecked,
           onChanged: (val) {
             final p = context.read<AddActivityPageProvider>();
+            if (p.isDoNothing) return;
             if (isWithSuggetedItem != null && isWithSuggetedItem) {
               p.updateSuggestedList(index!);
             } else {
@@ -633,7 +663,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     : anotherSaler != null
                         ? AppColors.unReadyButton
                         : null,
-                iconType: anotherSaler == null ? InputIconType.SEARCH : null,
+                iconType: p.isDoNothing
+                    ? null
+                    : anotherSaler == null
+                        ? InputIconType.SEARCH
+                        : null,
                 iconColor: anotherSaler != null
                     ? AppColors.defaultText
                     : AppColors.textFieldUnfoucsColor,
@@ -644,11 +678,13 @@ class _AddActivityPageState extends State<AddActivityPage> {
                             ''
                           ])}',
                 // 팀장 일때 만 팀원선택후 삭제가능.
-                isShowDeleteForHintText: ismoutiAccount
-                    ? anotherSaler != null
-                        ? true
-                        : false
-                    : false,
+                isShowDeleteForHintText: p.isDoNothing
+                    ? false
+                    : ismoutiAccount
+                        ? anotherSaler != null
+                            ? true
+                            : false
+                        : false,
                 deleteIconCallback: () => p.setAnotherSaler(null),
                 width: AppSize.defaultContentsWidth,
                 hintTextStyleCallBack: () => ismoutiAccount
@@ -656,9 +692,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
                         ? AppTextStyle.default_16
                         : AppTextStyle.hint_16
                     : AppTextStyle.hint_16,
-                popupSearchType: anotherSaler == null || ismoutiAccount
-                    ? PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY
-                    : PopupSearchType.DO_NOTHING,
+                popupSearchType: p.isDoNothing
+                    ? PopupSearchType.DO_NOTHING
+                    : anotherSaler == null || ismoutiAccount
+                        ? PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY
+                        : PopupSearchType.DO_NOTHING,
                 isSelectedStrCallBack: (persion) {
                   return p.setAnotherSaler(persion);
                 },
@@ -690,12 +728,14 @@ class _AddActivityPageState extends State<AddActivityPage> {
             GestureDetector(
                 onTap: () {
                   final p = context.read<AddActivityPageProvider>();
-                  p.removeAtSuggestedList(index);
-                  if (index == 0) {
-                    p.setAmount(null);
-                    _amountEditingController.clear();
+                  if (!p.isDoNothing) {
+                    p.removeAtSuggestedList(index);
+                    if (index == 0) {
+                      p.setAmount(null);
+                      _amountEditingController.clear();
+                    }
+                    pr('close');
                   }
-                  pr('close');
                 },
                 behavior: HitTestBehavior.opaque,
                 child: SizedBox(
@@ -713,7 +753,13 @@ class _AddActivityPageState extends State<AddActivityPage> {
             hintTextStyleCallBack: () => model.maktx == null
                 ? AppTextStyle.hint_16
                 : AppTextStyle.default_16,
-            popupSearchType: PopupSearchType.SEARCH_SUGGETION_ITEM,
+            iconType: p.isDoNothing ? null : InputIconType.SEARCH,
+            iconColor: model.maktx != null
+                ? AppColors.defaultText
+                : AppColors.textFieldUnfoucsColor,
+            popupSearchType: p.isDoNothing
+                ? PopupSearchType.DO_NOTHING
+                : PopupSearchType.SEARCH_SUGGETION_ITEM,
             isSelectedStrCallBack: (model) =>
                 p.updateSuggestedList(index, updateModel: model),
             width: AppSize.defaultContentsWidth,
@@ -741,7 +787,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                           onChangeCallBack: (str) => p.setAmount(str),
                           textEditingController: _amountEditingController,
                           width: AppSize.defaultContentsWidth,
-                          enable: true);
+                          enable: p.isDoNothing ? false : true);
                     },
                   )
                 ],
@@ -790,17 +836,19 @@ class _AddActivityPageState extends State<AddActivityPage> {
         GestureDetector(
           onTap: () {
             final p = context.read<AddActivityPageProvider>();
-            if (p.selectedActionType != null) {
-              if (p.suggestedItemList!.length < 3) {
-                p.insertToSuggestedList();
+            if (!p.isDoNothing) {
+              if (p.selectedActionType != null) {
+                if (p.suggestedItemList!.length < 3) {
+                  p.insertToSuggestedList();
+                } else {
+                  AppToast().show(context, tr('only_three_can_be_added'));
+                }
               } else {
-                AppToast().show(context, tr('only_three_can_be_added'));
+                AppToast().show(
+                    context,
+                    tr('plz_select_something_1',
+                        args: [tr('activity_type_2'), '']));
               }
-            } else {
-              AppToast().show(
-                  context,
-                  tr('plz_select_something_1',
-                      args: [tr('activity_type_2'), '']));
             }
           },
           child: Container(

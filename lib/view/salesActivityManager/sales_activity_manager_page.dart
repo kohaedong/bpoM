@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-16 17:43:36
+ * Last Modified: 2022-09-17 12:45:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -66,7 +66,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   @override
   void initState() {
     _pageType = ValueNotifier<PageType?>(PageType.DEFAULT);
-    _actionButton = ValueNotifier(_pageType.value!.actionWidget);
+    _actionButton = ValueNotifier(Container());
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
@@ -506,6 +506,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         if (p.activityStatus == ActivityStatus.INIT) {
           var parentModel = popupResult.data as SalesActivityDayResponseModel;
           p.initData(parentModel, ActivityStatus.STARTED, isMounted: true);
+          pr('2');
           p.setIsNeedUpdate(true);
           AppToast().show(context, tr('activity_is_started'));
           await _routeToAddActivityPage(context);
@@ -878,8 +879,10 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 if (_tabController.index == 0) {
                   // 버튼 없에기.
                   p.setIsShowConfirm(false);
+                  _actionButton.value = Container();
                 }
                 if (_tabController.index == 1) {
+                  _actionButton.value = _pageType.value!.actionWidget;
                   final p = context.read<SalseActivityManagerPageProvider>();
                   var isLock = false;
                   if ((p.isResetDay == null && !p.isLoadDayData && !isLock)) {
