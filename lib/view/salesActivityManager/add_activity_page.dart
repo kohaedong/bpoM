@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-18 16:58:18
+ * Last Modified: 2022-09-18 20:23:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -100,32 +100,35 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   Widget _buildSelectCustomer(BuildContext context) {
     final p = context.read<AddActivityPageProvider>();
-    return Selector<AddActivityPageProvider, EtKunnrModel?>(
-      selector: (context, provider) => provider.selectedKunnr,
-      builder: (context, model, _) {
+    return Selector<AddActivityPageProvider, Tuple2<EtKunnrModel?, bool>>(
+      selector: (context, provider) =>
+          Tuple2(provider.selectedKunnr, provider.isVisit),
+      builder: (context, tuple, _) {
         return BaseColumWithTitleAndTextFiled.build(
           tr('customer_name'),
           BaseInputWidget(
               context: context,
-              hintTextStyleCallBack: () => model != null
+              hintTextStyleCallBack: () => tuple.item1 != null
                   ? AppTextStyle.default_16
                   : AppTextStyle.hint_16,
-              popupSearchType: p.isDoNothing
+              popupSearchType: p.isDoNothing || tuple.item2
                   ? PopupSearchType.DO_NOTHING
                   : PopupSearchType.SEARCH_CUSTOMER,
               isSelectedStrCallBack: (costomerModel) {
                 return p.setCustomerModel(costomerModel);
               },
-              isShowDeleteForHintText: p.isDoNothing
+              isShowDeleteForHintText: p.isDoNothing || tuple.item2
                   ? false
-                  : model != null
+                  : tuple.item1 != null
                       ? true
                       : false,
               deleteIconCallback: () => p.setCustomerModel(null),
-              iconType: p.isDoNothing ? null : InputIconType.SEARCH,
-              iconColor: model != null ? null : AppColors.unReadyText,
+              iconType:
+                  p.isDoNothing || tuple.item2 ? null : InputIconType.SEARCH,
+              iconColor: tuple.item1 != null ? null : AppColors.unReadyText,
               defaultIconCallback: () => p.setCustomerModel(null),
-              hintText: model != null ? model.name : tr('plz_select'),
+              hintText:
+                  tuple.item1 != null ? tuple.item1!.name : tr('plz_select'),
               width: AppSize.defaultContentsWidth,
               enable: false),
         );
