@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-17 19:20:05
+ * Last Modified: 2022-09-18 16:38:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,7 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
+import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,6 +38,7 @@ import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/enums/add_activity_page_input_type.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
+import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
@@ -415,14 +416,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
     final p = context.read<AddActivityPageProvider>();
     var arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    var model = arguments['model'] as SalesActivityDayResponseModel;
     var index = arguments['index'] as int?;
     var isNewActivity = (index == null);
-    var isToday = model.table250 != null
-        ? DateUtil.equlse(
-            DateUtil.getDate(model.table250!.first.adate!), DateTime.now())
-        : DateUtil.equlse(
-            DateUtil.getDate(model.table260!.first.adate!), DateTime.now());
+
     return Positioned(
         bottom: 0,
         left: 0,
@@ -440,13 +436,40 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     canShow ? AppColors.whiteText : AppColors.hintText),
                 0,
                 selfHeight: AppSize.bottomButtonHeight, () async {
+              hideKeyboard(context);
               final p = context.read<AddActivityPageProvider>();
-              pr('1111 pressed');
+              var isHaveEmptyItem = false;
+              var isValidateNewItem = p.selectedActionType == '제품신규'
+                  ? p.suggestedItemList != null &&
+                          p.suggestedItemList!.isNotEmpty
+                      ? p.seletedAmount != null && p.seletedAmount!.isNotEmpty
+                      : true
+                  : true;
+              p.suggestedItemList!.forEach((item) {
+                if (item.matnr == null || item.matnr!.isEmpty) {
+                  isHaveEmptyItem = true;
+                }
+              });
+
+              if (isHaveEmptyItem) {
+                AppToast().show(
+                    context,
+                    tr('plz_select_something_1',
+                        args: [tr('suggested_item'), '']));
+                return;
+              }
+              if (!isValidateNewItem) {
+                AppToast().show(
+                    context,
+                    tr('plz_select_something_1',
+                        args: [tr('month_amount_price'), '']));
+                return;
+              }
+
               if (p.activityStatus == ActivityStatus.FINISH ||
                   p.activityStatus == ActivityStatus.NONE) {
                 return;
               } else {
-                pr('222 pressed');
                 if (canShow) {
                   var notInterviewValidation = p.isInterviewIndex == 1
                       ? (p.reasonForinterviewFailure != null &&
@@ -712,8 +735,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildTitleRow('${tr('suggested_item')}${index + 1}',
-                isNotwithStart: true),
+            _buildTitleRow('${tr('suggested_item')}${index + 1}'),
             GestureDetector(
                 onTap: () {
                   final p = context.read<AddActivityPageProvider>();
@@ -757,8 +779,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
             ? Column(
                 children: [
                   defaultSpacing(),
-                  _buildTitleRow(tr('month_amount_price'),
-                      isNotwithStart: true),
+                  _buildTitleRow(tr('month_amount_price')),
                   Selector<AddActivityPageProvider, String?>(
                     selector: (context, provider) => provider.seletedAmount,
                     builder: (context, amount, _) {
