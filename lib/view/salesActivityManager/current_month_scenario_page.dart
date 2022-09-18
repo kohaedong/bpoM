@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/currunt_month_scenario_page.dart
  * Created Date: 2022-08-17 23:33:31
- * Last Modified: 2022-08-23 14:10:01
+ * Last Modified: 2022-09-18 20:10:50
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -63,7 +63,7 @@ class _CurruntMonthScenarioPageState extends State<CurruntMonthScenarioPage> {
     final p = context.read<CurrentMonthScenarioProvider>();
     if (p.isFirstRun && p.table430 != null && p.table430!.isNotEmpty) {
       for (var i = 0; i < p.table430!.length; i++) {
-        var temp = p.table430![i].pdesc ?? '';
+        var temp = p.table430![i].pdesc ?? p.table430![i].rslt ?? '';
         i == 0
             ? textEditingController.text = temp
             : i == 1

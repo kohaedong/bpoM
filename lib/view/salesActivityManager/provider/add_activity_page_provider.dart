@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-18 16:35:07
+ * Last Modified: 2022-09-18 20:11:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -95,8 +95,40 @@ class AddActivityPageProvider extends ChangeNotifier {
     index = indexx;
     if (index != null) {
       var temp = fromParentResponseModel!.table260![index!];
-      pr(temp.toJson());
 
+      fromParentResponseModel!.table260!.asMap().entries.forEach((element) {
+        pr(' T 260 index ${element.key} ${element.value.toJson()}');
+      });
+      fromParentResponseModel!.table280!.asMap().entries.forEach((element) {
+        pr(' T 280 index ${element.key} ${element.value.toJson()}');
+      });
+      fromParentResponseModel!.table361!.asMap().entries.forEach((element) {
+        pr(' T 361 index ${element.key} ${element.value.toJson()}');
+      });
+      if (fromParentResponseModel!.table270!.isNotEmpty) {
+        fromParentResponseModel!.table270!.asMap().entries.forEach((element) {
+          pr(' T 270 index ${element.key} ${element.value.toJson()}');
+        });
+      }
+      if (fromParentResponseModel!.table290!.isNotEmpty) {
+        fromParentResponseModel!.table290!.asMap().entries.forEach((element) {
+          pr(' T 290 index ${element.key} ${element.value.toJson()}');
+        });
+      }
+      if (fromParentResponseModel!.table291!.isNotEmpty) {
+        fromParentResponseModel!.table291!.asMap().entries.forEach((element) {
+          pr(' T 291 index ${element.key} ${element.value.toJson()}');
+        });
+      }
+      if (fromParentResponseModel!.table330!.isNotEmpty) {
+        fromParentResponseModel!.table330!.asMap().entries.forEach((element) {
+          pr(' T 330 index ${element.key} ${element.value.toJson()}');
+        });
+      }
+      if (index != null) {
+        editModel260 = SalesActivityDayTable260.fromJson(
+            fromParentResponseModel?.table260?[index!].toJson());
+      }
       isVisit = temp.xvisit != null && temp.xvisit == 'Y';
       selectedKunnr = EtKunnrModel();
       selectedKunnr!.name = temp.zskunnrNm;
@@ -152,13 +184,14 @@ class AddActivityPageProvider extends ChangeNotifier {
       }
       // 활동유형. 초기화.(제안품목이 3개라도 활동유형은 1개  --- actcat2..actcat3 비움.)
       if (temp.actcat1!.isNotEmpty) {
-        getActivityType().then((_) {
+        await getActivityType().then((_) {
           var tempStr = activityList!
               .where((actity) => actity.contains(temp.actcat1!))
               .single;
           selectedActionType = tempStr.substring(0, tempStr.indexOf('-'));
         });
       }
+      pr(activityList);
 
       // 활동 유형 및 제안제품 초기화.
       var saveActivityType = () async {
@@ -504,7 +537,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       t260.zkmno = selectedKeyMan!.zkmno;
       t260.zkmnoNm = selectedKeyMan!.zkmnoNm;
       t260.visitRmk = isVisit ? '' : reasonForNotVisit ?? '';
-      t260.xmeet = isInterviewIndex == 0 ? 'S' : '';
+      t260.xmeet = isInterviewIndex == 0 ? 'S' : 'F';
       t260.meetRmk =
           isInterviewIndex == 0 ? '' : reasonForinterviewFailure ?? '';
       t260.rslt = visitResultInput ?? '';
@@ -740,6 +773,26 @@ class AddActivityPageProvider extends ChangeNotifier {
       fromParentResponseModel!.table361!.asMap().entries.forEach((element) {
         pr(' T 361 index ${element.key} ${element.value.toJson()}');
       });
+      if (fromParentResponseModel!.table270!.isNotEmpty) {
+        fromParentResponseModel!.table270!.asMap().entries.forEach((element) {
+          pr(' T 270 index ${element.key} ${element.value.toJson()}');
+        });
+      }
+      if (fromParentResponseModel!.table290!.isNotEmpty) {
+        fromParentResponseModel!.table290!.asMap().entries.forEach((element) {
+          pr(' T 290 index ${element.key} ${element.value.toJson()}');
+        });
+      }
+      if (fromParentResponseModel!.table291!.isNotEmpty) {
+        fromParentResponseModel!.table291!.asMap().entries.forEach((element) {
+          pr(' T 291 index ${element.key} ${element.value.toJson()}');
+        });
+      }
+      if (fromParentResponseModel!.table330!.isNotEmpty) {
+        fromParentResponseModel!.table330!.asMap().entries.forEach((element) {
+          pr(' T 330 index ${element.key} ${element.value.toJson()}');
+        });
+      }
       if (index != null) {
         editModel260 = SalesActivityDayTable260.fromJson(
             fromParentResponseModel?.table260?[index!].toJson());
