@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-17 14:33:18
+ * Last Modified: 2022-09-17 19:20:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -430,25 +430,14 @@ class _AddActivityPageState extends State<AddActivityPage> {
           selector: (context, provider) => Tuple2(
               provider.selectedKunnr != null, provider.selectedKeyMan != null),
           builder: (context, tuple, _) {
-            var canShow =
-                (isNewActivity || isToday) && tuple.item1 && tuple.item2;
+            var canShow = !p.isDoNothing && tuple.item1 && tuple.item2;
             return AppStyles.buildButton(
                 context,
                 isNewActivity ? tr('submmit') : tr('order_save'),
                 AppSize.realWidth,
-                p.activityStatus == ActivityStatus.FINISH ||
-                        p.activityStatus == ActivityStatus.NONE
-                    ? AppColors.unReadyButton
-                    : canShow
-                        ? AppColors.primary
-                        : AppColors.unReadyButton,
+                canShow ? AppColors.primary : AppColors.unReadyButton,
                 AppTextStyle.menu_18(
-                    p.activityStatus == ActivityStatus.FINISH ||
-                            p.activityStatus == ActivityStatus.NONE
-                        ? AppColors.hintText
-                        : canShow
-                            ? AppColors.whiteText
-                            : AppColors.hintText),
+                    canShow ? AppColors.whiteText : AppColors.hintText),
                 0,
                 selfHeight: AppSize.bottomButtonHeight, () async {
               final p = context.read<AddActivityPageProvider>();
@@ -458,7 +447,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 return;
               } else {
                 pr('222 pressed');
-                if (isToday && canShow) {
+                if (canShow) {
                   var notInterviewValidation = p.isInterviewIndex == 1
                       ? (p.reasonForinterviewFailure != null &&
                           p.reasonForinterviewFailure!.isNotEmpty)
