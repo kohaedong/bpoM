@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-09-19 17:55:37
+ * Last Modified: 2022-09-19 19:06:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';
@@ -655,9 +656,162 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       notifyListeners();
       return ResultModel(false, data: indexx);
     } else {
+      var t250Base64 = ''; // base
+      var t260Base64 = ''; // 영업활동 상세
+      var t280Base64 = ''; // 활동유형
+      var t361Base64 = ''; // 동행
+      var t270Base64 = ''; // 관계구축 및 관계형성 정보
+      var t290Base64 = ''; // 처방/판매/반품 정보
+      var t291Base64 = ''; // 처방/판매/반품 상세 정보
+      var t300Base64 = ''; // 정보획득
+      var t301Base64 = ''; // 정보획득 상세
+      var t310Base64 = ''; // 인수인계
+      var t320Base64 = ''; // 수금
+      var t321Base64 = ''; // 수금 상세
+      var t330Base64 = ''; // 세미나
+      var t340Base64 = ''; // Landing / DC
+      var t350Base64 = ''; // 입찰
+      var t430Base64 = ''; // 시나리오
+
+      var temp = <Map<String, dynamic>>[];
+      var t260List = dayResponseModel!.table260;
+      if (t260List != null && t260List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t260List.map((table) => table.toJson())]);
+        t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t270List = dayResponseModel!.table270;
+      if (t270List != null && t270List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t270List.map((table) => table.toJson())]);
+        t270Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t280List = dayResponseModel!.table280;
+      if (t280List != null && t280List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t280List.map((table) => table.toJson())]);
+        t280Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t290List = dayResponseModel!.table290;
+      if (t290List != null && t290List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t290List.map((table) => table.toJson())]);
+        t290Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t291List = dayResponseModel!.table291;
+      if (t291List != null && t291List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t291List.map((table) => table.toJson())]);
+        t291Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t300List = dayResponseModel!.table300;
+      if (t300List != null && t300List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t300List.map((table) => table.toJson())]);
+        t300Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t301List = dayResponseModel!.table301;
+      if (t301List != null && t301List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t301List.map((table) => table.toJson())]);
+        t301Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t310List = dayResponseModel!.table310;
+      if (t310List != null && t310List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t310List.map((table) => table.toJson())]);
+        t310Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t320List = dayResponseModel!.table320;
+      if (t320List != null && t320List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t320List.map((table) => table.toJson())]);
+        t320Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t321List = dayResponseModel!.table321;
+      if (t321List != null && t321List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t321List.map((table) => table.toJson())]);
+        t321Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t330List = dayResponseModel!.table330;
+      if (t330List != null && t330List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t330List.map((table) => table.toJson())]);
+        t330Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t340List = dayResponseModel!.table340;
+      if (t340List != null && t340List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t340List.map((table) => table.toJson())]);
+        t340Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t350List = dayResponseModel!.table350;
+      if (t350List != null && t350List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t350List.map((table) => table.toJson())]);
+        t350Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t430List = dayResponseModel!.table430;
+      if (t430List != null && t430List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t430List.map((table) => table.toJson())]);
+        t430Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var t361List = dayResponseModel!.table361;
+      if (t361List != null && t361List.isNotEmpty) {
+        temp.clear();
+        temp.addAll([...t361List.map((table) => table.toJson())]);
+        t361Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+      var isLogin = CacheService.getIsLogin();
+      _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
+      Map<String, dynamic> _body = {
+        "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
+        "methodParamMap": {
+          "IV_PTYPE": "C",
+          "IV_ADATE": FormatUtil.removeDash(
+              DateUtil.getDateStr(DateTime.now().toIso8601String())),
+          "T_ZLTSP0250S": t250Base64,
+          "T_ZLTSP0260S": t260Base64,
+          "T_ZLTSP0280S": t280Base64,
+          "T_ZLTSP0361S": t361Base64,
+          "T_ZLTSP0270S": t270Base64,
+          "T_ZLTSP0290S": t290Base64,
+          "T_ZLTSP0291S": t291Base64,
+          "T_ZLTSP0300S": t300Base64,
+          "T_ZLTSP0301S": t301Base64,
+          "T_ZLTSP0310S": t310Base64,
+          "T_ZLTSP0320S": t320Base64,
+          "T_ZLTSP0321S": t321Base64,
+          "T_ZLTSP0330S": t330Base64,
+          "T_ZLTSP0340S": t340Base64,
+          "T_ZLTSP0350S": t350Base64,
+          "T_ZLTSP0430S": t430Base64,
+          "IS_LOGIN": isLogin,
+          "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
+          "functionName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
+        }
+      };
+      final result = await _api.request(body: _body);
+      if (result != null && result.statusCode != 200) {
+        isLoadData = false;
+        notifyListeners();
+        return ResultModel(false);
+      }
+      if (result != null && result.statusCode == 200) {
+        dayResponseModel =
+            SalesActivityDayResponseModel.fromJson(result.body['data']);
+        pr(dayResponseModel?.toJson());
+        isLoadDayData = false;
+        notifyListeners();
+        return ResultModel(true);
+      }
       isLoadDayData = false;
-      notifyListeners();
-      return ResultModel(true);
+      try {
+        notifyListeners();
+      } catch (e) {}
+      return ResultModel(false);
     }
   }
 }

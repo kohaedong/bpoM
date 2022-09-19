@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-19 18:04:55
+ * Last Modified: 2022-09-19 19:04:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -98,36 +98,6 @@ class AddActivityPageProvider extends ChangeNotifier {
     index = indexx;
     if (index != null) {
       var temp = fromParentResponseModel!.table260![index!];
-
-      fromParentResponseModel!.table260!.asMap().entries.forEach((element) {
-        pr(' T 260 index ${element.key} ${element.value.toJson()}');
-      });
-      fromParentResponseModel!.table280!.asMap().entries.forEach((element) {
-        pr(' T 280 index ${element.key} ${element.value.toJson()}');
-      });
-      fromParentResponseModel!.table361!.asMap().entries.forEach((element) {
-        pr(' T 361 index ${element.key} ${element.value.toJson()}');
-      });
-      if (fromParentResponseModel!.table270!.isNotEmpty) {
-        fromParentResponseModel!.table270!.asMap().entries.forEach((element) {
-          pr(' T 270 index ${element.key} ${element.value.toJson()}');
-        });
-      }
-      if (fromParentResponseModel!.table290!.isNotEmpty) {
-        fromParentResponseModel!.table290!.asMap().entries.forEach((element) {
-          pr(' T 290 index ${element.key} ${element.value.toJson()}');
-        });
-      }
-      if (fromParentResponseModel!.table291!.isNotEmpty) {
-        fromParentResponseModel!.table291!.asMap().entries.forEach((element) {
-          pr(' T 291 index ${element.key} ${element.value.toJson()}');
-        });
-      }
-      if (fromParentResponseModel!.table330!.isNotEmpty) {
-        fromParentResponseModel!.table330!.asMap().entries.forEach((element) {
-          pr(' T 330 index ${element.key} ${element.value.toJson()}');
-        });
-      }
       if (index != null) {
         editModel260 = SalesActivityDayTable260.fromJson(
             fromParentResponseModel?.table260?[index!].toJson());
@@ -479,7 +449,6 @@ class AddActivityPageProvider extends ChangeNotifier {
               } else {
                 t260 = SalesActivityDayTable260.fromJson(
                     fromParentResponseModel!.table260![index!].toJson());
-                t260.xvisit = 'F';
               }
               t260.umode = 'U';
               t260.erdat = DateUtil.getDateStr(now.toIso8601String());
@@ -768,35 +737,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       fromParentResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
-      fromParentResponseModel!.table260!.asMap().entries.forEach((element) {
-        pr(' T 260 index ${element.key} ${element.value.toJson()}');
-      });
-      fromParentResponseModel!.table280!.asMap().entries.forEach((element) {
-        pr(' T 280 index ${element.key} ${element.value.toJson()}');
-      });
-      fromParentResponseModel!.table361!.asMap().entries.forEach((element) {
-        pr(' T 361 index ${element.key} ${element.value.toJson()}');
-      });
-      if (fromParentResponseModel!.table270!.isNotEmpty) {
-        fromParentResponseModel!.table270!.asMap().entries.forEach((element) {
-          pr(' T 270 index ${element.key} ${element.value.toJson()}');
-        });
-      }
-      if (fromParentResponseModel!.table290!.isNotEmpty) {
-        fromParentResponseModel!.table290!.asMap().entries.forEach((element) {
-          pr(' T 290 index ${element.key} ${element.value.toJson()}');
-        });
-      }
-      if (fromParentResponseModel!.table291!.isNotEmpty) {
-        fromParentResponseModel!.table291!.asMap().entries.forEach((element) {
-          pr(' T 291 index ${element.key} ${element.value.toJson()}');
-        });
-      }
-      if (fromParentResponseModel!.table330!.isNotEmpty) {
-        fromParentResponseModel!.table330!.asMap().entries.forEach((element) {
-          pr(' T 330 index ${element.key} ${element.value.toJson()}');
-        });
-      }
+
       if (index != null) {
         pr(fromParentResponseModel!.table260![index!]);
         editModel260 = SalesActivityDayTable260.fromJson(
