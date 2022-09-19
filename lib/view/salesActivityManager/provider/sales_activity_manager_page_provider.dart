@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-09-18 19:51:52
+ * Last Modified: 2022-09-19 17:55:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,8 +11,10 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
+import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
@@ -23,8 +25,14 @@ import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/common/holiday_response_model.dart';
 import 'package:medsalesportal/model/rfc/search_key_response_model.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_361.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_280.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_month_response_model.dart';
+import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
+
+typedef IsThisActivityFrom361 = bool Function(SalesActivityDayTable361);
+typedef IsThisActivityFrom280 = bool Function(SalesActivityDayTable280);
 
 class SalseActivityManagerPageProvider extends ChangeNotifier {
   SalseActivityLocationResponseModel? locationResponseModel;
@@ -519,4 +527,144 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     notifyListeners();
     return ResultModel(true);
   }
+
+  Future<ResultModel> confirmAcitivityTable() async {
+    // 하드코딩.
+    isLoadDayData = true;
+    notifyListeners();
+    var validateTables = () async {
+      var is250Stoped = false;
+      var isSuccessfulList = <ConfirmModel>[];
+      if (dayResponseModel!.table250!.isNotEmpty) {
+        var t250 = dayResponseModel!.table250!.single;
+        is250Stoped = t250.scallType == 'M' &&
+            t250.fcallType == 'M' &&
+            t250.ftime != null &&
+            t250.ftime!.isNotEmpty &&
+            t250.stime != null &&
+            t250.stime!.isNotEmpty;
+      }
+
+      if (dayResponseModel!.table260!.isNotEmpty) {
+        await Future.forEach(dayResponseModel!.table260!.asMap().entries,
+            (map) async {
+          map as MapEntry<int, SalesActivityDayTable260>;
+          var table = map.value;
+          var index = map.key;
+          var message = '';
+          final isNeedCheckAmount = table.actcat1 == 'A15';
+          var isAmountNotEmpty = true;
+          var isActivityTypeNotEmpty = true;
+          var isActivityResultNotEmpty = true;
+          var isSuggetionItemNotEmpty = true;
+          var isMeetFailReasonNotEmpty = true;
+          var isNotVisitReasonNotEmpty = true;
+          var t280List = <SalesActivityDayTable280>[];
+          var t361List = <SalesActivityDayTable361>[];
+          IsThisActivityFrom280 isTable280MatchThisCondition =
+              (SalesActivityDayTable280 t) {
+            return table.bzactno == t.bzactno && table.seqno == t.seqno;
+          };
+
+          IsThisActivityFrom361 isTable361MatchThisCondition =
+              (SalesActivityDayTable361 t) {
+            return table.bzactno == t.bzactno && table.seqno == t.seqno;
+          };
+          if (dayResponseModel!.table280!.isNotEmpty) {
+            dayResponseModel!.table280!.forEach((t280) {
+              isTable280MatchThisCondition(t280)
+                  ? t280List.add(t280)
+                  : DoNothingAction();
+            });
+          }
+          if (dayResponseModel!.table361!.isNotEmpty) {
+            dayResponseModel!.table361!.forEach((t361) {
+              isTable361MatchThisCondition(t361)
+                  ? t361List.add(t361)
+                  : DoNothingAction();
+            });
+          }
+          if (table.xvisit == 'Y') {
+            if (table.xmeet == 'S') {
+              isActivityTypeNotEmpty =
+                  table.actcat1 != null && table.actcat1!.isNotEmpty;
+              isActivityResultNotEmpty =
+                  table.rslt != null && table.rslt!.isNotEmpty;
+              isSuggetionItemNotEmpty = t280List.isNotEmpty;
+              if (isNeedCheckAmount) {
+                isAmountNotEmpty = t280List
+                    .where(
+                        (t280) => t280.amount1 != null && t280.amount1 != 0.0)
+                    .isNotEmpty;
+              }
+              if (!isActivityTypeNotEmpty) {
+                pr('1');
+                message = 'isActivityTypeNotEmpty:${map.key}';
+              }
+              if (!isActivityResultNotEmpty) {
+                pr(2);
+
+                message = 'isActivityResultNotEmpty:${map.key}';
+              }
+              if (!isSuggetionItemNotEmpty) {
+                pr(3);
+
+                message = 'isSuggetionItemNotEmpty:${map.key}';
+              }
+              if (!isAmountNotEmpty) {
+                pr(4);
+
+                message = 'isAmountNotEmpty:${map.key}';
+              }
+            } else {
+              isMeetFailReasonNotEmpty =
+                  table.meetRmk != null && table.meetRmk!.isNotEmpty;
+              if (!isMeetFailReasonNotEmpty) {
+                pr(5);
+
+                message = 'isMeetFailReasonNotEmpty:${map.key}';
+              }
+            }
+          } else {
+            isNotVisitReasonNotEmpty =
+                table.visitRmk != null && table.visitRmk!.isNotEmpty;
+            if (!isNotVisitReasonNotEmpty) {
+              pr('6');
+
+              message = 'isNotVisitReasonNotEmpty:${map.key}';
+            }
+          }
+          var validate = isAmountNotEmpty &&
+              isActivityTypeNotEmpty &&
+              isActivityResultNotEmpty &&
+              isSuggetionItemNotEmpty &&
+              isMeetFailReasonNotEmpty &&
+              isNotVisitReasonNotEmpty &&
+              is250Stoped;
+          isSuccessfulList.add(ConfirmModel(
+              isSuccessful: validate, index: map.key, message: message));
+        });
+      }
+      return isSuccessfulList;
+    };
+    var comfirmList = await validateTables();
+    var failedList = comfirmList.where((confirm) => !confirm.isSuccessful);
+    if (failedList.isNotEmpty) {
+      var indexx = comfirmList.first.index;
+      isLoadDayData = false;
+      notifyListeners();
+      return ResultModel(false, data: indexx);
+    } else {
+      isLoadDayData = false;
+      notifyListeners();
+      return ResultModel(true);
+    }
+  }
+}
+
+class ConfirmModel {
+  bool isSuccessful;
+  int? index;
+  String? message;
+  ConfirmModel({required this.isSuccessful, this.index, this.message});
 }

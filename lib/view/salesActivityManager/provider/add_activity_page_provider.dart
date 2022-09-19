@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-18 20:11:59
+ * Last Modified: 2022-09-19 18:04:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -92,6 +92,9 @@ class AddActivityPageProvider extends ChangeNotifier {
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
     activityStatus = status;
     pr(activityStatus);
+    fromParentModel.table260!.forEach((element) {
+      pr(element.toJson());
+    });
     index = indexx;
     if (index != null) {
       var temp = fromParentResponseModel!.table260![index!];
@@ -476,6 +479,7 @@ class AddActivityPageProvider extends ChangeNotifier {
               } else {
                 t260 = SalesActivityDayTable260.fromJson(
                     fromParentResponseModel!.table260![index!].toJson());
+                t260.xvisit = 'F';
               }
               t260.umode = 'U';
               t260.erdat = DateUtil.getDateStr(now.toIso8601String());
@@ -794,8 +798,9 @@ class AddActivityPageProvider extends ChangeNotifier {
         });
       }
       if (index != null) {
+        pr(fromParentResponseModel!.table260![index!]);
         editModel260 = SalesActivityDayTable260.fromJson(
-            fromParentResponseModel?.table260?[index!].toJson());
+            fromParentResponseModel!.table260![index!].toJson());
       }
       isLoadData = false;
       isUpdate = true;

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-18 16:44:17
+ * Last Modified: 2022-09-19 18:11:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,11 +12,8 @@
  */
 
 import 'dart:io';
-
+import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/enums/menu_type.dart';
@@ -25,6 +22,7 @@ import 'package:medsalesportal/service/hive_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
@@ -35,6 +33,7 @@ import 'package:medsalesportal/enums/customer_report_type.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_popup_list.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/common/widget_of_tag_button.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
@@ -45,10 +44,10 @@ import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_single_date_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/view/salesActivityManager/add_activity_page.dart';
+import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
 import 'package:medsalesportal/view/salesActivityManager/select_location_widget.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/activity_menu_provider.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/sales_activity_manager_page_provider.dart';
-import 'package:tuple/tuple.dart';
 
 class SalseActivityManagerPage extends StatefulWidget {
   const SalseActivityManagerPage({Key? key}) : super(key: key);
@@ -943,7 +942,22 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 switch (p.activityStatus!) {
                   case ActivityStatus.STOPED:
                     // save
-                    p.setActivityStatus(ActivityStatus.FINISH);
+                    p
+                        .confirmAcitivityTable()
+                        .then((result) => result.isSuccessful
+                            ? p.setActivityStatus(ActivityStatus.FINISH)
+                            : () async {
+                                var popResult = await Navigator.pushNamed(
+                                    context, AddActivityPage.routeName,
+                                    arguments: {
+                                      'model': p.dayResponseModel,
+                                      'status': p.activityStatus,
+                                      'index': result.data as int
+                                    });
+                                if (popResult != null) {
+                                  p.getDayData(isWithLoading: true);
+                                }
+                              }());
                     break;
                   case ActivityStatus.FINISH:
                     DoNothingAction();
