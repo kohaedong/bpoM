@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-19 18:05:03
+ * Last Modified: 2022-09-20 16:37:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -255,7 +255,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                       )),
                   GestureDetector(
                     onTap: () {
-                      if (p.activityStatus == ActivityStatus.NONE) {
+                      if (p.activityStatus == ActivityStatus.NONE ||
+                          p.activityStatus == ActivityStatus.FINISH) {
                         return;
                       }
                       if (p.activityStatus == ActivityStatus.STOPED) {

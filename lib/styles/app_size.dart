@@ -43,7 +43,7 @@ class AppSize {
   static double get splashIconHeight => 60.h;
   static double get defaultBorderWidth => 1.w;
   static double get smallButtonHeight => 32;
-  static double get weekDayHeight => 80;
+  static double get weekDayHeight => 80.h;
   static double get calendarWidth => AppSize.realWidth;
   static double get weekDayNumberBoxHeight => 30;
 
