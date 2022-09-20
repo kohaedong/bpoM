@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-20 16:49:27
+ * Last Modified: 2022-09-20 16:54:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -195,16 +195,20 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 tuple.item1 != null && tuple.item1!.zkmnoNm != null
                     ? AppTextStyle.default_16
                     : AppTextStyle.hint_16,
-            popupSearchType: p.isDoNothing
-                ? PopupSearchType.DO_NOTHING
-                : tuple.item2 == null
-                    ? null
-                    : PopupSearchType.SEARCH_KEY_MAN,
+            popupSearchType:
+                p.activityStatus == ActivityStatus.STARTED || p.isDoNothing
+                    ? PopupSearchType.DO_NOTHING
+                    : tuple.item2 == null
+                        ? null
+                        : PopupSearchType.SEARCH_KEY_MAN,
             isSelectedStrCallBack: (keymanModel) {
               return p.setKeymanModel(keymanModel);
             },
             deleteIconCallback: () => p.setKeymanModel(null),
-            iconType: p.isDoNothing ? null : InputIconType.SELECT,
+            iconType:
+                p.activityStatus == ActivityStatus.STARTED || p.isDoNothing
+                    ? null
+                    : InputIconType.SELECT,
             isShowDeleteForHintText: p.isDoNothing
                 ? false
                 : tuple.item1 != null && tuple.item1!.zkmnoNm != null
