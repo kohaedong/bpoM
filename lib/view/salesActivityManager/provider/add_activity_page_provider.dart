@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-19 19:04:15
+ * Last Modified: 2022-09-20 17:54:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -527,9 +527,10 @@ class AddActivityPageProvider extends ChangeNotifier {
                   ? 'E002'
                   : '';
 
-      if (suggestedItemList != null && suggestedItemList!.isNotEmpty) {
-        t260.actcat1 = getCode(activityList!, selectedActionType!);
-      }
+      // if (suggestedItemList != null && suggestedItemList!.isNotEmpty) {
+      //   t260.actcat1 = getCode(activityList!, selectedActionType!);
+      // }
+      t260.actcat1 = getCode(activityList!, selectedActionType!);
     };
 
     // create table 260 table List

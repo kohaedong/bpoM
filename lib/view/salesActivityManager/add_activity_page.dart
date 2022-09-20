@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-20 17:38:39
+ * Last Modified: 2022-09-20 17:51:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -195,21 +195,17 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 tuple.item1 != null && tuple.item1!.zkmnoNm != null
                     ? AppTextStyle.default_16
                     : AppTextStyle.hint_16,
-            popupSearchType:
-                p.activityStatus == ActivityStatus.STARTED || p.isDoNothing
-                    ? PopupSearchType.DO_NOTHING
-                    : tuple.item2 == null
-                        ? null
-                        : PopupSearchType.SEARCH_KEY_MAN,
+            popupSearchType: p.isVisit || p.isDoNothing
+                ? PopupSearchType.DO_NOTHING
+                : tuple.item2 == null
+                    ? null
+                    : PopupSearchType.SEARCH_KEY_MAN,
             isSelectedStrCallBack: (keymanModel) {
               return p.setKeymanModel(keymanModel);
             },
             deleteIconCallback: () => p.setKeymanModel(null),
-            iconType:
-                p.activityStatus == ActivityStatus.STARTED || p.isDoNothing
-                    ? null
-                    : InputIconType.SELECT,
-            isShowDeleteForHintText: p.isDoNothing
+            iconType: p.isVisit || p.isDoNothing ? null : InputIconType.SELECT,
+            isShowDeleteForHintText: p.isVisit || p.isDoNothing
                 ? false
                 : tuple.item1 != null && tuple.item1!.zkmnoNm != null
                     ? true
@@ -261,10 +257,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     onTap: () {
                       if (p.activityStatus == ActivityStatus.NONE ||
                           p.activityStatus == ActivityStatus.FINISH) {
+                        pr(2);
                         return;
                       }
                       if (p.activityStatus == ActivityStatus.STOPED) {
                         AppToast().show(context, tr('activity_is_stoped'));
+                        pr(3);
                       } else {
                         if ((p.selectedKunnr == null ||
                                 p.selectedKeyMan == null) &&
@@ -481,25 +479,20 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 return;
               } else {
                 if (canShow) {
-                  var notInterviewValidation = p.isVisit
-                      ? p.isInterviewIndex == 1
-                          ? (p.reasonForinterviewFailure != null &&
-                              p.reasonForinterviewFailure!.isNotEmpty)
-                          : true
-                      : true;
-                  if (notInterviewValidation) {
-                    await p.saveTable().then((result) {
-                      if (result.isSuccessful) {
-                        AppToast().show(context, tr('success'));
-                        if (index == null) {
-                          Navigator.pop(context, true);
-                        }
+                  // var notInterviewValidation = p.isVisit
+                  //     ? p.isInterviewIndex == 1
+                  //         ? (p.reasonForinterviewFailure != null &&
+                  //             p.reasonForinterviewFailure!.isNotEmpty)
+                  //         : true
+                  //     : true;
+                  await p.saveTable().then((result) {
+                    if (result.isSuccessful) {
+                      AppToast().show(context, tr('success'));
+                      if (index == null) {
+                        Navigator.pop(context, true);
                       }
-                    });
-                  } else {
-                    // AppToast().show(
-                    //     context, tr('plz_enter_reason_for_interview_failure'));
-                  }
+                    }
+                  });
                 }
               }
             }, isBottomButton: true);
