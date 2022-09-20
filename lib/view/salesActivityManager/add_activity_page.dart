@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-20 16:45:24
+ * Last Modified: 2022-09-20 16:49:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -456,20 +456,20 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 }
               });
 
-              if (isHaveEmptyItem) {
-                AppToast().show(
-                    context,
-                    tr('plz_select_something_1',
-                        args: [tr('suggested_item'), '']));
-                return;
-              }
-              if (!isValidateNewItem) {
-                AppToast().show(
-                    context,
-                    tr('plz_select_something_1',
-                        args: [tr('month_amount_price'), '']));
-                return;
-              }
+              // if (isHaveEmptyItem) {
+              //   AppToast().show(
+              //       context,
+              //       tr('plz_select_something_1',
+              //           args: [tr('suggested_item'), '']));
+              //   return;
+              // }
+              // if (!isValidateNewItem) {
+              //   AppToast().show(
+              //       context,
+              //       tr('plz_select_something_1',
+              //           args: [tr('month_amount_price'), '']));
+              //   return;
+              // }
 
               if (p.activityStatus == ActivityStatus.FINISH ||
                   p.activityStatus == ActivityStatus.NONE) {
@@ -492,8 +492,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                       }
                     });
                   } else {
-                    AppToast().show(
-                        context, tr('plz_enter_reason_for_interview_failure'));
+                    // AppToast().show(
+                    //     context, tr('plz_enter_reason_for_interview_failure'));
                   }
                 }
               }
