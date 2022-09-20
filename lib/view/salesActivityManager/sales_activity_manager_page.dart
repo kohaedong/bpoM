@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-19 18:11:25
+ * Last Modified: 2022-09-20 09:50:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -945,7 +945,11 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     p
                         .confirmAcitivityTable()
                         .then((result) => result.isSuccessful
-                            ? p.setActivityStatus(ActivityStatus.FINISH)
+                            ? () {
+                                p.setActivityStatus(ActivityStatus.FINISH);
+                                AppToast()
+                                    .show(context, tr('confirm_successful'));
+                              }()
                             : () async {
                                 var popResult = await Navigator.pushNamed(
                                     context, AddActivityPage.routeName,

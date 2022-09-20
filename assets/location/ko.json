@@ -568,7 +568,8 @@
     "order_reason_discription":"오더사유 상세설명",
     "register":"등록",
     "save":"저장",
-    "insufficient_balance":"고정여신점검: 한도 총액을 초과 했습니다."
+    "insufficient_balance":"고정여신점검: 한도 총액을 초과 했습니다.",
+    "confirm_successful":"확정 되였습니다."
    
    
 }

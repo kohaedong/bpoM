@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-09-19 19:06:32
+ * Last Modified: 2022-09-20 10:19:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,10 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
-import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
@@ -26,6 +23,7 @@ import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/common/holiday_response_model.dart';
 import 'package:medsalesportal/model/rfc/search_key_response_model.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_361.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_280.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
@@ -132,6 +130,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
             table250.last.stime!.isNotEmpty &&
             table250.last.faddcat!.isEmpty &&
             arrivalLatLonIsNull;
+        var isConfirmed = table250.last.stat == 'C';
         var isStoped = table250.last.scallType == 'M' &&
             table250.last.sxLatitude != null &&
             table250.last.syLongitude != null &&
@@ -140,11 +139,13 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
             table250.last.fcallType == 'M' &&
             table250.last.ftime!.isNotEmpty;
 
-        activityStatus = isStarted
-            ? ActivityStatus.STARTED
-            : isStoped
-                ? ActivityStatus.STOPED
-                : ActivityStatus.INIT;
+        activityStatus = isConfirmed
+            ? ActivityStatus.FINISH
+            : isStarted
+                ? ActivityStatus.STARTED
+                : isStoped
+                    ? ActivityStatus.STOPED
+                    : ActivityStatus.INIT;
       }
     } else {
       activityStatus = ActivityStatus.NONE;
@@ -674,6 +675,16 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       var t430Base64 = ''; // 시나리오
 
       var temp = <Map<String, dynamic>>[];
+      var t250List = dayResponseModel!.table250;
+      if (t250List != null && t250List.isNotEmpty) {
+        var temp250 = t250List.last;
+        temp250.stat = 'C';
+        temp250.umode = 'U';
+        temp.clear();
+        temp.add(temp250.toJson());
+        t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+      }
+
       var t260List = dayResponseModel!.table260;
       if (t260List != null && t260List.isNotEmpty) {
         temp.clear();
@@ -769,7 +780,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       Map<String, dynamic> _body = {
         "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
         "methodParamMap": {
-          "IV_PTYPE": "C",
+          "IV_PTYPE": "U",
+          "confirmType": "Y",
           "IV_ADATE": FormatUtil.removeDash(
               DateUtil.getDateStr(DateTime.now().toIso8601String())),
           "T_ZLTSP0250S": t250Base64,
@@ -793,6 +805,10 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
           "functionName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
         }
       };
+
+      pr('t250Base64 $t250Base64');
+      pr('t260Base64 $t260Base64');
+      pr('t280Base64 $t280Base64');
       final result = await _api.request(body: _body);
       if (result != null && result.statusCode != 200) {
         isLoadData = false;
@@ -803,10 +819,12 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         dayResponseModel =
             SalesActivityDayResponseModel.fromJson(result.body['data']);
         pr(dayResponseModel?.toJson());
+        pr(dayResponseModel?.table250?.first.toJson());
         isLoadDayData = false;
         notifyListeners();
         return ResultModel(true);
       }
+      pr('???');
       isLoadDayData = false;
       try {
         notifyListeners();
