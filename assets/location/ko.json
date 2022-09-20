@@ -537,7 +537,7 @@
     "with_team_leader":"팀장 동행",
     "with_another_saler":"영업사원 동행",
     "suggested_item":"제안품목",
-    "give_sample":"셈플 전달",
+    "give_sample":"샘플 전달",
     "add":"추가",
     "add_order":"주문 제품 추가",
     "get_recent_order":"최근 주문 불러오기",
@@ -569,7 +569,8 @@
     "register":"등록",
     "save":"저장",
     "insufficient_balance":"고정여신점검: 한도 총액을 초과 했습니다.",
-    "confirm_successful":"확정 되였습니다."
+    "confirm_successful":"확정 되였습니다.",
+    "plz_check_item":"제안품목1을 먼저 선택해주세요."
    
    
 }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-15 15:03:02
+ * Last Modified: 2022-09-20 18:02:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -164,39 +164,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         defaultSpacing(),
         Selector<BasePopupSearchProvider, String?>(
             selector: (context, provider) =>
-                provider.suggetionItemNameInputText,
-            builder: (context, name, _) {
-              return BaseInputWidget(
-                  context: context,
-                  width: AppSize.defaultContentsWidth - AppSize.padding * 2,
-                  enable: true,
-                  hintTextStyleCallBack:
-                      name != null ? null : () => AppTextStyle.hint_16,
-                  iconType: name != null
-                      ? InputIconType.DELETE_AND_SEARCH
-                      : InputIconType.SEARCH,
-                  onChangeCallBack: (e) => p.setSuggetionItemNameInputText(e),
-                  iconColor:
-                      name == null ? AppColors.textFieldUnfoucsColor : null,
-                  defaultIconCallback: () {
-                    hideKeyboard(context);
-                    p.refresh();
-                  },
-                  textEditingController: _suggetionNameInputController,
-                  otherIconcallback: () {
-                    p.setSuggetionItemNameInputText(null);
-                    _suggetionNameInputController.text = '';
-                  },
-                  hintText: name != null
-                      ? null
-                      : '${tr('plz_enter_search_key_for_something_1', args: [
-                              '${tr('materials_name')}',
-                              ''
-                            ])}');
-            }),
-        defaultSpacing(),
-        Selector<BasePopupSearchProvider, String?>(
-            selector: (context, provider) =>
                 provider.suggetionItemGroupInputText,
             builder: (context, group, _) {
               return BaseInputWidget(
@@ -224,6 +191,39 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? null
                       : '${tr('plz_enter_search_key_for_something_1', args: [
                               '${tr('materials_group')}',
+                              ''
+                            ])}');
+            }),
+        defaultSpacing(),
+        Selector<BasePopupSearchProvider, String?>(
+            selector: (context, provider) =>
+                provider.suggetionItemNameInputText,
+            builder: (context, name, _) {
+              return BaseInputWidget(
+                  context: context,
+                  width: AppSize.defaultContentsWidth - AppSize.padding * 2,
+                  enable: true,
+                  hintTextStyleCallBack:
+                      name != null ? null : () => AppTextStyle.hint_16,
+                  iconType: name != null
+                      ? InputIconType.DELETE_AND_SEARCH
+                      : InputIconType.SEARCH,
+                  onChangeCallBack: (e) => p.setSuggetionItemNameInputText(e),
+                  iconColor:
+                      name == null ? AppColors.textFieldUnfoucsColor : null,
+                  defaultIconCallback: () {
+                    hideKeyboard(context);
+                    p.refresh();
+                  },
+                  textEditingController: _suggetionNameInputController,
+                  otherIconcallback: () {
+                    p.setSuggetionItemNameInputText(null);
+                    _suggetionNameInputController.text = '';
+                  },
+                  hintText: name != null
+                      ? null
+                      : '${tr('plz_enter_search_key_for_something_1', args: [
+                              '${tr('materials_name')}',
                               ''
                             ])}');
             }),
@@ -1170,9 +1170,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
               _horizontalRow(
                 Row(
                   children: [
-                    AppText.text(model.maktx ?? '',
-                        style: AppTextStyle.h4
-                            .copyWith(fontWeight: FontWeight.bold)),
+                    AppText.listViewText(model.maktx ?? ''),
                     SizedBox(width: AppSize.defaultShimmorSpacing),
                     AppText.text(model.kbetr1!),
                   ],

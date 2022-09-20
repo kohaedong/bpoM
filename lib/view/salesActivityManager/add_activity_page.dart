@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-20 17:51:36
+ * Last Modified: 2022-09-20 18:14:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -639,7 +639,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
             final p = context.read<AddActivityPageProvider>();
             if (p.isDoNothing) return;
             if (isWithSuggetedItem != null && isWithSuggetedItem) {
-              p.updateSuggestedList(index!);
+              // p.updateSuggestedList(index!);
+              if (p.suggestedItemList![index!].matnr != null) {
+                p.updateSuggestedList(index);
+              } else {
+                AppToast().show(context, tr('plz_check_item'));
+              }
             } else {
               p.setIsWithTeamLeader(val);
             }
@@ -743,6 +748,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildTitleRow('${tr('suggested_item')}${index + 1}'),
+            defaultSpacing(isHalf: true),
             GestureDetector(
                 onTap: () {
                   final p = context.read<AddActivityPageProvider>();
@@ -818,7 +824,16 @@ class _AddActivityPageState extends State<AddActivityPage> {
             Padding(
                 padding:
                     EdgeInsets.only(right: AppSize.defaultListItemSpacing)),
-            AppText.text(tr('give_sample'), style: AppTextStyle.h4),
+            InkWell(
+              onTap: () {
+                if (p.suggestedItemList![index].matnr != null) {
+                  p.updateSuggestedList(index);
+                } else {
+                  AppToast().show(context, tr('plz_check_item'));
+                }
+              },
+              child: AppText.text(tr('give_sample'), style: AppTextStyle.h4),
+            ),
           ],
         ),
         defaultSpacing()
