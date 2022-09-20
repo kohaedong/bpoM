@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-20 16:54:13
+ * Last Modified: 2022-09-20 17:38:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -272,8 +272,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
                           AppToast()
                               .show(context, tr('plz_check_essential_option'));
                         } else if (!p.isVisit) {
-                          // p.getDistance();
-                          p.saveTable();
+                          p.getDistance().then((result) => result.isSuccessful
+                              ? p.saveTable()
+                              : DoNothingAction());
                         }
                       }
                     },
@@ -725,11 +726,13 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 },
                 // 멀티계정 전부 조회.
                 // 팀장계정 조속팀 조회.
-                bodyMap: CheckSuperAccount.isMultiAccount()
-                    ? {'dptnm': ''}
-                    : CheckSuperAccount.isLeaderAccount()
-                        ? {'dptnm': p.dptnm}
-                        : null,
+                bodyMap:
+                    //  CheckSuperAccount.isMultiAccount()
+                    //     ? {'dptnm': ''}
+                    //     : CheckSuperAccount.isLeaderAccount()
+                    //         ? {'dptnm': p.dptnm}
+                    //         : null,
+                    {'dptnm': ''},
                 enable: false,
               );
             })
