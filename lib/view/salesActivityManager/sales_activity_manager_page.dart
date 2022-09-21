@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-20 18:48:53
+ * Last Modified: 2022-09-21 18:34:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -291,8 +291,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 return Container(
                   child: AppText.text(
                       month != null
-                          ? DateUtil.getMonthStrForKR(month)
-                          : '${DateUtil.getMonthStrForKR(DateTime.now())}',
+                          ? DateUtil.getMonthStrForKR(month, isWithZero: true)
+                          : '${DateUtil.getMonthStrForKR(DateTime.now(), isWithZero: true)}',
                       style: AppTextStyle.default_18
                           .copyWith(fontWeight: FontWeight.w500)),
                 );

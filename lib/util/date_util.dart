@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/date_util.dart
  * Created Date: 2021-11-23 07:56:54
- * Last Modified: 2022-08-20 00:39:56
+ * Last Modified: 2022-09-21 18:36:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -84,14 +84,18 @@ class DateUtil {
     return formatter.format(temp);
   }
 
-  static String getDateStrForKR(DateTime date) {
+  static String getDateStrForKR(DateTime date, {bool? isWithZero}) {
     var formatter = DateFormat('yyyy년 MM월 dd일');
-    return formatter.format(date);
+    return isWithZero != null && isWithZero
+        ? '${date.year}년 ${date.month}월 ${date.day}일'
+        : formatter.format(date);
   }
 
-  static String getMonthStrForKR(DateTime date) {
+  static String getMonthStrForKR(DateTime date, {bool? isWithZero}) {
     var formatter = DateFormat('yyyy년 MM월');
-    return formatter.format(date);
+    return isWithZero != null && isWithZero
+        ? '${date.year}년 ${date.month}월'
+        : formatter.format(date);
   }
 
   static String now() {
