@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -54,7 +55,7 @@ class SettingsPage extends StatelessWidget {
                                         AppSize.buttonHeight,
                                     alignment: Alignment.center,
                                     child: AppText.text(
-                                        '(개발)제약 영업포탈 ${tr('is_ready_to_logout')}',
+                                        '${KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev' ? '(개발)제약 영업포탈' : '제약 영업포탈'}${tr('is_ready_to_logout')}',
                                         style: AppTextStyle.default_16)),
                                 successButtonText: '${tr('ok')}',
                                 successTextColor: AppColors.primary,
