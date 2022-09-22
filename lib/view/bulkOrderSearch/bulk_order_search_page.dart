@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-09-22 13:12:56
+ * Last Modified: 2022-09-22 15:03:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -407,17 +407,8 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
               ],
             ),
             defaultSpacing(),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  AppText.listViewText(model.kunnrNm!,
-                      textAlign: TextAlign.start),
-                  AppText.listViewText('(${model.kunnr!})',
-                      textAlign: TextAlign.start),
-                ],
-              ),
-            ),
+            AppText.listViewText('${model.kunnrNm}${model.kunnr}',
+                textAlign: TextAlign.start),
             // model.kunnrNm != model.zzkunnrEndNm!
             //     ? Row(
             //         children: [
@@ -428,33 +419,24 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
             //         ],
             //       )
             //     : Container(),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  AppText.listViewText(model.zzkunnrEndNm!,
-                      textAlign: TextAlign.start),
-                  AppText.listViewText('(${model.zzkunnrEnd!})',
-                      textAlign: TextAlign.start),
-                ],
-              ),
-            ),
+            AppText.listViewText('${model.zzkunnrEndNm!} ${model.zzkunnrEnd!}',
+                textAlign: TextAlign.start),
+
             defaultSpacing(isHalf: true),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  AppText.text('${tr('salse_order_number')}:${model.zreqno!}',
-                      maxLines: 1),
-                  model.zdmstatus == 'A' ? Container() : AppStyles.buildPipe(),
-                  AppText.text(
-                      // 주문요청상태시 주문번호 없음.
-                      model.zdmstatus == 'A'
-                          ? ''
-                          : '${tr('request_order_number')}:${model.vbeln!}',
-                      maxLines: 1),
-                ],
-              ),
+            Row(
+              children: [
+                SizedBox(
+                  child: AppText.text(
+                      '${tr('salse_order_number')}:${model.zreqno!}'),
+                ),
+                model.zdmstatus == 'A' ? Container() : AppStyles.buildPipe(),
+                AppText.text(
+                  // 주문요청상태시 주문번호 없음.
+                  model.zdmstatus == 'A'
+                      ? ''
+                      : '${tr('request_order_number')}:${model.vbeln!}',
+                ),
+              ],
             ),
             defaultSpacing(),
             Divider(),

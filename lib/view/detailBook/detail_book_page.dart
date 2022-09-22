@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-09-22 13:38:02
+ * Last Modified: 2022-09-22 15:06:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -204,6 +204,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                           vertical: AppSize.defaultListItemSpacing),
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
+                        physics: ClampingScrollPhysics(),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [

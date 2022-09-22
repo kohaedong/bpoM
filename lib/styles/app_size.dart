@@ -77,7 +77,7 @@ class AppSize {
   static EdgeInsets get popupPadding =>
       EdgeInsets.fromLTRB(20.w, 28.h, 20.w, 20.h);
   static EdgeInsets get searchPopupListPadding =>
-      EdgeInsets.only(top: 12.w, bottom: 12.w);
+      EdgeInsets.only(top: 12.w, bottom: 12.w, left: 0, right: 0);
   static EdgeInsets get nullValueWidgetPadding =>
       EdgeInsets.only(left: padding, top: 50.w, bottom: 50.w, right: padding);
   static EdgeInsets get updatePopupPadding =>
@@ -100,8 +100,7 @@ class AppSize {
       EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 0.h);
   static EdgeInsets get defaultSidePadding =>
       EdgeInsets.only(left: padding, right: padding);
-  static EdgeInsets get defaultSearchPopupSidePadding => EdgeInsets.only(
-      left: 45.w - padding, top: 0, bottom: 0, right: 45.w - padding);
+
   static double get searchPopupSideSize => 45.w;
   static EdgeInsets get listPadding =>
       EdgeInsets.fromLTRB(16.w, 20.h, 16.w, 20.h);

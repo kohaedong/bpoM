@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-09-20 18:43:42
+ * Last Modified: 2022-09-22 14:33:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -37,6 +37,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirestRun = true;
   bool isSingleData = false;
+  bool isShhowNotResultText = false;
   String? personInputText;
   String? keymanInputText;
   String? customerInputTextForAddActivityPage;
@@ -380,6 +381,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
       return BasePoupSearchResult(true);
     }
     isLoadData = false;
+    isShhowNotResultText = staList != null && staList!.staffList!.isEmpty;
+
     notifyListeners();
     return BasePoupSearchResult(false);
   }
@@ -430,11 +433,17 @@ class BasePopupSearchProvider extends ChangeNotifier {
       }
       pr(temp.toJson());
       isLoadData = false;
+      isShhowNotResultText =
+          keyManResponseModel != null && keyManResponseModel!.etList!.isEmpty;
+
       notifyListeners();
       return BasePoupSearchResult(true);
     }
     isLoadData = false;
-    notifyListeners();
+    isShhowNotResultText = true;
+    try {
+      notifyListeners();
+    } catch (e) {}
     return BasePoupSearchResult(false);
   }
 
@@ -496,11 +505,16 @@ class BasePopupSearchProvider extends ChangeNotifier {
       }
       pr(temp.toJson());
       isLoadData = false;
+      isShhowNotResultText = metarialResponseModel != null &&
+          metarialResponseModel!.etOutput!.isEmpty;
       notifyListeners();
       return BasePoupSearchResult(true);
     }
     isLoadData = false;
-    notifyListeners();
+    isShhowNotResultText = true;
+    try {
+      notifyListeners();
+    } catch (e) {}
     return BasePoupSearchResult(false);
   }
 
@@ -585,10 +599,16 @@ class BasePopupSearchProvider extends ChangeNotifier {
         etKunnrResponseModel = null;
       }
       isLoadData = false;
+      isShhowNotResultText = etKunnrResponseModel != null &&
+          etKunnrResponseModel!.etKunnr!.isEmpty;
       notifyListeners();
       return BasePoupSearchResult(true);
     }
     isLoadData = false;
+    isShhowNotResultText = true;
+    try {
+      notifyListeners();
+    } catch (e) {}
     return BasePoupSearchResult(false);
   }
 
@@ -656,6 +676,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     }
     if (result != null && result.statusCode == 200) {
       var temp = EtCustomerResponseModel.fromJson(result.body['data']);
+
       if (temp.esReturn!.mtype == 'S') {
         pr(result.body);
         if (temp.etCustomer!.length != partial) {
@@ -671,12 +692,17 @@ class BasePopupSearchProvider extends ChangeNotifier {
           etCustomerResponseModel = null;
         }
         isLoadData = false;
+        isShhowNotResultText = etCustomerResponseModel != null &&
+            etCustomerResponseModel!.etCustomer!.isEmpty;
         notifyListeners();
         return BasePoupSearchResult(true);
       }
     }
     isLoadData = false;
-    notifyListeners();
+    isShhowNotResultText = true;
+    try {
+      notifyListeners();
+    } catch (e) {}
     return BasePoupSearchResult(false);
   }
 
@@ -739,10 +765,19 @@ class BasePopupSearchProvider extends ChangeNotifier {
       }
 
       isLoadData = false;
+      isShhowNotResultText = etEndCustomerOrSupplierResponseModel != null &&
+          etEndCustomerOrSupplierResponseModel!.etCustList!.isEmpty;
+      pr('caonima $isShhowNotResultText');
+
       notifyListeners();
       return BasePoupSearchResult(true);
     }
+
     isLoadData = false;
+    isShhowNotResultText = true;
+    try {
+      notifyListeners();
+    } catch (e) {}
     return BasePoupSearchResult(false);
   }
 
@@ -796,10 +831,18 @@ class BasePopupSearchProvider extends ChangeNotifier {
         suggetionResponseModel = null;
       }
       isLoadData = false;
+      isShhowNotResultText = suggetionResponseModel != null &&
+          suggetionResponseModel!.etOutput!.isEmpty;
+      pr('caonima $isShhowNotResultText');
+
       notifyListeners();
       return BasePoupSearchResult(true);
     }
     isLoadData = false;
+    isShhowNotResultText = true;
+    try {
+      notifyListeners();
+    } catch (e) {}
     return BasePoupSearchResult(false);
   }
 

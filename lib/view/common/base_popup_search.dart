@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-22 11:54:43
+ * Last Modified: 2022-09-22 14:57:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -434,10 +434,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   context: context,
                   width: (AppSize.defaultContentsWidth - AppSize.padding * 2),
                   enable: false,
-                  hintTextStyleCallBack: CheckSuperAccount.isMultiAccount()
-                      ? salesGroup != null
-                          ? () => AppTextStyle.default_16
-                          : () => AppTextStyle.hint_16
+                  hintTextStyleCallBack: salesGroup != null
+                      ? () => AppTextStyle.default_16
                       : () => AppTextStyle.hint_16,
                   // hintTextStyleCallBack: () => AppTextStyle.hint_16,
                   iconType: CheckSuperAccount.isMultiAccountOrLeaderAccount()
@@ -484,11 +482,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     CheckSuperAccount.isMultiAccountOrLeaderAccount()
                         ? p.setStaffName(tr('all'))
                         : p.setStaffName(null),
-                hintTextStyleCallBack: () =>
-                    CheckSuperAccount.isMultiAccountOrLeaderAccount() &&
-                            tuple.item1 != null
-                        ? AppTextStyle.default_16
-                        : AppTextStyle.hint_16,
+                hintTextStyleCallBack: () => tuple.item1 != null
+                    ? AppTextStyle.default_16
+                    : AppTextStyle.hint_16,
                 popupSearchType:
                     CheckSuperAccount.isMultiAccountOrLeaderAccount()
                         ? PopupSearchType.SEARCH_SALSE_PERSON
@@ -593,10 +589,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                             '${tr('search_by_keywords')}',
                             ''
                           ])}',
-                hintTextStyleCallBack: CheckSuperAccount.isMultiAccount()
-                    ? key != null
-                        ? () => AppTextStyle.default_16
-                        : () => AppTextStyle.hint_16
+                hintTextStyleCallBack: key != null
+                    ? () => AppTextStyle.default_16
                     : () => AppTextStyle.hint_16,
                 onChangeCallBack: (t) => p.setMeatrialSearchKeyInputText(t),
                 enable: true,
@@ -665,7 +659,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
   Widget _buildSearchBar(BuildContext context) {
     pr('buildBar');
     return Container(
-      height: widget.type.appBarHeight,
+      height: widget.type.appBarHeight + 0.5,
       child: Column(
         children: [
           Container(
@@ -709,6 +703,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                           PopupSearchType.SEARCH_MATERIAL
                                       ? _buildMateRialSearchBar(context)
                                       : Container(),
+          Divider(height: 0.5),
         ],
       ),
     );
@@ -748,129 +743,127 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     (provider.metarialResponseModel != null &&
                         provider.metarialResponseModel!.etOutput != null &&
                         provider.metarialResponseModel!.etOutput!.isNotEmpty)
-                ? Padding(
-                    padding: AppSize.defaultSearchPopupSidePadding,
-                    child: Container(
-                        child: RefreshIndicator(
-                            child: ListView.builder(
-                              controller: _scrollController
-                                ..addListener(() {
-                                  if (_scrollController.offset ==
-                                          _scrollController
-                                              .position.maxScrollExtent &&
-                                      !provider.isLoadData &&
-                                      provider.hasMore) {
-                                    final nextPageProvider =
-                                        context.read<NextPageLoadingProvider>();
-                                    nextPageProvider.show();
-                                    provider
-                                        .nextPage()
-                                        .then((_) => nextPageProvider.stop());
-                                  }
-                                }),
-                              shrinkWrap: true,
-                              padding:
-                                  EdgeInsets.only(bottom: AppSize.appBarHeight),
-                              itemCount: widget.type ==
-                                          PopupSearchType.SEARCH_SALSE_PERSON ||
+                ? RefreshIndicator(
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(
+                          left: AppSize.padding,
+                          right: AppSize.padding,
+                          top: AppSize.padding,
+                          bottom: AppSize.buttonHeight + AppSize.padding),
+                      controller: _scrollController
+                        ..addListener(() {
+                          if (_scrollController.offset ==
+                                  _scrollController.position.maxScrollExtent &&
+                              !provider.isLoadData &&
+                              provider.hasMore) {
+                            final nextPageProvider =
+                                context.read<NextPageLoadingProvider>();
+                            nextPageProvider.show();
+                            provider
+                                .nextPage()
+                                .then((_) => nextPageProvider.stop());
+                          }
+                        }),
+                      shrinkWrap: true,
+                      itemCount: widget.type ==
+                                  PopupSearchType.SEARCH_SALSE_PERSON ||
+                              widget.type ==
+                                  PopupSearchType
+                                      .SEARCH_SALSE_PERSON_FOR_ACTIVITY
+                          ? provider.staList!.staffList!.length
+                          : widget.type == PopupSearchType.SEARCH_CUSTOMER
+                              ? provider.etKunnrResponseModel!.etKunnr!.length
+                              : widget.type == PopupSearchType.SEARCH_SALLER ||
                                       widget.type ==
                                           PopupSearchType
-                                              .SEARCH_SALSE_PERSON_FOR_ACTIVITY
-                                  ? provider.staList!.staffList!.length
+                                              .SEARCH_SALLER_FOR_BULK_ORDER
+                                  ? provider.etCustomerResponseModel!
+                                      .etCustomer!.length
                                   : widget.type ==
-                                          PopupSearchType.SEARCH_CUSTOMER
+                                              PopupSearchType
+                                                  .SEARCH_END_CUSTOMER ||
+                                          widget.type ==
+                                              PopupSearchType.SEARCH_SUPPLIER
                                       ? provider
-                                          .etKunnrResponseModel!.etKunnr!.length
-                                      : widget.type == PopupSearchType.SEARCH_SALLER ||
-                                              widget.type ==
+                                          .etEndCustomerOrSupplierResponseModel!
+                                          .etCustList!
+                                          .length
+                                      : widget.type ==
+                                              PopupSearchType.SEARCH_KEY_MAN
+                                          ? provider.keyManResponseModel!
+                                              .etList!.length
+                                          : widget.type ==
                                                   PopupSearchType
-                                                      .SEARCH_SALLER_FOR_BULK_ORDER
-                                          ? provider.etCustomerResponseModel!
-                                              .etCustomer!.length
-                                          : widget.type == PopupSearchType.SEARCH_END_CUSTOMER ||
-                                                  widget.type ==
-                                                      PopupSearchType
-                                                          .SEARCH_SUPPLIER
-                                              ? provider
-                                                  .etEndCustomerOrSupplierResponseModel!
-                                                  .etCustList!
-                                                  .length
+                                                      .SEARCH_SUGGETION_ITEM
+                                              ? provider.suggetionResponseModel!
+                                                  .etOutput!.length
                                               : widget.type ==
                                                       PopupSearchType
-                                                          .SEARCH_KEY_MAN
+                                                          .SEARCH_MATERIAL
                                                   ? provider
-                                                      .keyManResponseModel!
-                                                      .etList!
+                                                      .metarialResponseModel!
+                                                      .etOutput!
                                                       .length
-                                                  : widget.type ==
-                                                          PopupSearchType
-                                                              .SEARCH_SUGGETION_ITEM
-                                                      ? provider
-                                                          .suggetionResponseModel!
-                                                          .etOutput!
-                                                          .length
-                                                      : widget.type == PopupSearchType.SEARCH_MATERIAL
-                                                          ? provider.metarialResponseModel!.etOutput!.length
-                                                          : 0,
-                              itemBuilder: (BuildContext context, int index) {
-                                return widget.type == PopupSearchType.SEARCH_SALSE_PERSON ||
+                                                  : 0,
+                      itemBuilder: (BuildContext context, int index) {
+                        return widget.type == PopupSearchType.SEARCH_SALSE_PERSON ||
+                                widget.type ==
+                                    PopupSearchType
+                                        .SEARCH_SALSE_PERSON_FOR_ACTIVITY
+                            ? _buildPersonContentsItem(
+                                context,
+                                provider.staList!.staffList![index],
+                                index,
+                                !provider.hasMore &&
+                                    index ==
+                                        provider.staList!.staffList!.length - 1)
+                            : widget.type == PopupSearchType.SEARCH_CUSTOMER
+                                ? _buildCustomerContentsItem(
+                                    context,
+                                    provider
+                                        .etKunnrResponseModel!.etKunnr![index],
+                                    index,
+                                    !provider.hasMore &&
+                                        index ==
+                                            provider.etKunnrResponseModel!
+                                                    .etKunnr!.length -
+                                                1)
+                                : widget.type == PopupSearchType.SEARCH_SALLER ||
                                         widget.type ==
                                             PopupSearchType
-                                                .SEARCH_SALSE_PERSON_FOR_ACTIVITY
-                                    ? _buildPersonContentsItem(
+                                                .SEARCH_SALLER_FOR_BULK_ORDER
+                                    ? _buildSallerContentsItem(
                                         context,
-                                        provider.staList!.staffList![index],
+                                        provider.etCustomerResponseModel!
+                                            .etCustomer![index],
                                         index,
                                         !provider.hasMore &&
                                             index ==
-                                                provider.staList!.staffList!.length -
+                                                provider.etCustomerResponseModel!
+                                                        .etCustomer!.length -
                                                     1)
-                                    : widget.type ==
-                                            PopupSearchType.SEARCH_CUSTOMER
-                                        ? _buildCustomerContentsItem(
+                                    : widget.type == PopupSearchType.SEARCH_END_CUSTOMER ||
+                                            widget.type ==
+                                                PopupSearchType.SEARCH_SUPPLIER
+                                        ? _buildEndCustomerContentsItem(
                                             context,
-                                            provider.etKunnrResponseModel!
-                                                .etKunnr![index],
+                                            provider
+                                                .etEndCustomerOrSupplierResponseModel!
+                                                .etCustList![index],
                                             index,
                                             !provider.hasMore &&
-                                                index ==
-                                                    provider.etKunnrResponseModel!.etKunnr!.length -
-                                                        1)
-                                        : widget.type == PopupSearchType.SEARCH_SALLER ||
-                                                widget.type ==
-                                                    PopupSearchType
-                                                        .SEARCH_SALLER_FOR_BULK_ORDER
-                                            ? _buildSallerContentsItem(
-                                                context,
-                                                provider
-                                                    .etCustomerResponseModel!
-                                                    .etCustomer![index],
-                                                index,
-                                                !provider.hasMore &&
-                                                    index ==
-                                                        provider.etCustomerResponseModel!.etCustomer!.length -
-                                                            1)
-                                            : widget.type == PopupSearchType.SEARCH_END_CUSTOMER ||
-                                                    widget.type ==
-                                                        PopupSearchType
-                                                            .SEARCH_SUPPLIER
-                                                ? _buildEndCustomerContentsItem(
-                                                    context,
-                                                    provider.etEndCustomerOrSupplierResponseModel!.etCustList![index],
-                                                    index,
-                                                    !provider.hasMore && index == provider.etEndCustomerOrSupplierResponseModel!.etCustList!.length - 1)
-                                                : widget.type == PopupSearchType.SEARCH_KEY_MAN
-                                                    ? _buildKeymanContentsItem(context, provider.keyManResponseModel!.etList![index], index, !provider.hasMore && index == provider.keyManResponseModel!.etList!.length - 1)
-                                                    : widget.type == PopupSearchType.SEARCH_SUGGETION_ITEM
-                                                        ? _buildSuggetionContentsItem(context, provider.suggetionResponseModel!.etOutput![index], index, !provider.hasMore && index == provider.suggetionResponseModel!.etOutput!.length - 1)
-                                                        : widget.type == PopupSearchType.SEARCH_MATERIAL
-                                                            ? _buildMaterialContentsItem(context, provider.metarialResponseModel!.etOutput![index], index, !provider.hasMore && index == provider.metarialResponseModel!.etOutput!.length - 1)
-                                                            : Container();
-                              },
-                            ),
-                            // 수정 ! nextPage ->  refresh
-                            onRefresh: () => provider.refresh())),
-                  )
+                                                index == provider.etEndCustomerOrSupplierResponseModel!.etCustList!.length - 1)
+                                        : widget.type == PopupSearchType.SEARCH_KEY_MAN
+                                            ? _buildKeymanContentsItem(context, provider.keyManResponseModel!.etList![index], index, !provider.hasMore && index == provider.keyManResponseModel!.etList!.length - 1)
+                                            : widget.type == PopupSearchType.SEARCH_SUGGETION_ITEM
+                                                ? _buildSuggetionContentsItem(context, provider.suggetionResponseModel!.etOutput![index], index, !provider.hasMore && index == provider.suggetionResponseModel!.etOutput!.length - 1)
+                                                : widget.type == PopupSearchType.SEARCH_MATERIAL
+                                                    ? _buildMaterialContentsItem(context, provider.metarialResponseModel!.etOutput![index], index, !provider.hasMore && index == provider.metarialResponseModel!.etOutput!.length - 1)
+                                                    : Container();
+                      },
+                    ),
+                    // 수정 ! nextPage ->  refresh
+                    onRefresh: () => provider.refresh())
                 : provider.isLoadData
                     ? Container(
                         height: widget.type.height -
@@ -882,17 +875,25 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                         ),
                       )
                     : Column(
-                        children: [BaseNullDataWidget.build()],
+                        children: [
+                          BaseNullDataWidget.build(
+                              message:
+                                  provider.isShhowNotResultText ? null : '')
+                        ],
                       );
           });
         });
   }
 
+//좌우 스크롤 가능한 위젯
   Widget _horizontalRow(Widget w) {
     return Align(
-      alignment: Alignment.centerLeft,
-      child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: w),
-    );
+        alignment: Alignment.centerLeft,
+        child: SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          child: w,
+        ));
   }
 
   Widget _buildPersonContentsItem(BuildContext context, EtStaffListModel model,

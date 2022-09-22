@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-21 18:36:46
+ * Last Modified: 2022-09-22 15:06:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -427,6 +427,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             ),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
+              physics: ClampingScrollPhysics(),
               child: Row(
                 children: [
                   model.rslt != null && model.rslt!.trim().isEmpty
