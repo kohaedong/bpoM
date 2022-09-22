@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-09-22 11:54:43
+ * Last Modified: 2022-09-22 12:44:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -472,7 +472,8 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                       Padding(
                           padding: AppSize.nullValueWidgetPadding,
                           child: BaseNullDataWidget.build(
-                              message: provider.hasData ? null : ''))
+                              message:
+                                  provider.isShowNotResultText ? null : ''))
                     ],
                   )
       ],
@@ -522,16 +523,9 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                 create: (context) => NextPageLoadingProvider()),
           ],
           builder: (context, _) {
-            final p = context.watch<OrderSearchPageProvider>();
+            final p = context.read<OrderSearchPageProvider>();
             if (p.isFirstRun) {
-              p.initPageData().then((_) {
-                if (p.searchOrderResponseModel != null &&
-                    p.searchOrderResponseModel!.tList!.isNotEmpty) {
-                  _panelSwich = ValueNotifier<bool>(false);
-                } else {
-                  // _panelSwich = ValueNotifier<bool>(false);
-                }
-              });
+              p.initPageData().then((value) => _panelSwich.value = false);
             }
             return Stack(
               fit: StackFit.expand,

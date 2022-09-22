@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-09-22 11:46:57
+ * Last Modified: 2022-09-22 12:28:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -29,7 +29,8 @@ import 'package:medsalesportal/model/rfc/salse_activity_search_response_model.da
 
 class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
-  bool hasData = false;
+  bool isFirstRun = true;
+  bool isShowNotResultText = false;
   String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
@@ -63,6 +64,7 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
     setIsLoginModel();
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
+    onSearch(false);
   }
 
   void setIsLoginModel() async {
@@ -169,7 +171,8 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
         searchResponseModel = null;
       }
       isLoadData = false;
-      hasData = searchResponseModel!.tList!.isNotEmpty;
+      isFirstRun = false;
+      isShowNotResultText = true;
       notifyListeners();
       return ResultModel(true);
     }

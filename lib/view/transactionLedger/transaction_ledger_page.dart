@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-22 11:54:43
+ * Last Modified: 2022-09-22 12:47:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -703,7 +703,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           Padding(
                               padding: AppSize.nullValueWidgetPadding,
                               child: BaseNullDataWidget.build(
-                                  message: p.hasData ? null : ''))
+                                  message: p.isShowNotResultText ? null : ''))
                         ],
                       ),
             Padding(padding: EdgeInsets.only(top: AppSize.buttonHeight))
@@ -1024,7 +1024,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                       Padding(
                           padding: AppSize.nullValueWidgetPadding,
                           child: BaseNullDataWidget.build(
-                              message: p.hasData ? null : ''))
+                              message: p.isShowNotResultText ? null : ''))
                     ],
                   );
       },
@@ -1165,6 +1165,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
         builder: (context, _) {
           pr('build');
           final p = context.read<TransactionLedgerPageProvider>();
+
           return Selector<TransactionLedgerPageProvider, bool>(
             selector: (context, provider) => provider.isShowAppBar,
             builder: (context, isShowAppBar, _) {

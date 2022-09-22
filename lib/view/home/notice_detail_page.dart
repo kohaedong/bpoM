@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/home/notice_detail_page.dart
  * Created Date: 2022-07-05 13:17:36
- * Last Modified: 2022-09-22 10:29:01
+ * Last Modified: 2022-09-22 12:16:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_shimmer.dart';
@@ -39,6 +38,7 @@ class _NoticeDetailPageState extends State<NoticeDetailPage> {
 
   @override
   void dispose() {
+    _appBarTitle.dispose();
     super.dispose();
   }
 

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-09-22 11:45:35
+ * Last Modified: 2022-09-22 12:43:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -32,8 +32,8 @@ import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 
 class OrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
-  bool isFirstRun = false;
-  bool hasData = false;
+  bool isFirstRun = true;
+  bool isShowNotResultText = false;
   String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
@@ -68,6 +68,11 @@ class OrderSearchPageProvider extends ChangeNotifier {
       return onSearch(false);
     }
     return null;
+  }
+
+  void setIsShowNotResultText() {
+    isShowNotResultText = false;
+    notifyListeners();
   }
 
   String get dptnm => CacheService.getEsLogin()!.dptnm!;
@@ -112,12 +117,12 @@ class OrderSearchPageProvider extends ChangeNotifier {
   }
 
   Future<void> initPageData() async {
+    isLoadData = true;
     setIsLoginModel();
     await searchPerson(dptnm: CheckSuperAccount.isMultiAccount() ? '' : null);
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
     selectedProductsFamily = selectedProcessingStatus = tr('all');
-    isFirstRun = false;
     onSearch(false);
   }
 
@@ -297,7 +302,8 @@ class OrderSearchPageProvider extends ChangeNotifier {
         searchOrderResponseModel = null;
       }
       isLoadData = false;
-      hasData = searchOrderResponseModel!.tList!.isNotEmpty;
+      isFirstRun = false;
+      isShowNotResultText = true;
       notifyListeners();
       return ResultModel(true);
     }

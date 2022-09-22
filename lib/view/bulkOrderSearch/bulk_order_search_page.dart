@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-09-22 11:54:43
+ * Last Modified: 2022-09-22 12:50:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -528,7 +528,7 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
           builder: (context, _) {
             final p = context.watch<BulkOrderSearchPageProvider>();
             if (p.isFirstRun) {
-              p.initPageData();
+              p.initPageData().then((value) => _panelSwich.value = false);
             }
             return Stack(
               fit: StackFit.expand,

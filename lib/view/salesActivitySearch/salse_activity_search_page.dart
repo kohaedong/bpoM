@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-09-22 11:54:43
+ * Last Modified: 2022-09-22 12:45:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -72,8 +72,8 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
   }
 
   Widget _buildPanel(BuildContext context) {
-    final p = context.read<SalseSalseActivitySearchPageProvider>();
-    p.initPageData();
+    final p = context.watch<SalseSalseActivitySearchPageProvider>();
+
     return ValueListenableBuilder<bool>(
         valueListenable: _panelSwich,
         builder: (context, swichValue, _) {
@@ -353,7 +353,8 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                       Padding(
                           padding: AppSize.nullValueWidgetPadding,
                           child: BaseNullDataWidget.build(
-                              message: provider.hasData ? null : ''))
+                              message:
+                                  provider.isShowNotResultText ? null : ''))
                     ],
                   )
       ],
@@ -405,6 +406,11 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
           ],
           builder: (context, _) {
             final p = context.read<SalseSalseActivitySearchPageProvider>();
+            if (p.isFirstRun) {
+              p.initPageData().then((_) {
+                _panelSwich.value = false;
+              });
+            }
             return Stack(
               fit: StackFit.expand,
               children: [
