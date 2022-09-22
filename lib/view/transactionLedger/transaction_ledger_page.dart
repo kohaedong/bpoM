@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-22 11:01:36
+ * Last Modified: 2022-09-22 11:54:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -188,9 +188,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                     BaseInputWidget(
                                       context: context,
                                       iconType: InputIconType.SELECT,
-                                      iconColor: family != null
-                                          ? AppColors.subText
-                                          : AppColors.textFieldUnfoucsColor,
+                                      iconColor:
+                                          AppColors.textFieldUnfoucsColor,
                                       hintText: family ??
                                           '${tr('plz_select_something_1', args: [
                                                 tr('product_family'),
@@ -227,9 +226,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                               .isMultiAccountOrLeaderAccount()
                                           ? InputIconType.SEARCH
                                           : null,
-                                      iconColor: staffName != null
-                                          ? AppColors.subText
-                                          : AppColors.textFieldUnfoucsColor,
+                                      iconColor:
+                                          AppColors.textFieldUnfoucsColor,
                                       hintText: staffName ??
                                           '${tr('plz_select_something_1', args: [
                                                 tr('manager'),
@@ -295,9 +293,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                           }
                                         : null,
                                     iconType: InputIconType.SEARCH,
-                                    iconColor: tuple.item1 != null
-                                        ? AppColors.subText
-                                        : AppColors.textFieldUnfoucsColor,
+                                    iconColor: AppColors.textFieldUnfoucsColor,
                                     deleteIconCallback: () =>
                                         p.setCustomerName(null),
                                     hintText: tuple.item1 ??
@@ -363,9 +359,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                               }
                                             : null,
                                         iconType: InputIconType.SEARCH,
-                                        iconColor: tuple.item1 != null
-                                            ? AppColors.subText
-                                            : AppColors.textFieldUnfoucsColor,
+                                        iconColor:
+                                            AppColors.textFieldUnfoucsColor,
                                         deleteIconCallback: () =>
                                             p.setEndCustomerModel(null),
                                         hintText: tuple.item1 ??
@@ -707,7 +702,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                         children: [
                           Padding(
                               padding: AppSize.nullValueWidgetPadding,
-                              child: BaseNullDataWidget.build())
+                              child: BaseNullDataWidget.build(
+                                  message: p.hasData ? null : ''))
                         ],
                       ),
             Padding(padding: EdgeInsets.only(top: AppSize.buttonHeight))
@@ -1027,7 +1023,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                     children: [
                       Padding(
                           padding: AppSize.nullValueWidgetPadding,
-                          child: BaseNullDataWidget.build())
+                          child: BaseNullDataWidget.build(
+                              message: p.hasData ? null : ''))
                     ],
                   );
       },

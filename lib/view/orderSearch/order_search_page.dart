@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-09-22 11:00:49
+ * Last Modified: 2022-09-22 11:54:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -178,9 +178,8 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                               .isMultiAccountOrLeaderAccount()
                                           ? InputIconType.SEARCH
                                           : null,
-                                      iconColor: staffName != null
-                                          ? AppColors.subText
-                                          : AppColors.textFieldUnfoucsColor,
+                                      iconColor:
+                                          AppColors.textFieldUnfoucsColor,
                                       hintText: staffName ??
                                           '${tr('plz_select_something_1', args: [
                                                 tr('manager'),
@@ -230,9 +229,8 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                     BaseInputWidget(
                                       context: context,
                                       iconType: InputIconType.SELECT,
-                                      iconColor: status != null
-                                          ? AppColors.subText
-                                          : AppColors.textFieldUnfoucsColor,
+                                      iconColor:
+                                          AppColors.textFieldUnfoucsColor,
                                       hintText: status ??
                                           '${tr('plz_select_something_2', args: [
                                                 tr('product_process_status'),
@@ -265,9 +263,8 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                     BaseInputWidget(
                                       context: context,
                                       iconType: InputIconType.SELECT,
-                                      iconColor: family != null
-                                          ? AppColors.subText
-                                          : AppColors.textFieldUnfoucsColor,
+                                      iconColor:
+                                          AppColors.textFieldUnfoucsColor,
                                       hintText: family ??
                                           '${tr('plz_select_something_1', args: [
                                                 tr('product_family'),
@@ -316,9 +313,8 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                             }
                                           : null,
                                       iconType: InputIconType.SEARCH,
-                                      iconColor: tuple.item1 != null
-                                          ? AppColors.subText
-                                          : AppColors.textFieldUnfoucsColor,
+                                      iconColor:
+                                          AppColors.textFieldUnfoucsColor,
                                       deleteIconCallback: () =>
                                           p.setCustomerName(null),
                                       hintText: tuple.item1 ??
@@ -475,7 +471,8 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                     children: [
                       Padding(
                           padding: AppSize.nullValueWidgetPadding,
-                          child: BaseNullDataWidget.build())
+                          child: BaseNullDataWidget.build(
+                              message: provider.hasData ? null : ''))
                     ],
                   )
       ],
@@ -528,9 +525,12 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
             final p = context.watch<OrderSearchPageProvider>();
             if (p.isFirstRun) {
               p.initPageData().then((_) {
-                _panelSwich = ValueNotifier<bool>(
-                    p.searchOrderResponseModel != null &&
-                        p.searchOrderResponseModel!.tList!.isEmpty);
+                if (p.searchOrderResponseModel != null &&
+                    p.searchOrderResponseModel!.tList!.isNotEmpty) {
+                  _panelSwich = ValueNotifier<bool>(false);
+                } else {
+                  // _panelSwich = ValueNotifier<bool>(false);
+                }
               });
             }
             return Stack(

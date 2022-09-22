@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-22 10:46:20
+ * Last Modified: 2022-09-22 11:54:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -97,9 +97,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                                 .hint_16, // hintTextStyleCallBack: () => AppTextStyle.hint_16,
                         iconType: InputIconType.SELECT,
                         // iconType: null,
-                        iconColor: salesGroup == null
-                            ? AppColors.textFieldUnfoucsColor
-                            : null,
+                        iconColor: AppColors.textFieldUnfoucsColor,
                         commononeCellDataCallback: p.getSalesGroup,
                         oneCellType: OneCellType.SEARCH_BUSINESS_GROUP,
                         // oneCellType: OneCellType.DO_NOTHING,
@@ -134,9 +132,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       context: context,
                       width: AppSize.defaultContentsWidth,
                       iconType: InputIconType.SEARCH,
-                      iconColor: tuple.item1 != null
-                          ? AppColors.subText
-                          : AppColors.textFieldUnfoucsColor,
+                      iconColor: AppColors.textFieldUnfoucsColor,
                       hintText: tuple.item1 != null
                           ? tuple.item1!.sname!
                           : tr('plz_select'),
@@ -257,9 +253,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                     }
                   : null,
               iconType: InputIconType.SEARCH,
-              iconColor: tuple.item1 != null
-                  ? AppColors.subText
-                  : AppColors.textFieldUnfoucsColor,
+              iconColor: AppColors.textFieldUnfoucsColor,
               deleteIconCallback: () => p.setCustomerModel(null),
               hintText: tuple.item2 != null
                   ? tuple.item2!.kunnrNm
@@ -338,9 +332,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       BaseInputWidget(
                         context: context,
                         iconType: InputIconType.SEARCH,
-                        iconColor: tuple.item1 != null
-                            ? AppColors.subText
-                            : AppColors.textFieldUnfoucsColor,
+                        iconColor: AppColors.textFieldUnfoucsColor,
                         deleteIconCallback: () => p.setSupplier(null),
                         hintText: tuple.item1 != null
                             ? tuple.item1!.kunnrNm

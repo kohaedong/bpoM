@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-09-22 10:52:34
+ * Last Modified: 2022-09-22 11:54:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -311,9 +311,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
           iconType: searchKeyStr != null && searchKeyStr.isNotEmpty
               ? InputIconType.DELETE_AND_SEARCH
               : InputIconType.SEARCH,
-          iconColor: searchKeyStr != null && searchKeyStr.isNotEmpty
-              ? AppColors.subText
-              : AppColors.textFieldUnfoucsColor,
+          iconColor: AppColors.textFieldUnfoucsColor,
           onChangeCallBack: (str) => p.setSerachKeyStr(str),
           defaultIconCallback: () =>
               p.searchDetailBook(false, searchKey: searchKeyStr),

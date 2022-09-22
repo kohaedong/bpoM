@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-09-04 15:01:29
+ * Last Modified: 2022-09-22 11:56:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -33,6 +33,7 @@ import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 class TransactionLedgerPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirstRun = true;
+  bool hasData = false;
   bool isAnimationNotReady = true;
   bool isOpenBottomSheet = true;
   bool isOpenBottomSheetForLandSpace = true;
@@ -314,7 +315,9 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
         transLedgerResponseModel = null;
       }
       if (transLedgerResponseModel != null) {}
+      hasData = transLedgerResponseModel!.tList!.isNotEmpty;
       isLoadData = false;
+
       notifyListeners();
       return ResultModel(true);
     }

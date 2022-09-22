@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-22 11:01:14
+ * Last Modified: 2022-09-22 11:54:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -125,7 +125,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
               deleteIconCallback: () => p.setCustomerModel(null),
               iconType:
                   p.isDoNothing || tuple.item2 ? null : InputIconType.SEARCH,
-              iconColor: tuple.item1 != null ? null : AppColors.unReadyText,
+              iconColor: AppColors.textFieldUnfoucsColor,
               defaultIconCallback: () => p.setCustomerModel(null),
               hintText:
                   tuple.item1 != null ? tuple.item1!.name : tr('plz_select'),
@@ -210,7 +210,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 : tuple.item1 != null && tuple.item1!.zkmnoNm != null
                     ? true
                     : false,
-            iconColor: tuple.item1 != null ? null : AppColors.unReadyText,
+            iconColor: AppColors.textFieldUnfoucsColor,
             defaultIconCallback: () => p.setKeymanModel(null),
             hintText: tuple.item1 != null && tuple.item1!.zkmnoNm != null
                 ? tuple.item1!.zkmnoNm
@@ -614,9 +614,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     : OneCellType.SEARCH_ACTIVITY_TYPE,
                 hintText: type ?? tr('plz_select'),
                 iconType: p.isDoNothing ? null : InputIconType.SELECT,
-                iconColor: type != null
-                    ? AppColors.subText
-                    : AppColors.textFieldUnfoucsColor,
+                iconColor: AppColors.textFieldUnfoucsColor,
                 hintTextStyleCallBack: () => type == null
                     ? AppTextStyle.hint_16
                     : AppTextStyle.default_16,
@@ -694,9 +692,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     : anotherSaler == null
                         ? InputIconType.SEARCH
                         : null,
-                iconColor: anotherSaler != null
-                    ? AppColors.subText
-                    : AppColors.textFieldUnfoucsColor,
+                iconColor: AppColors.textFieldUnfoucsColor,
                 hintText: anotherSaler != null
                     ? anotherSaler.sname
                     : '${tr('plz_select_something_1', args: [
@@ -780,9 +776,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 ? AppTextStyle.hint_16
                 : AppTextStyle.default_16,
             iconType: p.isDoNothing ? null : InputIconType.SEARCH,
-            iconColor: model.maktx != null
-                ? AppColors.subText
-                : AppColors.textFieldUnfoucsColor,
+            iconColor: AppColors.textFieldUnfoucsColor,
             popupSearchType: p.isDoNothing
                 ? PopupSearchType.DO_NOTHING
                 : PopupSearchType.SEARCH_SUGGETION_ITEM,

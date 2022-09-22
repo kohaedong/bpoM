@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-09-22 10:59:28
+ * Last Modified: 2022-09-22 11:54:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -183,9 +183,8 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                               ? InputIconType.SEARCH
                                               : null
                                           : null,
-                                      iconColor: staffName != null
-                                          ? AppColors.subText
-                                          : AppColors.textFieldUnfoucsColor,
+                                      iconColor:
+                                          AppColors.textFieldUnfoucsColor,
                                       hintText: staffName ??
                                           '${tr('plz_select_something_1', args: [
                                                 tr('manager'),
@@ -224,9 +223,8 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                     BaseInputWidget(
                                       context: context,
                                       iconType: InputIconType.SELECT,
-                                      iconColor: status != null
-                                          ? AppColors.subText
-                                          : AppColors.textFieldUnfoucsColor,
+                                      iconColor:
+                                          AppColors.textFieldUnfoucsColor,
                                       hintText: status ??
                                           '${tr('plz_select_something_2', args: [
                                                 tr('product_process_status'),
@@ -259,9 +257,8 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                     BaseInputWidget(
                                       context: context,
                                       iconType: InputIconType.SELECT,
-                                      iconColor: family != null
-                                          ? AppColors.subText
-                                          : AppColors.textFieldUnfoucsColor,
+                                      iconColor:
+                                          AppColors.textFieldUnfoucsColor,
                                       hintText: family ??
                                           '${tr('plz_select_something_1', args: [
                                                 tr('product_family'),
@@ -307,9 +304,8 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                             }
                                           : null,
                                       iconType: InputIconType.SEARCH,
-                                      iconColor: customerName != null
-                                          ? AppColors.subText
-                                          : AppColors.textFieldUnfoucsColor,
+                                      iconColor:
+                                          AppColors.textFieldUnfoucsColor,
                                       deleteIconCallback: () =>
                                           p.setCustomerName(null),
                                       hintText: customerName ??
@@ -478,7 +474,8 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                     children: [
                       Padding(
                           padding: AppSize.nullValueWidgetPadding,
-                          child: BaseNullDataWidget.build())
+                          child: BaseNullDataWidget.build(
+                              message: provider.hasData ? '' : null))
                     ],
                   )
       ],

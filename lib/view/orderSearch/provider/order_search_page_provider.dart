@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-09-16 00:31:24
+ * Last Modified: 2022-09-22 11:45:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -32,7 +32,8 @@ import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 
 class OrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
-  bool isFirstRun = true;
+  bool isFirstRun = false;
+  bool hasData = false;
   String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
@@ -296,6 +297,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
         searchOrderResponseModel = null;
       }
       isLoadData = false;
+      hasData = searchOrderResponseModel!.tList!.isNotEmpty;
       notifyListeners();
       return ResultModel(true);
     }

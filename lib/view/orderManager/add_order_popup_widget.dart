@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-22 10:46:06
+ * Last Modified: 2022-09-22 11:54:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -83,9 +83,7 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
             return BaseInputWidget(
               context: context,
               iconType: InputIconType.SELECT,
-              iconColor: tuple.item1 != null
-                  ? AppColors.subText
-                  : AppColors.textFieldUnfoucsColor,
+              iconColor: AppColors.textFieldUnfoucsColor,
               hintText:
                   tuple.item1 != null ? tuple.item1!.maktx : tr('plz_select'),
               popupSearchType: tuple.item2
@@ -151,9 +149,7 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                     },
                     textEditingController: _productQuantityInputController,
                     keybordType: TextInputType.number,
-                    iconColor: tuple.item1 != null
-                        ? AppColors.subText
-                        : AppColors.textFieldUnfoucsColor,
+                    iconColor: AppColors.textFieldUnfoucsColor,
                     hintText: tuple.item1 ?? tr('plz_enter'),
                     // 팀장 일때 만 팀원선택후 삭제가능.
                     width: AppSize.defaultContentsWidth,
@@ -186,9 +182,7 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                     context: context,
                     iconType: InputIconType.SELECT,
                     textEditingController: _surchargeQuantityInputController,
-                    iconColor: surcharge != null
-                        ? AppColors.subText
-                        : AppColors.textFieldUnfoucsColor,
+                    iconColor: AppColors.textFieldUnfoucsColor,
                     hintText: surcharge ?? tr('plz_enter'),
                     keybordType: TextInputType.number,
                     onChangeCallBack: (str) {

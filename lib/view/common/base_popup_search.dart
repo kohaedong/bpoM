@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-22 10:45:48
+ * Last Modified: 2022-09-22 11:54:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -134,9 +134,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? InputIconType.DELETE_AND_SEARCH
                       : InputIconType.SEARCH,
                   onChangeCallBack: (e) => p.setPersonInputText(e),
-                  iconColor: personInputText == null
-                      ? AppColors.textFieldUnfoucsColor
-                      : null,
+                  iconColor: AppColors.textFieldUnfoucsColor,
                   defaultIconCallback: () {
                     hideKeyboard(context);
                     p.refresh();
@@ -176,8 +174,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? InputIconType.DELETE_AND_SEARCH
                       : InputIconType.SEARCH,
                   onChangeCallBack: (e) => p.setSuggetionItemGroupInputText(e),
-                  iconColor:
-                      group == null ? AppColors.textFieldUnfoucsColor : null,
+                  iconColor: AppColors.textFieldUnfoucsColor,
                   defaultIconCallback: () {
                     hideKeyboard(context);
                     p.refresh();
@@ -209,8 +206,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? InputIconType.DELETE_AND_SEARCH
                       : InputIconType.SEARCH,
                   onChangeCallBack: (e) => p.setSuggetionItemNameInputText(e),
-                  iconColor:
-                      name == null ? AppColors.textFieldUnfoucsColor : null,
+                  iconColor: AppColors.textFieldUnfoucsColor,
                   defaultIconCallback: () {
                     hideKeyboard(context);
                     p.refresh();
@@ -262,9 +258,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? InputIconType.DELETE_AND_SEARCH
                       : InputIconType.SEARCH,
                   onChangeCallBack: (e) => p.setKeymanInputText(e),
-                  iconColor: keymanInputText == null
-                      ? AppColors.textFieldUnfoucsColor
-                      : null,
+                  iconColor: AppColors.textFieldUnfoucsColor,
                   defaultIconCallback: () {
                     hideKeyboard(context);
                     p.refresh();
@@ -308,9 +302,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                           ? () => AppTextStyle.default_16
                           : () => AppTextStyle.hint_16,
                       iconType: InputIconType.SELECT,
-                      iconColor: selectedProductCategory == null
-                          ? AppColors.textFieldUnfoucsColor
-                          : null,
+                      iconColor: AppColors.textFieldUnfoucsColor,
                       commononeCellDataCallback: p.getProductCategory,
                       oneCellType: OneCellType.SEARCH_PRODUCTS_CATEGORY,
                       isSelectedStrCallBack: (str) =>
@@ -341,9 +333,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                           ? () => AppTextStyle.default_16
                           : () => AppTextStyle.hint_16,
                       iconType: InputIconType.SELECT,
-                      iconColor: selectedProductFamily == null
-                          ? AppColors.textFieldUnfoucsColor
-                          : null,
+                      iconColor: AppColors.textFieldUnfoucsColor,
                       commononeCellDataCallback: p.getProductFamily,
                       oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,
                       isSelectedStrCallBack: (str) => p.setProductsFamily(str),
@@ -376,9 +366,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                           ? InputIconType.DELETE
                           : null,
                       onChangeCallBack: (e) => p.setCustomerInputText(e),
-                      iconColor: customerInputText == null
-                          ? AppColors.textFieldUnfoucsColor
-                          : null,
+                      iconColor: AppColors.textFieldUnfoucsColor,
                       defaultIconCallback: () {
                         p.setCustomerInputText(null);
                         _customerInputController.text = '';
@@ -423,9 +411,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? () => AppTextStyle.default_16
                       : () => AppTextStyle.hint_16,
                   iconType: InputIconType.SELECT,
-                  iconColor: selectedProductFamily == null
-                      ? AppColors.textFieldUnfoucsColor
-                      : null,
+                  iconColor: AppColors.textFieldUnfoucsColor,
                   isNotInsertAll:
                       CheckSuperAccount.isMultiAccountOrLeaderAccount()
                           ? true
@@ -458,9 +444,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? InputIconType.SELECT
                       : null,
                   // iconType: null,
-                  iconColor: salesGroup == null
-                      ? AppColors.textFieldUnfoucsColor
-                      : null,
+                  iconColor: AppColors.textFieldUnfoucsColor,
                   commononeCellDataCallback: p.getSalesGroup,
                   oneCellType: CheckSuperAccount.isMultiAccount()
                       ? OneCellType.SEARCH_BUSINESS_GROUP
@@ -487,9 +471,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                 iconType: CheckSuperAccount.isMultiAccountOrLeaderAccount()
                     ? InputIconType.SEARCH
                     : null,
-                iconColor: tuple.item1 != null
-                    ? AppColors.subText
-                    : AppColors.textFieldUnfoucsColor,
+                iconColor: AppColors.textFieldUnfoucsColor,
                 hintText: tuple.item1 ?? tr('plz_select'),
                 // 팀장 일때 만 팀원선택후 삭제가능.
                 isShowDeleteForHintText:
@@ -538,9 +520,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   iconType:
                       customerInputText != null ? InputIconType.DELETE : null,
                   onChangeCallBack: (e) => p.setCustomerInputText(e),
-                  iconColor: customerInputText == null
-                      ? AppColors.textFieldUnfoucsColor
-                      : null,
+                  iconColor: AppColors.textFieldUnfoucsColor,
                   defaultIconCallback: () {
                     p.setCustomerInputText(null);
                     _customerInputController.text = '';
@@ -582,8 +562,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   enable: false,
                   hintTextStyleCallBack: () => AppTextStyle.hint_16,
                   // iconType: InputIconType.SELECT,
-                  iconColor:
-                      itemType == null ? AppColors.textFieldUnfoucsColor : null,
+                  iconColor: AppColors.textFieldUnfoucsColor,
                   commononeCellDataCallback: p.getMateralItemType,
                   // oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,
                   oneCellType: OneCellType.DO_NOTHING,
@@ -660,9 +639,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? InputIconType.DELETE_AND_SEARCH
                       : InputIconType.SEARCH,
                   onChangeCallBack: (e) => p.setEndCustomerInputText(e),
-                  iconColor: endCustomer == null
-                      ? AppColors.textFieldUnfoucsColor
-                      : null,
+                  iconColor: AppColors.textFieldUnfoucsColor,
                   defaultIconCallback: () {
                     hideKeyboard(context);
                     p.refresh();
