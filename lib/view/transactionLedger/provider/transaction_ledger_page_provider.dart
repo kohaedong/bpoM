@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-09-22 12:48:37
+ * Last Modified: 2022-09-22 15:43:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
+import 'package:medsalesportal/model/rfc/et_cust_list_response_model.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
@@ -201,7 +202,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setCustomerModel(dynamic map) {
+  Future<void> setCustomerModel(dynamic map) async {
     map as Map<String, dynamic>;
     var productsFamily = map['product_family'] as String?;
     var staff = map['staff'] as String?;
@@ -215,6 +216,12 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     var model = map['model'] as EtCustomerModel?;
     selectedCustomerModel = model;
     customerName = selectedCustomerModel?.kunnrNm;
+    if (selectedCustomerModel != null) {
+      await searchEndCustomer();
+    } else {
+      selectedEndCustomerModel = null;
+      endCustomerName = null;
+    }
 
     notifyListeners();
   }
@@ -231,6 +238,46 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
         notifyListeners();
       }
     });
+  }
+
+  Future<ResultModel> searchEndCustomer() async {
+    var _api = ApiService();
+    final isLogin = CacheService.getIsLogin();
+    final isloginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
+    isloginModel.kunag = selectedCustomerModel!.kunnr;
+    var newIslogin = await EncodingUtils.base64Convert(isloginModel.toJson());
+    Map<String, dynamic>? _body;
+    _body = {
+      // Z_LTS_IFS6002
+      "methodName": RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER.serverMethod,
+      "methodParamMap": {
+        "IV_VTWEG": "10",
+        "IV_KEYWORD": "",
+        "IS_LOGIN": newIslogin,
+        "pos": "0",
+        "IV_PARVW": "WE",
+        "IV_KFM2": "",
+        "groupid": "",
+        "functionName":
+            RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER.serverMethod,
+        "resultTables": RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER.resultTable,
+      }
+    };
+    _api.init(RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER);
+    final result = await _api.request(body: _body);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false);
+    }
+    if (result.statusCode == 200 && result.body['data'] != null) {
+      var temp = EtCustListResponseModel.fromJson(result.body['data']);
+      pr(temp.toJson());
+      if (temp.etCustList != null && temp.etCustList!.length == 1) {
+        selectedEndCustomerModel = temp.etCustList!.single;
+        endCustomerName = selectedEndCustomerModel!.kunnrNm;
+      }
+      return ResultModel(true);
+    }
+    return ResultModel(false);
   }
 
   Future<List<String>?> getProcessingStatus() async {
