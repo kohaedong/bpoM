@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-09-22 13:17:57
+ * Last Modified: 2022-09-22 13:38:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -53,51 +53,60 @@ class _DetailBookPageState extends State<DetailBookPage> {
   }
 
   Widget _buildPannelTitle(DetailBookTListModel model) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      child: AppText.text(model.iclsnm!,
-          maxLines: 2, textAlign: TextAlign.start, style: AppTextStyle.blod_16),
+    return Padding(
+      padding: EdgeInsets.only(left: AppSize.padding),
+      child: Container(
+        alignment: Alignment.centerLeft,
+        child: AppText.text(model.iclsnm!,
+            maxLines: 2,
+            textAlign: TextAlign.start,
+            style: AppTextStyle.blod_16),
+      ),
     );
   }
 
   Widget _buildPannelBody(
       BuildContext context, List<DetailBookTListModel> model) {
-    return Column(
-      children: [
-        ...model
-            .asMap()
-            .entries
-            .map(
-              (map) => GestureDetector(
-                onTap: () {
-                  final p = context.read<DetailBookPageProvider>();
-                  p.searchDetailBookFile(map.value).then((result) async {
-                    if (result.isSuccessful) {
-                      final routeResult = await Navigator.pushNamed(
-                          context, DetailBookWebView.routeName,
-                          arguments: result.data);
-                      if (routeResult != null) {
-                        p.resetResultModel();
+    return Padding(
+      padding: EdgeInsets.only(left: AppSize.padding),
+      child: Column(
+        children: [
+          ...model
+              .asMap()
+              .entries
+              .map(
+                (map) => GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    final p = context.read<DetailBookPageProvider>();
+                    p.searchDetailBookFile(map.value).then((result) async {
+                      if (result.isSuccessful) {
+                        final routeResult = await Navigator.pushNamed(
+                            context, DetailBookWebView.routeName,
+                            arguments: result.data);
+                        if (routeResult != null) {
+                          p.resetResultModel();
+                        }
+                      } else {
+                        AppToast().show(context, result.errorMassage!);
                       }
-                    } else {
-                      AppToast().show(context, result.errorMassage!);
-                    }
-                  });
-                },
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: AppSize.padding,
-                      vertical: AppSize.defaultListItemSpacing),
-                  child: AppText.text(map.value.itemnm!,
-                      textAlign: TextAlign.start,
-                      style: AppTextStyle.default_16),
+                    });
+                  },
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: AppSize.padding,
+                        vertical: AppSize.defaultListItemSpacing),
+                    child: AppText.text(map.value.itemnm!,
+                        textAlign: TextAlign.start,
+                        style: AppTextStyle.default_16),
+                  ),
                 ),
-              ),
-            )
-            .toList(),
-        defaultSpacing()
-      ],
+              )
+              .toList(),
+          defaultSpacing()
+        ],
+      ),
     );
   }
 
@@ -138,12 +147,9 @@ class _DetailBookPageState extends State<DetailBookPage> {
                             );
                           },
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(right: AppSize.padding),
-                          child: Divider(
-                            height: AppSize.dividerHeight,
-                          ),
-                        )
+                        Divider(
+                          height: AppSize.dividerHeight,
+                        ),
                       ],
                     ))
                 .toList(),
