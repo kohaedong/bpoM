@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_list_item.dart
  * Created Date: 2022-01-04 00:52:36
- * Last Modified: 2022-08-24 17:37:22
+ * Last Modified: 2022-09-22 09:19:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -20,11 +20,13 @@ import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/model/rfc/table_notice_T_ZLTSP0710_model.dart';
 
 Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
-    int index, bool isHomeList, bool isShowLastPageText) {
+    int index, bool isHomeList, bool isShowLastPageText, bool isLastItem) {
   return InkWell(
       onTap: () async {
-        Navigator.pushNamed(context, NoticeDetailPage.routeName,
-            arguments: model.noticeNo);
+        if (model.noticeNo!.isNotEmpty) {
+          Navigator.pushNamed(context, NoticeDetailPage.routeName,
+              arguments: model.noticeNo);
+        }
       },
       child: Column(
         children: [
@@ -56,9 +58,11 @@ Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
           ),
           defaultSpacing(isHalf: true),
           isHomeList && index == 0
-              ? Column(
-                  children: [Divider(), defaultSpacing()],
-                )
+              ? isLastItem
+                  ? Container()
+                  : Column(
+                      children: [Divider(), defaultSpacing()],
+                    )
               : !isHomeList
                   ? Column(
                       children: [Divider(), defaultSpacing()],

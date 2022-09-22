@@ -241,10 +241,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   Widget buildNoticeBody() {
     return Padding(
-        padding: AppSize.homeNoticeContentsPadding,
+        padding: EdgeInsets.symmetric(vertical: AppSize.padding * 2),
         child: Container(
-            alignment: Alignment.topCenter,
-            constraints: BoxConstraints(minHeight: 100),
+            alignment: Alignment.center,
             decoration: BoxDecoration(
                 borderRadius:
                     BorderRadius.all(Radius.circular(AppSize.radius8)),
@@ -279,7 +278,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                             .take(2)
                                             .toList()
                                             .length -
-                                        1);
+                                        1,
+                            provider.homeNoticeResponseModel!.tZltsp0710!
+                                    .length ==
+                                1);
                       })
                   : provider.isLoadData
                       ? Container(

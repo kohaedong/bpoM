@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/provider/alarm_provider.dart
  * Created Date: 2022-01-03 14:00:12
- * Last Modified: 2022-08-24 17:37:00
+ * Last Modified: 2022-09-22 09:20:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,8 +13,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/model/rfc/table_notice_T_ZLTSP0710_model.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/util/date_util.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/home_notice_response_model.dart';
 import 'package:medsalesportal/model/rfc/home_notice_detail_response_model.dart';
@@ -88,8 +91,9 @@ class NoticeProvider extends ChangeNotifier {
         "IV_SANUM_NM": "",
         "partial": partial,
         "pos": pos,
-        "IV_FRMDT": "19990101", // start date
-        "IV_TODT": "20211111", // end date
+        "IV_FRMDT": DateUtil.prevMonth(), // start date
+        "IV_TODT": FormatUtil.removeDash(
+            DateUtil.getDateStr(DateTime.now().toIso8601String())), // end date
         "IV_NTYPE": ""
       }
     };
@@ -107,11 +111,13 @@ class NoticeProvider extends ChangeNotifier {
         hasMore = false;
         notifyListeners();
       }
+
       if (homeNoticeResponseModel == null) {
         homeNoticeResponseModel = temp;
       } else {
         homeNoticeResponseModel!.tZltsp0710!.addAll(temp.tZltsp0710!);
       }
+      pr(homeNoticeResponseModel!.tZltsp0710!.first.toJson());
       isLoadData = false;
       notifyListeners();
       return NoticeResult(true);
