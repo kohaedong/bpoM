@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-15 18:19:57
+ * Last Modified: 2022-09-22 10:46:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -84,7 +84,7 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
               context: context,
               iconType: InputIconType.SELECT,
               iconColor: tuple.item1 != null
-                  ? AppColors.defaultText
+                  ? AppColors.subText
                   : AppColors.textFieldUnfoucsColor,
               hintText:
                   tuple.item1 != null ? tuple.item1!.maktx : tr('plz_select'),
@@ -152,7 +152,7 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                     textEditingController: _productQuantityInputController,
                     keybordType: TextInputType.number,
                     iconColor: tuple.item1 != null
-                        ? AppColors.defaultText
+                        ? AppColors.subText
                         : AppColors.textFieldUnfoucsColor,
                     hintText: tuple.item1 ?? tr('plz_enter'),
                     // 팀장 일때 만 팀원선택후 삭제가능.
@@ -187,7 +187,7 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                     iconType: InputIconType.SELECT,
                     textEditingController: _surchargeQuantityInputController,
                     iconColor: surcharge != null
-                        ? AppColors.defaultText
+                        ? AppColors.subText
                         : AppColors.textFieldUnfoucsColor,
                     hintText: surcharge ?? tr('plz_enter'),
                     keybordType: TextInputType.number,

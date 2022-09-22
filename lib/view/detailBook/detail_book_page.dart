@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-09-05 11:15:27
+ * Last Modified: 2022-09-22 10:44:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -305,10 +305,15 @@ class _DetailBookPageState extends State<DetailBookPage> {
           context: context,
           textEditingController: _textEditingController,
           width: AppSize.defaultContentsWidth,
-          hintText: searchKeyStr ?? '${tr('keyword_must_not_null')}',
+          hintText: searchKeyStr ??
+              tr('plz_enter_search_key_for_something_1',
+                  args: [tr('mat_name'), '']),
           iconType: searchKeyStr != null && searchKeyStr.isNotEmpty
               ? InputIconType.DELETE_AND_SEARCH
-              : null,
+              : InputIconType.SEARCH,
+          iconColor: searchKeyStr != null && searchKeyStr.isNotEmpty
+              ? AppColors.subText
+              : AppColors.textFieldUnfoucsColor,
           onChangeCallBack: (str) => p.setSerachKeyStr(str),
           defaultIconCallback: () =>
               p.searchDetailBook(false, searchKey: searchKeyStr),
@@ -348,6 +353,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                           physics: ClampingScrollPhysics(),
                           children: [
                             _buildSearchBar(context),
+                            defaultSpacing(times: 2),
                             _buildContents(context),
                           ],
                         ),

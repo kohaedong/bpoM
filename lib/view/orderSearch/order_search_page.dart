@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-09-16 08:59:25
+ * Last Modified: 2022-09-22 10:46:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -179,7 +179,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           ? InputIconType.SEARCH
                                           : null,
                                       iconColor: staffName != null
-                                          ? AppColors.defaultText
+                                          ? AppColors.subText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: staffName ??
                                           '${tr('plz_select_something_1', args: [
@@ -232,7 +232,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                       context: context,
                                       iconType: InputIconType.SELECT,
                                       iconColor: status != null
-                                          ? AppColors.defaultText
+                                          ? AppColors.subText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: status ??
                                           '${tr('plz_select_something_2', args: [
@@ -267,7 +267,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                       context: context,
                                       iconType: InputIconType.SELECT,
                                       iconColor: family != null
-                                          ? AppColors.defaultText
+                                          ? AppColors.subText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: family ??
                                           '${tr('plz_select_something_1', args: [
@@ -318,7 +318,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           : null,
                                       iconType: InputIconType.SEARCH,
                                       iconColor: tuple.item1 != null
-                                          ? AppColors.defaultText
+                                          ? AppColors.subText
                                           : AppColors.textFieldUnfoucsColor,
                                       deleteIconCallback: () =>
                                           p.setCustomerName(null),

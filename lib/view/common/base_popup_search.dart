@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-20 18:02:42
+ * Last Modified: 2022-09-22 10:45:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -488,7 +488,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     ? InputIconType.SEARCH
                     : null,
                 iconColor: tuple.item1 != null
-                    ? AppColors.defaultText
+                    ? AppColors.subText
                     : AppColors.textFieldUnfoucsColor,
                 hintText: tuple.item1 ?? tr('plz_select'),
                 // 팀장 일때 만 팀원선택후 삭제가능.

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-21 18:42:35
+ * Last Modified: 2022-09-22 10:46:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -615,7 +615,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 hintText: type ?? tr('plz_select'),
                 iconType: p.isDoNothing ? null : InputIconType.SELECT,
                 iconColor: type != null
-                    ? AppColors.defaultText
+                    ? AppColors.subText
                     : AppColors.textFieldUnfoucsColor,
                 hintTextStyleCallBack: () => type == null
                     ? AppTextStyle.hint_16
@@ -695,7 +695,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                         ? InputIconType.SEARCH
                         : null,
                 iconColor: anotherSaler != null
-                    ? AppColors.defaultText
+                    ? AppColors.subText
                     : AppColors.textFieldUnfoucsColor,
                 hintText: anotherSaler != null
                     ? anotherSaler.sname
@@ -783,7 +783,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 : AppTextStyle.default_16,
             iconType: p.isDoNothing ? null : InputIconType.SEARCH,
             iconColor: model.maktx != null
-                ? AppColors.defaultText
+                ? AppColors.subText
                 : AppColors.textFieldUnfoucsColor,
             popupSearchType: p.isDoNothing
                 ? PopupSearchType.DO_NOTHING

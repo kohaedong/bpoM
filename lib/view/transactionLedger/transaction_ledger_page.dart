@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-15 09:59:57
+ * Last Modified: 2022-09-22 10:47:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -189,7 +189,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                       context: context,
                                       iconType: InputIconType.SELECT,
                                       iconColor: family != null
-                                          ? AppColors.defaultText
+                                          ? AppColors.subText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: family ??
                                           '${tr('plz_select_something_1', args: [
@@ -228,7 +228,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                           ? InputIconType.SEARCH
                                           : null,
                                       iconColor: staffName != null
-                                          ? AppColors.defaultText
+                                          ? AppColors.subText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: staffName ??
                                           '${tr('plz_select_something_1', args: [
@@ -297,7 +297,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                         : null,
                                     iconType: InputIconType.SEARCH,
                                     iconColor: tuple.item1 != null
-                                        ? AppColors.defaultText
+                                        ? AppColors.subText
                                         : AppColors.textFieldUnfoucsColor,
                                     deleteIconCallback: () =>
                                         p.setCustomerName(null),
@@ -365,7 +365,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                             : null,
                                         iconType: InputIconType.SEARCH,
                                         iconColor: tuple.item1 != null
-                                            ? AppColors.defaultText
+                                            ? AppColors.subText
                                             : AppColors.textFieldUnfoucsColor,
                                         deleteIconCallback: () =>
                                             p.setEndCustomerModel(null),

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-09-08 10:31:30
+ * Last Modified: 2022-09-22 10:45:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -184,7 +184,7 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                               : null
                                           : null,
                                       iconColor: staffName != null
-                                          ? AppColors.defaultText
+                                          ? AppColors.subText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: staffName ??
                                           '${tr('plz_select_something_1', args: [
@@ -225,7 +225,7 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                       context: context,
                                       iconType: InputIconType.SELECT,
                                       iconColor: status != null
-                                          ? AppColors.defaultText
+                                          ? AppColors.subText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: status ??
                                           '${tr('plz_select_something_2', args: [
@@ -260,7 +260,7 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                       context: context,
                                       iconType: InputIconType.SELECT,
                                       iconColor: family != null
-                                          ? AppColors.defaultText
+                                          ? AppColors.subText
                                           : AppColors.textFieldUnfoucsColor,
                                       hintText: family ??
                                           '${tr('plz_select_something_1', args: [
@@ -308,7 +308,7 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                           : null,
                                       iconType: InputIconType.SEARCH,
                                       iconColor: customerName != null
-                                          ? AppColors.defaultText
+                                          ? AppColors.subText
                                           : AppColors.textFieldUnfoucsColor,
                                       deleteIconCallback: () =>
                                           p.setCustomerName(null),
