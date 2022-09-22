@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_null_data_widget.dart
  * Created Date: 2021-09-18 18:25:35
- * Last Modified: 2022-07-05 16:57:22
+ * Last Modified: 2022-09-22 10:52:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -16,7 +16,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 
 class BaseNullDataWidget {
-  static Widget build({String? message, TextStyle? style}) {
+  static Widget build(
+      {String? message, TextStyle? style, bool? isForSearchResult}) {
     return Center(
         child: message != null
             ? Container(
@@ -28,7 +29,10 @@ class BaseNullDataWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  AppText.text('${tr('no_data')}',
+                  AppText.text(
+                      isForSearchResult != null && isForSearchResult
+                          ? tr('not_search_result')
+                          : '${tr('no_data')}',
                       style: style ?? AppTextStyle.h4),
                   // AppStyles.text(
                   //    '${tr('plz_check_condition')}', AppTextStyle.default_14),

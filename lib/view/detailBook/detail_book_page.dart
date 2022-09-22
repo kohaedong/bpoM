@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-09-22 10:44:08
+ * Last Modified: 2022-09-22 10:52:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -262,7 +262,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                     .toList()
               ])
             : model!.tList != null && model.tList!.isEmpty
-                ? BaseNullDataWidget.build()
+                ? BaseNullDataWidget.build(isForSearchResult: true)
                 : Container();
       },
     );
