@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/provider/alarm_provider.dart
  * Created Date: 2022-01-03 14:00:12
- * Last Modified: 2022-09-22 10:30:29
+ * Last Modified: 2022-09-22 13:30:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -59,7 +59,7 @@ class NoticeProvider extends ChangeNotifier {
         "resultColumns": RequestType.HOME_NOTICE_DETAIL.resultColums,
         //! 하드코딩.
         // "IV_NOTICENO": noticeNumber,
-        "IV_NOTICENO": "NT1000000080",
+        "IV_NOTICENO": noticeNumber.length < 10 ? "NT1000000080" : noticeNumber,
         "IS_LOGIN": "$isLogin",
         "IV_PTYPE": "R",
       }
@@ -76,7 +76,9 @@ class NoticeProvider extends ChangeNotifier {
       noticeDetailTitle =
           homeNoticeDetailResponseModel!.tZLTSP0700!.single.nType == 'A'
               ? tr('notice')
-              : '';
+              : homeNoticeDetailResponseModel!.tZLTSP0700!.single.nType == 'B'
+                  ? tr('sys_notice')
+                  : '';
       isLoadData = false;
       notifyListeners();
     }
@@ -122,27 +124,9 @@ class NoticeProvider extends ChangeNotifier {
 
       if (homeNoticeResponseModel == null) {
         homeNoticeResponseModel = temp;
-        homeNoticeResponseModel!.tZltsp0710!.add(TableNoticeZLTSP0710Model(
-            '20220101',
-            '34',
-            '56',
-            '132012',
-            '90',
-            '11',
-            '진익창',
-            '33',
-            '44',
-            '55',
-            '66',
-            '추석연휴 관련해서 콜 확정 안내드립니다.',
-            '99',
-            '',
-            '진익창',
-            '90'));
       } else {
         homeNoticeResponseModel!.tZltsp0710!.addAll(temp.tZltsp0710!);
       }
-      pr(homeNoticeResponseModel!.tZltsp0710!.first.toJson());
       isLoadData = false;
       notifyListeners();
       return NoticeResult(true);

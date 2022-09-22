@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-09-22 11:54:43
+ * Last Modified: 2022-09-22 13:17:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -108,49 +108,45 @@ class _DetailBookPageState extends State<DetailBookPage> {
         children: [
           // _buildTitle(),
           Divider(height: AppSize.dividerHeight, indent: 0),
-          Padding(
-            padding: EdgeInsets.only(left: AppSize.padding),
-            child: Column(
-              children: p.pannelGroup
-                  .asMap()
-                  .entries
-                  .map((map) => Column(
-                        children: [
-                          Selector<DetailBookPageProvider, bool>(
-                            selector: (context, provider) =>
-                                provider.isOpenList[map.key],
-                            builder: (context, isOpen, _) {
-                              return ExpansionPanelList(
-                                elevation: 0,
-                                expandedHeaderPadding: EdgeInsets.all(0),
-                                expansionCallback: (_, __) {
-                                  p.setIsOpen(map.key);
-                                  hideKeyboard(context);
-                                },
-                                children: [
-                                  ExpansionPanel(
-                                      headerBuilder: (context, _) {
-                                        return _buildPannelTitle(
-                                            map.value!.first);
-                                      },
-                                      canTapOnHeader: true,
-                                      isExpanded: isOpen,
-                                      body:
-                                          _buildPannelBody(context, map.value!))
-                                ],
-                              );
-                            },
+          Column(
+            children: p.pannelGroup
+                .asMap()
+                .entries
+                .map((map) => Column(
+                      children: [
+                        Selector<DetailBookPageProvider, bool>(
+                          selector: (context, provider) =>
+                              provider.isOpenList[map.key],
+                          builder: (context, isOpen, _) {
+                            return ExpansionPanelList(
+                              elevation: 0,
+                              expandedHeaderPadding: EdgeInsets.all(0),
+                              expansionCallback: (_, __) {
+                                p.setIsOpen(map.key);
+                                hideKeyboard(context);
+                              },
+                              children: [
+                                ExpansionPanel(
+                                    headerBuilder: (context, _) {
+                                      return _buildPannelTitle(
+                                          map.value!.first);
+                                    },
+                                    canTapOnHeader: true,
+                                    isExpanded: isOpen,
+                                    body: _buildPannelBody(context, map.value!))
+                              ],
+                            );
+                          },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(right: AppSize.padding),
+                          child: Divider(
+                            height: AppSize.dividerHeight,
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(right: AppSize.padding),
-                            child: Divider(
-                              height: AppSize.dividerHeight,
-                            ),
-                          )
-                        ],
-                      ))
-                  .toList(),
-            ),
+                        )
+                      ],
+                    ))
+                .toList(),
           ),
         ],
       ),

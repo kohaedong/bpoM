@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_list_item.dart
  * Created Date: 2022-01-04 00:52:36
- * Last Modified: 2022-09-22 10:32:17
+ * Last Modified: 2022-09-22 13:29:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/home/notice_detail_page.dart';
@@ -34,13 +35,15 @@ Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
             children: [
               isHomeList
                   ? Container()
-                  : Padding(
-                      padding: EdgeInsets.only(
-                          right: AppSize.defaultListItemSpacing),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.red,
-                        radius: 3,
-                      )),
+                  : DateUtil.getDate(model.aedat!).day == DateTime.now().day
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                              right: AppSize.defaultListItemSpacing),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.red,
+                            radius: 3,
+                          ))
+                      : Container(),
               AppText.listViewText(model.nTitle!,
                   maxLines: 2, style: isHomeList ? null : AppTextStyle.blod_16)
             ],
@@ -54,7 +57,7 @@ Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
                       children: [
                         AppText.listViewText(
                           //! 하드코딩
-                          '${model.nType == 'A' ? tr('notice') : tr('notice')}',
+                          '${model.nType == 'A' ? tr('notice') : model.nType == 'B' ? tr('sys_notice') : model.nType}',
                           style: AppTextStyle.h4.copyWith(
                               fontSize: AppTextStyle.h4.fontSize! - 2,
                               color: AppColors.primary),

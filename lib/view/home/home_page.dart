@@ -300,7 +300,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               provider
                                   .homeNoticeResponseModel!.tZltsp0710!.isEmpty
                           ? Container(
-                              height: 200,
+                              height: 100,
                               child: BaseNullDataWidget.build(
                                   message: '${tr('notice_is_null')}'))
                           : Container(height: 200);
