@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-09-22 13:10:40
+ * Last Modified: 2022-09-22 15:55:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -462,12 +462,12 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                       _panelSwich.value = false;
                       return p.refresh().then((value) {
                         hideKeyboard(context);
-                        if (p.searchResponseModel == null ||
-                            p.searchResponseModel!.tList!.isEmpty) {
-                          Future.delayed(Duration(seconds: 1), () {
+                        Future.delayed(Duration(seconds: 1), () {
+                          if (p.searchResponseModel == null ||
+                              p.searchResponseModel!.tList!.isEmpty) {
                             _panelSwich.value = true;
-                          });
-                        }
+                          }
+                        });
                       });
                     }),
                 _buildScrollToTop(context)

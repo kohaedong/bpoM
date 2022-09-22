@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-22 13:11:23
+ * Last Modified: 2022-09-22 17:06:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -335,18 +336,20 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                 );
                               },
                             ),
-                            Selector<TransactionLedgerPageProvider,
-                                    Tuple3<String?, String?, EtCustomerModel?>>(
+                            Selector<
+                                    TransactionLedgerPageProvider,
+                                    Tuple3<EtCustomerModel?, EtCustListModel?,
+                                        List<EtCustListModel>>>(
                                 selector: (context, provider) => Tuple3(
-                                    provider.endCustomerName,
-                                    provider.customerName,
-                                    provider.selectedCustomerModel),
+                                    provider.selectedCustomerModel,
+                                    provider.selectedEndCustomerModel,
+                                    provider.endCustomerList),
                                 builder: (context, tuple, _) {
                                   return BaseColumWithTitleAndTextFiled.build(
                                       '${tr('end_customer')}',
                                       BaseInputWidget(
                                         context: context,
-                                        onTap: tuple.item2 == null
+                                        onTap: tuple.item1 == null
                                             ? () {
                                                 AppToast().show(
                                                     context,
@@ -358,31 +361,33 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                                 return 'continue';
                                               }
                                             : null,
-                                        iconType: InputIconType.SEARCH,
+                                        iconType: InputIconType.SELECT,
                                         iconColor:
                                             AppColors.textFieldUnfoucsColor,
                                         deleteIconCallback: () =>
                                             p.setEndCustomerModel(null),
-                                        hintText: tuple.item1 ??
-                                            '${tr('plz_select_something_1', args: [
-                                                  tr('end_customer'),
-                                                  ''
-                                                ])}',
-                                        // 팀장 일때 만 팀원선택후 삭제가능.
-                                        isShowDeleteForHintText:
-                                            tuple.item1 != null ? true : false,
+                                        hintText: tuple.item3.isEmpty ||
+                                                tuple.item2 == null
+                                            ? '${tr('plz_select_something_1', args: [
+                                                    tr('end_customer'),
+                                                    ''
+                                                  ])}'
+                                            : tuple.item2!.kunnrNm!,
                                         width: AppSize.defaultContentsWidth,
+                                        isNotInsertAll: true,
                                         hintTextStyleCallBack: () =>
                                             tuple.item1 != null
                                                 ? AppTextStyle.default_16
                                                 : AppTextStyle.hint_16,
-                                        popupSearchType:
-                                            PopupSearchType.SEARCH_END_CUSTOMER,
+                                        oneCellType: tuple.item3.isEmpty
+                                            ? OneCellType.DO_NOTHING
+                                            : OneCellType.END_CUSTOMER,
+                                        commononeCellDataCallback: () =>
+                                            p.getEndCustomerList(),
                                         isSelectedStrCallBack: (customer) {
                                           return p
                                               .setEndCustomerModel(customer);
                                         },
-                                        bodyMap: {'kunnr': tuple.item3?.kunnr},
                                         enable: false,
                                       ),
                                       isNotShowStar: true);
@@ -395,16 +400,16 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                   _panelSwich.value = false;
                                   provider.refresh().then((value) {
                                     hideKeyboard(context);
-                                    Future.delayed(Duration(seconds: 1), () {
-                                      if (p.transLedgerResponseModel == null ||
-                                          p.transLedgerResponseModel!.tList!
-                                              .isEmpty) {
-                                        Future.delayed(Duration(seconds: 1),
-                                            () {
-                                          _panelSwich.value = true;
-                                        });
-                                      }
-                                    });
+                                    // Future.delayed(Duration(seconds: 1), () {
+                                    //   if (p.transLedgerResponseModel == null ||
+                                    //       p.transLedgerResponseModel!.tList!
+                                    //           .isEmpty) {
+                                    //     Future.delayed(Duration(seconds: 1),
+                                    //         () {
+                                    //       _panelSwich.value = true;
+                                    //     });
+                                    //   }
+                                    // });
                                   });
                                 } else {
                                   AppToast().show(context,
@@ -603,7 +608,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
               _buildTableBox(tr('division'), 0,
                   isBody: false, isTotalRow: true),
               _buildTableBox(tr('item_name'), 1,
-                  isBody: false, isTotalRow: true, alignment: Alignment.center),
+                  isBody: false, isTotalRow: true),
               _buildTableBox(tr('quantity_and_add'), 2,
                   isBody: false, isTotalRow: true),
             ]),
@@ -862,9 +867,17 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                       defaultSpacingWidget,
                       _buildAmountRow(
                           tr('collection_amount'),
-                          head.dmbtrD != null && head.dmbtrD!.isNotEmpty
-                              ? '${head.dmbtrD}'
-                              : '0',
+                          head.dmbtrD != null &&
+                                  head.dmbtrD!.isNotEmpty &&
+                                  head.dmbtr != null &&
+                                  head.dmbtr!.isNotEmpty
+                              ? '${head.dmbtr}/${head.dmbtr}'
+                              : head.dmbtr != null && head.dmbtr!.isNotEmpty
+                                  ? '${head.dmbtr}'
+                                  : head.dmbtrD != null &&
+                                          head.dmbtrD!.isNotEmpty
+                                      ? '${head.dmbtrD}'
+                                      : '0',
                           style1: AppTextStyle.default_14
                               .copyWith(fontWeight: FontWeight.w600),
                           width: isLandSpace != null ? width : null),
@@ -981,10 +994,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
               _buildTableBox(tr('date_1'), 1,
                   isBody: false, isTotalRow: true, isLandSpace: true),
               _buildTableBox(tr('item_name'), 2,
-                  isBody: false,
-                  isTotalRow: true,
-                  isLandSpace: true,
-                  alignment: Alignment.center),
+                  isBody: false, isTotalRow: true, isLandSpace: true),
               _buildTableBox(tr('quantity_and_add'), 3,
                   isBody: false, isTotalRow: true, isLandSpace: true),
               _buildTableBox(tr('total_sales'), 4,
@@ -1067,59 +1077,62 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   }
 
   Widget _buildLandSpaceView(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          height: AppSize.realHeight,
-          width: AppSize.realWidth,
-          child: Column(
-            children: [
-              defaultSpacing(height: AppSize.defaultListItemSpacing / 4),
-              _buildAppBar(context),
-              defaultSpacing(height: AppSize.defaultListItemSpacing / 4),
-              _buildResultTitleWithLandSpaceScrren(context),
-              _buildResultForLandSpace(context),
-              defaultSpacing(times: 2),
-            ],
+    return SafeArea(
+      left: false,
+      right: true,
+      child: Stack(
+        children: [
+          Container(
+            height: AppSize.realHeight,
+            width: AppSize.realWidth,
+            child: Column(
+              children: [
+                defaultSpacing(height: AppSize.defaultListItemSpacing / 4),
+                _buildAppBar(context),
+                defaultSpacing(height: AppSize.defaultListItemSpacing / 4),
+                _buildResultTitleWithLandSpaceScrren(context),
+                _buildResultForLandSpace(context),
+                defaultSpacing(times: 2),
+              ],
+            ),
           ),
-        ),
-        Selector<TransactionLedgerPageProvider, Tuple2<bool, bool>>(
-          selector: (context, provider) =>
-              Tuple2(provider.isOpenBottomSheet, provider.isAnimationNotReady),
-          builder: (context, tuple, _) {
-            return WidgetOfOffSetAnimationWidget(
-                key: key,
-                animationSwich: tuple.item2 ? null : () => tuple.item1,
-                body: _buildAnimationBody(context, isLandSpace: true),
-                height: AppSize.realHeight,
-                width: AppSize.bottomSheetWidth,
-                offset: Offset(-AppSize.bottomSheetWidth, 0),
-                offsetType: OffsetDirectionType.RIGHT);
-          },
-        ),
-        Selector<TransactionLedgerPageProvider, bool>(
-          selector: (context, provider) =>
-              provider.isOpenBottomSheetForLandSpace,
-          builder: (context, isOpen, _) {
-            return DrawerButtonAnimationWidget(
-              animationSwich: () => isOpen,
-              body: InkWell(
-                  onTap: () {
-                    final p = context.read<TransactionLedgerPageProvider>();
-                    p.setIsOpenBottomSheet();
-                    p.setIsOpenBottomSheetForLandSpace();
-                  },
-                  child: WidgetOfRotationAnimationComponents(
-                    animationSwich: () => isOpen,
-                    rotationValue: math.pi,
-                    body: Container(
-                        child:
-                            AppImage.getImage(ImageType.LAND_SPACE_PAGE_ICON)),
-                  )),
-            );
-          },
-        ),
-      ],
+          Selector<TransactionLedgerPageProvider, Tuple2<bool, bool>>(
+            selector: (context, provider) => Tuple2(
+                provider.isOpenBottomSheet, provider.isAnimationNotReady),
+            builder: (context, tuple, _) {
+              return WidgetOfOffSetAnimationWidget(
+                  key: key,
+                  animationSwich: tuple.item2 ? null : () => tuple.item1,
+                  body: _buildAnimationBody(context, isLandSpace: true),
+                  height: AppSize.realHeight,
+                  width: AppSize.bottomSheetWidth,
+                  offset: Offset(-AppSize.bottomSheetWidth, 0),
+                  offsetType: OffsetDirectionType.RIGHT);
+            },
+          ),
+          Selector<TransactionLedgerPageProvider, bool>(
+            selector: (context, provider) =>
+                provider.isOpenBottomSheetForLandSpace,
+            builder: (context, isOpen, _) {
+              return DrawerButtonAnimationWidget(
+                animationSwich: () => isOpen,
+                body: InkWell(
+                    onTap: () {
+                      final p = context.read<TransactionLedgerPageProvider>();
+                      p.setIsOpenBottomSheet();
+                      p.setIsOpenBottomSheetForLandSpace();
+                    },
+                    child: WidgetOfRotationAnimationComponents(
+                      animationSwich: () => isOpen,
+                      rotationValue: math.pi,
+                      body: Container(
+                          child: AppImage.getImage(ImageType.SELECT_RIGHT)),
+                    )),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 

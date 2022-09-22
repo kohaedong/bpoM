@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-09-22 15:43:19
+ * Last Modified: 2022-09-22 17:14:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -45,7 +45,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   String? selectedEndDate;
   String? selectedProductsFamily;
   String? customerName;
-  String? endCustomerName;
+  List<EtCustListModel> endCustomerList = [];
   EtStaffListModel? selectedSalesPerson;
   EtCustListModel? selectedEndCustomerModel;
   EtCustomerModel? selectedCustomerModel;
@@ -177,14 +177,19 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
       selectedCustomerModel = null;
     }
     selectedEndCustomerModel = null;
-    endCustomerName = null;
     notifyListeners();
   }
 
   void setEndCustomerModel(dynamic data) {
-    data as EtCustListModel?;
-    selectedEndCustomerModel = data;
-    endCustomerName = selectedEndCustomerModel?.kunnrNm!;
+    data as String?;
+    if (data != null) {
+      var tempKunnr = data.substring(data.indexOf('/') + 1);
+      pr(tempKunnr);
+      selectedEndCustomerModel =
+          endCustomerList.where((endCust) => endCust.kunnr == tempKunnr).single;
+    } else {
+      selectedEndCustomerModel = null;
+    }
     notifyListeners();
   }
 
@@ -220,7 +225,6 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
       await searchEndCustomer();
     } else {
       selectedEndCustomerModel = null;
-      endCustomerName = null;
     }
 
     notifyListeners();
@@ -238,6 +242,14 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
         notifyListeners();
       }
     });
+  }
+
+  Future<List<String>> getEndCustomerList() async {
+    var temp = <String>[];
+    endCustomerList.forEach((endCustomer) {
+      temp.add('${endCustomer.kunnrNm!}/${endCustomer.kunnr!}');
+    });
+    return temp;
   }
 
   Future<ResultModel> searchEndCustomer() async {
@@ -271,9 +283,13 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtCustListResponseModel.fromJson(result.body['data']);
       pr(temp.toJson());
-      if (temp.etCustList != null && temp.etCustList!.length == 1) {
-        selectedEndCustomerModel = temp.etCustList!.single;
-        endCustomerName = selectedEndCustomerModel!.kunnrNm;
+      endCustomerList = [];
+      if (temp.etCustList != null && temp.etCustList!.isNotEmpty) {
+        endCustomerList.addAll(temp.etCustList!);
+      }
+      if (endCustomerList.length == 1) {
+        selectedEndCustomerModel = endCustomerList.single;
+        notifyListeners();
       }
       return ResultModel(true);
     }

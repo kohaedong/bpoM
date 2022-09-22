@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/list_group_type.dart
  * Created Date: 2021-09-10 09:52:32
- * Last Modified: 2022-09-08 13:54:56
+ * Last Modified: 2022-09-22 16:36:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -99,6 +99,7 @@ enum OneCellType {
   SPECIAL_DELIVERY_CONDITION,
   NULL_CHECK,
   DO_NOTHING,
+  END_CUSTOMER
 }
 
 extension OneCellTypeExtension on OneCellType {
@@ -106,6 +107,8 @@ extension OneCellTypeExtension on OneCellType {
     switch (this) {
       case OneCellType.SEARCH_SALLER:
         return '${tr('sales_office')}';
+      case OneCellType.END_CUSTOMER:
+        return '${tr('end_customer')}';
       case OneCellType.SEARCH_MATERIAL:
         return '${tr('search_material')}';
       case OneCellType.SEARCH_SUGGETION_ITEM:
