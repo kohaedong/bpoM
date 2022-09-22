@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/provider/alarm_provider.dart
  * Created Date: 2022-01-03 14:00:12
- * Last Modified: 2022-09-22 09:20:23
+ * Last Modified: 2022-09-22 10:30:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/model/rfc/table_notice_T_ZLTSP0710_model.dart';
@@ -25,6 +26,7 @@ import 'package:medsalesportal/model/rfc/home_notice_detail_response_model.dart'
 class NoticeProvider extends ChangeNotifier {
   HomeNoticeResponseModel? homeNoticeResponseModel;
   HomeNoticeDetailResponseModel? homeNoticeDetailResponseModel;
+  String? noticeDetailTitle;
   final _api = ApiService();
   final isLogin = CacheService.getIsLogin();
   //------ pageing ----------
@@ -55,6 +57,8 @@ class NoticeProvider extends ChangeNotifier {
         "functionName": RequestType.HOME_NOTICE_DETAIL.serverMethod,
         "resultTables": RequestType.HOME_NOTICE_DETAIL.resultTable,
         "resultColumns": RequestType.HOME_NOTICE_DETAIL.resultColums,
+        //! 하드코딩.
+        // "IV_NOTICENO": noticeNumber,
         "IV_NOTICENO": "NT1000000080",
         "IS_LOGIN": "$isLogin",
         "IV_PTYPE": "R",
@@ -69,6 +73,10 @@ class NoticeProvider extends ChangeNotifier {
       homeNoticeDetailResponseModel =
           HomeNoticeDetailResponseModel.fromJson(result.body['data']);
       pr(homeNoticeDetailResponseModel?.toJson());
+      noticeDetailTitle =
+          homeNoticeDetailResponseModel!.tZLTSP0700!.single.nType == 'A'
+              ? tr('notice')
+              : '';
       isLoadData = false;
       notifyListeners();
     }
@@ -114,6 +122,23 @@ class NoticeProvider extends ChangeNotifier {
 
       if (homeNoticeResponseModel == null) {
         homeNoticeResponseModel = temp;
+        homeNoticeResponseModel!.tZltsp0710!.add(TableNoticeZLTSP0710Model(
+            '20220101',
+            '34',
+            '56',
+            '132012',
+            '90',
+            '11',
+            '진익창',
+            '33',
+            '44',
+            '55',
+            '66',
+            '추석연휴 관련해서 콜 확정 안내드립니다.',
+            '99',
+            '',
+            '진익창',
+            '90'));
       } else {
         homeNoticeResponseModel!.tZltsp0710!.addAll(temp.tZltsp0710!);
       }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/home/notice_detail_page.dart
  * Created Date: 2022-07-05 13:17:36
- * Last Modified: 2022-07-13 11:15:07
+ * Last Modified: 2022-09-22 10:29:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,9 +22,26 @@ import 'package:medsalesportal/view/common/base_shimmer.dart';
 import 'package:medsalesportal/view/home/provider/notice_provider.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 
-class NoticeDetailPage extends StatelessWidget {
+class NoticeDetailPage extends StatefulWidget {
   const NoticeDetailPage({Key? key}) : super(key: key);
   static const String routeName = '/noticeDetailPage';
+
+  @override
+  State<NoticeDetailPage> createState() => _NoticeDetailPageState();
+}
+
+class _NoticeDetailPageState extends State<NoticeDetailPage> {
+  late ValueNotifier<String> _appBarTitle = ValueNotifier<String>('');
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Widget _buildNoticeTitle(BuildContext context) {
     return Consumer<NoticeProvider>(builder: (context, provider, _) {
       final textModel = provider.homeNoticeDetailResponseModel!.tText!.first;
@@ -81,26 +98,33 @@ class NoticeDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final noticeNumber = ModalRoute.of(context)!.settings.arguments as String;
-    return BaseLayout(
-        hasForm: false,
-        appBar: MainAppBar(
-          context,
-          titleText: AppText.text('${tr('notice_detail')}',
-              style: AppTextStyle.w500_22),
-          callback: () {
-            Navigator.pop(context);
-          },
-        ),
-        child: ChangeNotifierProvider(
-          create: (context) => NoticeProvider(),
-          builder: (context, _) {
-            return FutureBuilder(
+    return ChangeNotifierProvider(
+      create: (context) => NoticeProvider(),
+      builder: (context, _) {
+        final p = context.read<NoticeProvider>();
+        return BaseLayout(
+            hasForm: false,
+            appBar: MainAppBar(
+              context,
+              titleText: ValueListenableBuilder<String>(
+                  valueListenable: _appBarTitle,
+                  builder: (context, title, _) {
+                    return AppText.text(title, style: AppTextStyle.w500_22);
+                  }),
+              callback: () {
+                Navigator.pop(context);
+              },
+            ),
+            child: FutureBuilder(
                 future: context
                     .read<NoticeProvider>()
                     .getNoticeDetail(noticeNumber: noticeNumber),
                 builder: (context, snapshot) {
                   if (snapshot.hasData &&
                       snapshot.connectionState == ConnectionState.done) {
+                    Future.delayed(Duration.zero, () {
+                      _appBarTitle.value = p.noticeDetailTitle!;
+                    });
                     return Padding(
                       padding: AppSize.defaultSidePadding,
                       child: ListView(
@@ -113,8 +137,8 @@ class NoticeDetailPage extends StatelessWidget {
                     );
                   }
                   return _buildNoticeDetailPageShimmer(context);
-                });
-          },
-        ));
+                }));
+      },
+    );
   }
 }
