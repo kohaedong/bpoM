@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-22 12:47:58
+ * Last Modified: 2022-09-22 13:11:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -393,9 +393,19 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                   context, '${tr('search')}', () {
                                 if (provider.isValidate) {
                                   _panelSwich.value = false;
-                                  provider
-                                      .refresh()
-                                      .then((value) => hideKeyboard(context));
+                                  provider.refresh().then((value) {
+                                    hideKeyboard(context);
+                                    Future.delayed(Duration(seconds: 1), () {
+                                      if (p.transLedgerResponseModel == null ||
+                                          p.transLedgerResponseModel!.tList!
+                                              .isEmpty) {
+                                        Future.delayed(Duration(seconds: 1),
+                                            () {
+                                          _panelSwich.value = true;
+                                        });
+                                      }
+                                    });
+                                  });
                                 } else {
                                   AppToast().show(context,
                                       '${tr('essential_option')}${tr('selecte_first')}');
@@ -1120,7 +1130,17 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
         RefreshIndicator(
           onRefresh: () {
             _panelSwich.value = false;
-            return p.refresh();
+            return p.refresh().then((value) {
+              hideKeyboard(context);
+              Future.delayed(Duration(seconds: 1), () {
+                if (p.transLedgerResponseModel == null ||
+                    p.transLedgerResponseModel!.tList!.isEmpty) {
+                  Future.delayed(Duration(seconds: 1), () {
+                    _panelSwich.value = true;
+                  });
+                }
+              });
+            });
           },
           child: ListView(
             controller: _scrollController2,

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-09-22 12:50:05
+ * Last Modified: 2022-09-22 13:12:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -340,7 +340,16 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                 context, '${tr('search')}', () {
                               if (p.isValidate) {
                                 _panelSwich.value = false;
-                                p.refresh();
+                                p.refresh().then((_) {
+                                  hideKeyboard(context);
+                                  Future.delayed(Duration(seconds: 1), () {
+                                    if (p.bulkOrderResponseModel == null ||
+                                        p.bulkOrderResponseModel!.tList!
+                                            .isEmpty) {
+                                      _panelSwich.value = true;
+                                    }
+                                  });
+                                });
                               } else {
                                 AppToast().show(context,
                                     '${tr('essential_option')}${tr('selecte_first')}');
@@ -371,7 +380,15 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
             context, BulkOrderDetailPage.routeName,
             arguments: model);
         if (result != null) {
-          p.refresh();
+          p.refresh().then((_) {
+            hideKeyboard(context);
+            Future.delayed(Duration(seconds: 1), () {
+              if (p.bulkOrderResponseModel == null ||
+                  p.bulkOrderResponseModel!.tList!.isEmpty) {
+                _panelSwich.value = true;
+              }
+            });
+          });
         }
       },
       child: Padding(
@@ -573,7 +590,15 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                     ),
                     onRefresh: () {
                       _panelSwich.value = false;
-                      return p.refresh();
+                      return p.refresh().then((_) {
+                        hideKeyboard(context);
+                        Future.delayed(Duration(seconds: 1), () {
+                          if (p.bulkOrderResponseModel == null ||
+                              p.bulkOrderResponseModel!.tList!.isEmpty) {
+                            _panelSwich.value = true;
+                          }
+                        });
+                      });
                     }),
                 _buildScrollToTop(context)
               ],
