@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-09-22 10:46:59
+ * Last Modified: 2022-09-22 11:01:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -198,11 +198,10 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                                           ? p.setStaffName(tr('all'))
                                           : p.setStaffName(null),
                                       width: AppSize.defaultContentsWidth,
-                                      hintTextStyleCallBack: () => CheckSuperAccount
-                                                  .isMultiAccountOrLeaderAccount() &&
-                                              staffName != null
-                                          ? AppTextStyle.default_16
-                                          : AppTextStyle.hint_16,
+                                      hintTextStyleCallBack: () =>
+                                          staffName != null
+                                              ? AppTextStyle.default_16
+                                              : AppTextStyle.hint_16,
                                       popupSearchType: CheckSuperAccount
                                               .isMultiAccountOrLeaderAccount()
                                           ? PopupSearchType.SEARCH_SALSE_PERSON

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-22 10:46:51
+ * Last Modified: 2022-09-22 11:01:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -713,10 +713,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                         : false,
                 deleteIconCallback: () => p.setAnotherSaler(null),
                 width: AppSize.defaultContentsWidth,
-                hintTextStyleCallBack: () => ismoutiAccount
-                    ? anotherSaler != null
-                        ? AppTextStyle.default_16
-                        : AppTextStyle.hint_16
+                hintTextStyleCallBack: () => anotherSaler != null
+                    ? AppTextStyle.default_16
                     : AppTextStyle.hint_16,
                 popupSearchType: p.isDoNothing
                     ? PopupSearchType.DO_NOTHING

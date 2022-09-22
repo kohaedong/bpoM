@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-22 10:47:16
+ * Last Modified: 2022-09-22 11:01:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -247,11 +247,10 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                           ? p.setStaffName(tr('all'))
                                           : p.setStaffName(null),
                                       width: AppSize.defaultContentsWidth,
-                                      hintTextStyleCallBack: () => CheckSuperAccount
-                                                  .isMultiAccountOrLeaderAccount() &&
-                                              staffName != null
-                                          ? AppTextStyle.default_16
-                                          : AppTextStyle.hint_16,
+                                      hintTextStyleCallBack: () =>
+                                          staffName != null
+                                              ? AppTextStyle.default_16
+                                              : AppTextStyle.hint_16,
                                       popupSearchType: CheckSuperAccount
                                               .isMultiAccountOrLeaderAccount()
                                           ? PopupSearchType.SEARCH_SALSE_PERSON
