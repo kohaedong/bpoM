@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/cache_service.dart
  * Created Date: 2021-08-22 19:45:10
- * Last Modified: 2022-08-07 19:49:29
+ * Last Modified: 2022-09-23 15:31:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -88,7 +88,9 @@ class CacheService {
   }
 
   static EsLoginModel? getEsLogin() {
-    return EsLoginModel.fromJson(jsonDecode(getData('es_login')));
+    return getData('es_login') != null
+        ? EsLoginModel.fromJson(jsonDecode(getData('es_login')))
+        : null;
   }
 
   // netWork Check

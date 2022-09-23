@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-09-06 11:26:59
+ * Last Modified: 2022-09-23 15:20:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -127,7 +127,7 @@ class AppDialog {
                         .themeData
                         .textTheme
                         .headline3!,
-                    maxLines: 3),
+                    maxLines: 5),
               ],
             )),
             true,
