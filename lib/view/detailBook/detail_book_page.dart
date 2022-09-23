@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-09-22 15:06:05
+ * Last Modified: 2022-09-23 13:21:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -252,6 +252,18 @@ class _DetailBookPageState extends State<DetailBookPage> {
     );
   }
 
+  Widget _buildResultNull(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        defaultSpacing(times: 15),
+        AppText.text(tr('not_search_result'), style: AppTextStyle.w500_22),
+        defaultSpacing(times: 4),
+        AppText.text(tr('try_other_keyworld'), style: AppTextStyle.default_14)
+      ],
+    );
+  }
+
   Widget _buildResultListView(BuildContext context) {
     return Selector<DetailBookPageProvider, DetailBookResponseModel?>(
       selector: (context, provider) => provider.searchResultModel,
@@ -265,7 +277,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                     .toList()
               ])
             : model!.tList != null && model.tList!.isEmpty
-                ? BaseNullDataWidget.build(isForSearchResult: true)
+                ? _buildResultNull(context)
                 : Container();
       },
     );

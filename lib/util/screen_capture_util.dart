@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/screen_capture_util.dart
  * Created Date: 2021-12-14 00:55:19
- * Last Modified: 2022-09-03 12:14:12
+ * Last Modified: 2022-09-23 13:48:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,6 +22,7 @@ import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
 import 'dart:ui' as ui;
 
@@ -55,11 +56,13 @@ class ScreenCaptrueUtil {
     Uint8List? unit8List;
     ui.Image? image;
     return await Future.delayed(Duration.zero, () async {
-      var renderObject = KeyService.baseAppKey.currentContext!
-          .findRenderObject() as RenderRepaintBoundary;
-      image = await renderObject.toImage();
-      var byte = await image!.toByteData(format: ui.ImageByteFormat.png);
-      unit8List = byte!.buffer.asUint8List();
+      try {
+        var renderObject = KeyService.screenKey.currentContext!
+            .findRenderObject() as RenderRepaintBoundary;
+        image = await renderObject.toImage();
+        var byte = await image!.toByteData(format: ui.ImageByteFormat.png);
+        unit8List = byte!.buffer.asUint8List();
+      } catch (e) {}
     }).then((_) {
       return unit8List;
     });
@@ -72,6 +75,7 @@ class ScreenCaptrueUtil {
       iosEvent.receiveBroadcastStream("screen").listen((result) async {
         CacheService.setIsDisableUpdate(true);
         if (result != null) {
+          pr('listen');
           if (!lock) {
             lock = true;
             Future.delayed(Duration(seconds: 1), () async {

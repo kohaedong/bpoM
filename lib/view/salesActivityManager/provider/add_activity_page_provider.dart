@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-20 17:57:28
+ * Last Modified: 2022-09-23 12:54:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -66,6 +66,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   bool isWithTeamLeader = false;
   bool isUpdate = false;
   int? index;
+  bool? isLockOtherSalerSelector;
   int isInterviewIndex = 0;
   final _api = ApiService();
 
@@ -139,6 +140,7 @@ class AddActivityPageProvider extends ChangeNotifier {
           anotherSaller = EtStaffListModel();
           anotherSaller!.sname = model.sname;
           anotherSaller!.logid = model.logid;
+          isLockOtherSalerSelector = true;
         }
       };
       // 동행 주요 로직.
@@ -458,10 +460,9 @@ class AddActivityPageProvider extends ChangeNotifier {
               t260.erwid = esLogin.logid;
             }()
           : () {
-              var isT260Empty = fromParentResponseModel!.table260!.isEmpty;
-              t260.umode = 'I';
               // 첫번째 데이터
-              if (isT260Empty) {
+              if (editModel260 == null) {
+                t260.umode = 'I';
                 pr('empty????');
                 t260.seqno = '0002';
                 t260.erdat = t250.erdat;
@@ -475,6 +476,9 @@ class AddActivityPageProvider extends ChangeNotifier {
                 t260.etime = DateUtil.getTimeNow(isNotWithColon: true);
                 t260.atime = DateUtil.getTimeNow(isNotWithColon: true);
               } else {
+                t260 =
+                    SalesActivityDayTable260.fromJson(editModel260!.toJson());
+                t260.umode = 'U';
                 pr('not empty????');
                 var lastSeqNo = fromParentResponseModel!.table260!.last.seqno!;
                 pr(lastSeqNo);
@@ -530,7 +534,9 @@ class AddActivityPageProvider extends ChangeNotifier {
       // if (suggestedItemList != null && suggestedItemList!.isNotEmpty) {
       //   t260.actcat1 = getCode(activityList!, selectedActionType!);
       // }
-      t260.actcat1 = getCode(activityList!, selectedActionType!);
+      if (activityList != null && selectedActionType != null) {
+        t260.actcat1 = getCode(activityList!, selectedActionType!);
+      }
     };
 
     // create table 260 table List
@@ -743,6 +749,11 @@ class AddActivityPageProvider extends ChangeNotifier {
         pr(fromParentResponseModel!.table260![index!]);
         editModel260 = SalesActivityDayTable260.fromJson(
             fromParentResponseModel!.table260![index!].toJson());
+      } else {
+        editModel260 = SalesActivityDayTable260.fromJson(t260.toJson());
+      }
+      if (anotherSaller != null) {
+        isLockOtherSalerSelector = true;
       }
       isLoadData = false;
       isUpdate = true;

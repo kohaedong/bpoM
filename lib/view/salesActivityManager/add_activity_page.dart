@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-22 11:54:43
+ * Last Modified: 2022-09-23 13:03:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -645,7 +645,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
               if (p.suggestedItemList![index!].matnr != null) {
                 p.updateSuggestedList(index);
               } else {
-                AppToast().show(context, tr('plz_check_item'));
+                AppToast().show(
+                    context,
+                    tr(index + 1 == 2 ? 'plz_check_item2' : 'plz_check_item',
+                        args: ['${tr('suggested_item')}${index + 1}']));
               }
             } else {
               p.setIsWithTeamLeader(val);
@@ -677,24 +680,25 @@ class _AddActivityPageState extends State<AddActivityPage> {
       children: [
         _buildTitleRow(tr('with_another_saler'), isNotwithStart: true),
         defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
-        Selector<AddActivityPageProvider, EtStaffListModel?>(
-            selector: (context, provider) => provider.anotherSaller,
-            builder: (context, anotherSaler, _) {
+        Selector<AddActivityPageProvider, Tuple2<EtStaffListModel?, bool?>>(
+            selector: (context, provider) => Tuple2(
+                provider.anotherSaller, provider.isLockOtherSalerSelector),
+            builder: (context, tuple, _) {
               return BaseInputWidget(
                 context: context,
                 bgColor: ismoutiAccount
                     ? null
-                    : anotherSaler != null
+                    : tuple.item2 != null && tuple.item2!
                         ? AppColors.unReadyButton
                         : null,
                 iconType: p.isDoNothing
                     ? null
-                    : anotherSaler == null
-                        ? InputIconType.SEARCH
-                        : null,
+                    : tuple.item2 != null && tuple.item2!
+                        ? null
+                        : InputIconType.SEARCH,
                 iconColor: AppColors.textFieldUnfoucsColor,
-                hintText: anotherSaler != null
-                    ? anotherSaler.sname
+                hintText: tuple.item1 != null
+                    ? tuple.item1!.sname
                     : '${tr('plz_select_something_1', args: [
                             tr('manager'),
                             ''
@@ -702,21 +706,23 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 // 팀장 일때 만 팀원선택후 삭제가능.
                 isShowDeleteForHintText: p.isDoNothing
                     ? false
-                    : ismoutiAccount
-                        ? anotherSaler != null
+                    : tuple.item2 != null && tuple.item2!
+                        ? false
+                        : tuple.item1 != null
                             ? true
-                            : false
-                        : false,
+                            : false,
                 deleteIconCallback: () => p.setAnotherSaler(null),
                 width: AppSize.defaultContentsWidth,
-                hintTextStyleCallBack: () => anotherSaler != null
+                hintTextStyleCallBack: () => tuple.item1 != null
                     ? AppTextStyle.default_16
                     : AppTextStyle.hint_16,
                 popupSearchType: p.isDoNothing
                     ? PopupSearchType.DO_NOTHING
-                    : anotherSaler == null || ismoutiAccount
-                        ? PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY
-                        : PopupSearchType.DO_NOTHING,
+                    : tuple.item2 != null && tuple.item2!
+                        ? PopupSearchType.DO_NOTHING
+                        : tuple.item1 == null || ismoutiAccount
+                            ? PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY
+                            : PopupSearchType.DO_NOTHING,
                 isSelectedStrCallBack: (persion) {
                   return p.setAnotherSaler(persion);
                 },
@@ -746,7 +752,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildTitleRow('${tr('suggested_item')}${index + 1}'),
-            defaultSpacing(isHalf: true),
+            defaultSpacing(),
             GestureDetector(
                 onTap: () {
                   final p = context.read<AddActivityPageProvider>();
@@ -769,6 +775,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     )))
           ],
         ),
+        defaultSpacing(isHalf: true),
         BaseInputWidget(
             context: context,
             hintText: model.maktx == null ? tr('plz_select') : model.maktx,

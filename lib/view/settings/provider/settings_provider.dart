@@ -6,6 +6,8 @@ import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/rfc/es_login_model.dart';
 import 'package:medsalesportal/model/user/user_settings.dart';
 import 'package:medsalesportal/model/update/check_update_model.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
 import 'package:medsalesportal/view/commonLogin/provider/update_and_notice_provider.dart';
 
@@ -135,10 +137,11 @@ class SettingsProvider extends ChangeNotifier {
   }
 
   Future<UserSettings?> getUserEvn() async {
-    final esLogin = CacheService.getEsLogin();
+    final isLogin = CacheService.getIsLogin();
+    final isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
     var signinProvider = SigninProvider();
     var result = await signinProvider
-        .checkUserEnvironment(esLogin!.logid!.toLowerCase());
+        .checkUserEnvironment(isLoginModel.logid!.toLowerCase());
     signinProvider.dispose();
     return result;
   }

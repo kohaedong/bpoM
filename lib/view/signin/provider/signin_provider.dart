@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:medsalesportal/globalProvider/app_auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/model/user/user.dart';
 import 'package:medsalesportal/enums/account_type.dart';
@@ -306,9 +307,10 @@ class SigninProvider extends ChangeNotifier {
     if (sapResult != null && sapResult.statusCode == 200) {
       sapLoginInfoResponseModel =
           SapLoginInfoResponseModel.fromJson(sapResult.body);
-
-      pr('????${sapLoginInfoResponseModel?.data?.isLogin}');
-      return SigninResult(true, 'login successful', isShowPopup: false);
+      var isSuccessfull =
+          sapLoginInfoResponseModel?.data?.esReturn?.mtype == 'S';
+      var message = tr('permission_denied');
+      return SigninResult(isSuccessfull, message, isShowPopup: false);
     }
     return SigninResult(false, '');
   }
@@ -351,6 +353,7 @@ class SigninProvider extends ChangeNotifier {
       return SigninResult(false, "${tr('check_account')}");
     }
     if (signResult.statusCode == 200 && signResult.body['data'] != null) {
+      pr('@@@@@@@${signResult.body}');
       user = User.fromJson(signResult.body['data']);
       final tokenResult =
           await requestToken(signBody['userAccount'], signBody['passwd']);
@@ -376,9 +379,7 @@ class SigninProvider extends ChangeNotifier {
           var isTeamLeader = esLogin.xtm == 'X';
           var isMultiAccount =
               esLogin.xtm == '' && esLogin.vkgrp == '' && esLogin.salem == '';
-          pr('xtm ::${esLogin.xtm}\n');
-          pr('vkgrp ::${esLogin.vkgrp}\n');
-          pr('salem ::${esLogin.salem}\n');
+
           CacheService.saveEsLogin(esLogin);
           CacheService.saveIsLogin(isLogin);
           CacheService.saveUser(user!);
@@ -387,6 +388,16 @@ class SigninProvider extends ChangeNotifier {
               : isTeamLeader
                   ? AccountType.LEADER
                   : AccountType.NORMAL);
+
+          var p = KeyService.baseAppKey.currentContext!.read<AppAuthProvider>();
+          p.setSsalseGroupList(sapLoginInfoResponseModel!.data!.etOrghk!);
+          pr('xtm ::${esLogin.xtm}\n');
+          pr('vkgrp ::${esLogin.vkgrp}\n');
+          pr('salem ::${esLogin.salem}\n');
+          pr('p.isSalseGroup  ${p.isPermidedSalseGroup}');
+          p.salseGroupList.forEach((group) {
+            pr(group!.toJson());
+          });
           await saveTcode();
           final deviceInfoResult =
               await getDeviceInfo(signBody!['userAccount']);
@@ -415,6 +426,8 @@ class SigninProvider extends ChangeNotifier {
           return SigninResult(true, '');
         } else {
           isWithAutoLogin = null;
+          isLoadData = false;
+          notifyListeners();
           return SigninResult(false, '${sapResult.message}',
               id: userAccount,
               pw: password,

@@ -115,7 +115,8 @@
     "zip_code":"우편번호",
     "search_zip_code":"우편번호 조회",
     "no_data":"조회 결과가 없습니다.",
-    "not_search_result":"검색 결과가 없습니다. \n다른 검색어를 입력하거나 \n철자와 띄어쓰기를 확인해 보세요. ",
+    "not_search_result":"검색 결과가 없습니다.",
+    "try_other_keyworld":"다른 검색어를 입력하거나 \n철자와 띄어쓰기를 확인해 보세요. ",
     "addr":"주소",
     "ceo_name":"대표자명",
     "office":"사무실",
@@ -511,7 +512,7 @@
     "amount_available_for_order_entry":"주문 입력 가능 액",
     "amount_available_for_order_entry_is_fail":"주문 입력가능액이 부족합니다.",
     "is_realy_cancel_order":"주문을 취소하시겠습니까?",
-    "permission_denied":"권한이 없습니다.",
+    "permission_denied":"앱 사용 권한이 없습니다. 권한 요청 후 다시 시도해 주세요.",
     "monday":"월{}",
     "tuesday":"화{}",
     "wednesday":"수{}",
@@ -571,7 +572,8 @@
     "save":"저장",
     "insufficient_balance":"고정여신점검: 한도 총액을 초과 했습니다.",
     "confirm_successful":"확정 되였습니다.",
-    "plz_check_item":"제안품목1을 먼저 선택해주세요.",
+    "plz_check_item":"{}을 먼저 선택해주세요.",
+    "plz_check_item2":"{}를 먼저 선택해주세요.",
     "sys_notice":"시스템점검"
    
    
