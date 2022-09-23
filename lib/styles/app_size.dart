@@ -105,7 +105,7 @@ class AppSize {
   static EdgeInsets get listPadding =>
       EdgeInsets.fromLTRB(16.w, 20.h, 16.w, 20.h);
   static EdgeInsets get versionRowPadding =>
-      EdgeInsets.fromLTRB(16.w, 14.w, 16.w, 14.w);
+      EdgeInsets.fromLTRB(16.w, 8, 16.w, 8);
   static EdgeInsets get noticePageTopWidgetPadding =>
       EdgeInsets.fromLTRB(16.w, 5.h, 16.w, 5.h);
   static EdgeInsets get noticePageEndWidgetPadding =>

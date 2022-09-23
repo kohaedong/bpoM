@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-22 11:54:43
+ * Last Modified: 2022-09-23 14:30:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:flutter/services.dart';
 import 'package:medsalesportal/globalProvider/timer_provider.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/orderSearch/order_search_page.dart';
 import 'package:tuple/tuple.dart';
@@ -916,7 +917,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         return BaseLayout(
             hasForm: true,
             appBar: MainAppBar(context,
-                titleText: AppText.text('${tr('salse_order_manager')}',
+                icon: Icon(Icons.clear),
+                titleText: AppText.text('${tr('registor_order')}',
                     style: AppTextStyle.w500_22)),
             child: FutureBuilder<ResultModel>(
                 future: context.read<OrderManagerPageProvider>().initData(),

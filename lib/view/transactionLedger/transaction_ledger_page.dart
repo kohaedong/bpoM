@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-22 17:06:29
+ * Last Modified: 2022-09-23 14:47:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -1114,20 +1114,26 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             selector: (context, provider) =>
                 provider.isOpenBottomSheetForLandSpace,
             builder: (context, isOpen, _) {
-              return DrawerButtonAnimationWidget(
-                animationSwich: () => isOpen,
-                body: InkWell(
-                    onTap: () {
-                      final p = context.read<TransactionLedgerPageProvider>();
-                      p.setIsOpenBottomSheet();
-                      p.setIsOpenBottomSheetForLandSpace();
-                    },
-                    child: WidgetOfRotationAnimationComponents(
-                      animationSwich: () => isOpen,
-                      rotationValue: math.pi,
-                      body: Container(
-                          child: AppImage.getImage(ImageType.SELECT_RIGHT)),
-                    )),
+              return Container(
+                padding: EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                    border: Border.all(),
+                    borderRadius: BorderRadius.circular(5)),
+                child: DrawerButtonAnimationWidget(
+                  animationSwich: () => isOpen,
+                  body: InkWell(
+                      onTap: () {
+                        final p = context.read<TransactionLedgerPageProvider>();
+                        p.setIsOpenBottomSheet();
+                        p.setIsOpenBottomSheetForLandSpace();
+                      },
+                      child: WidgetOfRotationAnimationComponents(
+                        animationSwich: () => isOpen,
+                        rotationValue: math.pi,
+                        body: Container(
+                            child: AppImage.getImage(ImageType.SELECT_RIGHT)),
+                      )),
+                ),
               );
             },
           ),

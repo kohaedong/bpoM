@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-09-15 10:29:10
+ * Last Modified: 2022-09-23 14:12:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -217,7 +217,7 @@ Widget buildTowButtonDialogContents(
                           successBackgraoundColor ?? AppColors.whiteText,
                           faildTextColor ?? AppColors.defaultText,
                           AppTextStyle.hint_16,
-                          AppSize.radius8),
+                          AppSize.radius15),
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -235,7 +235,7 @@ Widget buildTowButtonDialogContents(
                           successBackgraoundColor ?? AppColors.whiteText,
                           successTextColor ?? AppColors.primary,
                           AppTextStyle.hint_16,
-                          AppSize.radius8),
+                          AppSize.radius15),
                       onPressed: () {
                         Navigator.pop(
                             context,

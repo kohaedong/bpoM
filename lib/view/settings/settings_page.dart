@@ -93,34 +93,42 @@ class SettingsPage extends StatelessWidget {
 
   Widget _buildVersionRow(BuildContext context, CheckUpdateModel versionInfo) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        AppText.text('${tr('version_info')}', style: AppTextStyle.w500_16),
+        SizedBox(
+          width: AppSize.defaultContentsWidth * .3,
+          child: AppText.text('${tr('version_info')}',
+              style: AppTextStyle.w500_16, textAlign: TextAlign.start),
+        ),
         Padding(padding: EdgeInsets.only(left: AppSize.versionInfoSpacing1)),
-        AppText.text('${versionInfo.currentVersion}',
-            style: AppTextStyle.hint_16),
+        SizedBox(
+            width: AppSize.defaultContentsWidth * .3,
+            child: AppText.text('${versionInfo.currentVersion}',
+                style: AppTextStyle.hint_16, textAlign: TextAlign.start)),
         Padding(
             padding: EdgeInsets.only(right: AppSize.defaultListItemSpacing)),
-        versionInfo.result == 'OK'
-            ? Container(
-                width: AppSize.secondButtonWidth,
-                child: TextButton(
-                    onPressed: () {
-                      CheckUpdateAndNoticeService.check(
-                          context, CheckType.UPDATE_ONLY, false);
-                    },
-                    style: AppStyles.getButtonStyle(
-                        AppColors.primary,
-                        AppColors.whiteText,
-                        AppTextStyle.default_14,
-                        AppSize.radius4),
-                    child: Text(
-                      '${tr('do_update')}',
-                    )))
-            : Expanded(
-                child: AppText.text('${tr('is_latest_version')}',
-                    style: AppTextStyle.default_14, textAlign: TextAlign.end),
-              )
+        Expanded(
+            child: versionInfo.result == 'OK'
+                ? Container(
+                    width: AppSize.secondButtonWidth,
+                    child: TextButton(
+                        onPressed: () {
+                          CheckUpdateAndNoticeService.check(
+                              context, CheckType.UPDATE_ONLY, false);
+                        },
+                        style: AppStyles.getButtonStyle(
+                            AppColors.primary,
+                            AppColors.whiteText,
+                            AppTextStyle.default_14,
+                            AppSize.radius4),
+                        child: Text(
+                          '${tr('do_update')}',
+                        )))
+                : SizedBox(
+                    child: AppText.text('${tr('is_latest_version')}',
+                        style: AppTextStyle.default_14,
+                        textAlign: TextAlign.end),
+                  ))
       ],
     );
   }

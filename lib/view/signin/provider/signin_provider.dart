@@ -287,7 +287,11 @@ class SigninProvider extends ChangeNotifier {
     };
   }
 
-  bool get isValueNotNull => this.userAccount != null && this.password != null;
+  bool get isValueNotNull =>
+      userAccount != null &&
+      userAccount!.isNotEmpty &&
+      password != null &&
+      password!.isNotEmpty;
 
   Future<SigninResult> sapLogin(String id) async {
     Map<String, dynamic>? sapBody = {

@@ -112,7 +112,8 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
         height: AppSize.buttonHeight,
         child: Consumer<SettingsProvider>(builder: (context, provider, _) {
           return TextButton(
-              style: provider.suggetionText == null
+              style: provider.suggetionText == null ||
+                      provider.suggetionText!.isEmpty
                   ? AppStyles.getButtonStyle(AppColors.unReadyButton,
                       AppColors.unReadyText, AppTextStyle.default_18, 0)
                   : AppStyles.getButtonStyle(AppColors.primary,
