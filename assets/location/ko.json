@@ -409,15 +409,13 @@
     "only_select_one":"1건만 승인 가능합니다.",
     "item_add_successful":"아이템등록이 완료되였습니다.",
     "sales_order_register_successful":"SalesOrder 등록이 완료되였습니다",
-    "is_ready_to_logout":" 에서\n       로그아웃 합니다",
+    "is_ready_to_logout":" 에서\n로그아웃 합니다",
     "plz_check_standard_price":"기준판가를 조회해주세요.",
     "plz_check_quantity_and_unit":"수량과 단위를 입력해주세요.",
     "ext_app_when_tap_again":"뒤로 버튼을 한번더 누르면 앱이 종료됩니다.",
     "plz_check_discount_option":"할인할증 옵션을 확인해주세요",
     "not_authorized_to_use_create_order":"본 사업부는 모바일에서 Sales Order 생성 불가합니다.",
     "is_last_item":"-",
-
-
 
     "notice_is_null":"최근 공지사항이 없습니다.",
     "salse_activity_search":"영업활동 조회",

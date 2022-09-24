@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-24 14:34:05
+ * Last Modified: 2022-09-24 15:26:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -471,7 +471,9 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             TableRow(children: [
               _buildTableBox(
                   isTotalRow
-                      ? model.spmon!
+                      ? model.spmon!.contains('총 계')
+                          ? '총 합계'
+                          : model.spmon!
                       : FormatUtil.addDashForDateStr2(
                           model.spmon!.replaceAll('-', '')),
                   0,
@@ -522,7 +524,9 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   isBody: true, isLandSpace: true, isTotalRow: isTotalRow),
               _buildTableBox(
                   isTotalRow
-                      ? model.spmon!
+                      ? model.spmon!.contains('총 계')
+                          ? '총 합계'
+                          : model.spmon!
                       : FormatUtil.addDashForDateStr2(
                           model.spmon!.replaceAll('-', '')),
                   1,
@@ -577,7 +581,9 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             : AppSize.defaultTextFieldHeight * .6,
         decoration: BoxDecoration(
             color: isBody != null && isBody
-                ? AppColors.whiteText
+                ? isTotalRow != null && isTotalRow
+                    ? AppColors.tableBorderColor.withOpacity(.2)
+                    : AppColors.whiteText
                 : AppColors.tableBorderColor.withOpacity(.2)),
         alignment: alignment != null ? alignment : Alignment.centerLeft,
         child: AppText.text(text,
