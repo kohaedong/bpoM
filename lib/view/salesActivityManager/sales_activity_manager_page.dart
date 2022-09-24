@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-24 20:57:30
+ * Last Modified: 2022-09-24 21:15:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -396,7 +396,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         Selector<SalseActivityManagerPageProvider, bool>(
           selector: (context, provider) => provider.isLoadData,
           builder: (context, isLoadData, _) {
-            return BaseLoadingViewOnStackWidget.build(context, isLoadData);
+            return BaseLoadingViewOnStackWidget.build(context, isLoadData,
+                color: Colors.transparent, icon: Container());
           },
         ),
         _buildPopupView(context),
@@ -814,7 +815,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         Selector<SalseActivityManagerPageProvider, bool>(
           selector: (context, provider) => provider.isLoadDayData,
           builder: (context, isLoadDayData, _) {
-            return BaseLoadingViewOnStackWidget.build(context, isLoadDayData);
+            return BaseLoadingViewOnStackWidget.build(context, isLoadDayData,
+                color: Colors.transparent, icon: Container());
           },
         ),
       ],

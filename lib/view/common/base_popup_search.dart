@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-24 20:17:25
+ * Last Modified: 2022-09-24 21:06:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -703,7 +703,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                           PopupSearchType.SEARCH_MATERIAL
                                       ? _buildMateRialSearchBar(context)
                                       : Container(),
-          Divider(height: 0.5),
+
+          widget.type == PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY ||
+                  widget.type == PopupSearchType.SEARCH_SALSE_PERSON
+              ? Container()
+              : Divider(height: 0.5)
         ],
       ),
     );
@@ -876,6 +880,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       )
                     : Column(
                         children: [
+                          defaultSpacing(times: 2),
                           BaseNullDataWidget.build(
                               message:
                                   provider.isShhowNotResultText ? null : '')
