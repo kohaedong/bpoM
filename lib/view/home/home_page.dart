@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:medsalesportal/view/common/function_of_print.dart';
+
 import './home_icon_map.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +33,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
-  var _isPaused = false;
   var _isNoticeCheckDone = false;
   ScrollController? _scrollController;
   Timer? exitAppTimer;
@@ -78,16 +79,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     // update or notice 확인 완료 여부.
     final isCheckDone = CacheService.isUpdateAndNoticeCheckDone();
     var isLocked = false;
-    print('checkDone???$isCheckDone');
     if (paused) {
-      _isPaused = true;
+      _isForeground = false;
     }
-
-    if (_isForeground && _isPaused && arguments == null && !isLocked) {
+    print('checkDone???$isCheckDone');
+    pr('_isForeground ${_isForeground}');
+    pr('arguments == null  ${arguments == null}');
+    pr('isNotLocked ${!isLocked}');
+    if (_isForeground && arguments == null && !isLocked) {
       isLocked = true;
       // 다이얼로그 호출시 업데이트 체크 재외 처리.
       final isDisable = CacheService.getIsDisableUpdate();
-      if (isDisable == false && isCheckDone) {
+      if (isDisable == false) {
         // chack update and alarm
         await Future.delayed(
             Duration.zero,
@@ -95,7 +98,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 KeyService.baseAppKey.currentContext!,
                 CheckType.UPDATE_ONLY,
                 true)).then((value) {
-          _isPaused = false;
           isLocked = false;
         });
       } else {
