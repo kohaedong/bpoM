@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/rfc/es_login_model.dart';
 import 'package:medsalesportal/model/user/user_settings.dart';
 import 'package:medsalesportal/model/update/check_update_model.dart';
-import 'package:medsalesportal/util/encoding_util.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
 import 'package:medsalesportal/view/commonLogin/provider/update_and_notice_provider.dart';
 

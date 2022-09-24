@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-09-24 14:32:55
+ * Last Modified: 2022-09-24 16:02:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -142,13 +142,15 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
 
   Future<void> initPageData() async {
     // isLoadData = true;
-    setIsLoginModel();
-    searchPerson();
-    selectedStartDate = DateUtil.prevWeek();
-    selectedEndDate = DateUtil.now();
-    selectedProductsFamily = tr('all');
-    isAnimationNotReady = false;
-    isFirstRun = false;
+    if (isFirstRun) {
+      setIsLoginModel();
+      searchPerson();
+      selectedStartDate = DateUtil.prevWeek();
+      selectedEndDate = DateUtil.now();
+      selectedProductsFamily = tr('all');
+      isAnimationNotReady = false;
+      isFirstRun = false;
+    }
   }
 
   void setIsLoginModel() async {
@@ -379,6 +381,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
         transLedgerResponseModel = null;
       }
       isLoadData = false;
+      isFirstRun = false;
       hasResultData = transLedgerResponseModel != null &&
           transLedgerResponseModel!.tList!.isNotEmpty;
       notifyListeners();
