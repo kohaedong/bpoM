@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-09-22 12:28:53
+ * Last Modified: 2022-09-24 15:00:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -30,7 +30,7 @@ import 'package:medsalesportal/model/rfc/salse_activity_search_response_model.da
 class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirstRun = true;
-  bool isShowNotResultText = false;
+  bool? hasResultData;
   String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
@@ -43,11 +43,11 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   int partial = 30;
   bool hasMore = false;
   final _api = ApiService();
-  Future<void> refresh() async {
+  Future<ResultModel> refresh() async {
     pos = 0;
     hasMore = true;
     searchResponseModel = null;
-    onSearch(true);
+    return onSearch(true);
   }
 
   bool get isValidate =>
@@ -60,11 +60,11 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
     return null;
   }
 
-  Future<void> initPageData() async {
+  Future<ResultModel> initPageData() async {
     setIsLoginModel();
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
-    onSearch(false);
+    return onSearch(false);
   }
 
   void setIsLoginModel() async {
@@ -172,9 +172,10 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
       }
       isLoadData = false;
       isFirstRun = false;
-      isShowNotResultText = true;
+      hasResultData =
+          searchResponseModel != null && searchResponseModel!.tList!.isNotEmpty;
       notifyListeners();
-      return ResultModel(true);
+      return ResultModel(true, data: hasResultData);
     }
     return ResultModel(false);
   }

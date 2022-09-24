@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-23 14:47:12
+ * Last Modified: 2022-09-24 14:34:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -398,18 +398,15 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                   context, '${tr('search')}', () {
                                 if (provider.isValidate) {
                                   _panelSwich.value = false;
-                                  provider.refresh().then((value) {
+                                  provider.refresh().then((result) {
                                     hideKeyboard(context);
-                                    // Future.delayed(Duration(seconds: 1), () {
-                                    //   if (p.transLedgerResponseModel == null ||
-                                    //       p.transLedgerResponseModel!.tList!
-                                    //           .isEmpty) {
-                                    //     Future.delayed(Duration(seconds: 1),
-                                    //         () {
-                                    //       _panelSwich.value = true;
-                                    //     });
-                                    //   }
-                                    // });
+                                    if (result.isSuccessful) {
+                                      Future.delayed(Duration.zero, () {
+                                        if (!result.data) {
+                                          _panelSwich.value = true;
+                                        }
+                                      });
+                                    }
                                   });
                                 } else {
                                   AppToast().show(context,
@@ -718,7 +715,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           Padding(
                               padding: AppSize.nullValueWidgetPadding,
                               child: BaseNullDataWidget.build(
-                                  message: p.isShowNotResultText ? null : ''))
+                                  message: p.hasResultData == null ? '' : null))
                         ],
                       ),
             Padding(padding: EdgeInsets.only(top: AppSize.buttonHeight))
@@ -1044,7 +1041,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                       Padding(
                           padding: AppSize.nullValueWidgetPadding,
                           child: BaseNullDataWidget.build(
-                              message: p.isShowNotResultText ? null : ''))
+                              message: p.hasResultData == null ? '' : null))
                     ],
                   );
       },
@@ -1110,30 +1107,25 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   offsetType: OffsetDirectionType.RIGHT);
             },
           ),
-          Selector<TransactionLedgerPageProvider, bool>(
-            selector: (context, provider) =>
-                provider.isOpenBottomSheetForLandSpace,
-            builder: (context, isOpen, _) {
-              return Container(
-                padding: EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                    border: Border.all(),
-                    borderRadius: BorderRadius.circular(5)),
-                child: DrawerButtonAnimationWidget(
-                  animationSwich: () => isOpen,
-                  body: InkWell(
-                      onTap: () {
-                        final p = context.read<TransactionLedgerPageProvider>();
-                        p.setIsOpenBottomSheet();
-                        p.setIsOpenBottomSheetForLandSpace();
-                      },
-                      child: WidgetOfRotationAnimationComponents(
-                        animationSwich: () => isOpen,
-                        rotationValue: math.pi,
-                        body: Container(
-                            child: AppImage.getImage(ImageType.SELECT_RIGHT)),
-                      )),
-                ),
+          Selector<TransactionLedgerPageProvider, Tuple2<bool, bool>>(
+            selector: (context, provider) => Tuple2(
+                provider.isOpenBottomSheetForLandSpace, provider.isFirstRun),
+            builder: (context, tuple, _) {
+              return DrawerButtonAnimationWidget(
+                animationSwich: () => tuple.item1,
+                body: InkWell(
+                    onTap: () {
+                      final p = context.read<TransactionLedgerPageProvider>();
+                      p.setIsOpenBottomSheet();
+                      p.setIsOpenBottomSheetForLandSpace();
+                    },
+                    child: WidgetOfRotationAnimationComponents(
+                      // 반대로.
+                      animationSwich: () => !tuple.item1,
+                      rotationValue: math.pi,
+                      body: Container(
+                          child: AppImage.getImage(ImageType.SELECT_RIGHT)),
+                    )),
               );
             },
           ),

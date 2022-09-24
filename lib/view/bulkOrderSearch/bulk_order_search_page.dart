@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-09-22 15:03:37
+ * Last Modified: 2022-09-24 14:48:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -340,15 +340,15 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                 context, '${tr('search')}', () {
                               if (p.isValidate) {
                                 _panelSwich.value = false;
-                                p.refresh().then((_) {
+                                p.refresh().then((result) {
                                   hideKeyboard(context);
-                                  Future.delayed(Duration(seconds: 1), () {
-                                    if (p.bulkOrderResponseModel == null ||
-                                        p.bulkOrderResponseModel!.tList!
-                                            .isEmpty) {
-                                      _panelSwich.value = true;
-                                    }
-                                  });
+                                  if (result.isSuccessful) {
+                                    Future.delayed(Duration.zero, () {
+                                      if (!result.data) {
+                                        _panelSwich.value = true;
+                                      }
+                                    });
+                                  }
                                 });
                               } else {
                                 AppToast().show(context,
@@ -380,15 +380,7 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
             context, BulkOrderDetailPage.routeName,
             arguments: model);
         if (result != null) {
-          p.refresh().then((_) {
-            hideKeyboard(context);
-            Future.delayed(Duration(seconds: 1), () {
-              if (p.bulkOrderResponseModel == null ||
-                  p.bulkOrderResponseModel!.tList!.isEmpty) {
-                _panelSwich.value = true;
-              }
-            });
-          });
+          p.refresh();
         }
       },
       child: Padding(
@@ -474,7 +466,8 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                       Padding(
                           padding: AppSize.nullValueWidgetPadding,
                           child: BaseNullDataWidget.build(
-                              message: provider.hasData ? '' : null))
+                              message:
+                                  provider.hasResultData == null ? '' : null))
                     ],
                   )
       ],
@@ -525,9 +518,19 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                 create: (context) => NextPageLoadingProvider()),
           ],
           builder: (context, _) {
-            final p = context.watch<BulkOrderSearchPageProvider>();
+            final p = context.read<BulkOrderSearchPageProvider>();
             if (p.isFirstRun) {
-              p.initPageData().then((value) => _panelSwich.value = false);
+              _panelSwich.value = false;
+              p.initPageData().then((result) {
+                hideKeyboard(context);
+                if (result.isSuccessful) {
+                  Future.delayed(Duration.zero, () {
+                    if (!result.data) {
+                      _panelSwich.value = true;
+                    }
+                  });
+                }
+              });
             }
             return Stack(
               fit: StackFit.expand,
@@ -572,14 +575,15 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                     ),
                     onRefresh: () {
                       _panelSwich.value = false;
-                      return p.refresh().then((_) {
+                      return p.refresh().then((result) {
                         hideKeyboard(context);
-                        Future.delayed(Duration(seconds: 1), () {
-                          if (p.bulkOrderResponseModel == null ||
-                              p.bulkOrderResponseModel!.tList!.isEmpty) {
-                            _panelSwich.value = true;
-                          }
-                        });
+                        if (result.isSuccessful) {
+                          Future.delayed(Duration.zero, () {
+                            if (!result.data) {
+                              _panelSwich.value = true;
+                            }
+                          });
+                        }
                       });
                     }),
                 _buildScrollToTop(context)

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-09-22 15:06:11
+ * Last Modified: 2022-09-24 14:58:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -361,15 +361,15 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                 context, '${tr('search')}', () {
                               if (p.isValidate) {
                                 _panelSwich.value = false;
-                                p.refresh().then((value) {
+                                return p.refresh().then((result) {
                                   hideKeyboard(context);
-                                  Future.delayed(Duration(seconds: 1), () {
-                                    if (p.searchOrderResponseModel == null ||
-                                        p.searchOrderResponseModel!.tList!
-                                            .isEmpty) {
-                                      _panelSwich.value = true;
-                                    }
-                                  });
+                                  if (result.isSuccessful) {
+                                    Future.delayed(Duration.zero, () {
+                                      if (!result.data) {
+                                        _panelSwich.value = true;
+                                      }
+                                    });
+                                  }
                                 });
                               } else {
                                 AppToast().show(context,
@@ -481,7 +481,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                           padding: AppSize.nullValueWidgetPadding,
                           child: BaseNullDataWidget.build(
                               message:
-                                  provider.isShowNotResultText ? null : ''))
+                                  provider.hasResultData == null ? '' : null))
                     ],
                   )
       ],
@@ -533,7 +533,17 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
           builder: (context, _) {
             final p = context.read<OrderSearchPageProvider>();
             if (p.isFirstRun) {
-              p.initPageData().then((value) => _panelSwich.value = false);
+              _panelSwich.value = false;
+              p.initPageData().then((result) {
+                hideKeyboard(context);
+                if (result.isSuccessful) {
+                  Future.delayed(Duration.zero, () {
+                    if (!result.data) {
+                      _panelSwich.value = true;
+                    }
+                  });
+                }
+              });
             }
             return Stack(
               fit: StackFit.expand,
@@ -578,14 +588,15 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                     ),
                     onRefresh: () {
                       _panelSwich.value = false;
-                      return p.refresh().then((value) {
+                      return p.refresh().then((result) {
                         hideKeyboard(context);
-                        Future.delayed(Duration(seconds: 1), () {
-                          if (p.searchOrderResponseModel == null ||
-                              p.searchOrderResponseModel!.tList!.isEmpty) {
-                            _panelSwich.value = true;
-                          }
-                        });
+                        if (result.isSuccessful) {
+                          Future.delayed(Duration.zero, () {
+                            if (!result.data) {
+                              _panelSwich.value = true;
+                            }
+                          });
+                        }
                       });
                     }),
                 _buildScrollToTop(context)

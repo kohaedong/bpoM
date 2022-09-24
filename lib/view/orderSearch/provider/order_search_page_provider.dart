@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-09-22 12:43:46
+ * Last Modified: 2022-09-24 14:56:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -33,7 +33,7 @@ import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 class OrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirstRun = true;
-  bool isShowNotResultText = false;
+  bool? hasResultData;
   String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
@@ -52,12 +52,12 @@ class OrderSearchPageProvider extends ChangeNotifier {
   int partial = 100;
   bool hasMore = false;
   final _api = ApiService();
-  Future<void> refresh() async {
+  Future<ResultModel> refresh() async {
     pos = 0;
     hasMore = true;
     searchOrderResponseModel = null;
     orderSetRef = {};
-    onSearch(true);
+    return onSearch(true);
   }
 
   bool get isValidate =>
@@ -68,11 +68,6 @@ class OrderSearchPageProvider extends ChangeNotifier {
       return onSearch(false);
     }
     return null;
-  }
-
-  void setIsShowNotResultText() {
-    isShowNotResultText = false;
-    notifyListeners();
   }
 
   String get dptnm => CacheService.getEsLogin()!.dptnm!;
@@ -116,14 +111,14 @@ class OrderSearchPageProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  Future<void> initPageData() async {
+  Future<ResultModel> initPageData() async {
     isLoadData = true;
     setIsLoginModel();
     await searchPerson(dptnm: CheckSuperAccount.isMultiAccount() ? '' : null);
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
     selectedProductsFamily = selectedProcessingStatus = tr('all');
-    onSearch(false);
+    return onSearch(false);
   }
 
   void setIsLoginModel() async {
@@ -303,9 +298,10 @@ class OrderSearchPageProvider extends ChangeNotifier {
       }
       isLoadData = false;
       isFirstRun = false;
-      isShowNotResultText = true;
+      hasResultData = searchOrderResponseModel != null &&
+          searchOrderResponseModel!.tList!.isNotEmpty;
       notifyListeners();
-      return ResultModel(true);
+      return ResultModel(true, data: hasResultData);
     }
     return ResultModel(false);
   }

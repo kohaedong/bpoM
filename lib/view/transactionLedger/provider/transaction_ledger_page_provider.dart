@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-09-22 17:14:34
+ * Last Modified: 2022-09-24 14:32:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -34,7 +34,7 @@ import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 class TransactionLedgerPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirstRun = true;
-  bool isShowNotResultText = false;
+  bool? hasResultData;
   bool isAnimationNotReady = true;
   bool isOpenBottomSheet = true;
   bool isOpenBottomSheetForLandSpace = true;
@@ -59,11 +59,11 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   int partial = 100;
   bool hasMore = false;
   final _api = ApiService();
-  Future<void> refresh() async {
+  Future<ResultModel> refresh() async {
     pos = 0;
     hasMore = true;
     transLedgerResponseModel = null;
-    onSearch(true);
+    return onSearch(true);
   }
 
   String get dptnm => CacheService.getEsLogin()!.dptnm!;
@@ -378,10 +378,11 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
               transLedgerResponseModel!.tList!.isEmpty)) {
         transLedgerResponseModel = null;
       }
-      isShowNotResultText = true;
       isLoadData = false;
+      hasResultData = transLedgerResponseModel != null &&
+          transLedgerResponseModel!.tList!.isNotEmpty;
       notifyListeners();
-      return ResultModel(true);
+      return ResultModel(true, data: hasResultData);
     }
     return ResultModel(false);
   }

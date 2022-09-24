@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-09-22 12:51:08
+ * Last Modified: 2022-09-24 14:44:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -34,7 +34,7 @@ import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 class BulkOrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirstRun = true;
-  bool hasData = true;
+  bool? hasResultData;
   String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
@@ -53,12 +53,12 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
   int partial = 100;
   bool hasMore = false;
   final _api = ApiService();
-  Future<void> refresh() async {
+  Future<ResultModel> refresh() async {
     pos = 0;
     hasMore = true;
     bulkOrderResponseModel = null;
     orderSetRef = {};
-    onSearch(true);
+    return onSearch(true);
   }
 
   bool get isValidate =>
@@ -102,7 +102,7 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  Future<void> initPageData() async {
+  Future<ResultModel> initPageData() async {
     setIsLoginModel();
     await searchPerson();
     selectedStartDate = DateUtil.prevWeek();
@@ -110,7 +110,7 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     selectedProductsFamily = selectedOrderStatus = tr('all');
     orderStatusListWithCode = await HiveService.getOrderStatus();
     isFirstRun = false;
-    onSearch(true);
+    return onSearch(true);
   }
 
   void setIsLoginModel() async {
@@ -295,9 +295,10 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
         bulkOrderResponseModel = null;
       }
       isLoadData = false;
-      hasData = false;
+      hasResultData = bulkOrderResponseModel != null &&
+          bulkOrderResponseModel!.tList!.isNotEmpty;
       notifyListeners();
-      return ResultModel(true);
+      return ResultModel(true, data: hasResultData);
     }
     return ResultModel(false);
   }
