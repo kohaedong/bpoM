@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-23 12:54:49
+ * Last Modified: 2022-09-24 19:08:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -315,6 +315,12 @@ class AddActivityPageProvider extends ChangeNotifier {
 
   void setIsInterviewIndex(int indexx) {
     isInterviewIndex = indexx;
+    //실패시 제안품목과 활동유형 삭제처리
+    if (indexx == 1) {
+      selectedActionType = null;
+      suggestedItemList = [];
+      seletedAmount = null;
+    }
     notifyListeners();
   }
 

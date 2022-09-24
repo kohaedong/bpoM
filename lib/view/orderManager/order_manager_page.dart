@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-24 16:05:25
+ * Last Modified: 2022-09-24 20:09:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -331,9 +331,10 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       AppStyles.buildTitleRow(tr('supplier')),
                       BaseInputWidget(
                         context: context,
-                        iconType: InputIconType.SEARCH,
+                        iconType: InputIconType.SELECT,
                         iconColor: AppColors.textFieldUnfoucsColor,
                         deleteIconCallback: () => p.setSupplier(null),
+                        isNotInsertAll: true,
                         hintText: tuple.item1 != null
                             ? tuple.item1!.kunnrNm
                             : '${tr('plz_select_something_1', args: [
@@ -341,17 +342,15 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                                     ''
                                   ])}',
                         // 팀장 일때 만 팀원선택후 삭제가능.
-                        isShowDeleteForHintText:
-                            tuple.item1 != null ? true : false,
                         width: AppSize.defaultContentsWidth,
                         hintTextStyleCallBack: () => tuple.item1 != null
                             ? AppTextStyle.default_16
                             : AppTextStyle.hint_16,
-                        popupSearchType: PopupSearchType.SEARCH_SUPPLIER,
-                        isSelectedStrCallBack: (supplier) {
-                          return p.setSupplier(supplier);
+                        oneCellType: OneCellType.SUPPLER_CUSTOMER,
+                        commononeCellDataCallback: () => p.getsupplierList(),
+                        isSelectedStrCallBack: (str) {
+                          return p.setSupplier(str);
                         },
-                        bodyMap: {'kunnr': tuple.item3?.kunnr},
                         enable: false,
                       ),
                     ],

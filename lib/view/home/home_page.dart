@@ -125,6 +125,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       if (!ap.isPermidedSalseGroup) {
                         AppToast().show(context, '${tr('permission_denied')}');
                       } else {
+                        pr('sb');
                         Navigator.pushNamed(context, map.value.routeName);
                       }
                     } else {

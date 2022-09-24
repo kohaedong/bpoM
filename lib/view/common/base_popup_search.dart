@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-22 14:57:32
+ * Last Modified: 2022-09-24 20:17:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -890,7 +890,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     return Align(
         alignment: Alignment.centerLeft,
         child: SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
+          physics: NeverScrollableScrollPhysics(),
           scrollDirection: Axis.horizontal,
           child: w,
         ));
@@ -993,8 +993,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         );
       },
       child: Padding(
-          padding:
-              index == 0 ? EdgeInsets.all(0) : AppSize.searchPopupListPadding,
+          padding: AppSize.searchPopupListPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -1005,16 +1004,19 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AppText.listViewText(
-                            '${model.kunnrNm!} (${model.kunnr})'),
+                            '${model.kunnrNm!} (${model.kunnr})',
+                            textAlign: TextAlign.start),
                         AppText.listViewText('${model.ort01} ${model.stras}',
-                            isSubTitle: true),
+                            isSubTitle: true,
+                            maxLines: 1,
+                            textAlign: TextAlign.start),
                         Row(
                           children: [
                             model.telf1 != null && model.telf1!.isNotEmpty
                                 ? AppText.listViewText('${model.telf1}',
                                     isSubTitle: true)
                                 : Container(),
-                            model.telf1 != null && model.telf1!.isNotEmpty
+                            model.stcd2 != null && model.stcd2!.isNotEmpty
                                 ? AppStyles.buildPipe()
                                 : Container(),
                             AppText.listViewText('${model.stcd2}',

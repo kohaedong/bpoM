@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-09-22 14:33:34
+ * Last Modified: 2022-09-24 19:26:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -650,7 +650,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "IV_VKGRP": vkgrp != null && vkgrp.isNotEmpty
             ? vkgrp.first.substring(vkgrp.first.indexOf('-') + 1)
             : '',
-        "IV_PERNR": staffName == tr('all') ? '' : selectedSalesPerson!.pernr,
+        "IV_PERNR": staffName == tr('all')
+            ? ''
+            : selectedSalesPerson != null
+                ? selectedSalesPerson!.pernr
+                : '',
         "pos": pos,
         "partial": partial,
         "IV_KUNNR": "",
@@ -767,8 +771,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
       isLoadData = false;
       isShhowNotResultText = etEndCustomerOrSupplierResponseModel != null &&
           etEndCustomerOrSupplierResponseModel!.etCustList!.isEmpty;
-      pr('caonima $isShhowNotResultText');
-
       notifyListeners();
       return BasePoupSearchResult(true);
     }

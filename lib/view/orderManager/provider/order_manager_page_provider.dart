@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-16 00:26:46
+ * Last Modified: 2022-09-24 20:05:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -39,6 +39,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
   List<BulkOrderDetailSearchMetaPriceModel?> priceModelList = [];
   List<double> selectedQuantityList = [];
   List<double> selectedSurchargeList = [];
+  List<EtCustListModel> supplierList = [];
   RecentOrderResponseModel? recentOrderResponseModel;
   String? selectedSalseGroup;
   // String? selectedStaffName;
@@ -376,8 +377,10 @@ class OrderManagerPageProvider extends ChangeNotifier {
       selectedCustomerModel = map['model'] as EtCustomerModel?;
       if (selectedCustomerModel != null) {
         var supplierResult = await searchSupplierAndEndCustomer(true);
-        var endCustomerResult = await searchSupplierAndEndCustomer(false);
-        isSingleData = supplierResult.data && endCustomerResult.data;
+        var endResult = await searchSupplierAndEndCustomer(false);
+
+        isSingleData = supplierResult.data && endResult.data;
+        pr('${isSingleData} ?????');
         pr('isSingleData???? $isSingleData');
       } else {
         isSingleData = null;
@@ -386,14 +389,22 @@ class OrderManagerPageProvider extends ChangeNotifier {
       notifyListeners();
     } else {
       selectedCustomerModel = null;
+      selectedEndCustomerModel = null;
+
       isSingleData = null;
       resetData(level: 2);
       notifyListeners();
     }
   }
 
-  void setSupplier(EtCustListModel? supplier) {
-    selectedSupplierModel = supplier;
+  void setSupplier(String? str) {
+    if (str != null) {
+      var temp = str.substring(str.indexOf('/') + 1);
+      selectedSupplierModel =
+          supplierList.where((supplier) => supplier.kunnr == temp).single;
+    } else {
+      selectedSupplierModel = null;
+    }
     notifyListeners();
   }
 
@@ -471,6 +482,14 @@ class OrderManagerPageProvider extends ChangeNotifier {
       return ResultModel(isSuccess, message: temp.esReturn!.message);
     }
     return ResultModel(false);
+  }
+
+  Future<List<String>> getsupplierList() async {
+    var temp = <String>[];
+    supplierList.forEach((supplier) {
+      temp.add('${supplier.kunnrNm!}/${supplier.kunnr!}');
+    });
+    return temp;
   }
 
   Future<ResultModel> checkPrice(int indexx, {required bool isNotifier}) async {
@@ -671,16 +690,30 @@ class OrderManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       var temp = EtCustListResponseModel.fromJson(result.body['data']);
       if (temp.esReturn!.mtype == 'S') {
-        if (isSupplier) {
-          selectedSupplierModel = temp.etCustList!.first;
+        if (temp.etCustList!.isNotEmpty) {
+          if (isSupplier) {
+            supplierList = [];
+            selectedSupplierModel = temp.etCustList!.first;
+            temp.etCustList!.forEach((cust) {
+              supplierList.add(cust);
+            });
+          } else {
+            selectedEndCustomerModel = temp.etCustList!.first;
+          }
         } else {
-          selectedEndCustomerModel = temp.etCustList!.first;
+          if (isSupplier) {
+            supplierList = [];
+            selectedSupplierModel = null;
+          } else {
+            selectedEndCustomerModel = null;
+          }
         }
       }
 
       isLoadData = false;
       notifyListeners();
-      return ResultModel(true, data: temp.etCustList!.length == 1);
+      return ResultModel(true,
+          data: temp.etCustList!.isNotEmpty && temp.etCustList!.length == 1);
     }
     return ResultModel(false);
   }

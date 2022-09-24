@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-24 18:43:12
+ * Last Modified: 2022-09-24 20:57:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -905,7 +905,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             ]));
   }
 
-  Widget _buildShimmerView(BuildContext context, ResultModel? resultModel) {
+  Widget _buildShimmerView(BuildContext context) {
     return Expanded(
         child: ListView(
       children: [
@@ -977,19 +977,36 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
               child: FutureBuilder<ResultModel>(
                   future: p.getMonthData(),
                   builder: (context, snapshot) {
-                    var hasData = snapshot.hasData &&
-                        snapshot.connectionState == ConnectionState.done &&
-                        snapshot.data!.isSuccessful;
-                    return Column(
-                      children: [
-                        _buildTabBar(context),
-                        Divider(color: AppColors.textGrey, height: 0),
-                        hasData
-                            ? _buildTapBarView(context)
-                            : _buildShimmerView(
-                                context, hasData ? snapshot.data : null),
-                      ],
-                    );
+                    if (snapshot.hasData &&
+                        snapshot.connectionState == ConnectionState.done) {
+                      return Column(
+                        children: [
+                          _buildTabBar(context),
+                          Divider(color: AppColors.textGrey, height: 0),
+                          snapshot.data!.isSuccessful
+                              ? _buildTapBarView(context)
+                              : Builder(builder: (ctx) {
+                                  Future.delayed(Duration.zero, () async {
+                                    var popupsult =
+                                        await AppDialog.showSignglePopup(
+                                            ctx, snapshot.data!.errorMassage!);
+                                    if (popupsult != null) {
+                                      Navigator.pop(context);
+                                    }
+                                  });
+                                  return Container();
+                                })
+                        ],
+                      );
+                    } else {
+                      return Column(
+                        children: [
+                          _buildTabBar(context),
+                          Divider(color: AppColors.textGrey, height: 0),
+                          _buildShimmerView(context),
+                        ],
+                      );
+                    }
                   }));
         });
   }

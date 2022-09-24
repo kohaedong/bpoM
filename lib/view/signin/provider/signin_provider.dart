@@ -399,9 +399,6 @@ class SigninProvider extends ChangeNotifier {
           pr('vkgrp ::${esLogin.vkgrp}\n');
           pr('salem ::${esLogin.salem}\n');
           pr('p.isSalseGroup  ${p.isPermidedSalseGroup}');
-          p.salseGroupList.forEach((group) {
-            pr(group!.toJson());
-          });
           await saveTcode();
           final deviceInfoResult =
               await getDeviceInfo(signBody!['userAccount']);

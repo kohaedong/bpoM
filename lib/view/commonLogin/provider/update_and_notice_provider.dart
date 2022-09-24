@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/splash/commonLogin/provider/common_login_provider.dart
  * Created Date: 2021-10-06 03:26:46
- * Last Modified: 2022-09-24 17:25:01
+ * Last Modified: 2022-09-24 20:43:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -104,7 +104,7 @@ class UpdateAndNoticeProvider extends ChangeNotifier {
   }
 
   Future<UpdateType> prosseseUpdateType(CheckUpdateModel model) async {
-    final isChoose = model.cmpsYn != 'y';
+    final isChoose = model.cmpsYn == 'y';
     final isWeb = model.updateKind == 'web';
     if (isChoose && isWeb) {
       return UpdateType.WEB_CHOOSE;
