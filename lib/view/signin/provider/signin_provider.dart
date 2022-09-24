@@ -466,10 +466,10 @@ class SigninProvider extends ChangeNotifier {
         final temp = UserSettings(
           isSetNotDisturb: true,
           isShowNotice: true,
-          notDisturbStartHour: '',
-          notDisturbStartMine: '',
-          notDisturbStopHour: '',
-          notDisturbStopMine: '',
+          notDisturbStartHour: '23',
+          notDisturbStartMine: '00',
+          notDisturbStopHour: '07',
+          notDisturbStopMine: '00',
           textScale: 'big',
         );
         return temp;

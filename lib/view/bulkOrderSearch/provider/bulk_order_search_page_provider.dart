@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-09-24 14:44:35
+ * Last Modified: 2022-09-24 18:40:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -252,7 +252,11 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
         "IV_VKGRP": vkgrp,
         "IV_VTWEG": vtweg,
         "IS_LOGIN": isLogin,
-        "IV_PERNR": staffName == tr('all') ? '' : selectedSalesPerson!.pernr,
+        "IV_PERNR": staffName == tr('all')
+            ? ''
+            : selectedSalesPerson != null
+                ? selectedSalesPerson!.pernr
+                : '',
         "IV_SPART": spart.isNotEmpty
             ? spart.first.substring(spart.first.indexOf('-') + 1)
             : '',

@@ -59,12 +59,14 @@ class CheckUpdateAndNoticeService {
                                         updateData.type == UpdateType.WEB_CHOOSE
                                     ? '${tr('update_text_choose')}'
                                     : '${tr('update_text_enforce')}',
-                                style: AppTextStyle.default_16),
+                                style: AppTextStyle.default_16,
+                                textAlign: TextAlign.start),
                             Padding(
                                 padding: EdgeInsets.only(
                                     top: AppSize.defaultListItemSpacing)),
                             AppText.text('${updateData.model!.appVerDscr}',
-                                style: AppTextStyle.default_16),
+                                style: AppTextStyle.default_16,
+                                textAlign: TextAlign.start),
                           ],
                         ),
                       ),

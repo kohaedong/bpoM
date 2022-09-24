@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-09-16 17:12:38
+ * Last Modified: 2022-09-24 18:59:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -90,21 +90,33 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
             }
             switch (index) {
               case 0:
-                p.setSelectedAddress(p.homeAddress);
+                if (!p.isHomeAddressEmpty) {
+                  p.setSelectedAddress(p.homeAddress);
+                }
                 break;
               case 1:
-                p.setSelectedAddress(p.officeAddress);
+                if (!p.isOfficeAddressEmpty) {
+                  p.setSelectedAddress(p.officeAddress);
+                }
+
                 break;
             }
-            await p.startOrStopActivity(index).then((result) {
-              if (result.isSuccessful) {
-                //!  table저장완료. 부모창으로 model전달.
-                Navigator.pop(context,
-                    isLeft ? null : ResultModel(true, data: p.editDayModel));
-              } else {
-                AppToast().show(context, result.errorMassage!);
-              }
-            });
+
+            if (p.selectedAddress != null &&
+                !p.isHomeAddressEmpty &&
+                !p.isOfficeAddressEmpty) {
+              await p.startOrStopActivity(index).then((result) {
+                if (result.isSuccessful) {
+                  //!  table저장완료. 부모창으로 model전달.
+                  Navigator.pop(context,
+                      isLeft ? null : ResultModel(true, data: p.editDayModel));
+                } else {
+                  AppToast().show(context, result.errorMassage!);
+                }
+              });
+            } else {
+              AppToast().show(context, tr('plz_set_home_address'));
+            }
           }
         },
         child: Container(

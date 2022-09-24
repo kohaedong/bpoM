@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/provider/detail_book_page_provider.dart
  * Created Date: 2022-07-05 09:55:29
- * Last Modified: 2022-09-23 16:16:04
+ * Last Modified: 2022-09-24 17:58:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -77,7 +77,7 @@ class DetailBookPageProvider extends ChangeNotifier {
       fileKeyResponseModel =
           DetailBookFileKeyResponseModel.fromJson(result.body['data']);
       final key = fileKeyResponseModel!.attachInfo!.id;
-      var dev = ' https://mkolonviewdev.kolon.com:8000';
+      var dev = ' https://mkolonviewdev.kolon.com';
       var prod = ' https://mkolonview.kolon.com';
       var url =
           '${KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev' ? '$dev' : '$prod'}/SynapDocViewServer/viewer/doc.html?key=$key&contextPath=/SynapDocViewServer';

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/api_service.dart
  * Created Date: 2021-08-22 21:53:15
- * Last Modified: 2022-09-03 12:00:59
+ * Last Modified: 2022-09-24 17:47:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -20,6 +20,7 @@ import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/local_file_servicer.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
+import 'package:medsalesportal/util/log_util.dart';
 
 // * 서버 에러 statusCode -1 으로 리턴.
 // * 넷트워크 에러 statusCode  99 으로  리턴.
@@ -43,7 +44,7 @@ class ApiService {
   //* 모든 요청은 [RequestType]에 사전 등록 한여 [init]에서 RequestType 을 초기화 한다.
   RequestType? requestType;
   //* 로그 출력여부.
-  final isWithLog = false;
+  final isWithLog = true;
   //* JWT 토큰 사용시 서버와 협의하여 결정 하는 내용 입니다.
   //* 보통은 id + pw 조합으로  많이 사용한다.
   //* 영업포탈에는 토큰을 사용하는 api가 없다. 향후 사용 대비 예제 뿐이다.
@@ -119,13 +120,6 @@ class ApiService {
       }
     }
 
-    if (isWithLog) {
-      // customLogger.d(
-      //   'path: ${options.baseUrl}${options.path}\n'
-      //   'headers: ${options.headers}'
-      //   'body: ${options.data}\n',
-      // );
-    }
     print(options.data);
     return handler.next(options);
   }
@@ -152,11 +146,11 @@ class ApiService {
     // }
     print(requestType);
     if (isWithLog) {
-      // customLogger.d(
-      //   'path: ${resp.requestOptions.baseUrl}${resp.requestOptions.path}\n'
-      //   'headers: ${resp.headers}'
-      //   'body: ${resp.data}\n',
-      // );
+      customLogger.d(
+        'path: ${resp.requestOptions.baseUrl}${resp.requestOptions.path}\n'
+        'headers: ${resp.headers}'
+        'body: ${resp.data}\n',
+      );
     }
     return handler.next(resp);
   }

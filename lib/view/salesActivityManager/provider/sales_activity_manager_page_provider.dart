@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-09-20 18:45:42
+ * Last Modified: 2022-09-24 18:23:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -531,7 +531,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> confirmAcitivityTable() async {
-    // 하드코딩.
     isLoadDayData = true;
     notifyListeners();
     var validateTables = () async {
@@ -599,40 +598,29 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
                     .isNotEmpty;
               }
               if (!isActivityTypeNotEmpty) {
-                pr('1');
-                message = 'isActivityTypeNotEmpty:${map.key}';
+                message = '${table.zskunnrNm}의 활동유형을 입력해 주세요.';
               }
               if (!isActivityResultNotEmpty) {
-                pr(2);
-
-                message = 'isActivityResultNotEmpty:${map.key}';
+                message = '${table.zskunnrNm}의 면담결과를 입력해 주세요.';
               }
               if (!isSuggetionItemNotEmpty) {
-                pr(3);
-
-                message = 'isSuggetionItemNotEmpty:${map.key}';
+                message = '${table.zskunnrNm}의 제안품목을 1개 이상 추가해주세요';
               }
               if (!isAmountNotEmpty) {
-                pr(4);
-
-                message = 'isAmountNotEmpty:${map.key}';
+                message = '${table.zskunnrNm}의 예상매출액을 입력해 주세요.';
               }
             } else {
               isMeetFailReasonNotEmpty =
                   table.meetRmk != null && table.meetRmk!.isNotEmpty;
               if (!isMeetFailReasonNotEmpty) {
-                pr(5);
-
-                message = 'isMeetFailReasonNotEmpty:${map.key}';
+                message = '${table.zskunnrNm}의 면담 실패 사유를 입력해 주세요.';
               }
             }
           } else {
             isNotVisitReasonNotEmpty =
                 table.visitRmk != null && table.visitRmk!.isNotEmpty;
             if (!isNotVisitReasonNotEmpty) {
-              pr('6');
-
-              message = 'isNotVisitReasonNotEmpty:${map.key}';
+              message = '${table.zskunnrNm}의 미방문 사유를 입력해 주세요.';
             }
           }
           var validate = isAmountNotEmpty &&
@@ -652,9 +640,10 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     var failedList = comfirmList.where((confirm) => !confirm.isSuccessful);
     if (failedList.isNotEmpty) {
       var indexx = comfirmList.first.index;
+      var message = comfirmList.first.message;
       isLoadDayData = false;
       notifyListeners();
-      return ResultModel(false, data: indexx);
+      return ResultModel(false, data: {'index': indexx, 'message': message});
     } else {
       var t250Base64 = ''; // base
       var t260Base64 = ''; // 영업활동 상세

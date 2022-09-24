@@ -573,7 +573,8 @@
     "confirm_successful":"확정 되였습니다.",
     "plz_check_item":"{}을 먼저 선택해 주세요.",
     "plz_check_item2":"{}를 먼저 선택해 주세요.",
-    "sys_notice":"시스템점검"
+    "sys_notice":"시스템점검",
+    "plz_set_home_address":"집주소 와 사무실주소 등록후 이용해주세요."
    
    
 }

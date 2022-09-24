@@ -96,34 +96,39 @@ class SettingsPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(
-          width: AppSize.defaultContentsWidth * .3,
+          width: AppSize.defaultContentsWidth * .25,
           child: AppText.text('${tr('version_info')}',
               style: AppTextStyle.w500_16, textAlign: TextAlign.start),
         ),
         Padding(padding: EdgeInsets.only(left: AppSize.versionInfoSpacing1)),
         SizedBox(
-            width: AppSize.defaultContentsWidth * .3,
+            width: AppSize.defaultContentsWidth * .25,
             child: AppText.text('${versionInfo.currentVersion}',
                 style: AppTextStyle.hint_16, textAlign: TextAlign.start)),
         Padding(
             padding: EdgeInsets.only(right: AppSize.defaultListItemSpacing)),
         Expanded(
             child: versionInfo.result == 'OK'
-                ? Container(
-                    width: AppSize.secondButtonWidth,
-                    child: TextButton(
-                        onPressed: () {
-                          CheckUpdateAndNoticeService.check(
-                              context, CheckType.UPDATE_ONLY, false);
-                        },
-                        style: AppStyles.getButtonStyle(
-                            AppColors.primary,
-                            AppColors.whiteText,
-                            AppTextStyle.default_14,
-                            AppSize.radius4),
-                        child: Text(
-                          '${tr('do_update')}',
-                        )))
+                ? Row(
+                    children: [
+                      Spacer(),
+                      Container(
+                          width: AppSize.secondButtonWidth,
+                          child: TextButton(
+                              onPressed: () {
+                                CheckUpdateAndNoticeService.check(
+                                    context, CheckType.UPDATE_ONLY, false);
+                              },
+                              style: AppStyles.getButtonStyle(
+                                  AppColors.primary,
+                                  AppColors.whiteText,
+                                  AppTextStyle.default_14,
+                                  AppSize.radius4),
+                              child: Text(
+                                '${tr('do_update')}',
+                              ))),
+                    ],
+                  )
                 : SizedBox(
                     child: AppText.text('${tr('is_latest_version')}',
                         style: AppTextStyle.default_14,

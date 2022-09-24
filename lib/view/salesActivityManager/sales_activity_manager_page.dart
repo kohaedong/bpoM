@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-22 15:22:01
+ * Last Modified: 2022-09-24 18:43:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -923,7 +923,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
 
   @override
   Widget build(BuildContext context) {
-    pr('엉업사원 맞나 ?${CacheService.getEsLogin()!.salem}');
     return ChangeNotifierProvider(
         create: (context) => SalseActivityManagerPageProvider(),
         builder: (context, _) {
@@ -951,14 +950,15 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                                     .show(context, tr('confirm_successful'));
                               }()
                             : () async {
-                                AppToast().show(
-                                    context, tr('plz_check_essential_option'));
+                                var indexx = result.data['index'];
+                                var message = result.data['message'];
+                                AppToast().show(context, message);
                                 var popResult = await Navigator.pushNamed(
                                     context, AddActivityPage.routeName,
                                     arguments: {
                                       'model': p.dayResponseModel,
                                       'status': p.activityStatus,
-                                      'index': result.data as int
+                                      'index': indexx
                                     });
                                 if (popResult != null) {
                                   p.getDayData(isWithLoading: true);

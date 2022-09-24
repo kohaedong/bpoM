@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-09-24 14:56:49
+ * Last Modified: 2022-09-24 18:40:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -84,6 +84,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();
     final esLogin = CacheService.getEsLogin();
+    pr(dptnm);
     Map<String, dynamic>? body;
     body = {
       "methodName": RequestType.SEARCH_STAFF.serverMethod,
@@ -103,8 +104,11 @@ class OrderSearchPageProvider extends ChangeNotifier {
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtStaffListResponseModel.fromJson(result.body['data']);
+
+      pr('staffName ${staffName}');
       var staffList =
           temp.staffList!.where((model) => model.sname == staffName).toList();
+      pr(staffList);
       selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
       // return ResultModel(true);
     }
@@ -114,7 +118,8 @@ class OrderSearchPageProvider extends ChangeNotifier {
   Future<ResultModel> initPageData() async {
     isLoadData = true;
     setIsLoginModel();
-    await searchPerson(dptnm: CheckSuperAccount.isMultiAccount() ? '' : null);
+    await searchPerson(
+        dptnm: CheckSuperAccount.isMultiAccountOrLeaderAccount() ? '' : null);
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
     selectedProductsFamily = selectedProcessingStatus = tr('all');
@@ -126,6 +131,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
     if (CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
       staffName = tr('all');
+      pr('!');
     } else {
       staffName = isLoginModel!.ename;
     }
@@ -255,7 +261,11 @@ class OrderSearchPageProvider extends ChangeNotifier {
         "IV_VTWEG": vtweg,
         "pos": pos,
         "partial": partial,
-        "IV_PERNR": staffName == tr('all') ? '' : selectedSalesPerson!.pernr,
+        "IV_PERNR": staffName == tr('all')
+            ? ''
+            : selectedSalesPerson != null
+                ? selectedSalesPerson!.pernr
+                : '',
         "IV_SPART": spart.isNotEmpty
             ? spart.first.substring(spart.first.indexOf('-') + 1)
             : '',
