@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-24 20:09:15
+ * Last Modified: 2022-09-25 11:08:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -294,38 +294,22 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
     );
   }
 
-  Widget _buildSupplierAndEndCustomerInfoRow() {
-    return Selector<OrderManagerPageProvider,
-        Tuple3<bool?, EtCustListModel?, EtCustListModel?>>(
-      selector: (context, provider) => Tuple3(provider.isSingleData,
-          provider.selectedSupplierModel, provider.selectedEndCustomerModel),
-      builder: (context, tuple, _) {
-        return tuple.item1 != null && tuple.item1!
-            ? Column(
-                children: [
-                  BaseInfoRowByKeyAndValue.build(
-                      tr('supplier'), tuple.item2!.kunnrNm!),
-                  BaseInfoRowByKeyAndValue.build(
-                      tr('end_user'), tuple.item3!.kunnrNm!),
-                  defaultSpacing(),
-                ],
-              )
-            : Container();
-      },
-    );
-  }
-
   Widget _buildSupplierSelector(BuildContext context) {
     final p = context.read<OrderManagerPageProvider>();
     return Selector<OrderManagerPageProvider,
         Tuple3<EtCustListModel?, bool?, EtCustomerModel?>>(
       selector: (context, provider) => Tuple3(provider.selectedSupplierModel,
-          provider.isSingleData, provider.selectedCustomerModel),
+          provider.isSupplierSingleData, provider.selectedCustomerModel),
       builder: (context, tuple, _) {
         return tuple.item2 == null
             ? Container()
-            : tuple.item2!
-                ? Container()
+            : tuple.item2 != null && tuple.item2!
+                ? Column(
+                    children: [
+                      BaseInfoRowByKeyAndValue.build(
+                          tr('supplier'), tuple.item1!.kunnrNm!)
+                    ],
+                  )
                 : Column(
                     children: [
                       AppStyles.buildTitleRow(tr('supplier')),
@@ -359,15 +343,51 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
     );
   }
 
-  Widget _buildEndCustomerTextRow(BuildContext context) {
-    return Selector<OrderManagerPageProvider, Tuple2<bool?, EtCustomerModel?>>(
-      selector: (context, provider) =>
-          Tuple2(provider.isSingleData, provider.selectedCustomerModel),
+  Widget _buildEndCustomerSelector(BuildContext context) {
+    final p = context.read<OrderManagerPageProvider>();
+    return Selector<OrderManagerPageProvider,
+        Tuple3<EtCustListModel?, bool?, EtCustomerModel?>>(
+      selector: (context, provider) => Tuple3(provider.selectedEndCustomerModel,
+          provider.isEndCustSingleData, provider.selectedCustomerModel),
       builder: (context, tuple, _) {
-        return tuple.item1 != null && !tuple.item1!
-            ? BaseInfoRowByKeyAndValue.build(
-                tr('end_user'), tuple.item2!.kunnrNm!)
-            : Container();
+        return tuple.item2 == null
+            ? Container()
+            : tuple.item2 != null && tuple.item2!
+                ? Column(
+                    children: [
+                      BaseInfoRowByKeyAndValue.build(
+                          tr('end_user'), tuple.item1!.kunnrNm!),
+                    ],
+                  )
+                : Column(
+                    children: [
+                      AppStyles.buildTitleRow(tr('end_customer')),
+                      BaseInputWidget(
+                        context: context,
+                        iconType: InputIconType.SELECT,
+                        iconColor: AppColors.textFieldUnfoucsColor,
+                        deleteIconCallback: () => p.setSupplier(null),
+                        isNotInsertAll: true,
+                        hintText: tuple.item1 != null
+                            ? tuple.item1!.kunnrNm
+                            : '${tr('plz_select_something_1', args: [
+                                    tr('end_costomer'),
+                                    ''
+                                  ])}',
+                        // 팀장 일때 만 팀원선택후 삭제가능.
+                        width: AppSize.defaultContentsWidth,
+                        hintTextStyleCallBack: () => tuple.item1 != null
+                            ? AppTextStyle.default_16
+                            : AppTextStyle.hint_16,
+                        oneCellType: OneCellType.END_CUSTOMER,
+                        commononeCellDataCallback: () => p.getEndCustList(),
+                        isSelectedStrCallBack: (str) {
+                          return p.setEndCust(str);
+                        },
+                        enable: false,
+                      ),
+                    ],
+                  );
       },
     );
   }
@@ -944,10 +964,9 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                                     _buildProductFamilySelector(context),
                                     defaultSpacing(),
                                     _buildSalseOfficeSelector(context),
-                                    _buildSupplierAndEndCustomerInfoRow(),
                                     _buildSupplierSelector(context),
                                     defaultSpacing(),
-                                    _buildEndCustomerTextRow(context),
+                                    _buildEndCustomerSelector(context),
                                     defaultSpacing(),
                                   ],
                                 ),

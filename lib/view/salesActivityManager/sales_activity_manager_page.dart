@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-24 21:15:46
+ * Last Modified: 2022-09-25 12:27:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'dart:io';
+import 'package:medsalesportal/view/common/base_date_picker_for_month.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,6 @@ import 'package:medsalesportal/service/hive_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
-import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
@@ -270,18 +270,30 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     return InkWell(
       onTap: () async {
         final p = context.read<SalseActivityManagerPageProvider>();
-        final result = await BasePopupList(
-                OneCellType.DATE_PICKER, InputIconType.DATA_PICKER)
-            .show(context,
-                selectedDateStr: DateUtil.getDateStr('',
-                    dt: isMonth != null && isMonth
-                        ? p.selectedMonth ?? DateTime.now()
-                        : p.selectedDay ?? DateTime.now()));
+        if (isMonth != null && isMonth) {
+          final result = await AppDialog.showPopup(
+              context,
+              BaseDatePickerForMonth(
+                initDate: p.selectedMonth ?? DateTime.now(),
+              ));
+          if (result != null) {
+            if (result != null) {
+              var date = DateUtil.getDate(result);
+              p.getSelectedMonthData(date);
+            }
+          }
+        } else {
+          final result = await BasePopupList(
+                  OneCellType.DATE_PICKER, InputIconType.DATA_PICKER)
+              .show(context,
+                  selectedDateStr: DateUtil.getDateStr('',
+                      dt: isMonth != null && isMonth
+                          ? p.selectedMonth ?? DateTime.now()
+                          : p.selectedDay ?? DateTime.now()));
 
-        if (result != null) {
-          isMonth != null && isMonth
-              ? p.getSelectedMonthData(DateUtil.getDate(result))
-              : p.getSelectedDayData(DateUtil.getDate(result));
+          if (result != null) {
+            p.getSelectedDayData(DateUtil.getDate(result));
+          }
         }
       },
       child: isMonth != null && isMonth

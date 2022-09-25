@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-25 09:48:30
+ * Last Modified: 2022-09-25 10:58:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -40,6 +40,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
   List<double> selectedQuantityList = [];
   List<double> selectedSurchargeList = [];
   List<EtCustListModel> supplierList = [];
+  List<EtCustListModel> endCustList = [];
   RecentOrderResponseModel? recentOrderResponseModel;
   String? selectedSalseGroup;
   // String? selectedStaffName;
@@ -57,7 +58,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
   List<String>? productFamilyDataList;
   List<String>? channelList;
   List<RecentOrderTItemModel>? items;
-  bool? isSingleData;
+  bool? isSupplierSingleData;
+  bool? isEndCustSingleData;
   bool isLoadData = false;
   double? amountAvalible;
   final _api = ApiService();
@@ -138,7 +140,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
         break;
       default:
     }
-    isSingleData = null;
+    isSupplierSingleData = null;
+    isEndCustSingleData = null;
   }
 
   void resetOrderItem() {
@@ -328,10 +331,10 @@ class OrderManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setIsSingleData(bool val) {
-    isSingleData = val;
-    notifyListeners();
-  }
+  // void setIsSingleData(bool val) {
+  //   isSingleData = val;
+  //   notifyListeners();
+  // }
 
   // void setStaffName(String? str) {
   //   selectedStaffName = str;
@@ -379,19 +382,19 @@ class OrderManagerPageProvider extends ChangeNotifier {
         var supplierResult = await searchSupplierAndEndCustomer(true);
         var endResult = await searchSupplierAndEndCustomer(false);
 
-        isSingleData = supplierResult.data && endResult.data;
-        pr('${isSingleData} ?????');
-        pr('isSingleData???? $isSingleData');
+        isSupplierSingleData = supplierResult.data;
+        isEndCustSingleData = endResult.data;
       } else {
-        isSingleData = null;
+        isSupplierSingleData = null;
+        isEndCustSingleData = null;
       }
       resetOrderItem();
       notifyListeners();
     } else {
       selectedCustomerModel = null;
       selectedEndCustomerModel = null;
-
-      isSingleData = null;
+      isSupplierSingleData = null;
+      isEndCustSingleData = null;
       resetData(level: 2);
       notifyListeners();
     }
@@ -408,8 +411,14 @@ class OrderManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setEndCustomer(EtCustListModel? end) {
-    selectedEndCustomerModel = end;
+  void setEndCust(String? str) {
+    if (str != null) {
+      var temp = str.substring(str.indexOf('/') + 1);
+      selectedEndCustomerModel =
+          endCustList.where((end) => end.kunnr == temp).single;
+    } else {
+      selectedSupplierModel = null;
+    }
     notifyListeners();
   }
 
@@ -488,6 +497,14 @@ class OrderManagerPageProvider extends ChangeNotifier {
     var temp = <String>[];
     supplierList.forEach((supplier) {
       temp.add('${supplier.kunnrNm!}/${supplier.kunnr!}');
+    });
+    return temp;
+  }
+
+  Future<List<String>> getEndCustList() async {
+    var temp = <String>[];
+    endCustList.forEach((end) {
+      temp.add('${end.kunnrNm!}/${end.kunnr!}');
     });
     return temp;
   }
@@ -700,13 +717,18 @@ class OrderManagerPageProvider extends ChangeNotifier {
               supplierList.add(cust);
             });
           } else {
+            endCustList = [];
             selectedEndCustomerModel = temp.etCustList!.first;
+            temp.etCustList!.forEach((cust) {
+              endCustList.add(cust);
+            });
           }
         } else {
           if (isSupplier) {
             supplierList = [];
             selectedSupplierModel = null;
           } else {
+            endCustList = [];
             selectedEndCustomerModel = null;
           }
         }

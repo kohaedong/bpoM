@@ -2,7 +2,7 @@
  * Project Name:  [maepyoso] -  V1.2.0+
  * File: /Users/bakbeom/work/sm/kcld/ticketoffice/lib/view/common/provider/date_picker_provider.dart
  * Created Date: 2022-04-18 01:25:52
- * Last Modified: 2022-09-25 09:38:49
+ * Last Modified: 2022-09-25 11:27:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  케이씨엘디 주식회사 ALL RIGHTS RESERVED. 
@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
-class DatePickerProvider extends ChangeNotifier {
+class BaseDatePickerForMonthProvider extends ChangeNotifier {
   List<List<int>> dayInMonth = [];
   var startYear = DateTime.now().year - 70;
   var endYear = DateTime.now().year;

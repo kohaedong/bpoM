@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/base_date_picker_for_month.dart
  * Created Date: 2022-09-25 09:37:58
- * Last Modified: 2022-09-25 09:39:24
+ * Last Modified: 2022-09-25 12:24:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,200 +11,241 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/provider/base_date_picker_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../styles/export_common.dart';
 
 typedef DateCallback = Function(DateTime?);
 
-class BaseDatePicker extends StatefulWidget {
-  const BaseDatePicker({
-    Key? key,
-    this.dateCallback,
-  }) : super(key: key);
+class BaseDatePickerForMonth extends StatefulWidget {
+  const BaseDatePickerForMonth({Key? key, this.dateCallback, this.initDate})
+      : super(key: key);
   final DateCallback? dateCallback;
+  final DateTime? initDate;
   @override
-  State<BaseDatePicker> createState() => _BaseDatePickerState();
+  State<BaseDatePickerForMonth> createState() => _BaseDatePickerForMonthState();
 }
 
-class _BaseDatePickerState extends State<BaseDatePicker> {
+class _BaseDatePickerForMonthState extends State<BaseDatePickerForMonth> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => DatePickerProvider(),
+      create: (context) => BaseDatePickerForMonthProvider(),
       builder: (context, _) {
-        final p = context.read<DatePickerProvider>();
+        final p = context.read<BaseDatePickerForMonthProvider>();
         return FutureBuilder<ResultModel>(
-            future: p.initYearList(),
+            future: p.initYearList(widget.initDate),
             builder: (context, snapshot) {
               if (snapshot.hasData &&
                   snapshot.connectionState == ConnectionState.done) {
-                return Container(
-                    height: 300,
-                    child: Column(
-                      children: [
-                        Padding(
-                            padding: AppSize.defaultSidePadding,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                return buildTowButtonDialogContents(
+                    context,
+                    AppSize.secondPopupHeight,
+                    Container(
+                        height:
+                            AppSize.secondPopupHeight - AppSize.buttonHeight,
+                        child: Column(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      widget.dateCallback?.call(null);
-                                    },
-                                    child: AppText.text(tr('cancel'))),
-                                TextButton(
-                                    onPressed: () {
-                                      final p =
-                                          context.read<DatePickerProvider>();
-                                      Navigator.pop(context);
-                                      widget.dateCallback?.call(p.currentDate);
-                                    },
-                                    child: AppText.text(tr('done'),
-                                        style: AppTextStyle.default_14.copyWith(
-                                            color: AppColors.primary))),
+                                SizedBox(
+                                  height: AppSize.buttonHeight,
+                                  child: Padding(
+                                      padding: AppSize.defaultSidePadding,
+                                      child: Selector<
+                                          BaseDatePickerForMonthProvider,
+                                          Tuple2<int?, int?>>(
+                                        selector: (context, provider) => Tuple2(
+                                            provider.currenYear,
+                                            provider.currenMonth),
+                                        builder: (context, tuple, _) {
+                                          return Row(
+                                            children: [
+                                              SizedBox(
+                                                  width: 60,
+                                                  child: AppText.text(
+                                                      tuple.item1 != null
+                                                          ? '${tuple.item1}'
+                                                          : '',
+                                                      style: AppTextStyle
+                                                          .w500_20)),
+                                              AppText.text('년',
+                                                  style: AppTextStyle.w500_20),
+                                              SizedBox(
+                                                  width: 25,
+                                                  child: AppText.text(
+                                                      tuple.item2 != null
+                                                          ? '${tuple.item2}'
+                                                          : '',
+                                                      style: AppTextStyle
+                                                          .w500_20)),
+                                              AppText.text('월',
+                                                  style: AppTextStyle.w500_20),
+                                              SizedBox(
+                                                width: AppSize
+                                                    .defaultListItemSpacing,
+                                              ),
+                                              AppImage.getImage(
+                                                  ImageType.SELECT)
+                                            ],
+                                          );
+                                        },
+                                      )),
+                                ),
+                                Divider(
+                                  thickness: 1,
+                                  height: 1,
+                                )
                               ],
-                            )),
-                        Expanded(
-                            child: Padding(
-                          padding: AppSize.defaultSidePadding,
-                          child: Row(
-                            children: [
-                              Selector<DatePickerProvider, int?>(
-                                selector: (context, provider) =>
-                                    provider.currenYear,
-                                builder: (context, year, _) {
-                                  return Container(
-                                    width: (AppSize.realWidth -
-                                            AppSize.padding * 2) *
-                                        .33,
-                                    child: CupertinoPicker(
-                                        scrollController:
-                                            FixedExtentScrollController(
-                                                initialItem: 0),
-                                        itemExtent: 50,
-                                        looping: true,
-                                        selectionOverlay: Container(
-                                          decoration: const BoxDecoration(
-                                              border: Border(
-                                                  top: BorderSide(
-                                                      width: .8,
-                                                      color:
-                                                          AppColors.textGrey),
-                                                  bottom: BorderSide(
-                                                      width: .8,
-                                                      color:
-                                                          AppColors.textGrey))),
-                                        ),
-                                        onSelectedItemChanged: (int value) {
-                                          p.setCurrenYear(value);
-                                        },
-                                        children: p.yearList
-                                            .asMap()
-                                            .entries
-                                            .map((map) => Center(
-                                                  child: AppText.text(
-                                                    '${map.value}',
-                                                  ),
-                                                ))
-                                            .toList()),
-                                  );
-                                },
+                            ),
+                            Expanded(
+                                child: Padding(
+                              padding: AppSize.defaultSidePadding,
+                              child: Row(
+                                children: [
+                                  Selector<BaseDatePickerForMonthProvider,
+                                      int?>(
+                                    selector: (context, provider) =>
+                                        provider.currenYear,
+                                    builder: (context, year, _) {
+                                      return Container(
+                                        width: (AppSize.defaultContentsWidth -
+                                                AppSize.padding * 2) *
+                                            .5,
+                                        child: CupertinoPicker(
+                                            scrollController:
+                                                FixedExtentScrollController(
+                                                    initialItem: p.yearList
+                                                        .indexOf(year!)),
+                                            itemExtent: 50,
+                                            looping: true,
+                                            selectionOverlay: Container(
+                                              decoration: const BoxDecoration(
+                                                  border: Border(
+                                                      top: BorderSide(
+                                                          width: .8,
+                                                          color: AppColors
+                                                              .textGrey),
+                                                      bottom: BorderSide(
+                                                          width: .8,
+                                                          color: AppColors
+                                                              .textGrey))),
+                                            ),
+                                            onSelectedItemChanged: (int value) {
+                                              p.setCurrenYear(value);
+                                            },
+                                            children: p.yearList
+                                                .asMap()
+                                                .entries
+                                                .map((map) => Center(
+                                                      child: AppText.text(
+                                                        '${map.value}',
+                                                      ),
+                                                    ))
+                                                .toList()),
+                                      );
+                                    },
+                                  ),
+                                  Selector<BaseDatePickerForMonthProvider,
+                                      int?>(
+                                    selector: (context, provider) =>
+                                        provider.currenMonth,
+                                    builder: (context, month, _) {
+                                      return Container(
+                                        width: (AppSize.defaultContentsWidth -
+                                                AppSize.padding * 2) *
+                                            .5,
+                                        child: CupertinoPicker(
+                                            scrollController:
+                                                FixedExtentScrollController(
+                                                    initialItem: p.monthList
+                                                        .indexOf(month!)),
+                                            itemExtent: 50,
+                                            looping: true,
+                                            selectionOverlay: Container(
+                                              decoration: const BoxDecoration(
+                                                  border: Border(
+                                                      top: BorderSide(
+                                                          width: .8,
+                                                          color: AppColors
+                                                              .textGrey),
+                                                      bottom: BorderSide(
+                                                          width: .8,
+                                                          color: AppColors
+                                                              .textGrey))),
+                                            ),
+                                            onSelectedItemChanged: (int value) {
+                                              p.setCurrenMonth(value);
+                                            },
+                                            children: p.monthList
+                                                .asMap()
+                                                .entries
+                                                .map((map) => Center(
+                                                      child: AppText.text(
+                                                        '${map.value}',
+                                                      ),
+                                                    ))
+                                                .toList()),
+                                      );
+                                    },
+                                  ),
+                                  // Selector<BaseDatePickerForMonthProvider, int?>(
+                                  //   selector: (context, provider) =>
+                                  //       provider.currenDay,
+                                  //   builder: (context, day, _) {
+                                  //     return Container(
+                                  //       width: (AppSize.realWidth -
+                                  //               AppSize.padding * 2) *
+                                  //           .33,
+                                  //       child: CupertinoPicker(
+                                  //           scrollController:
+                                  //               FixedExtentScrollController(
+                                  //                   initialItem: 0),
+                                  //           itemExtent: 50,
+                                  //           looping: true,
+                                  //           selectionOverlay: Container(
+                                  //             decoration: const BoxDecoration(
+                                  //                 border: Border(
+                                  //                     top: BorderSide(
+                                  //                         width: .8,
+                                  //                         color:
+                                  //                             AppColors.textGrey),
+                                  //                     bottom: BorderSide(
+                                  //                         width: .8,
+                                  //                         color:
+                                  //                             AppColors.textGrey))),
+                                  //           ),
+                                  //           onSelectedItemChanged: (int value) {
+                                  //             p.setCurrenDay(value);
+                                  //           },
+                                  //           children: p.dayList
+                                  //               .asMap()
+                                  //               .entries
+                                  //               .map((map) => Center(
+                                  //                     child: AppText.text(
+                                  //                       '${map.value}',
+                                  //                     ),
+                                  //                   ))
+                                  //               .toList()),
+                                  //     );
+                                  //   },
+                                  // ),
+                                ],
                               ),
-                              Selector<DatePickerProvider, int?>(
-                                selector: (context, provider) =>
-                                    provider.currenMonth,
-                                builder: (context, month, _) {
-                                  return Container(
-                                    width: (AppSize.realWidth -
-                                            AppSize.padding * 2) *
-                                        .33,
-                                    child: CupertinoPicker(
-                                        scrollController:
-                                            FixedExtentScrollController(
-                                                initialItem: 0),
-                                        itemExtent: 50,
-                                        looping: true,
-                                        selectionOverlay: Container(
-                                          decoration: const BoxDecoration(
-                                              border: Border(
-                                                  top: BorderSide(
-                                                      width: .8,
-                                                      color:
-                                                          AppColors.textGrey),
-                                                  bottom: BorderSide(
-                                                      width: .8,
-                                                      color:
-                                                          AppColors.textGrey))),
-                                        ),
-                                        onSelectedItemChanged: (int value) {
-                                          p.setCurrenMonth(value);
-                                        },
-                                        children: p.monthList
-                                            .asMap()
-                                            .entries
-                                            .map((map) => Center(
-                                                  child: AppText.text(
-                                                    '${map.value}',
-                                                  ),
-                                                ))
-                                            .toList()),
-                                  );
-                                },
-                              ),
-                              Selector<DatePickerProvider, int?>(
-                                selector: (context, provider) =>
-                                    provider.currenDay,
-                                builder: (context, day, _) {
-                                  return Container(
-                                    width: (AppSize.realWidth -
-                                            AppSize.padding * 2) *
-                                        .33,
-                                    child: CupertinoPicker(
-                                        scrollController:
-                                            FixedExtentScrollController(
-                                                initialItem: 0),
-                                        itemExtent: 50,
-                                        looping: true,
-                                        selectionOverlay: Container(
-                                          decoration: const BoxDecoration(
-                                              border: Border(
-                                                  top: BorderSide(
-                                                      width: .8,
-                                                      color:
-                                                          AppColors.textGrey),
-                                                  bottom: BorderSide(
-                                                      width: .8,
-                                                      color:
-                                                          AppColors.textGrey))),
-                                        ),
-                                        onSelectedItemChanged: (int value) {
-                                          p.setCurrenDay(value);
-                                        },
-                                        children: p.dayList
-                                            .asMap()
-                                            .entries
-                                            .map((map) => Center(
-                                                  child: AppText.text(
-                                                    '${map.value}',
-                                                  ),
-                                                ))
-                                            .toList()),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ))
-                      ],
-                    ));
+                            ))
+                          ],
+                        )), callback: () {
+                  return DateTime(p.currenYear!, p.currenMonth!)
+                      .toIso8601String();
+                });
               } else {
                 return Container();
               }

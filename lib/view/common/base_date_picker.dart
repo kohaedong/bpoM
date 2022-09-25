@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/base_date_picker.dart
  * Created Date: 2022-07-06 10:30:16
- * Last Modified: 2022-07-12 09:10:54
+ * Last Modified: 2022-09-25 11:27:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -35,9 +35,9 @@ class _BaseDatePickerState extends State<BaseDatePicker> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => DatePickerProvider(),
+      create: (context) => BaseDatePickerForMonthProvider(),
       builder: (context, _) {
-        final p = context.read<DatePickerProvider>();
+        final p = context.read<BaseDatePickerForMonthProvider>();
         return FutureBuilder<ResultModel>(
             future: p.initYearList(),
             builder: (context, snapshot) {
@@ -60,8 +60,8 @@ class _BaseDatePickerState extends State<BaseDatePicker> {
                                     child: AppText.text(tr('cancel'))),
                                 TextButton(
                                     onPressed: () {
-                                      final p =
-                                          context.read<DatePickerProvider>();
+                                      final p = context.read<
+                                          BaseDatePickerForMonthProvider>();
                                       Navigator.pop(context);
                                       widget.dateCallback?.call(p.currentDate);
                                     },
@@ -75,7 +75,7 @@ class _BaseDatePickerState extends State<BaseDatePicker> {
                           padding: AppSize.defaultSidePadding,
                           child: Row(
                             children: [
-                              Selector<DatePickerProvider, int?>(
+                              Selector<BaseDatePickerForMonthProvider, int?>(
                                 selector: (context, provider) =>
                                     provider.currenYear,
                                 builder: (context, year, _) {
@@ -116,7 +116,7 @@ class _BaseDatePickerState extends State<BaseDatePicker> {
                                   );
                                 },
                               ),
-                              Selector<DatePickerProvider, int?>(
+                              Selector<BaseDatePickerForMonthProvider, int?>(
                                 selector: (context, provider) =>
                                     provider.currenMonth,
                                 builder: (context, month, _) {
@@ -157,7 +157,7 @@ class _BaseDatePickerState extends State<BaseDatePicker> {
                                   );
                                 },
                               ),
-                              Selector<DatePickerProvider, int?>(
+                              Selector<BaseDatePickerForMonthProvider, int?>(
                                 selector: (context, provider) =>
                                     provider.currenDay,
                                 builder: (context, day, _) {
