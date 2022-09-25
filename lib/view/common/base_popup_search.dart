@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-24 21:06:39
+ * Last Modified: 2022-09-25 09:59:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -438,7 +438,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? () => AppTextStyle.default_16
                       : () => AppTextStyle.hint_16,
                   // hintTextStyleCallBack: () => AppTextStyle.hint_16,
-                  iconType: CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                  iconType: CheckSuperAccount.isMultiAccount()
                       ? InputIconType.SELECT
                       : null,
                   // iconType: null,
@@ -449,7 +449,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       : OneCellType.DO_NOTHING,
                   // oneCellType: OneCellType.DO_NOTHING,
                   isSelectedStrCallBack: (str) => p.setSalesGroup(str),
-                  hintText: CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                  hintText: CheckSuperAccount.isMultiAccount()
                       ? salesGroup != null
                           ? salesGroup
                           : '${tr('plz_select_something_1', args: [
