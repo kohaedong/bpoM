@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-26 17:11:11
+ * Last Modified: 2022-09-26 17:44:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -125,7 +125,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       visitResultInput = temp.rslt ?? '';
       leaderAdviceInput = temp.comnt ?? '';
       isVisit = temp.xvisit == 'Y';
-      isInterviewIndex = temp.xmeet == 'S' ? 0 : 1;
+      isInterviewIndex = temp.xmeet != 'F' ? 0 : 1;
       suggestedItemList ??= [];
 
       // 동행 초기화.

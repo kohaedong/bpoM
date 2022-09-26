@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-26 17:30:34
+ * Last Modified: 2022-09-26 17:51:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -258,7 +258,6 @@ class _AddActivityPageState extends State<AddActivityPage> {
                       if (isVisit ||
                           p.isDoNothing ||
                           p.activityStatus == ActivityStatus.STOPED) {
-                        pr(2);
                         return;
                       } else {
                         if ((p.selectedKunnr == null ||
@@ -268,7 +267,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
                               .show(context, tr('plz_check_essential_option'));
                         } else if (!p.isVisit) {
                           p.getDistance().then((result) => result.isSuccessful
-                              ? p.saveTable()
+                              ? () {
+                                  p.saveTable().then(
+                                      (value) => p.setIsInterviewIndex(0));
+                                  _interviewTextEditingController.text = '';
+                                }()
                               : DoNothingAction());
                         }
                       }
@@ -381,7 +384,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
       style: AppTextStyle.default_16,
       decoration: InputDecoration(
           fillColor: AppColors.whiteText,
-          hintText: '${tr('suggestion_hint')}',
+          hintText: type == AddActivityPageInputType.LEADER_ADVICE
+              ? ''
+              : '${tr('suggestion_hint')}',
           hintStyle: AppTextStyle.hint_16,
           border: defaultBorder,
           focusedBorder: p.isDoNothing
@@ -610,6 +615,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 oneCellType: p.isDoNothing
                     ? OneCellType.DO_NOTHING
                     : OneCellType.SEARCH_ACTIVITY_TYPE,
+                isNotInsertAll: true,
                 hintText: type ?? tr('plz_select'),
                 iconType: p.isDoNothing ? null : InputIconType.SELECT,
                 iconColor: AppColors.textFieldUnfoucsColor,
@@ -645,8 +651,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
               } else {
                 AppToast().show(
                     context,
-                    tr(index + 1 == 2 ? 'plz_check_item2' : 'plz_check_item',
-                        args: ['${tr('suggested_item')}${index + 1}']));
+                    index + 1 == 2
+                        ? tr('plz_check_item2',
+                            args: ['${tr('suggested_item')}${index + 1}'])
+                        : tr('plz_check_item',
+                            args: ['${tr('suggested_item')}${index + 1}']));
               }
             } else {
               p.setIsWithTeamLeader(val);
