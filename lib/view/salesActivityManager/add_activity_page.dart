@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-26 14:09:49
+ * Last Modified: 2022-09-26 17:23:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -255,14 +255,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
                       )),
                   GestureDetector(
                     onTap: () {
-                      if (p.activityStatus == ActivityStatus.NONE ||
-                          p.activityStatus == ActivityStatus.FINISH) {
+                      if (isVisit ||
+                          p.isDoNothing ||
+                          p.activityStatus == ActivityStatus.STOPED) {
                         pr(2);
                         return;
-                      }
-                      if (p.activityStatus == ActivityStatus.STOPED) {
-                        AppToast().show(context, tr('activity_is_stoped'));
-                        pr(3);
                       } else {
                         if ((p.selectedKunnr == null ||
                                 p.selectedKeyMan == null) &&
@@ -283,8 +280,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                       height: AppSize.defaultTextFieldHeight,
                       decoration: BoxDecoration(
                           color: isVisit ||
-                                  p.activityStatus == ActivityStatus.STOPED ||
-                                  p.activityStatus == ActivityStatus.NONE
+                                  p.isDoNothing ||
+                                  p.activityStatus == ActivityStatus.STOPED
                               ? AppColors.unReadyButton
                               : AppColors.sendButtonColor,
                           borderRadius: BorderRadius.all(
@@ -292,17 +289,15 @@ class _AddActivityPageState extends State<AddActivityPage> {
                           border: Border.all(
                               width: .5,
                               color: isVisit ||
-                                      p.activityStatus ==
-                                          ActivityStatus.STOPED ||
-                                      p.activityStatus == ActivityStatus.NONE
+                                      p.isDoNothing ||
+                                      p.activityStatus == ActivityStatus.STOPED
                                   ? AppColors.textFieldUnfoucsColor
                                   : AppColors.primary)),
                       child: AppText.text(tr('arrival'),
                           style: AppTextStyle.h4.copyWith(
                               color: isVisit ||
-                                      p.activityStatus ==
-                                          ActivityStatus.STOPED ||
-                                      p.activityStatus == ActivityStatus.NONE
+                                      p.isDoNothing ||
+                                      p.activityStatus == ActivityStatus.STOPED
                                   ? AppColors.hintText
                                   : AppColors.primary)),
                     ),
