@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-26 19:57:19
+ * Last Modified: 2022-09-26 20:25:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -703,6 +703,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                     constraints: BoxConstraints(
                       maxHeight: AppSize.realHeight -
                           AppSize.appBarHeight -
+                          AppSize.bottomSafeAreaHeight(context) -
                           AppSize.buttonHeight * 3,
                     ),
                     child: ListView.builder(
