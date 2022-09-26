@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-26 17:23:40
+ * Last Modified: 2022-09-26 17:30:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -1035,139 +1035,147 @@ class _AddActivityPageState extends State<AddActivityPage> {
       create: (context) => AddActivityPageProvider(),
       builder: (context, _) {
         final p = context.read<AddActivityPageProvider>();
-        return BaseLayout(
-            hasForm: true,
-            appBar: MainAppBar(
-              context,
-              titleText: AppText.text(tr('add_activity_page'),
-                  style: AppTextStyle.w500_22),
-              callback: () {
-                Navigator.pop(context, p.isUpdate);
-              },
-            ),
-            child: FutureBuilder<ResultModel>(
-                future: context
-                    .read<AddActivityPageProvider>()
-                    .initData(model, activityStatus, index),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData &&
-                      snapshot.connectionState == ConnectionState.done) {
-                    return Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              CustomerinfoWidget.buildSubTitle(
-                                  context, '${tr('activity_report')}'),
-                              Padding(
-                                padding: AppSize.defaultSidePadding,
-                                child: Column(
-                                  children: [
-                                    defaultSpacing(times: 2),
-                                    _buildSelectCustomer(context),
-                                    _buildCustomerDiscription(context),
-                                    _buildSelectKeyMan(context),
-                                    defaultSpacing(),
-                                    _buildIsVisitRow(context),
-                                    _buildDistanceDiscription(context),
-                                    defaultSpacing(),
-                                    _buildIsWithTeamLeader(context),
-                                    defaultSpacing(times: 2),
-                                    _buildIsWithAnotherSales(context),
-                                    defaultSpacing(times: 2),
-                                    _buildReasonForNotVisit(context),
-                                    defaultSpacing(),
-                                    Selector<AddActivityPageProvider, bool>(
-                                      selector: (context, provider) =>
-                                          provider.isVisit,
-                                      builder: (context, isVisit, _) {
-                                        return isVisit
-                                            ? Column(
-                                                children: [
-                                                  _buildIsInterview(context),
-                                                  _buildReasonForInterviewFailure(
-                                                      context),
-                                                  defaultSpacing(times: 2),
-                                                  _buildActivityType(context),
-                                                  defaultSpacing()
-                                                ],
-                                              )
-                                            : Container();
-                                      },
-                                    )
-                                  ],
+        return WillPopScope(
+          onWillPop: () async {
+            Navigator.pop(context, p.isUpdate);
+            return false;
+          },
+          child: BaseLayout(
+              hasForm: true,
+              appBar: MainAppBar(
+                context,
+                titleText: AppText.text(tr('add_activity_page'),
+                    style: AppTextStyle.w500_22),
+                callback: () {
+                  Navigator.pop(context, p.isUpdate);
+                },
+              ),
+              child: FutureBuilder<ResultModel>(
+                  future: context
+                      .read<AddActivityPageProvider>()
+                      .initData(model, activityStatus, index),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData &&
+                        snapshot.connectionState == ConnectionState.done) {
+                      return Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                CustomerinfoWidget.buildSubTitle(
+                                    context, '${tr('activity_report')}'),
+                                Padding(
+                                  padding: AppSize.defaultSidePadding,
+                                  child: Column(
+                                    children: [
+                                      defaultSpacing(times: 2),
+                                      _buildSelectCustomer(context),
+                                      _buildCustomerDiscription(context),
+                                      _buildSelectKeyMan(context),
+                                      defaultSpacing(),
+                                      _buildIsVisitRow(context),
+                                      _buildDistanceDiscription(context),
+                                      defaultSpacing(),
+                                      _buildIsWithTeamLeader(context),
+                                      defaultSpacing(times: 2),
+                                      _buildIsWithAnotherSales(context),
+                                      defaultSpacing(times: 2),
+                                      _buildReasonForNotVisit(context),
+                                      defaultSpacing(),
+                                      Selector<AddActivityPageProvider, bool>(
+                                        selector: (context, provider) =>
+                                            provider.isVisit,
+                                        builder: (context, isVisit, _) {
+                                          return isVisit
+                                              ? Column(
+                                                  children: [
+                                                    _buildIsInterview(context),
+                                                    _buildReasonForInterviewFailure(
+                                                        context),
+                                                    defaultSpacing(times: 2),
+                                                    _buildActivityType(context),
+                                                    defaultSpacing()
+                                                  ],
+                                                )
+                                              : Container();
+                                        },
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Selector<AddActivityPageProvider, bool>(
-                                selector: (context, provider) =>
-                                    provider.isVisit,
-                                builder: (context, isVisit, _) {
-                                  return isVisit
-                                      ? Column(
-                                          children: [
-                                            CustomerinfoWidget.buildSubTitle(
-                                                context,
-                                                '${tr('activity_type_2')}'),
-                                            Padding(
-                                                padding:
-                                                    AppSize.defaultSidePadding,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    _buildSuggestedItems(
-                                                        context),
-                                                    defaultSpacing(),
-                                                    _buildAddSuggestedItemButton(
-                                                        context),
-                                                    defaultSpacing(times: 2)
-                                                  ],
-                                                )),
-                                            CustomerinfoWidget.buildSubTitle(
-                                                context,
-                                                '${tr('result_and_future')}'),
-                                            Padding(
-                                                padding:
-                                                    AppSize.defaultSidePadding,
-                                                child: Column(
-                                                  children: [
-                                                    defaultSpacing(),
-                                                    _buildVisitResult(context),
-                                                    defaultSpacing(times: 2),
-                                                    _buildTeamLeaderAdvice(
-                                                        context),
-                                                    defaultSpacing(times: 2),
-                                                    _buildCurrentMonthScenario(
-                                                        context),
-                                                    defaultSpacing(times: 2),
-                                                  ],
-                                                )),
-                                          ],
-                                        )
-                                      : Container();
-                                },
-                              ),
-                              defaultSpacing(height: AppSize.realHeight * .3),
-                            ],
+                                Selector<AddActivityPageProvider, bool>(
+                                  selector: (context, provider) =>
+                                      provider.isVisit,
+                                  builder: (context, isVisit, _) {
+                                    return isVisit
+                                        ? Column(
+                                            children: [
+                                              CustomerinfoWidget.buildSubTitle(
+                                                  context,
+                                                  '${tr('activity_type_2')}'),
+                                              Padding(
+                                                  padding: AppSize
+                                                      .defaultSidePadding,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      _buildSuggestedItems(
+                                                          context),
+                                                      defaultSpacing(),
+                                                      _buildAddSuggestedItemButton(
+                                                          context),
+                                                      defaultSpacing(times: 2)
+                                                    ],
+                                                  )),
+                                              CustomerinfoWidget.buildSubTitle(
+                                                  context,
+                                                  '${tr('result_and_future')}'),
+                                              Padding(
+                                                  padding: AppSize
+                                                      .defaultSidePadding,
+                                                  child: Column(
+                                                    children: [
+                                                      defaultSpacing(),
+                                                      _buildVisitResult(
+                                                          context),
+                                                      defaultSpacing(times: 2),
+                                                      _buildTeamLeaderAdvice(
+                                                          context),
+                                                      defaultSpacing(times: 2),
+                                                      _buildCurrentMonthScenario(
+                                                          context),
+                                                      defaultSpacing(times: 2),
+                                                    ],
+                                                  )),
+                                            ],
+                                          )
+                                        : Container();
+                                  },
+                                ),
+                                defaultSpacing(height: AppSize.realHeight * .3),
+                              ],
+                            ),
                           ),
-                        ),
-                        _buildSubmmitButton(context),
-                        _buildLoadingWidget(context),
-                      ],
+                          _buildSubmmitButton(context),
+                          _buildLoadingWidget(context),
+                        ],
+                      );
+                    }
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          CustomerinfoWidget.buildSubTitle(
+                              context, '${tr('activity_report')}'),
+                          DefaultShimmer.buildDefaultPageShimmer(5,
+                              isWithSet: true, setLenght: 10)
+                        ],
+                      ),
                     );
-                  }
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        CustomerinfoWidget.buildSubTitle(
-                            context, '${tr('activity_report')}'),
-                        DefaultShimmer.buildDefaultPageShimmer(5,
-                            isWithSet: true, setLenght: 10)
-                      ],
-                    ),
-                  );
-                }));
+                  })),
+        );
       },
     );
   }
