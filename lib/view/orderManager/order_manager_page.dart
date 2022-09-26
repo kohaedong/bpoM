@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-25 11:08:26
+ * Last Modified: 2022-09-26 18:46:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -843,8 +843,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               onChanged: (text) {
                 final p = context.read<OrderManagerPageProvider>();
                 type == 1
-                    ? p.setDeliveryCondition(text)
-                    : p.setOrderDescriptionDetai(text);
+                    ? p.setDeliveryCondition(text.trim())
+                    : p.setOrderDescriptionDetai(text.trim());
               },
               autofocus: false,
               inputFormatters: [

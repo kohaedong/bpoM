@@ -44,6 +44,13 @@ class SettingsProvider extends ChangeNotifier {
     return SettingsResult(true, settings: settings);
   }
 
+  void resetNoticeTimeSettings() {
+    notDisturbStartHour = '23';
+    notDisturbStartMinute = '00';
+    notDisturbEndHour = '07';
+    notDisturbEndMinute = '00';
+  }
+
   void setSettingsScale(String scale) {
     this.settings!.textScale = scale;
   }

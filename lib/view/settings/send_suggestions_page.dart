@@ -81,7 +81,7 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
           },
           onChanged: (text) {
             final p = context.read<SettingsProvider>();
-            p.setSuggestion(text);
+            p.setSuggestion(text.trim());
           },
           autofocus: false,
           inputFormatters: [
@@ -113,14 +113,14 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
         child: Consumer<SettingsProvider>(builder: (context, provider, _) {
           return TextButton(
               style: provider.suggetionText == null ||
-                      provider.suggetionText!.isEmpty
+                      provider.suggetionText!.trim().isEmpty
                   ? AppStyles.getButtonStyle(AppColors.unReadyButton,
                       AppColors.unReadyText, AppTextStyle.default_18, 0)
                   : AppStyles.getButtonStyle(AppColors.primary,
                       AppColors.whiteText, AppTextStyle.default_18, 0),
               onPressed: () async {
                 hideKeyboard(context);
-                if (_textEditingController!.text.isNotEmpty) {
+                if (_textEditingController!.text.trim().isNotEmpty) {
                   final isSended = await provider.sendSuggestion();
                   if (isSended) {
                     AppToast().show(context, '${tr('send_success')}');

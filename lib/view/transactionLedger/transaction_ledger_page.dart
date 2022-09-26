@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-24 15:56:31
+ * Last Modified: 2022-09-26 19:57:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -663,6 +663,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   onPressed: () {
                     final p = context.read<TransactionLedgerPageProvider>();
                     p.setIsShowAppBar();
+                    CacheService.setIsDisableUpdate(true);
                     SystemChrome.setPreferredOrientations([
                       DeviceOrientation.landscapeRight,
                     ]);
@@ -699,7 +700,11 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                 : Container(),
             isModelNotNull
                 ? Container(
-                    height: AppSize.realHeight * .5,
+                    constraints: BoxConstraints(
+                      maxHeight: AppSize.realHeight -
+                          AppSize.appBarHeight -
+                          AppSize.buttonHeight * 3,
+                    ),
                     child: ListView.builder(
                       shrinkWrap: true,
                       controller: _scrollController,
@@ -1065,11 +1070,13 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
           p.setIsOpenBottomSheet();
         }
         p.setIsShowAppBar();
+
         SystemChrome.setPreferredOrientations([
           DeviceOrientation.portraitUp,
         ]);
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
             overlays: [SystemUiOverlay.top]);
+        CacheService.setIsDisableUpdate(false);
       },
       child: Container(
           padding: Platform.isIOS

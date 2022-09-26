@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-26 17:51:17
+ * Last Modified: 2022-09-26 19:22:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -361,16 +361,16 @@ class _AddActivityPageState extends State<AddActivityPage> {
       onChanged: (text) {
         switch (type) {
           case AddActivityPageInputType.INTERVIEW:
-            p.setReasonForInterviewFailure(text);
+            p.setReasonForInterviewFailure(text.trim());
             break;
           case AddActivityPageInputType.NOT_VISIT:
-            p.setReasonForNotVisit(text);
+            p.setReasonForNotVisit(text.trim());
             break;
           case AddActivityPageInputType.VISIT_RESULT:
-            p.setVisitResultInputText(text);
+            p.setVisitResultInputText(text.trim());
             break;
           case AddActivityPageInputType.LEADER_ADVICE:
-            p.setLeaderAdviceInputText(text);
+            p.setLeaderAdviceInputText(text.trim());
             break;
         }
       },
@@ -581,23 +581,16 @@ class _AddActivityPageState extends State<AddActivityPage> {
   }
 
   Widget _buildReasonForInterviewFailure(BuildContext context) {
-    return Selector<AddActivityPageProvider, int>(
-        selector: (context, provider) => provider.isInterviewIndex,
-        builder: (context, index, _) {
-          return index == 0
-              ? Container()
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    defaultSpacing(times: 2),
-                    _buildTitleRow(tr('reason_for_interview_failure')),
-                    defaultSpacing(),
-                    _buildTextField(context,
-                        type: AddActivityPageInputType.INTERVIEW)
-                  ],
-                );
-        });
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        defaultSpacing(times: 2),
+        _buildTitleRow(tr('reason_for_interview_failure')),
+        defaultSpacing(),
+        _buildTextField(context, type: AddActivityPageInputType.INTERVIEW)
+      ],
+    );
   }
 
   Widget _buildActivityType(BuildContext context) {
@@ -1092,19 +1085,22 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                       defaultSpacing(times: 2),
                                       _buildReasonForNotVisit(context),
                                       defaultSpacing(),
-                                      Selector<AddActivityPageProvider, bool>(
-                                        selector: (context, provider) =>
+                                      Selector<AddActivityPageProvider,
+                                          Tuple2<bool, int>>(
+                                        selector: (context, provider) => Tuple2(
                                             provider.isVisit,
-                                        builder: (context, isVisit, _) {
-                                          return isVisit
+                                            provider.isInterviewIndex),
+                                        builder: (context, tuple, _) {
+                                          return tuple.item1
                                               ? Column(
                                                   children: [
                                                     _buildIsInterview(context),
-                                                    _buildReasonForInterviewFailure(
-                                                        context),
+                                                    tuple.item1 &&
+                                                            tuple.item2 == 1
+                                                        ? _buildReasonForInterviewFailure(
+                                                            context)
+                                                        : Container(),
                                                     defaultSpacing(times: 2),
-                                                    _buildActivityType(context),
-                                                    defaultSpacing()
                                                   ],
                                                 )
                                               : Container();
@@ -1113,13 +1109,17 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                     ],
                                   ),
                                 ),
-                                Selector<AddActivityPageProvider, bool>(
-                                  selector: (context, provider) =>
+                                Selector<AddActivityPageProvider,
+                                    Tuple2<bool, int>>(
+                                  selector: (context, provider) => Tuple2(
                                       provider.isVisit,
-                                  builder: (context, isVisit, _) {
-                                    return isVisit
+                                      provider.isInterviewIndex),
+                                  builder: (context, tuple, _) {
+                                    return tuple.item1 && tuple.item2 == 0
                                         ? Column(
                                             children: [
+                                              _buildActivityType(context),
+                                              defaultSpacing(),
                                               CustomerinfoWidget.buildSubTitle(
                                                   context,
                                                   '${tr('activity_type_2')}'),
@@ -1139,6 +1139,18 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                                       defaultSpacing(times: 2)
                                                     ],
                                                   )),
+                                            ],
+                                          )
+                                        : Container();
+                                  },
+                                ),
+                                Selector<AddActivityPageProvider, bool>(
+                                  selector: (context, provider) =>
+                                      provider.isVisit,
+                                  builder: (context, isVisit, _) {
+                                    return isVisit
+                                        ? Column(
+                                            children: [
                                               CustomerinfoWidget.buildSubTitle(
                                                   context,
                                                   '${tr('result_and_future')}'),
@@ -1164,7 +1176,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                         : Container();
                                   },
                                 ),
-                                defaultSpacing(height: AppSize.realHeight * .3),
+                                defaultSpacing(times: 5),
                               ],
                             ),
                           ),

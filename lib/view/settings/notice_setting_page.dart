@@ -214,8 +214,8 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
             child: Consumer<SettingsProvider>(builder: (context, provider, _) {
           return AppText.text(
               isStartTime
-                  ? '${provider.notDisturbStartHour != null && provider.notDisturbStartHour != '' ? provider.notDisturbStartHour! : '12'}:${provider.notDisturbStartMinute != null && provider.notDisturbStartMinute!.isNotEmpty ? provider.notDisturbStartMinute! : '00'}'
-                  : '${provider.notDisturbEndHour != null && provider.notDisturbEndHour != '' ? provider.notDisturbEndHour! : '00'}:${provider.notDisturbEndMinute != null && provider.notDisturbEndMinute != '' ? provider.notDisturbEndMinute : '00'}',
+                  ? '${provider.notDisturbStartHour != null && provider.notDisturbStartHour != '' ? provider.notDisturbStartHour! : '23'}:${provider.notDisturbStartMinute != null && provider.notDisturbStartMinute!.isNotEmpty ? provider.notDisturbStartMinute! : '00'}'
+                  : '${provider.notDisturbEndHour != null && provider.notDisturbEndHour != '' ? provider.notDisturbEndHour! : '07'}:${provider.notDisturbEndMinute != null && provider.notDisturbEndMinute != '' ? provider.notDisturbEndMinute : '00'}',
               style: AppTextStyle.default_18);
         })),
       ),
@@ -291,7 +291,10 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
                           builder: (context, value, child) {
                             return value
                                 ? buildWhenSetNotDisturb(context)
-                                : Container();
+                                : Builder(builder: (context) {
+                                    p.resetNoticeTimeSettings();
+                                    return Container();
+                                  });
                           },
                         ),
                       ],

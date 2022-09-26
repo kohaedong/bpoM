@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-09-24 18:05:35
+ * Last Modified: 2022-09-26 18:34:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -433,8 +433,9 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                     child: ListView(
                       controller: _scrollController2
                         ..addListener(() {
-                          if (_scrollController2.offset >
-                              AppSize.realHeight * 1.5) {
+                          if (_scrollController2.position.atEdge &&
+                              _scrollController2.offset >
+                                  AppSize.appBarHeight) {
                             if (downLock == true) {
                               downLock = false;
                               upLock = true;
