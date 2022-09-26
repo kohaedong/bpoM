@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-24 19:08:09
+ * Last Modified: 2022-09-26 14:11:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -66,6 +66,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   bool isWithTeamLeader = false;
   bool isUpdate = false;
   int? index;
+  String? lastSeqNo;
   bool? isLockOtherSalerSelector;
   int isInterviewIndex = 0;
   final _api = ApiService();
@@ -98,6 +99,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     });
     index = indexx;
     if (index != null) {
+      lastSeqNo = getLastSeqNo();
       var temp = fromParentResponseModel!.table260![index!];
       if (index != null) {
         editModel260 = SalesActivityDayTable260.fromJson(
@@ -412,6 +414,25 @@ class AddActivityPageProvider extends ChangeNotifier {
     return '';
   }
 
+  String getLastSeqNo() {
+    var number = 0;
+    fromParentResponseModel!.table260!.forEach((table) {
+      if (int.tryParse(table.seqno!) != null) {
+        var tempSeqNo = int.parse(table.seqno!);
+        if (tempSeqNo > number) {
+          number = tempSeqNo;
+        }
+      }
+    });
+    var repairLenght = 4 - '$number'.length;
+    var newSeqno = '';
+    for (var i = 0; i < repairLenght; i++) {
+      newSeqno += '0';
+    }
+    newSeqno = '$newSeqno$number';
+    return '$newSeqno';
+  }
+
   Future<ResultModel> saveTable() async {
     isLoadData = true;
     notifyListeners();
@@ -449,100 +470,109 @@ class AddActivityPageProvider extends ChangeNotifier {
     t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
     // 영업활동 처리. - 260
     var newT260 = ({required bool isEditModel}) async {
-      isEditModel
-          ? () {
-              if (editModel260 != null) {
-                t260 =
-                    SalesActivityDayTable260.fromJson(editModel260!.toJson());
-              } else {
-                t260 = SalesActivityDayTable260.fromJson(
-                    fromParentResponseModel!.table260![index!].toJson());
-              }
-              t260.umode = 'U';
-              t260.erdat = DateUtil.getDateStr(now.toIso8601String());
-              t260.erzet = DateUtil.getTimeNow(isNotWithColon: true);
-              t260.etime = DateUtil.getTimeNow(isNotWithColon: true);
-              t260.ernam = esLogin.ename;
-              t260.erwid = esLogin.logid;
-            }()
-          : () {
-              // 첫번째 데이터
-              if (editModel260 == null) {
-                t260.umode = 'I';
-                pr('empty????');
-                t260.seqno = '0002';
-                t260.erdat = t250.erdat;
-                t260.erzet = t250.erzet;
-                t260.ernam = t250.ernam;
-                t260.erwid = t250.erwid;
-                t260.aedat = t250.aedat;
-                t260.aezet = t250.aezet;
-                t260.aenam = t250.aenam;
-                t260.aewid = t250.aewid;
-                t260.etime = DateUtil.getTimeNow(isNotWithColon: true);
-                t260.atime = DateUtil.getTimeNow(isNotWithColon: true);
-              } else {
-                t260 =
-                    SalesActivityDayTable260.fromJson(editModel260!.toJson());
+      await Future.delayed(Duration.zero, () {
+        isEditModel
+            ? () async {
+                if (editModel260 != null) {
+                  t260 =
+                      SalesActivityDayTable260.fromJson(editModel260!.toJson());
+                } else {
+                  t260 = SalesActivityDayTable260.fromJson(
+                      fromParentResponseModel!.table260![index!].toJson());
+                }
                 t260.umode = 'U';
-                pr('not empty????');
-                var lastSeqNo = fromParentResponseModel!.table260!.last.seqno!;
-                pr(lastSeqNo);
-                t260.seqno = incrementSeqno(lastSeqNo);
                 t260.erdat = DateUtil.getDateStr(now.toIso8601String());
                 t260.erzet = DateUtil.getTimeNow(isNotWithColon: true);
-                t260.aedat = DateUtil.getDateStr(now.toIso8601String());
-                t260.aezet = DateUtil.getTimeNow(isNotWithColon: true);
                 t260.etime = DateUtil.getTimeNow(isNotWithColon: true);
-                t260.atime = DateUtil.getTimeNow(isNotWithColon: true);
                 t260.ernam = esLogin.ename;
                 t260.erwid = esLogin.logid;
-                t260.aenam = esLogin.ename;
-                t260.aewid = esLogin.logid;
-              }
-            }();
+              }()
+            : () async {
+                // 첫번째 데이터
+                if (editModel260 == null) {
+                  t260.umode = 'I';
+                  pr('empty????');
 
-      //! 화면 수정사항.
-      var latLonMap = await getAddressLatLon(selectedKunnr!.zaddName1!)
-          .then((result) => result.data);
-      t260.adate = DateUtil.getDateStr(DateTime.now().toIso8601String());
-      t260.xLatitude = isVisit ? double.parse(latLonMap['lat']) : 0.00;
-      t260.yLongitude = isVisit ? double.parse(latLonMap['lon']) : 0.00;
-      t260.dist = isVisit ? double.parse(distanceModel!.distance!) : 0.0;
-      t260.isGps = 'X';
-      t260.callType = 'M';
-      t260.zskunnr = selectedKunnr!.zskunnr;
-      t260.zskunnrNm = selectedKunnr!.name;
-      t260.zaddr = selectedKunnr!.zaddName1;
-      t260.zaddName1 = selectedKunnr!.zaddName1;
-      t260.xvisit = isVisit ? 'Y' : 'N';
-      t260.zstatus = selectedKunnr!.zstatus;
-      t260.zkmno = selectedKeyMan!.zkmno;
-      t260.zkmnoNm = selectedKeyMan!.zkmnoNm;
-      t260.visitRmk = isVisit ? '' : reasonForNotVisit ?? '';
-      t260.xmeet = isInterviewIndex == 0 ? 'S' : 'F';
-      t260.meetRmk =
-          isInterviewIndex == 0 ? '' : reasonForinterviewFailure ?? '';
-      t260.rslt = visitResultInput ?? '';
-      t260.comnt = leaderAdviceInput ?? '';
+                  if (fromParentResponseModel!.table260!.isNotEmpty) {
+                    lastSeqNo = getLastSeqNo();
+                  } else {
+                    lastSeqNo = '0001';
+                  }
+                  pr('lastSeqNo:::${lastSeqNo}');
+                  t260.seqno = incrementSeqno(lastSeqNo!);
+                  t260.erdat = t250.erdat;
+                  t260.erzet = t250.erzet;
+                  t260.ernam = t250.ernam;
+                  t260.erwid = t250.erwid;
+                  t260.aedat = t250.aedat;
+                  t260.aezet = t250.aezet;
+                  t260.aenam = t250.aenam;
+                  t260.aewid = t250.aewid;
+                  t260.etime = DateUtil.getTimeNow(isNotWithColon: true);
+                  t260.atime = DateUtil.getTimeNow(isNotWithColon: true);
+                } else {
+                  t260 =
+                      SalesActivityDayTable260.fromJson(editModel260!.toJson());
+                  t260.umode = 'U';
+                  // var lastSeqNo = fromParentResponseModel!.table260!.last.seqno!;
+                  // pr(lastSeqNo);
+                  // t260.seqno = incrementSeqno(lastSeqNo);
+                  // t260.erdat = DateUtil.getDateStr(now.toIso8601String());
+                  // t260.erzet = DateUtil.getTimeNow(isNotWithColon: true);
+                  // t260.etime = DateUtil.getTimeNow(isNotWithColon: true);
 
-      var withLeaderOnly = isWithTeamLeader && anotherSaller == null;
-      var withLeaderAndSaller = isWithTeamLeader && anotherSaller != null;
-      var withSallerOnly = !isWithTeamLeader && anotherSaller != null;
-      t260.accompany = withLeaderOnly
-          ? 'D001'
-          : withSallerOnly
-              ? 'E001'
-              : withLeaderAndSaller
-                  ? 'E002'
-                  : '';
+                  // t260.ernam = esLogin.ename;
+                  // t260.erwid = esLogin.logid;
+                  // t260.aenam = esLogin.ename;
+                  // t260.aewid = esLogin.logid;
 
-      // if (suggestedItemList != null && suggestedItemList!.isNotEmpty) {
-      //   t260.actcat1 = getCode(activityList!, selectedActionType!);
-      // }
-      if (activityList != null && selectedActionType != null) {
-        t260.actcat1 = getCode(activityList!, selectedActionType!);
-      }
+                  t260.aedat = DateUtil.getDateStr(now.toIso8601String());
+                  t260.aezet = DateUtil.getTimeNow(isNotWithColon: true);
+                  t260.atime = DateUtil.getTimeNow(isNotWithColon: true);
+                }
+              }();
+      }).whenComplete(() async {
+        //! 화면 수정사항.
+        var latLonMap = await getAddressLatLon(selectedKunnr!.zaddName1!)
+            .then((result) => result.data);
+        t260.adate = DateUtil.getDateStr(DateTime.now().toIso8601String());
+        t260.xLatitude = isVisit ? double.parse(latLonMap['lat']) : 0.00;
+        t260.yLongitude = isVisit ? double.parse(latLonMap['lon']) : 0.00;
+        t260.dist = isVisit ? double.parse(distanceModel!.distance!) : 0.0;
+        t260.isGps = 'X';
+        t260.callType = 'M';
+        t260.zskunnr = selectedKunnr!.zskunnr;
+        t260.zskunnrNm = selectedKunnr!.name;
+        t260.zaddr = selectedKunnr!.zaddName1;
+        t260.zaddName1 = selectedKunnr!.zaddName1;
+        t260.xvisit = isVisit ? 'Y' : 'N';
+        t260.zstatus = selectedKunnr!.zstatus;
+        t260.zkmno = selectedKeyMan!.zkmno;
+        t260.zkmnoNm = selectedKeyMan!.zkmnoNm;
+        t260.visitRmk = isVisit ? '' : reasonForNotVisit ?? '';
+        t260.xmeet = isInterviewIndex == 0 ? 'S' : 'F';
+        t260.meetRmk =
+            isInterviewIndex == 0 ? '' : reasonForinterviewFailure ?? '';
+        t260.rslt = visitResultInput ?? '';
+        t260.comnt = leaderAdviceInput ?? '';
+        var withLeaderOnly = isWithTeamLeader && anotherSaller == null;
+        var withLeaderAndSaller = isWithTeamLeader && anotherSaller != null;
+        var withSallerOnly = !isWithTeamLeader && anotherSaller != null;
+        t260.accompany = withLeaderOnly
+            ? 'D001'
+            : withSallerOnly
+                ? 'E001'
+                : withLeaderAndSaller
+                    ? 'E002'
+                    : '';
+
+        // if (suggestedItemList != null && suggestedItemList!.isNotEmpty) {
+        //   t260.actcat1 = getCode(activityList!, selectedActionType!);
+        // }
+        if (activityList != null && selectedActionType != null) {
+          t260.actcat1 = getCode(activityList!, selectedActionType!);
+        }
+      });
     };
 
     // create table 260 table List
@@ -752,11 +782,15 @@ class AddActivityPageProvider extends ChangeNotifier {
           SalesActivityDayResponseModel.fromJson(result.body['data']);
 
       if (index != null) {
-        pr(fromParentResponseModel!.table260![index!]);
-        editModel260 = SalesActivityDayTable260.fromJson(
-            fromParentResponseModel!.table260![index!].toJson());
+        var temp = fromParentResponseModel!.table260!
+            .where((table) => table.seqno == lastSeqNo)
+            .single;
+        editModel260 = SalesActivityDayTable260.fromJson(temp.toJson());
       } else {
-        editModel260 = SalesActivityDayTable260.fromJson(t260.toJson());
+        var temp = fromParentResponseModel!.table260!
+            .where((table) => table.seqno == incrementSeqno(lastSeqNo!))
+            .single;
+        editModel260 = SalesActivityDayTable260.fromJson(temp.toJson());
       }
       if (anotherSaller != null) {
         isLockOtherSalerSelector = true;

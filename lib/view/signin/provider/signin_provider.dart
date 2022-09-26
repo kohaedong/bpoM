@@ -289,9 +289,9 @@ class SigninProvider extends ChangeNotifier {
 
   bool get isValueNotNull =>
       userAccount != null &&
-      userAccount!.isNotEmpty &&
+      userAccount!.trim().isNotEmpty &&
       password != null &&
-      password!.isNotEmpty;
+      password!.trim().isNotEmpty;
 
   Future<SigninResult> sapLogin(String id) async {
     Map<String, dynamic>? sapBody = {
@@ -342,11 +342,14 @@ class SigninProvider extends ChangeNotifier {
     if (isWithAutoLogin != null && isWithAutoLogin) {
       var ssoResultMap = await getUserIdAndPasswordFromSSO();
       signBody = {
-        "userAccount": "${ssoResultMap['userAccount']}",
-        "passwd": "${ssoResultMap['password']}"
+        "userAccount": "${ssoResultMap['userAccount']}".trim(),
+        "passwd": "${ssoResultMap['password']}".trim()
       };
     } else {
-      signBody = {"userAccount": userAccount ?? '', "passwd": password ?? ''};
+      signBody = {
+        "userAccount": userAccount != null ? userAccount!.trim() : '',
+        "passwd": password != null ? password!.trim() : ''
+      };
     }
     _api.init(RequestType.SIGNIN);
     final signResult = await _api.request(body: signBody);

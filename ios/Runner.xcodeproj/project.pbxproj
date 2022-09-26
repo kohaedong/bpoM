@@ -14,18 +14,18 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		D644E6E85F039FDB560E573D /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5350A3F6D323571CC7D1422 /* Pods_Runner.framework */; };
-		F60EFA0B286FFB9000973550 /* Kolonbase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F60EFA0A286FFB9000973550 /* Kolonbase.framework */; };
-		F60EFA0C286FFB9000973550 /* Kolonbase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F60EFA0A286FFB9000973550 /* Kolonbase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F62C996A28E0350300E1068C /* Kolonbase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F60EFA0A286FFB9000973550 /* Kolonbase.framework */; };
+		F62C996B28E0350300E1068C /* Kolonbase.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F60EFA0A286FFB9000973550 /* Kolonbase.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		9705A1C41CF9048500538489 /* Embed Frameworks */ = {
+		F62C996C28E0350300E1068C /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F60EFA0C286FFB9000973550 /* Kolonbase.framework in Embed Frameworks */,
+				F62C996B28E0350300E1068C /* Kolonbase.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -62,7 +62,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D644E6E85F039FDB560E573D /* Pods_Runner.framework in Frameworks */,
-				F60EFA0B286FFB9000973550 /* Kolonbase.framework in Frameworks */,
+				F62C996A28E0350300E1068C /* Kolonbase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,9 +148,9 @@
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
-				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				3BE44FBFDF67192413043C7A /* [CP] Embed Pods Frameworks */,
+				F62C996C28E0350300E1068C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
