@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-27 18:07:14
+ * Last Modified: 2022-09-27 19:15:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/enums/image_type.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -753,70 +754,86 @@ class _AddActivityPageState extends State<AddActivityPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildTitleRow('${tr('suggested_item')}${index + 1}'),
-            defaultSpacing(),
-            GestureDetector(
-                onTap: () {
-                  final p = context.read<AddActivityPageProvider>();
-                  if (!p.isDoNothing) {
-                    p.removeAtSuggestedList(index);
-                    if (index == 0) {
-                      p.setAmount(null);
-                      _amountEditingController.clear();
-                    }
-                    pr('close');
-                  }
-                },
-                behavior: HitTestBehavior.opaque,
-                child: SizedBox(
-                    height: AppSize.defaultCheckBoxHeight,
-                    width: AppSize.defaultCheckBoxHeight,
-                    child: Icon(
-                      Icons.close,
-                      color: AppColors.hintText,
-                    )))
+            SizedBox(
+              width: AppSize.defaultContentsWidth * .3,
+              child: _buildTitleRow('${tr('suggested_item')}${index + 1}',
+                  isNotwithStart: index != 0),
+            ),
+            Expanded(
+              child: BaseInputWidget(
+                  context: context,
+                  hintText:
+                      model.maktx == null ? tr('plz_select') : model.maktx,
+                  hintTextStyleCallBack: () => model.maktx == null
+                      ? AppTextStyle.hint_16
+                      : AppTextStyle.default_16,
+                  iconType: p.isDoNothing ? null : InputIconType.SEARCH,
+                  iconColor: AppColors.textFieldUnfoucsColor,
+                  popupSearchType: p.isDoNothing
+                      ? PopupSearchType.DO_NOTHING
+                      : PopupSearchType.SEARCH_SUGGETION_ITEM,
+                  isSelectedStrCallBack: (model) =>
+                      p.updateSuggestedList(index, updateModel: model),
+                  width: AppSize.defaultContentsWidth,
+                  enable: false),
+            ),
+            index == 0
+                ? Container()
+                : Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.only(
+                              right: AppSize.defaultListItemSpacing)),
+                      GestureDetector(
+                          onTap: () {
+                            final p = context.read<AddActivityPageProvider>();
+                            if (!p.isDoNothing) {
+                              p.removeAtSuggestedList(index);
+                              if (index == 0) {
+                                p.setAmount(null);
+                                _amountEditingController.clear();
+                              }
+                              pr('close');
+                            }
+                          },
+                          behavior: HitTestBehavior.opaque,
+                          child: AppImage.getImage(ImageType.DELETE_BOX))
+                    ],
+                  )
           ],
         ),
-        defaultSpacing(isHalf: true),
-        BaseInputWidget(
-            context: context,
-            hintText: model.maktx == null ? tr('plz_select') : model.maktx,
-            hintTextStyleCallBack: () => model.maktx == null
-                ? AppTextStyle.hint_16
-                : AppTextStyle.default_16,
-            iconType: p.isDoNothing ? null : InputIconType.SEARCH,
-            iconColor: AppColors.textFieldUnfoucsColor,
-            popupSearchType: p.isDoNothing
-                ? PopupSearchType.DO_NOTHING
-                : PopupSearchType.SEARCH_SUGGETION_ITEM,
-            isSelectedStrCallBack: (model) =>
-                p.updateSuggestedList(index, updateModel: model),
-            width: AppSize.defaultContentsWidth,
-            enable: false),
         actionType.trim() == '제품신규' && index == 0
             ? Column(
                 children: [
                   defaultSpacing(),
-                  _buildTitleRow(tr('month_amount_price')),
-                  Selector<AddActivityPageProvider, String?>(
-                    selector: (context, provider) => provider.seletedAmount,
-                    builder: (context, amount, _) {
-                      return BaseInputWidget(
-                          context: context,
-                          keybordType: TextInputType.number,
-                          hintText: amount == null || amount.isEmpty
-                              ? tr('plz_enter_search_key_for_something_1',
-                                  args: [tr('expected_amount'), ''])
-                              : amount,
-                          hintTextStyleCallBack: () =>
-                              amount == null || amount.isEmpty
-                                  ? AppTextStyle.hint_16
-                                  : AppTextStyle.default_16,
-                          onChangeCallBack: (str) => p.setAmount(str),
-                          textEditingController: _amountEditingController,
-                          width: AppSize.defaultContentsWidth,
-                          enable: p.isDoNothing ? false : true);
-                    },
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: AppSize.defaultContentsWidth * .3,
+                        child: _buildTitleRow(tr('month_amount_price')),
+                      ),
+                      Expanded(
+                          child: Selector<AddActivityPageProvider, String?>(
+                        selector: (context, provider) => provider.seletedAmount,
+                        builder: (context, amount, _) {
+                          return BaseInputWidget(
+                              context: context,
+                              keybordType: TextInputType.number,
+                              hintText: amount == null || amount.isEmpty
+                                  ? tr('plz_enter_search_key_for_something_1',
+                                      args: [tr('expected_amount'), ''])
+                                  : amount,
+                              hintTextStyleCallBack: () =>
+                                  amount == null || amount.isEmpty
+                                      ? AppTextStyle.hint_16
+                                      : AppTextStyle.default_16,
+                              onChangeCallBack: (str) => p.setAmount(str),
+                              textEditingController: _amountEditingController,
+                              width: AppSize.defaultContentsWidth,
+                              enable: p.isDoNothing ? false : true);
+                        },
+                      ))
+                    ],
                   )
                 ],
               )
@@ -847,7 +864,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
             ),
           ],
         ),
-        defaultSpacing()
+        defaultSpacing(times: 4)
       ],
     );
   }
@@ -1130,7 +1147,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                     return tuple.item1 && tuple.item2 == 0
                                         ? Column(
                                             children: [
-                                              _buildActivityType(context),
+                                              Padding(
+                                                padding:
+                                                    AppSize.defaultSidePadding,
+                                                child:
+                                                    _buildActivityType(context),
+                                              ),
                                               defaultSpacing(),
                                               CustomerinfoWidget.buildSubTitle(
                                                   context,
