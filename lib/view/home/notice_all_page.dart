@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_all_page.dart
  * Created Date: 2022-01-04 00:52:52
- * Last Modified: 2022-09-22 09:43:50
+ * Last Modified: 2022-09-27 10:21:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -80,7 +80,7 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
               child: SingleChildScrollView(
                 controller: scrollController!
                   ..addListener(() {
-                    if (scrollController!.offset > AppSize.realHeight) {
+                    if (scrollController!.offset > AppSize.appBarHeight) {
                       if (downLock == true) {
                         downLock = false;
                         upLock = true;

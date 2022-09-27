@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-09-24 18:59:40
+ * Last Modified: 2022-09-27 10:52:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -102,9 +102,10 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                 break;
             }
 
-            if (p.selectedAddress != null &&
-                !p.isHomeAddressEmpty &&
-                !p.isOfficeAddressEmpty) {
+            if (index == 2 ||
+                (p.selectedAddress != null &&
+                    !p.isHomeAddressEmpty &&
+                    !p.isOfficeAddressEmpty)) {
               await p.startOrStopActivity(index).then((result) {
                 if (result.isSuccessful) {
                   //!  table저장완료. 부모창으로 model전달.

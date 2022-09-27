@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-26 19:22:31
+ * Last Modified: 2022-09-27 10:45:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -832,7 +832,13 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 if (p.suggestedItemList![index].matnr != null) {
                   p.updateSuggestedList(index);
                 } else {
-                  AppToast().show(context, tr('plz_check_item'));
+                  AppToast().show(
+                      context,
+                      index + 1 == 2
+                          ? tr('plz_check_item2',
+                              args: ['${tr('suggested_item')}${index + 1}'])
+                          : tr('plz_check_item',
+                              args: ['${tr('suggested_item')}${index + 1}']));
                 }
               },
               child: AppText.text(tr('give_sample'), style: AppTextStyle.h4),
