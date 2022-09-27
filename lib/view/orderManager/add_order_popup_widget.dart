@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-22 11:54:43
+ * Last Modified: 2022-09-27 21:22:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -334,7 +334,7 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                             .show(context, tr('plz_check_essential_option'));
                         return null;
                       } else {
-                        if (!p.isLoadData) {
+                        if (!p.isLoadData && !FocusScope.of(context).hasFocus) {
                           var orderItemModel = await p.createOrderItemModel();
                           var priceModel = p.priceModel;
                           return {
@@ -351,7 +351,8 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                       }
                       if (p.selectedMateria != null &&
                           p.quantity != null &&
-                          !p.isLoadData) {
+                          !p.isLoadData &&
+                          !FocusScope.of(context).hasFocus) {
                         return true;
                       }
                       return false;

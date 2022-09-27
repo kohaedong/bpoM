@@ -64,13 +64,13 @@ class _SigninPageState extends State<SigninPage> {
                   p.setIsIdFocused(true);
                 },
                 focusNode: idFocus,
+                height: AppSize.buttonHeight,
                 textEditingController: _idController,
                 keybordType: TextInputType.multiline,
                 context: context,
                 iconType: account != null ? InputIconType.DELETE : null,
                 hintText: account != null ? null : '${tr('id')}',
                 width: AppSize.defaultContentsWidth,
-                height: AppSize.buttonHeight,
                 defaultIconCallback: () {
                   p.setAccount(null);
                   _idController!.text = '';
@@ -99,10 +99,10 @@ class _SigninPageState extends State<SigninPage> {
                   },
                   focusNode: pwFocus,
                   context: context,
+                  height: AppSize.buttonHeight,
                   iconType: password != null ? InputIconType.DELETE : null,
                   hintText: password != null ? null : '${tr('password')}',
                   width: AppSize.defaultContentsWidth,
-                  height: AppSize.buttonHeight,
                   keybordType: TextInputType.visiblePassword,
                   defaultIconCallback: () {
                     p.setPassword(null);

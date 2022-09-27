@@ -92,6 +92,7 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
           maxLines: 8,
           style: AppTextStyle.default_16,
           decoration: InputDecoration(
+              contentPadding: EdgeInsets.all(AppSize.defaultListItemSpacing),
               fillColor: AppColors.whiteText,
               hintText: '${tr('suggestion_hint')}',
               hintStyle: AppTextStyle.hint_16,

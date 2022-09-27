@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/provider/detail_book_page_provider.dart
  * Created Date: 2022-07-05 09:55:29
- * Last Modified: 2022-09-24 17:58:06
+ * Last Modified: 2022-09-27 20:41:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -38,13 +38,11 @@ class DetailBookPageProvider extends ChangeNotifier {
   }
 
   void setSerachKeyStr(String? str) {
-    searchKeyStr = str;
-    if (str == null || str.length < 2) {
-      notifyListeners();
-    }
+    searchKeyStr = str?.trim();
     if (str != null && str.isEmpty) {
       resetResultModel();
     }
+    notifyListeners();
   }
 
   void resetResultModel() {

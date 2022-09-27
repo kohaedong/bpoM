@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:medsalesportal/styles/app_style.dart';
+import 'package:medsalesportal/styles/app_text_style.dart';
 
 // 각종 사이즈 데이터 사전 등록.
 class AppSize {
@@ -174,19 +176,33 @@ class AppSize {
   static double get popupAppbarHeight => 88.w;
   static double get titleHeightInTwoRowsSearchBarPopup => 199.w;
   static double get searchBarTitleSidePadding => 20.w;
-  static EdgeInsets get defaultTextFieldPadding =>
-      EdgeInsets.fromLTRB(12.w, 10.w, 12.w, 11.w);
-  static EdgeInsets defaultTextFieldPaddingWidthSigninPage(double fontSize,
-          {bool? isSmallButton}) =>
+  static EdgeInsets defaultTextFieldPadding(double textHeight,
+          {double? boxHeight}) =>
       EdgeInsets.fromLTRB(
           12.w,
-          isSmallButton == null
-              ? (buttonHeight - fontSize) / 2
-              : (smallButtonHeight - fontSize) / 2,
+          boxHeight != null
+              ? ((boxHeight - textHeight) / 2) - 2
+              : ((defaultTextFieldHeight - textHeight) / 2) - 2,
           12.w,
-          isSmallButton == null
-              ? (buttonHeight - fontSize) / 2
-              : (smallButtonHeight - fontSize) / 2);
+          boxHeight != null
+              ? (boxHeight - textHeight) / 2
+              : ((defaultTextFieldHeight - textHeight) / 2) - 2);
+  static EdgeInsets defaultTextFieldPaddingWidthSigninPage(double fontSize,
+          {bool? isSmallButton, double? boxHeight}) =>
+      EdgeInsets.fromLTRB(
+        12.w,
+        isSmallButton == null
+            ? boxHeight != null
+                ? ((boxHeight - fontSize) / 2) - 2
+                : ((defaultTextFieldHeight - fontSize) / 2) - 2
+            : (smallButtonHeight - fontSize) / 2,
+        12.w,
+        isSmallButton == null
+            ? boxHeight != null
+                ? ((boxHeight - fontSize) / 2) - 2
+                : ((defaultTextFieldHeight - fontSize) / 2) - 2
+            : (smallButtonHeight - fontSize) / 2,
+      );
   static EdgeInsets get zipCodeContentsPadding =>
       EdgeInsets.fromLTRB(16.w, 28.w, 16.w, 0.w);
 

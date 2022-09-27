@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-09-22 17:03:06
+ * Last Modified: 2022-09-27 21:03:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -302,6 +302,9 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
           child: Container(
             alignment: Alignment.center,
             height: widget.height ?? AppSize.defaultTextFieldHeight,
+            decoration: BoxDecoration(
+                color: AppColors.whiteText,
+                borderRadius: BorderRadius.circular(AppSize.radius5)),
             width: widget.width,
             child: Focus(
               onFocusChange: (hasFocus) async {
@@ -371,8 +374,10 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                           isSmallButton: widget.oneCellType ==
                                   OneCellType.SELECT_OFFICE_ADDRESS
                               ? true
-                              : null)
-                      : AppSize.defaultTextFieldPadding,
+                              : null,
+                          boxHeight: widget.height)
+                      : AppSize.defaultTextFieldPadding(
+                          AppTextStyle.default_16.fontSize!),
                   border: widget._disabledBorder,
                   enabledBorder: widget._enabledBorder,
                   disabledBorder: widget.enable ? null : widget._disabledBorder,
@@ -395,7 +400,8 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                   ),
                   suffixIcon: widget.iconType != null
                       ? widget.iconType != InputIconType.DELETE_AND_SEARCH
-                          ? InkWell(
+                          ? GestureDetector(
+                              behavior: HitTestBehavior.opaque,
                               onTap: () => widget.defaultIconCallback!.call(),
                               child: Padding(
                                   padding: EdgeInsets.only(
