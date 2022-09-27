@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_bar.dart
  * Created Date: 2021-08-29 19:57:10
- * Last Modified: 2022-08-04 13:56:36
+ * Last Modified: 2022-09-27 18:20:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -54,9 +54,9 @@ class MainAppBar extends AppBar {
                         WillPopScope(
                             child: buildDialogContents(
                               context,
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: AppSize.appBarHeight * .6),
+                              SizedBox(
+                                height: AppSize.singlePopupHeight -
+                                    AppSize.buttonHeight,
                                 child: Center(
                                   child: AppText.text(
                                       '${tr('is_exit_current_page')}',

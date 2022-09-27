@@ -250,7 +250,10 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
                           buildTimeBox(context, isStartTime: false)
                         ],
                       ))
-                  : Container();
+                  : Builder(builder: (context) {
+                      p.resetNoticeTimeSettings();
+                      return Container();
+                    });
             })
       ],
     );

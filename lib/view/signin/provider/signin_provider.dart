@@ -92,16 +92,14 @@ class SigninProvider extends ChangeNotifier {
 
   void setAccount(String? str) {
     this.userAccount = (str == '' ? null : str);
-    if (str == null || str.length == 1 || str == '') {
-      notifyListeners();
-    }
+    // if (str == null || str.length == 1 || str == '') {}
+    notifyListeners();
   }
 
   void setPassword(String? password) {
     this.password = (password == '' ? null : password);
-    if (password == null || password.length == 1 || password == '') {
-      notifyListeners();
-    }
+    // if (password == null || password.length == 1 || password == '') {}
+    notifyListeners();
   }
 
   Future<TokenModel?> requestToken(String username, String password) async {

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-27 10:45:47
+ * Last Modified: 2022-09-27 18:07:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -385,7 +385,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
       decoration: InputDecoration(
           fillColor: AppColors.whiteText,
           hintText: type == AddActivityPageInputType.LEADER_ADVICE
-              ? ''
+              ? CheckSuperAccount.isLeaderAccount()
+                  ? '${tr('suggestion_hint')}'
+                  : ''
               : '${tr('suggestion_hint')}',
           hintStyle: AppTextStyle.hint_16,
           border: defaultBorder,
@@ -992,11 +994,15 @@ class _AddActivityPageState extends State<AddActivityPage> {
   }
 
   Widget _buildTeamLeaderAdvice(BuildContext context) {
+    final p = context.read<AddActivityPageProvider>();
     return Column(
       children: [
         _buildTitleRow(tr('leader_advice'), isNotwithStart: true),
         defaultSpacing(),
-        _buildTextField(context, type: AddActivityPageInputType.LEADER_ADVICE)
+        CheckSuperAccount.isLeaderAccount()
+            ? _buildTextField(context,
+                type: AddActivityPageInputType.LEADER_ADVICE)
+            : AppText.text(p.leaderAdviceInput ?? '')
       ],
     );
   }

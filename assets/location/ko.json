@@ -291,7 +291,7 @@
     "update_text_enforce":"업데이트 사항이 있습니다.\n업데이트를 하셔야 서비스 이용이 가능합니다.\n[취소] 누르실 경우 앱이 종료 됩니다.",
     "downloading":"다운로드 중입니다.",
     "edit_successful":"수정 되였습니다.",
-    "is_exit_current_page":"입력된 내용을 삭제하고 이전 화면으로 \n이동하겠습니까?",
+    "is_exit_current_page":"입력된 내용을 삭제하고 이전 화면으로 \n이동하시겠습니까?",
     "not_edit":"수정 할 내용이 없습니다.",
     "consulting_type":"상담유형",
     "save_to":"저장위치",
