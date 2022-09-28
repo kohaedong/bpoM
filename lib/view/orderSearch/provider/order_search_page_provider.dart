@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-09-24 18:40:18
+ * Last Modified: 2022-09-28 20:59:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -294,12 +294,12 @@ class OrderSearchPageProvider extends ChangeNotifier {
       }
       if (searchOrderResponseModel == null) {
         searchOrderResponseModel = temp;
-        searchOrderResponseModel!.tList =
-            await splitModel(SearchOrderResponseModel.fromJson(temp.toJson()));
+        // searchOrderResponseModel!.tList =
+        //     await splitModel(SearchOrderResponseModel.fromJson(temp.toJson()));
       } else {
-        var tempResult =
-            await splitModel(SearchOrderResponseModel.fromJson(temp.toJson()));
-        searchOrderResponseModel!.tList!.addAll(tempResult!);
+        // var tempResult =
+        //     await splitModel(SearchOrderResponseModel.fromJson(temp.toJson()));
+        searchOrderResponseModel!.tList!.addAll(temp.tList!);
       }
       if (searchOrderResponseModel != null &&
           (searchOrderResponseModel!.tList == null ||
