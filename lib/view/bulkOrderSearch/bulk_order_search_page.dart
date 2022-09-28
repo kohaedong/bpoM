@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-09-27 19:30:08
+ * Last Modified: 2022-09-28 18:14:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -460,8 +460,7 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
               )
             : provider.isLoadData
                 ? DefaultShimmer.buildDefaultResultShimmer()
-                : ListView(
-                    shrinkWrap: true,
+                : Column(
                     children: [
                       Padding(
                           padding: AppSize.nullValueWidgetPadding,

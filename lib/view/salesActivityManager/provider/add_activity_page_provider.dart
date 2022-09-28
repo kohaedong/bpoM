@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-28 14:40:52
+ * Last Modified: 2022-09-28 18:01:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -90,6 +90,7 @@ class AddActivityPageProvider extends ChangeNotifier {
 
   Future<ResultModel> initData(SalesActivityDayResponseModel fromParentModel,
       ActivityStatus status, int? indexx) async {
+    distanceModel = AddActivityDistanceModel();
     fromParentResponseModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
 
@@ -119,14 +120,14 @@ class AddActivityPageProvider extends ChangeNotifier {
               : temp.zkmnoNm;
       selectedKeyMan!.zkmno =
           temp.zkmno != null && temp.zkmno!.trim().isEmpty ? null : temp.zkmno;
-      distanceModel = AddActivityDistanceModel();
+
       distanceModel!.distance = '${temp.dist}';
       reasonForNotVisit = temp.visitRmk ?? '';
       reasonForinterviewFailure = temp.meetRmk ?? '';
       visitResultInput = temp.rslt ?? '';
       leaderAdviceInput = temp.comnt ?? '';
       isVisit = temp.xvisit == 'Y';
-      isInterviewIndex = temp.xmeet != 'F' ? 0 : 1;
+      isInterviewIndex = temp.xmeet == 'S' ? 0 : 1;
       suggestedItemList ??= [];
 
       // 동행 초기화.
@@ -241,7 +242,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       await saveActivityType().then((value) => pr(suggestedItemList));
     } else {
       suggestedItemList ??= [];
-      isInterviewIndex = 1;
+      distanceModel!.distance = '0.0';
     }
 
     return ResultModel(true);
@@ -508,7 +509,6 @@ class AddActivityPageProvider extends ChangeNotifier {
                 t260.aenam = t250.aenam;
                 t260.aewid = t250.aewid;
                 t260.etime = DateUtil.getTimeNow(isNotWithColon: true);
-                t260.atime = DateUtil.getTimeNow(isNotWithColon: true);
               } else {
                 t260 =
                     SalesActivityDayTable260.fromJson(editModel260!.toJson());
@@ -527,10 +527,14 @@ class AddActivityPageProvider extends ChangeNotifier {
 
                 t260.aedat = DateUtil.getDateStr(now.toIso8601String());
                 t260.aezet = DateUtil.getTimeNow(isNotWithColon: true);
-                t260.atime = DateUtil.getTimeNow(isNotWithColon: true);
               }
             }();
       //! 화면 수정사항.
+
+      // 도착할때만 저장.
+      if (t260.atime != null && t260.atime!.trim().isEmpty && isVisit) {
+        t260.atime = DateUtil.getTimeNow(isNotWithColon: true);
+      }
       var latLonMap = await getAddressLatLon(selectedKunnr!.zaddName1!)
           .then((result) => result.data);
       t260.adate = DateUtil.getDateStr(DateTime.now().toIso8601String());
@@ -855,16 +859,23 @@ class AddActivityPageProvider extends ChangeNotifier {
     var stopY = '';
     var startKunnr = '';
     var stopKunnr = '';
+    var sLat = fromParentResponseModel!.table250!.last.sxLatitude;
+    var sLon = fromParentResponseModel!.table250!.last.syLongitude;
     var setStartLatLonFormTable250 = () async {
       var latLonResult = await getAddressLatLon(selectedKunnr!.zaddName1!);
-      startX = '${fromParentResponseModel!.table250!.single.sxLatitude!}';
-      startY = '${fromParentResponseModel!.table250!.single.syLongitude!}';
+      startX = '$sLat';
+      startY = '$sLon';
       stopX = latLonResult.data['lat'];
       stopY = latLonResult.data['lon'];
       startKunnr = '';
       stopKunnr = selectedKunnr!.zskunnr!;
     };
-    if (isTable260Null) {
+    var isActivityStartByZeroLatLon = sLat == 0.0 && sLon == 0.0;
+    if (isActivityStartByZeroLatLon && isTable260Null) {
+      pr('거리계산안함');
+      isVisit = true;
+      return ResultModel(true);
+    } else if (isTable260Null) {
       // 도착처리건 없으면 영업활동 첫건으로 판단해 table 250어서 영업활동 시작주소 가져옴.
       await setStartLatLonFormTable250.call();
     } else {
@@ -872,8 +883,27 @@ class AddActivityPageProvider extends ChangeNotifier {
           .where((item) => item.xvisit == 'Y')
           .toList();
       // 도착처리건 있으면. 마지막 도착 지점의 lat & lon 가져온다.
+      var getLastVist = () {
+        var index = 0;
+        var time = 0;
+        visitList.asMap().entries.forEach((map) {
+          if (int.tryParse(map.value.atime!) != null) {
+            var temp = int.parse(map.value.atime!);
+            if (temp > time) {
+              time = temp;
+              index = map.key;
+            }
+          }
+        });
+        return visitList[index];
+      };
       if (visitList.isNotEmpty) {
-        var lastVisitModel = visitList.first;
+        visitList.forEach((element) {
+          pr(element.atime);
+        });
+
+        var lastVisitModel =
+            visitList.length == 1 ? visitList.single : getLastVist();
         var latLonResult = await getAddressLatLon(selectedKunnr!.zaddName1!);
         startX = '${lastVisitModel.xLatitude}';
         startY = '${lastVisitModel.yLongitude}';
