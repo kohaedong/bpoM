@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/currunt_month_scenario_page.dart
  * Created Date: 2022-08-17 23:33:31
- * Last Modified: 2022-09-18 20:10:50
+ * Last Modified: 2022-09-28 20:15:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -106,11 +106,11 @@ class _CurruntMonthScenarioPageState extends State<CurruntMonthScenarioPage> {
       },
       autofocus: false,
       inputFormatters: [
-        LengthLimitingTextInputFormatter(50),
+        LengthLimitingTextInputFormatter(100),
       ],
       autocorrect: false,
       keyboardType: TextInputType.multiline,
-      maxLines: 3,
+      maxLines: 6,
       style: AppTextStyle.default_16,
       decoration: InputDecoration(
           fillColor: AppColors.whiteText,
@@ -162,6 +162,7 @@ class _CurruntMonthScenarioPageState extends State<CurruntMonthScenarioPage> {
 
   Widget _buildListContents(BuildContext context) {
     return Stack(
+      alignment: AlignmentDirectional.center,
       children: [
         SingleChildScrollView(
           child: Selector<CurrentMonthScenarioProvider,
@@ -169,17 +170,22 @@ class _CurruntMonthScenarioPageState extends State<CurruntMonthScenarioPage> {
             selector: (context, provider) => provider.table430,
             builder: (context, table430, _) {
               return table430 != null && table430.isNotEmpty
-                  ? Column(
-                      children: [
-                        ...table430
-                            .asMap()
-                            .entries
-                            .map((e) => _buildBox(context, e.key, e.value)),
-                      ],
+                  ? SizedBox(
+                      height: AppSize.realHeight * .8,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ...table430
+                              .asMap()
+                              .entries
+                              .map((e) => _buildBox(context, e.key, e.value)),
+                        ],
+                      ),
                     )
                   : Padding(
                       padding: EdgeInsets.only(top: AppSize.appBarHeight),
-                      child: BaseNullDataWidget.build(),
+                      child: BaseNullDataWidget.build(context,
+                          isForSearchResult: true),
                     );
             },
           ),

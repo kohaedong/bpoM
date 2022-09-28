@@ -309,8 +309,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                   .homeNoticeResponseModel!.tZltsp0710!.isEmpty
                           ? Container(
                               height: 100,
-                              child: BaseNullDataWidget.build(
-                                  message: '${tr('notice_is_null')}'))
+                              child: Center(
+                                child: AppText.listViewText(
+                                    tr('not_search_result')),
+                              ))
                           : Container(height: 200);
             })));
   }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-09-27 10:19:20
+ * Last Modified: 2022-09-28 20:32:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -354,16 +354,17 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
               )
             : provider.isLoadData
                 ? DefaultShimmer.buildDefaultResultShimmer()
-                : ListView(
-                    shrinkWrap: true,
-                    children: [
-                      Padding(
-                          padding: AppSize.nullValueWidgetPadding,
-                          child: BaseNullDataWidget.build(
-                              message:
-                                  provider.hasResultData == null ? '' : null))
-                    ],
-                  )
+                : ValueListenableBuilder<bool>(
+                    valueListenable: _panelSwich,
+                    builder: (context, isOpen, _) {
+                      return Container(
+                        height: isOpen
+                            ? AppSize.realHeight * .3
+                            : AppSize.realHeight * .5,
+                        alignment: Alignment.center,
+                        child: AppText.listViewText(tr('no_data')),
+                      );
+                    })
       ],
     );
   }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/visit_result_history_page.dart
  * Created Date: 2022-08-17 23:31:14
- * Last Modified: 2022-09-18 20:12:38
+ * Last Modified: 2022-09-28 20:15:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -110,7 +110,8 @@ class VisitResultHistoryPage extends StatelessWidget {
                                             .toList()
                                       ],
                                     )
-                                  : BaseNullDataWidget.build()
+                                  : BaseNullDataWidget.build(context,
+                                      isForSearchResult: true)
                             ],
                           ),
                         )

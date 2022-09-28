@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-27 23:51:01
+ * Last Modified: 2022-09-28 20:34:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -728,15 +728,17 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   )
                 : tuple.item2
                     ? DefaultShimmer.buildDefaultResultShimmer()
-                    : ListView(
-                        shrinkWrap: true,
-                        children: [
-                          Padding(
-                              padding: AppSize.nullValueWidgetPadding,
-                              child: BaseNullDataWidget.build(
-                                  message: p.hasResultData == null ? '' : null))
-                        ],
-                      ),
+                    : ValueListenableBuilder<bool>(
+                        valueListenable: _panelSwich,
+                        builder: (context, isOpen, _) {
+                          return Container(
+                            height: isOpen
+                                ? AppSize.realHeight * .1
+                                : AppSize.realHeight * .5,
+                            alignment: Alignment.center,
+                            child: AppText.listViewText(tr('no_data')),
+                          );
+                        }),
             Padding(padding: EdgeInsets.only(top: AppSize.buttonHeight))
           ],
         );
@@ -1054,15 +1056,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
               )
             : tuple.item2
                 ? DefaultShimmer.buildDefaultResultShimmer()
-                : ListView(
-                    shrinkWrap: true,
-                    children: [
-                      Padding(
-                          padding: AppSize.nullValueWidgetPadding,
-                          child: BaseNullDataWidget.build(
-                              message: p.hasResultData == null ? '' : null))
-                    ],
-                  );
+                : Container();
       },
     ));
   }

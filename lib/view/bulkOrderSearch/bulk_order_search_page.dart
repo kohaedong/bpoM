@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-09-28 18:14:13
+ * Last Modified: 2022-09-28 20:29:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -415,20 +415,22 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                 textAlign: TextAlign.start),
 
             defaultSpacing(isHalf: true),
-            Row(
-              children: [
-                SizedBox(
-                  child: AppText.listViewText(
+            SizedBox(
+              width: AppSize.defaultContentsWidth,
+              child: Row(
+                children: [
+                  AppText.listViewText(
                       '${tr('salse_order_number')}:${model.zreqno!}'),
-                ),
-                model.zdmstatus == 'A' ? Container() : AppStyles.buildPipe(),
-                AppText.listViewText(
-                  // 주문요청상태시 주문번호 없음.
-                  model.zdmstatus == 'A'
-                      ? ''
-                      : '${tr('request_order_number')}:${model.vbeln!}',
-                ),
-              ],
+                  model.zdmstatus == 'A' ? Container() : AppStyles.buildPipe(),
+                  Expanded(
+                      child: AppText.listViewText(
+                    // 주문요청상태시 주문번호 없음.
+                    model.zdmstatus == 'A'
+                        ? ''
+                        : '${tr('request_order_number')}:${model.vbeln!}',
+                  )),
+                ],
+              ),
             ),
             defaultSpacing(),
             Divider(),
@@ -460,15 +462,17 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
               )
             : provider.isLoadData
                 ? DefaultShimmer.buildDefaultResultShimmer()
-                : Column(
-                    children: [
-                      Padding(
-                          padding: AppSize.nullValueWidgetPadding,
-                          child: BaseNullDataWidget.build(
-                              message:
-                                  provider.hasResultData == null ? '' : null))
-                    ],
-                  )
+                : ValueListenableBuilder<bool>(
+                    valueListenable: _panelSwich,
+                    builder: (context, isOpen, _) {
+                      return Container(
+                        height: isOpen
+                            ? AppSize.realHeight * .1
+                            : AppSize.realHeight * .5,
+                        alignment: Alignment.center,
+                        child: AppText.listViewText(tr('no_data')),
+                      );
+                    })
       ],
     );
   }

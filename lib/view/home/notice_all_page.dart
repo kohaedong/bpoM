@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_all_page.dart
  * Created Date: 2022-01-04 00:52:52
- * Last Modified: 2022-09-27 10:21:39
+ * Last Modified: 2022-09-28 19:47:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -133,8 +133,9 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
                       children: [
                         Padding(
                             padding: AppSize.nullValueWidgetPadding,
-                            child: BaseNullDataWidget.build(
-                                message: '${tr('notice_is_null')}'))
+                            child: Center(
+                              child: AppText.listViewText(tr('notice_is_null')),
+                            ))
                       ],
                     )
                   : Container();

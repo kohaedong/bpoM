@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-09-27 10:21:47
+ * Last Modified: 2022-09-28 20:30:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -474,16 +474,17 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
               )
             : provider.isLoadData
                 ? DefaultShimmer.buildDefaultResultShimmer()
-                : ListView(
-                    shrinkWrap: true,
-                    children: [
-                      Padding(
-                          padding: AppSize.nullValueWidgetPadding,
-                          child: BaseNullDataWidget.build(
-                              message:
-                                  provider.hasResultData == null ? '' : null))
-                    ],
-                  )
+                : ValueListenableBuilder<bool>(
+                    valueListenable: _panelSwich,
+                    builder: (context, isOpen, _) {
+                      return Container(
+                        height: isOpen
+                            ? AppSize.realHeight * .1
+                            : AppSize.realHeight * .5,
+                        alignment: Alignment.center,
+                        child: AppText.listViewText(tr('no_data')),
+                      );
+                    })
       ],
     );
   }

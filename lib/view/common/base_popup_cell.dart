@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/popup_cell.dart
  * Created Date: 2021-08-19 10:00:29
- * Last Modified: 2022-07-05 16:55:58
+ * Last Modified: 2022-09-28 19:44:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/enums/popup_cell_type.dart';
@@ -63,12 +64,14 @@ class BasePopupCell {
                                   ConnectionState.done &&
                               snapshot.data!.isEmpty) {
                             return Padding(
-                              padding:
-                                  EdgeInsets.only(top: AppSize.padding * 2),
-                              child: Padding(
-                                  padding: AppSize.nullValueWidgetPadding,
-                                  child: BaseNullDataWidget.build()),
-                            );
+                                padding:
+                                    EdgeInsets.only(top: AppSize.padding * 2),
+                                child: Padding(
+                                    padding: AppSize.nullValueWidgetPadding,
+                                    child: Center(
+                                      child:
+                                          AppText.text(tr('not_search_result')),
+                                    )));
                           }
                           if (snapshot.hasData &&
                               snapshot.connectionState ==
