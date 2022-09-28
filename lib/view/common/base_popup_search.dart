@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-25 09:59:07
+ * Last Modified: 2022-09-27 21:59:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -882,8 +882,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                         children: [
                           defaultSpacing(times: 2),
                           BaseNullDataWidget.build(
-                              message:
-                                  provider.isShhowNotResultText ? null : '')
+                              message: provider.isShhowNotResultText == null
+                                  ? ''
+                                  : null)
                         ],
                       );
           });
@@ -1169,6 +1170,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
 
   Widget _buildMaterialContentsItem(BuildContext context,
       OrderManagerMaterialModel model, int index, bool isShowLastPageText) {
+    final p = context.read<BasePopupSearchProvider>();
     return InkWell(
       onTap: () {
         Navigator.pop(context, model);

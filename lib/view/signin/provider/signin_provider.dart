@@ -314,7 +314,7 @@ class SigninProvider extends ChangeNotifier {
       var message = tr('permission_denied');
       return SigninResult(isSuccessfull, message, isShowPopup: false);
     }
-    return SigninResult(false, '');
+    return SigninResult(false, sapResult?.errorMessage ?? '');
   }
 
   Future<void> saveTcode() async {
@@ -439,7 +439,7 @@ class SigninProvider extends ChangeNotifier {
     }
     isLoadData = false;
     notifyListeners();
-    return SigninResult(false, '${signResult.errorMessage}',
+    return SigninResult(false, tr('permission_denied'),
         id: userAccount, pw: password, isShowPopup: true);
   }
 

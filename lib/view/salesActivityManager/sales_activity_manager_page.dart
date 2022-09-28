@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-26 17:09:58
+ * Last Modified: 2022-09-28 14:37:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -498,7 +498,9 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         : Container();
   }
 
-  Future<void> _showLocationPopup(BuildContext context) async {
+  Future<void> _showLocationPopup(
+    BuildContext context,
+  ) async {
     final p = context.read<ActivityMenuProvider>();
     final popupResult = await AppDialog.showPopup(
       context,
@@ -511,7 +513,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       popupResult as ResultModel;
       //!  주소 선택 팝업창에서 리턴된 데이터.
       if (popupResult.isSuccessful) {
-        if (p.activityStatus == ActivityStatus.STARTED) {
+        if (p.activityStatus == ActivityStatus.STARTED ||
+            p.activityStatus == ActivityStatus.NOTCONFIRMED) {
           AppToast().show(context, tr('activity_is_stoped'));
           Navigator.pop(context, true);
         }
@@ -638,7 +641,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         return AppStyles.buildButton(
             context,
             menuType == MenuType.ACTIVITY_STATUS
-                ? status == ActivityStatus.STARTED
+                ? status == ActivityStatus.STARTED ||
+                        status == ActivityStatus.NOTCONFIRMED
                     ? tr('stop_sales_activity')
                     : tr('start_sales_activity')
                 : '$text',
@@ -669,7 +673,10 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 case ActivityStatus.STARTED:
                   // 영업활동 종료.
                   _showLocationPopup(context);
-
+                  break;
+                case ActivityStatus.NOTCONFIRMED:
+                  // 영업활동 종료.
+                  _showLocationPopup(context);
                   break;
                 default:
               }
@@ -685,7 +692,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       BuildContext context,
       SalesActivityDayResponseModel fromParentWindowModel,
       ActivityStatus? activityStatus,
-      SalseActivityLocationResponseModel officeAddress) {
+      SalseActivityLocationResponseModel officeAddress,
+      {bool? isNotConfirmed}) {
     return ChangeNotifierProvider(
       create: (context) => ActivityMenuProvider(),
       builder: (context, _) {
@@ -694,46 +702,55 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             officeAddress: officeAddress);
         return Material(
           type: MaterialType.transparency,
-          child: SafeArea(
-            bottom: Platform.isIOS ? false : true,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Positioned(
-                    right: AppSize.padding,
-                    bottom: (AppSize.defaultListItemSpacing * 2) +
-                        AppSize.buttonHeight * 2,
-                    child: Column(
-                      children: [
-                        _buildMenuItem(
-                            context, '최종콜 삭제', MenuType.ACTIVITY_DELETE),
-                        defaultSpacing(times: 2),
-                        _buildMenuItem(
-                            context, '신규활동 추가', MenuType.ACTIVITY_ADD),
-                        defaultSpacing(times: 2),
-                        _buildMenuItem(context, '', MenuType.ACTIVITY_STATUS),
-                      ],
-                    )),
-                Positioned(
-                    right: AppSize.padding,
-                    bottom: AppSize.buttonHeight,
-                    child: FloatingActionButton(
-                      backgroundColor: AppColors.primary,
-                      onPressed: () {
-                        Navigator.pop(context, p.isNeedUpdate);
-                      },
-                      child: Icon(Icons.close, color: AppColors.whiteText),
-                    )),
-                Positioned(
-                    left: 0,
-                    bottom: 0,
-                    child: Selector<ActivityMenuProvider, bool>(
-                        selector: (context, provider) => provider.isLoadData,
-                        builder: (context, isLoadData, _) {
-                          return BaseLoadingViewOnStackWidget.build(
-                              context, isLoadData);
-                        }))
-              ],
+          child: WillPopScope(
+            onWillPop: () async => false,
+            child: SafeArea(
+              bottom: Platform.isIOS ? false : true,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Positioned(
+                      right: AppSize.padding,
+                      bottom: (AppSize.defaultListItemSpacing * 2) +
+                          AppSize.buttonHeight * 2,
+                      child: Column(
+                        children: [
+                          isNotConfirmed != null && isNotConfirmed
+                              ? Container()
+                              : Column(
+                                  children: [
+                                    _buildMenuItem(context, '최종콜 삭제',
+                                        MenuType.ACTIVITY_DELETE),
+                                    defaultSpacing(times: 2),
+                                    _buildMenuItem(context, '신규활동 추가',
+                                        MenuType.ACTIVITY_ADD),
+                                    defaultSpacing(times: 2),
+                                  ],
+                                ),
+                          _buildMenuItem(context, '', MenuType.ACTIVITY_STATUS),
+                        ],
+                      )),
+                  Positioned(
+                      right: AppSize.padding,
+                      bottom: AppSize.buttonHeight,
+                      child: FloatingActionButton(
+                        backgroundColor: AppColors.primary,
+                        onPressed: () {
+                          Navigator.pop(context, p.isNeedUpdate);
+                        },
+                        child: Icon(Icons.close, color: AppColors.whiteText),
+                      )),
+                  Positioned(
+                      left: 0,
+                      bottom: 0,
+                      child: Selector<ActivityMenuProvider, bool>(
+                          selector: (context, provider) => provider.isLoadData,
+                          builder: (context, isLoadData, _) {
+                            return BaseLoadingViewOnStackWidget.build(
+                                context, isLoadData);
+                          }))
+                ],
+              ),
             ),
           ),
         );
@@ -741,7 +758,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     );
   }
 
-  Widget _buildMenuButton(BuildContext context) {
+  Widget _buildMenuButton(BuildContext context, {bool? isNotConfirmed}) {
     final p = context.read<SalseActivityManagerPageProvider>();
 
     return Positioned(
@@ -757,7 +774,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 builder: (context) {
                   // dialog 내부 provider model 전달.
                   return _buildDialogContents(context, p.dayResponseModel!,
-                      p.activityStatus, p.locationResponseModel!);
+                      p.activityStatus, p.locationResponseModel!,
+                      isNotConfirmed: isNotConfirmed);
                 });
             if (result != null) {
               result as bool;
@@ -821,7 +839,9 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                         tuple.item2 == ActivityStatus.STOPED)
                     ? Container()
                     : _buildMenuButton(context)
-                : Container();
+                : tuple.item2 == ActivityStatus.NOTCONFIRMED
+                    ? _buildMenuButton(context, isNotConfirmed: true)
+                    : Container();
           },
         ),
         Selector<SalseActivityManagerPageProvider, bool>(
@@ -851,6 +871,9 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           switch (status) {
             case ActivityStatus.FINISH:
               _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY_DISIBLE;
+              break;
+            case ActivityStatus.NOTCONFIRMED:
+              _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY;
               break;
             case ActivityStatus.STARTED:
               _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY;

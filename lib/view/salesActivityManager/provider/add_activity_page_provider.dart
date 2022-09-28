@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-26 17:44:40
+ * Last Modified: 2022-09-28 14:40:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -92,6 +92,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       ActivityStatus status, int? indexx) async {
     fromParentResponseModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
+
     activityStatus = status;
     pr(activityStatus);
     fromParentModel.table260!.forEach((element) {
@@ -168,7 +169,6 @@ class AddActivityPageProvider extends ChangeNotifier {
           selectedActionType = tempStr.substring(0, tempStr.indexOf('-'));
         });
       }
-      pr(activityList);
 
       // 활동 유형 및 제안제품 초기화.
       var saveActivityType = () async {
@@ -187,7 +187,7 @@ class AddActivityPageProvider extends ChangeNotifier {
           });
           try {
             //! more
-            data = temp280List.single;
+            data = temp280List.last;
             seletedAmount = data.amount1 != null ? '${data.amount1}' : '0';
           } catch (e) {
             pr(e);
@@ -747,6 +747,7 @@ class AddActivityPageProvider extends ChangeNotifier {
 
     // 280 base64
     if (t280List.isNotEmpty) {
+      pr('notEmpty');
       temp.clear();
       temp.addAll([...t280List.map((table) => table.toJson())]);
       t280Base64 = await EncodingUtils.base64ConvertForListMap(temp);
@@ -777,11 +778,14 @@ class AddActivityPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       fromParentResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
-
+      pr(fromParentResponseModel?.toJson());
+      fromParentResponseModel?.table260?.forEach((element) {
+        pr('@@@@@@@@@@${element.toJson()}');
+      });
       if (index != null) {
         var temp = fromParentResponseModel!.table260!
             .where((table) => table.seqno == lastSeqNo)
-            .single;
+            .last;
         editModel260 = SalesActivityDayTable260.fromJson(temp.toJson());
       } else {
         var temp = fromParentResponseModel!.table260!
@@ -845,7 +849,6 @@ class AddActivityPageProvider extends ChangeNotifier {
     notifyListeners();
     assert(selectedKunnr != null && selectedKeyMan != null);
     var isTable260Null = fromParentResponseModel!.table260!.isEmpty;
-
     var startX = '';
     var startY = '';
     var stopX = '';

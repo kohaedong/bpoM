@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-09-27 21:22:30
+ * Last Modified: 2022-09-27 22:02:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -180,7 +180,6 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                 builder: (context, surcharge, _) {
                   return BaseInputWidget(
                     context: context,
-                    iconType: InputIconType.SELECT,
                     textEditingController: _surchargeQuantityInputController,
                     iconColor: AppColors.textFieldUnfoucsColor,
                     hintText: surcharge ?? tr('plz_enter'),

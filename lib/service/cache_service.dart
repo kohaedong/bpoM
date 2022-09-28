@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/cache_service.dart
  * Created Date: 2021-08-22 19:45:10
- * Last Modified: 2022-09-23 15:31:41
+ * Last Modified: 2022-09-27 23:27:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -160,6 +160,14 @@ class CacheService {
 
   static void setIsDisableUpdate(bool? isDisable) {
     saveData('isDisable', isDisable ?? false);
+  }
+
+  static bool? getIsLandSpaceMode() {
+    return getData('isLandSpace') ?? false;
+  }
+
+  static void setIsLandSpaceMode(bool? isLandSpace) {
+    saveData('isLandSpace', isLandSpace ?? false);
   }
 
   static void saveUser(User? user) {

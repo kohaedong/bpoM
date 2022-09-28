@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-09-27 10:52:35
+ * Last Modified: 2022-09-28 15:44:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_text.dart';
@@ -63,7 +64,8 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
       alignment: Alignment.centerLeft,
       height: AppSize.buttonHeight,
       child: AppText.text(
-          widget.status == ActivityStatus.STARTED
+          widget.status == ActivityStatus.STARTED ||
+                  widget.status == ActivityStatus.NOTCONFIRMED
               ? tr('stop_sales_activity')
               : tr('start_sales_activity'),
           style: AppTextStyle.w500_18,
@@ -84,24 +86,10 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
           } else {
             final p = context.read<SelectLocationProvider>();
             var index = p.selectedIndex;
-            if (index == 1 && p.selectedAddress == null && p.isShowSelector) {
+            if (index != 2 && p.selectedAddress == null) {
               AppToast().show(context, tr('plz_select_office'));
               return;
             }
-            switch (index) {
-              case 0:
-                if (!p.isHomeAddressEmpty) {
-                  p.setSelectedAddress(p.homeAddress);
-                }
-                break;
-              case 1:
-                if (!p.isOfficeAddressEmpty) {
-                  p.setSelectedAddress(p.officeAddress);
-                }
-
-                break;
-            }
-
             if (index == 2 ||
                 (p.selectedAddress != null &&
                     !p.isHomeAddressEmpty &&
@@ -115,8 +103,6 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                   AppToast().show(context, result.errorMassage!);
                 }
               });
-            } else {
-              AppToast().show(context, tr('plz_set_home_address'));
             }
           }
         },
@@ -152,12 +138,22 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
         onTap: () {
           final p = context.read<SelectLocationProvider>();
           p.setSelectedIndex(index);
-          if (index == 1 && p.isShowSelector) {
-            p.setIsShowSelector(true);
-            p.setHeight(250);
-          } else {
-            p.setIsShowSelector(false);
-            p.setHeight(200);
+          p.setIsShowSelector(p.isShowSelector);
+          switch (index) {
+            case 0:
+              p.setSelectedAddress(p.homeAddress);
+              pr(p.homeAddress);
+              break;
+            case 1:
+              if (p.isShowSelector) {
+                p.setHeight(250);
+              } else {
+                p.setSelectedAddress(p.officeAddres.single.zadd1);
+                pr(p.officeAddres.single.zadd1);
+              }
+              break;
+            default:
+              p.setHeight(200);
           }
         },
         behavior: HitTestBehavior.opaque,

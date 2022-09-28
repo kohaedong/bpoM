@@ -78,6 +78,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final arguments = ModalRoute.of(context)!.settings.arguments;
     // update or notice 확인 완료 여부.
     final isCheckDone = CacheService.isUpdateAndNoticeCheckDone();
+    final isLandSpace = CacheService.getIsLandSpaceMode();
     var isLocked = false;
     if (paused) {
       _isForeground = false;
@@ -86,7 +87,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     pr('_isForeground ${_isForeground}');
     pr('arguments == null  ${arguments == null}');
     pr('isNotLocked ${!isLocked}');
-    if (_isForeground && arguments == null && !isLocked) {
+    if (_isForeground &&
+        (isLandSpace == null || !isLandSpace) &&
+        arguments == null &&
+        !isLocked) {
       isLocked = true;
       // 다이얼로그 호출시 업데이트 체크 재외 처리.
       final isDisable = CacheService.getIsDisableUpdate();

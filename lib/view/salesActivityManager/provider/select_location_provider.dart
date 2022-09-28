@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-09-24 18:51:36
+ * Last Modified: 2022-09-28 15:42:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -54,8 +54,8 @@ class SelectLocationProvider extends ChangeNotifier {
       locationList!.where((model) => model.addcat == 'O').isEmpty;
   String get homeAddress =>
       locationList!.where((model) => model.addcat == 'H').single.zadd1!;
-  String get officeAddress =>
-      locationList!.where((model) => model.addcat == 'O').single.zadd1!;
+  List<SalseActivityLocationModel> get officeAddres =>
+      locationList!.where((model) => model.addcat == 'O').toList();
   String get locationType => locationList!
       .where((model) => model.zadd1 == selectedAddress)
       .first
@@ -67,12 +67,12 @@ class SelectLocationProvider extends ChangeNotifier {
     editDayModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
     locationList = fromParentLocationList;
-    locationList?.forEach((element) {
-      pr(element);
-    });
     activityStatus = status;
+
     isShowSelector =
         locationList!.where((model) => model.addcat == 'O').toList().length > 1;
+    selectedAddress = homeAddress;
+    pr(homeAddress);
   }
 
   Future<List<String>> getAddress(
@@ -123,23 +123,88 @@ class SelectLocationProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  Future<double> _getTable260TotalDistance() async {
-    var dist = 0.0;
-    if (editDayModel!.table260!.isNotEmpty) {
-      editDayModel!.table260!.forEach((item) {
-        dist = item.dist! + dist;
-      });
-    }
-    return dist;
-  }
+  // Future<ResultModel> getDistance() async {
+  //   isLoadData = true;
+  //   notifyListeners();
+  //   var isTable260Null = editDayModel!.table260!.isEmpty;
+  //   SalesActivityDayTable260? lastArriveModel;
+  //   if (!isTable260Null) {
+  //      var visitList = editDayModel!.table260!
+  //         .where((item) => item.xvisit == 'Y')
+  //         .toList();
+  //     lastArriveModel = editDayModel!.table260!.reduce((first, last) => first.);
+  //   }
+  //   var startX = '';
+  //   var startY = '';
+  //   var stopX = '';
+  //   var stopY = '';
+  //   var startKunnr = '';
+  //   var stopKunnr = '';
+  //   var setStartLatLonFormTable250 = () async {
+  //     var latLonResult = await getAddressLatLon(selectedKunnr!.zaddName1!);
+  //     startX = '${fromParentResponseModel!.table250!.single.sxLatitude!}';
+  //     startY = '${fromParentResponseModel!.table250!.single.syLongitude!}';
+  //     stopX = latLonResult.data['lat'];
+  //     stopY = latLonResult.data['lon'];
+  //     startKunnr = '';
+  //     stopKunnr = selectedKunnr!.zskunnr!;
+  //   };
+  //   if (isTable260Null) {
+  //     // 도착처리건 없으면 영업활동 첫건으로 판단해 table 250어서 영업활동 시작주소 가져옴.
+  //     await setStartLatLonFormTable250.call();
+  //   } else {
+  //     var visitList = fromParentResponseModel!.table260!
+  //         .where((item) => item.xvisit == 'Y')
+  //         .toList();
+  //     // 도착처리건 있으면. 마지막 도착 지점의 lat & lon 가져온다.
+  //     if (visitList.isNotEmpty) {
+  //       var lastVisitModel = visitList.first;
+  //       var latLonResult = await getAddressLatLon(selectedKunnr!.zaddName1!);
+  //       startX = '${lastVisitModel.xLatitude}';
+  //       startY = '${lastVisitModel.yLongitude}';
+  //       stopX = latLonResult.data['lat'];
+  //       stopY = latLonResult.data['lon'];
+  //       startKunnr = lastVisitModel.zskunnr ?? '';
+  //       stopKunnr = selectedKunnr!.zskunnr!;
+  //     } else {
+  //       // 도착처리건 없으면 영업활동 첫건으로 판단해 table 250어서 영업활동 시작주소 가져옴.
+  //       await setStartLatLonFormTable250.call();
+  //     }
+  //   }
+  //   _api.init(RequestType.GET_DISTANCE);
+  //   Map<String, dynamic> _body = {
+  //     "departureCode": startKunnr,
+  //     "departureX": startX,
+  //     "departureY": startY,
+  //     "destinationCode": stopKunnr,
+  //     "destinationX": stopX,
+  //     "destinationY": stopY
+  //   };
+  //   final result = await _api.request(body: _body);
+  //   if (result != null && result.statusCode != 200) {
+  //     isLoadData = false;
+  //     notifyListeners();
+  //     return ResultModel(false);
+  //   }
+  //   if (result != null && result.statusCode == 200) {
+  //     distanceModel = AddActivityDistanceModel.fromJson(result.body['data']);
+  //     isVisit = true;
+  //     isLoadData = false;
+  //     notifyListeners();
+  //     return ResultModel(true);
+  //   }
+  //   isLoadData = false;
+  //   notifyListeners();
+  //   return ResultModel(false);
+  // }
 
+  // Future<double> _getDistanceForFinishCourse() async {}
   Future<ResultModel> startOrStopActivity(int indexx) async {
     isLoadData = true;
     notifyListeners();
     if (selectedAddress != null) {
       await getAddressLatLon(selectedAddress!);
     } else {
-      pr('???');
       lat = '0.00';
       lon = '0.00';
     }
@@ -153,40 +218,25 @@ class SelectLocationProvider extends ChangeNotifier {
     var t250 = SalesActivityDayTable250();
 
     var time = DateUtil.getTimeNow();
-    if (activityStatus == ActivityStatus.STARTED) {
-      final t260TotalDistance = await _getTable260TotalDistance();
-      // if (indexx != 2) {
-      //   var t260 = editDayModel!.table260!;
-      //   // 거래처 혹은 숙박 아니면 최종 영업종료지점 까지의 거리 계산하기.
-      //   if (t260.isNotEmpty) {
-      //     var index = 0;
-      //     t260
-      //         .where((table) => table.xvisit == 'Y')
-      //         .toList()
-      //         .asMap()
-      //         .entries
-      //         .forEach((map) {
-      //       if (int.parse(time) > int.parse(map.value.aezet!)) {
-      //         index = map.key;
-      //       }
-      //     });
-      //   }
-      // }
+    if (activityStatus == ActivityStatus.STARTED ||
+        activityStatus == ActivityStatus.NOTCONFIRMED) {
       // 영업활동 시작 하였으면 >>>  영업활동 종료
       t250 = SalesActivityDayTable250.fromJson(
           editDayModel!.table250!.first.toJson());
-      t250.totDist = t260TotalDistance; // 총 거리 계산.
       t250.umode = 'U';
       t250.fcallType = 'M';
       t250.faddcat = indexx != 2 ? locationType : 'C';
       t250.fxLatitude = double.parse(lat!.trim());
       t250.fylongitude = double.parse(lon!.trim());
-      t250.ftime = DateUtil.getTimeNow();
+      t250.ftime = activityStatus == ActivityStatus.NOTCONFIRMED
+          ? '235900'
+          : DateUtil.getTimeNow();
       t250.fzaddr = indexx != 2 ? selectedAddress : '';
     } else {
       // 영업활동 시작 하지 않았으면. >>> 영업활동 시작. table 신규 추가.
       t250.adate =
           FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now()));
+      t250.aezet = DateUtil.getTimeNow(isNotWithColon: true);
       t250.saddcat = indexx != 2 ? locationType : 'C';
       t250.szaddr = indexx != 2 ? selectedAddress : '';
       t250.ernam = esLogin!.ename;
@@ -250,6 +300,9 @@ class SelectLocationProvider extends ChangeNotifier {
 
   void setSelectedIndex(int val) {
     selectedIndex = val;
+    if (selectedIndex == 2) {
+      selectedAddress = '';
+    }
     notifyListeners();
   }
 

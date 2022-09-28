@@ -239,19 +239,8 @@ class _SigninPageState extends State<SigninPage> {
                                   } else {
                                     if (result.isShowPopup != null &&
                                         result.isShowPopup!) {
-                                      switch (result.message) {
-                                        case 'serverError':
-                                          AppDialog.showServerErrorDialog(
-                                              context);
-                                          break;
-                                        case 'networkError':
-                                          AppDialog.showNetworkErrorDialog(
-                                              context);
-                                          break;
-                                        default:
-                                          AppDialog.showDangermessage(
-                                              context, '${result.message}');
-                                      }
+                                      AppDialog.showDangermessage(
+                                          context, '${result.message}');
                                     } else {
                                       p.startErrorMessage(result.message);
                                     }

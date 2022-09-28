@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-09-24 19:26:20
+ * Last Modified: 2022-09-27 21:57:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -37,7 +37,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirestRun = true;
   bool isSingleData = false;
-  bool isShhowNotResultText = false;
+  bool? isShhowNotResultText;
   String? personInputText;
   String? keymanInputText;
   String? customerInputTextForAddActivityPage;
@@ -448,11 +448,20 @@ class BasePopupSearchProvider extends ChangeNotifier {
   }
 
   Future<BasePoupSearchResult> searchMaterial(bool isMounted) async {
-    assert(seletedMateriaFamily != null);
+    // assert(seletedMateriaFamily != null);
+    pr(1);
+    if (isFirestRun) {
+      isFirestRun = false;
+      return BasePoupSearchResult(true);
+    }
+    pr(2);
+
     isLoadData = true;
     if (isMounted) {
       notifyListeners();
     }
+    pr(3);
+
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();
     var spart = '';
@@ -505,8 +514,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
       }
       pr(temp.toJson());
       isLoadData = false;
+      isFirestRun = false;
       isShhowNotResultText = metarialResponseModel != null &&
-          metarialResponseModel!.etOutput!.isEmpty;
+          metarialResponseModel!.etOutput!.isNotEmpty;
       notifyListeners();
       return BasePoupSearchResult(true);
     }

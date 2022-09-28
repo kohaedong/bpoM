@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-09-27 11:18:38
+ * Last Modified: 2022-09-28 14:33:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -113,7 +113,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     pr('isShowConfirm:: $isShowConfirm');
     if (seletedDayIsWorkingDayBeforeToday) {
       activityStatus = isPreviouDayNotConfirmed
-          ? ActivityStatus.STOPED
+          ? ActivityStatus.NOTCONFIRMED
           : ActivityStatus.FINISH;
     } else if (isToday) {
       var table250 = dayResponseModel!.table250!;
@@ -535,19 +535,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   Future<ResultModel> confirmAcitivityTable() async {
     isLoadDayData = true;
     notifyListeners();
+    var isSuccessfulList = <ConfirmModel>[];
     var validateTables = () async {
-      var is250Stoped = false;
-      var isSuccessfulList = <ConfirmModel>[];
-      if (dayResponseModel!.table250!.isNotEmpty) {
-        var t250 = dayResponseModel!.table250!.single;
-        is250Stoped = t250.scallType == 'M' &&
-            t250.fcallType == 'M' &&
-            t250.ftime != null &&
-            t250.ftime!.isNotEmpty &&
-            t250.stime != null &&
-            t250.stime!.isNotEmpty;
-      }
-
       if (dayResponseModel!.table260!.isNotEmpty) {
         await Future.forEach(dayResponseModel!.table260!.asMap().entries,
             (map) async {
@@ -630,8 +619,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
               isActivityResultNotEmpty &&
               isSuggetionItemNotEmpty &&
               isMeetFailReasonNotEmpty &&
-              isNotVisitReasonNotEmpty &&
-              is250Stoped;
+              isNotVisitReasonNotEmpty;
           isSuccessfulList.add(ConfirmModel(
               isSuccessful: validate, index: map.key, message: message));
         });

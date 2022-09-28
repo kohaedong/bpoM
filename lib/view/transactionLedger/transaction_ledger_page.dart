@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-09-27 10:16:21
+ * Last Modified: 2022-09-27 23:51:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -495,6 +495,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   Widget _buildListViewItemForLandSpace(BuildContext context,
       TransLedgerTListModel model, int index, bool isShowLastPage) {
     final isTotalRow = model.spmon!.contains('<');
+    final isLastRow = model.spmon!.contains('총 계');
     return Column(
       children: [
         Table(
@@ -520,12 +521,12 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
           },
           children: [
             TableRow(children: [
-              _buildTableBox(model.bschlTx!, 0,
+              _buildTableBox(isLastRow ? '총 합계' : model.bschlTx!, 0,
                   isBody: true, isLandSpace: true, isTotalRow: isTotalRow),
               _buildTableBox(
                   isTotalRow
-                      ? model.spmon!.contains('총 계')
-                          ? '총 합계'
+                      ? isLastRow
+                          ? ''
                           : model.spmon!
                       : FormatUtil.addDashForDateStr2(
                           model.spmon!.replaceAll('-', '')),
@@ -663,7 +664,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   onPressed: () {
                     final p = context.read<TransactionLedgerPageProvider>();
                     p.setIsShowAppBar();
-                    CacheService.setIsDisableUpdate(true);
+                    CacheService.setIsLandSpaceMode(true);
                     SystemChrome.setPreferredOrientations([
                       DeviceOrientation.landscapeRight,
                     ]);
@@ -705,9 +706,10 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           AppSize.appBarHeight -
                           AppSize.bottomSafeAreaHeight(context) -
                           AppSize.topSafeAreaHeight(context) -
-                          AppSize.buttonHeight * 3,
+                          AppSize.buttonHeight * 4,
                     ),
                     child: ListView.builder(
+                      physics: ClampingScrollPhysics(),
                       shrinkWrap: true,
                       padding: EdgeInsets.only(bottom: AppSize.appBarHeight),
                       controller: _scrollController,
@@ -1079,7 +1081,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
         ]);
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
             overlays: [SystemUiOverlay.top]);
-        CacheService.setIsDisableUpdate(false);
+        CacheService.setIsLandSpaceMode(false);
       },
       child: Container(
           padding: Platform.isIOS
@@ -1158,22 +1160,25 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     return Stack(
       children: [
         RefreshIndicator(
-          onRefresh: () {
-            _panelSwich.value = false;
-            return p.refresh().then((value) {
-              hideKeyboard(context);
-              Future.delayed(Duration(seconds: 1), () {
-                if (p.transLedgerResponseModel == null ||
-                    p.transLedgerResponseModel!.tList!.isEmpty) {
-                  Future.delayed(Duration(seconds: 1), () {
-                    _panelSwich.value = true;
-                  });
-                }
+          onRefresh: () async {
+            if (_scrollController2.position.atEdge && _panelSwich.value) {
+              _panelSwich.value = false;
+              return p.refresh().then((value) {
+                hideKeyboard(context);
+                Future.delayed(Duration(seconds: 1), () {
+                  if (p.transLedgerResponseModel == null ||
+                      p.transLedgerResponseModel!.tList!.isEmpty) {
+                    Future.delayed(Duration(seconds: 1), () {
+                      _panelSwich.value = true;
+                    });
+                  }
+                });
               });
-            });
+            }
           },
           child: ListView(
             controller: _scrollController2,
+            shrinkWrap: true,
             children: [
               CustomerinfoWidget.buildDividingLine(),
               _buildPanel(context),
