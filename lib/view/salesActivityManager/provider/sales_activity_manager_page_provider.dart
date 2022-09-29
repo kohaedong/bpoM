@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-09-29 15:17:40
+ * Last Modified: 2022-09-29 16:15:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -98,6 +98,13 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   }
 
   void checkShowConfirm() async {
+    var t250 = dayResponseModel!.table250;
+    var isStoped = t250 != null &&
+        t250.isNotEmpty &&
+        t250.single.faddcat != null &&
+        t250.single.faddcat!.isNotEmpty &&
+        t250.single.ftime != null &&
+        t250.single.ftime!.isNotEmpty;
     await checkPreviousWorkingDay('', dt: DateTime.now());
     var previouWorkday = previousWorkingDay;
     var isToday = (selectedDay!.year == DateTime.now().year) &&
@@ -113,7 +120,9 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     pr('isShowConfirm:: $isShowConfirm');
     if (seletedDayIsWorkingDayBeforeToday) {
       activityStatus = isPreviouDayNotConfirmed
-          ? ActivityStatus.NOTCONFIRMED
+          ? isStoped
+              ? ActivityStatus.STOPED
+              : ActivityStatus.NOTCONFIRMED
           : ActivityStatus.FINISH;
     } else if (isToday) {
       var table250 = dayResponseModel!.table250!;
@@ -499,19 +508,20 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       dayResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
-      pr('430 :::     ${dayResponseModel?.table430!.length}행');
-      if (isWithLoading != null && isWithLoading) {
-        isLoadDayData = false;
+      if (dayResponseModel!.table250!.isNotEmpty) {
+        dayResponseModel!.table250!.forEach((element) {
+          pr(element.toJson());
+        });
       }
-
       // 영업활동 종료 후 다시 페이지로 돌아 왔을때 대비.
       var t250 = dayResponseModel!.table250;
-      if (t250 != null &&
+      var isStoped = t250 != null &&
           t250.isNotEmpty &&
-          t250.first.faddcat != null &&
-          t250.first.faddcat!.isNotEmpty &&
-          t250.first.ftime != null &&
-          t250.first.ftime!.isNotEmpty) {
+          t250.single.faddcat != null &&
+          t250.single.faddcat!.isNotEmpty &&
+          t250.single.ftime != null &&
+          t250.single.ftime!.isNotEmpty;
+      if (isStoped) {
         activityStatus = ActivityStatus.STOPED;
       }
       isResetDay = null;

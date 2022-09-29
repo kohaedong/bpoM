@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-29 15:01:31
+ * Last Modified: 2022-09-29 16:29:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -269,6 +269,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   Widget _buildDateText(BuildContext context, {bool? isMonth}) {
     return InkWell(
       onTap: () async {
+        pr(1);
         final p = context.read<SalseActivityManagerPageProvider>();
         if (isMonth != null && isMonth) {
           final result = await AppDialog.showPopup(
@@ -282,8 +283,11 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
               p.getSelectedMonthData(date);
             }
           }
-        } else {
-          final result = await BasePopupList(
+        }
+
+        if (isMonth == null) {
+          pr('sb');
+          final rs = await BasePopupList(
                   OneCellType.DATE_PICKER, InputIconType.DATA_PICKER)
               .show(context,
                   selectedDateStr: DateUtil.getDateStr('',
@@ -291,8 +295,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                           ? p.selectedMonth ?? DateTime.now()
                           : p.selectedDay ?? DateTime.now()));
 
-          if (result != null) {
-            p.getSelectedDayData(DateUtil.getDate(result));
+          if (rs != null) {
+            p.getSelectedDayData(DateUtil.getDate(rs));
           }
         }
       },
