@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-09-01 09:53:08
+ * Last Modified: 2022-09-29 17:47:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -69,6 +69,7 @@ class ActivityMenuProvider extends ChangeNotifier {
     if (officeAddress != null) {
       officeAddressResponseModel = officeAddress;
     }
+
     pr('??? status $status');
     activityStatus = status;
     if (isMounted != null && isMounted) {

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/popup_cell.dart
  * Created Date: 2021-08-19 10:00:29
- * Last Modified: 2022-09-28 19:44:01
+ * Last Modified: 2022-09-29 19:03:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -17,7 +17,6 @@ import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/enums/popup_cell_type.dart';
 import 'package:medsalesportal/model/commonCode/cell_model.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 
 class BasePopupCell {
   BasePopupCell({

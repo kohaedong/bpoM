@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/popup_search_type.dart
  * Created Date: 2021-09-10 21:38:04
- * Last Modified: 2022-09-22 14:04:34
+ * Last Modified: 2022-09-29 20:53:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/app_size.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 
 import 'popup_list_type.dart';
 
@@ -147,7 +148,7 @@ extension PopupSearchTypeExtension on PopupSearchType {
       case PopupSearchType.SEARCH_SUGGETION_ITEM:
         return AppSize.defaultTextFieldHeight * 2 +
             AppSize.defaultListItemSpacing * 4 +
-            AppSize.appBarHeight +
+            AppSize.buttonHeight +
             AppSize.secondButtonHeight;
       case PopupSearchType.SEARCH_SALLER:
         return AppSize.defaultTextFieldHeight * 4 +
@@ -159,11 +160,16 @@ extension PopupSearchTypeExtension on PopupSearchType {
             AppSize.defaultListItemSpacing * 3 +
             AppSize.appBarHeight +
             AppSize.secondButtonHeight;
+      case PopupSearchType.SEARCH_SALSE_PERSON:
+        return AppSize.defaultTextFieldHeight +
+            AppSize.buttonHeight +
+            AppSize.defaultListItemSpacing * 2;
       case PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER:
         return AppSize.defaultTextFieldHeight * 4 +
             AppSize.defaultListItemSpacing * 6 +
             AppSize.appBarHeight +
             AppSize.secondButtonHeight; // 영업사원
+
       default:
         return AppSize.popupAppbarHeight + AppSize.secondButtonHeight;
     }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-29 16:47:06
+ * Last Modified: 2022-09-29 21:31:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -34,7 +34,6 @@ import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_popup_list.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/common/widget_of_tag_button.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_weeks_model.dart';
@@ -516,7 +515,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       //!  주소 선택 팝업창에서 리턴된 데이터.
       if (popupResult.isSuccessful) {
         if (p.activityStatus == ActivityStatus.STARTED ||
-            p.activityStatus == ActivityStatus.NOTCONFIRMED) {
+            p.activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED) {
           AppToast().show(context, tr('activity_is_stoped'));
           Navigator.pop(context, true);
         }
@@ -645,7 +644,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             context,
             menuType == MenuType.ACTIVITY_STATUS
                 ? status == ActivityStatus.STARTED ||
-                        status == ActivityStatus.NOTCONFIRMED
+                        status == ActivityStatus.PREV_WORK_DAY_EN_STOPED
                     ? tr('stop_sales_activity')
                     : tr('start_sales_activity')
                 : '$text',
@@ -677,7 +676,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   // 영업활동 종료.
                   _showLocationPopup(context);
                   break;
-                case ActivityStatus.NOTCONFIRMED:
+                case ActivityStatus.PREV_WORK_DAY_EN_STOPED:
                   // 영업활동 종료.
                   _showLocationPopup(context);
                   break;
@@ -846,7 +845,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                         tuple.item2 == ActivityStatus.STOPED)
                     ? Container()
                     : _buildMenuButton(context)
-                : tuple.item2 == ActivityStatus.NOTCONFIRMED
+                : tuple.item2 == ActivityStatus.PREV_WORK_DAY_EN_STOPED
                     ? _buildMenuButton(context, isNotConfirmed: true)
                     : Container();
           },
@@ -879,7 +878,10 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             case ActivityStatus.FINISH:
               _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY_DISIBLE;
               break;
-            case ActivityStatus.NOTCONFIRMED:
+            case ActivityStatus.PREV_WORK_DAY_EN_STOPED:
+              _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY;
+              break;
+            case ActivityStatus.PREV_WORK_DAY_STOPED:
               _pageType.value = PageType.SALES_ACTIVITY_MANAGER_DAY;
               break;
             case ActivityStatus.STARTED:
@@ -982,40 +984,31 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                         return _actionButton;
                       }), actionCallback: () async {
                 final p = context.read<SalseActivityManagerPageProvider>();
-                switch (p.activityStatus!) {
-                  case ActivityStatus.STOPED:
-                    // save
-                    p
-                        .confirmAcitivityTable()
-                        .then((result) => result.isSuccessful
-                            ? () {
-                                p.setActivityStatus(ActivityStatus.FINISH);
-                                AppToast()
-                                    .show(context, tr('confirm_successful'));
-                              }()
-                            : () async {
-                                var indexx = result.data['index'];
-                                var message = result.data['message'];
-                                AppToast().show(context, message);
-                                var popResult = await Navigator.pushNamed(
-                                    context, AddActivityPage.routeName,
-                                    arguments: {
-                                      'model': p.dayResponseModel,
-                                      'status': p.activityStatus,
-                                      'index': indexx
-                                    });
-                                if (popResult != null) {
-                                  p.getDayData(isWithLoading: true);
-                                }
-                              }());
-                    break;
-                  case ActivityStatus.FINISH:
-                    DoNothingAction();
-                    break;
-                  default:
-                    AppDialog.showSimpleDialog(
-                        context, null, tr('stop_activity_first_commont'),
-                        isSingleButton: true);
+                if (p.activityStatus! == ActivityStatus.STOPED ||
+                    p.activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED) {
+                  p.confirmAcitivityTable().then((result) => result.isSuccessful
+                      ? () {
+                          p.setActivityStatus(ActivityStatus.FINISH);
+                          AppToast().show(context, tr('confirm_successful'));
+                        }()
+                      : () async {
+                          var indexx = result.data['index'];
+                          var message = result.data['message'];
+                          AppToast().show(context, message);
+                          var popResult = await Navigator.pushNamed(
+                              context, AddActivityPage.routeName, arguments: {
+                            'model': p.dayResponseModel,
+                            'status': p.activityStatus,
+                            'index': indexx
+                          });
+                          if (popResult != null) {
+                            p.getDayData(isWithLoading: true);
+                          }
+                        }());
+                } else if (p.activityStatus != ActivityStatus.FINISH) {
+                  AppDialog.showSimpleDialog(
+                      context, null, tr('stop_activity_first_commont'),
+                      isSingleButton: true);
                 }
               }),
               child: FutureBuilder<ResultModel>(

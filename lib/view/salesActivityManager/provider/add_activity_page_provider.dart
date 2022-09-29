@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-28 18:01:13
+ * Last Modified: 2022-09-29 19:35:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
@@ -782,28 +783,36 @@ class AddActivityPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       fromParentResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
-      pr(fromParentResponseModel?.toJson());
-      fromParentResponseModel?.table260?.forEach((element) {
-        pr('@@@@@@@@@@${element.toJson()}');
-      });
-      if (index != null) {
-        var temp = fromParentResponseModel!.table260!
-            .where((table) => table.seqno == lastSeqNo)
-            .last;
-        editModel260 = SalesActivityDayTable260.fromJson(temp.toJson());
+      if (activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED ||
+          activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED) {
+        isLoadData = false;
+        notifyListeners();
+        pr(' pop ');
+        Navigator.pop(KeyService.baseAppKey.currentContext!, true);
       } else {
-        var temp = fromParentResponseModel!.table260!
-            .where((table) => table.seqno == incrementSeqno(lastSeqNo!))
-            .single;
-        editModel260 = SalesActivityDayTable260.fromJson(temp.toJson());
+        pr(fromParentResponseModel?.toJson());
+        fromParentResponseModel?.table260?.forEach((element) {
+          pr('@@@@@@@@@@${element.toJson()}');
+        });
+        if (index != null) {
+          var temp = fromParentResponseModel!.table260!
+              .where((table) => table.seqno == lastSeqNo)
+              .last;
+          editModel260 = SalesActivityDayTable260.fromJson(temp.toJson());
+        } else {
+          var temp = fromParentResponseModel!.table260!
+              .where((table) => table.seqno == incrementSeqno(lastSeqNo!))
+              .single;
+          editModel260 = SalesActivityDayTable260.fromJson(temp.toJson());
+        }
+        if (anotherSaller != null) {
+          isLockOtherSalerSelector = true;
+        }
+        isLoadData = false;
+        isUpdate = true;
+        notifyListeners();
+        return ResultModel(true);
       }
-      if (anotherSaller != null) {
-        isLockOtherSalerSelector = true;
-      }
-      isLoadData = false;
-      isUpdate = true;
-      notifyListeners();
-      return ResultModel(true);
     }
     isLoadData = false;
     notifyListeners();

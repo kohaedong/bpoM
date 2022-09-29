@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-09-29 14:58:37
+ * Last Modified: 2022-09-29 18:59:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/styles/app_style.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_text.dart';
@@ -64,7 +65,7 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
       height: AppSize.buttonHeight,
       child: AppText.text(
           widget.status == ActivityStatus.STARTED ||
-                  widget.status == ActivityStatus.NOTCONFIRMED
+                  widget.status == ActivityStatus.PREV_WORK_DAY_EN_STOPED
               ? tr('stop_sales_activity')
               : tr('start_sales_activity'),
           style: AppTextStyle.w500_18,
@@ -73,6 +74,7 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
   }
 
   Widget _buildButton(BuildContext context, {required bool isLeft}) {
+    final p = context.read<SelectLocationProvider>();
     var borderSide = BorderSide(width: .5, color: AppColors.textGrey);
     var decration = isLeft
         ? BoxDecoration(border: Border(top: borderSide, right: borderSide))
@@ -86,7 +88,6 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
               if (isLeft) {
                 Navigator.pop(context, null);
               } else {
-                final p = context.read<SelectLocationProvider>();
                 var index = p.selectedIndex;
 
                 switch (index) {
@@ -132,7 +133,13 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                 decoration: decration,
                 width: AppSize.defaultContentsWidth / 2,
                 child: AppText.text(
-                  isLeft ? tr('cancel') : tr('ok'),
+                  isLeft
+                      ? tr('cancel')
+                      : p.activityStatus == ActivityStatus.STARTED ||
+                              p.activityStatus ==
+                                  ActivityStatus.PREV_WORK_DAY_EN_STOPED
+                          ? tr('stop_sales_activity2')
+                          : tr('start_sales_activity2'),
                   style: AppTextStyle.menu_18(
                       isLeft ? AppColors.defaultText : AppColors.primary),
                 )));
@@ -160,12 +167,6 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
         onTap: () {
           final p = context.read<SelectLocationProvider>();
           p.setSelectedIndex(index);
-          p.setIsShowSelector(p.isShowSelector);
-          if (index == 1 && p.isShowSelector) {
-            p.setHeight(250);
-          } else {
-            p.setHeight(200);
-          }
         },
         behavior: HitTestBehavior.opaque,
         child: Container(
@@ -207,15 +208,20 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                             .copyWith(color: AppColors.subText),
                     textStyle: AppTextStyle.default_14,
                     oneCellType: OneCellType.SELECT_OFFICE_ADDRESS,
-                    commononeCellDataCallback: () =>
-                        p.getAddress(widget.locationList),
+                    commononeCellDataCallback: () => p.getAddress(),
+                    iconType: InputIconType.SELECT,
+                    iconColor: AppColors.textFieldUnfoucsColor,
+                    isNotInsertAll: true,
+                    isShowDeleteForHintText:
+                        selectedAddress != null && selectedAddress.isNotEmpty,
+                    deleteIconCallback: () {
+                      p.setSelectedAddress(null);
+                    },
                     isSelectedStrCallBack: (str) => p.setSelectedAddress(str),
-                    iconType:
-                        selectedAddress != null ? InputIconType.DELETE : null,
                     defaultIconCallback: () => p.setSelectedAddress(null),
                     hintText: selectedAddress ?? tr('plz_select'),
                     width: AppSize.defaultContentsWidth - AppSize.padding * 2,
-                    enable: selectedAddress != null ? true : false)));
+                    enable: false)));
       },
     );
   }
@@ -239,6 +245,8 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        _buildAdressDiscription(context),
+        defaultSpacing(),
         Selector<SelectLocationProvider, int>(
             selector: (context, provider) => provider.selectedIndex,
             builder: (context, isSelectedIndex, _) {
@@ -264,6 +272,18 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
           },
         )
       ],
+    );
+  }
+
+  Widget _buildAdressDiscription(BuildContext context) {
+    final p = context.read<SelectLocationProvider>();
+    return Padding(
+      padding: AppSize.defaultSidePadding,
+      child: AppStyles.buildTitleRow(
+          p.activityStatus == ActivityStatus.STARTED ||
+                  p.activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED
+              ? tr('start_adress')
+              : tr('stop_adress')),
     );
   }
 

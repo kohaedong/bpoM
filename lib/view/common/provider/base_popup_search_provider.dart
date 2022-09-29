@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-09-27 21:57:00
+ * Last Modified: 2022-09-29 19:53:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -378,10 +378,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
             temp.staffList!.where((model) => model.sname == staffName).toList();
         selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
       }
+      isShhowNotResultText = staList != null && staList!.staffList!.isEmpty;
+      pr(isShhowNotResultText);
       return BasePoupSearchResult(true);
     }
     isLoadData = false;
-    isShhowNotResultText = staList != null && staList!.staffList!.isEmpty;
 
     notifyListeners();
     return BasePoupSearchResult(false);

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/add_order_popup_provider.dart
  * Created Date: 2022-09-04 17:56:07
- * Last Modified: 2022-09-15 18:17:16
+ * Last Modified: 2022-09-29 20:39:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -42,20 +42,32 @@ class AddOrderPopupProvider extends ChangeNotifier {
       bodyMap.putIfAbsent(key, () => '$value');
     });
 
+    pr('editModell?.toJson() ${editModell?.toJson()}');
+
     if (editModell != null) {
-      editModel = editModell;
+      editModel = RecentOrderTItemModel.fromJson(editModell.toJson());
       selectedMateria = OrderManagerMaterialModel.fromJson(editModell.toJson());
-      pr(selectedMateria?.toJson());
+      pr('selectedMateria?.toJson() ${selectedMateria?.toJson()}');
     }
-    if (priceModell != null && priceModell.kwmeng != 0.0) {
+    if (editModell != null &&
+        priceModell != null &&
+        (priceModell.kwmeng != null && priceModell.kwmeng != 0)) {
       height = AppSize.realHeight * .8;
+      pr('priceModell.toJson() ${priceModell.toJson()}');
+
       priceModel =
           BulkOrderDetailSearchMetaPriceModel.fromJson(priceModell.toJson());
-      pr(selectedMateria?.toJson());
-      quantity = priceModel!.kwmeng != 0.0 ? '${priceModel!.kwmeng}' : null;
-      surcharge = editModel!.zfreeQty != 0.0 ? '${editModel!.zfreeQty}' : null;
+      pr('priceModel.toJson() ${priceModel!.toJson()}');
+      try {
+        quantity = priceModell.kwmeng != 0.0 ? '${priceModell.kwmeng}' : null;
+        surcharge =
+            editModell.zfreeQty != 0.0 ? '${editModell.zfreeQty}' : null;
+      } catch (e) {
+        pr(e);
+      }
       pr('@!@!@!@!@!@!@!@!@$surcharge');
     }
+
     return true;
   }
 

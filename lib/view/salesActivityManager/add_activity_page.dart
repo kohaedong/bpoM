@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-28 12:25:24
+ * Last Modified: 2022-09-29 21:16:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -1013,16 +1013,22 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   Widget _buildTeamLeaderAdvice(BuildContext context) {
     final p = context.read<AddActivityPageProvider>();
-    return Column(
-      children: [
-        _buildTitleRow(tr('leader_advice'), isNotwithStart: true),
-        defaultSpacing(),
-        CheckSuperAccount.isLeaderAccount()
-            ? _buildTextField(context,
-                type: AddActivityPageInputType.LEADER_ADVICE)
-            : AppText.text(p.leaderAdviceInput ?? '')
-      ],
-    );
+    return CheckSuperAccount.isLeaderAccount()
+        ? Column(
+            children: [
+              _buildTitleRow(tr('leader_advice'), isNotwithStart: true),
+              defaultSpacing(),
+              _buildTextField(context,
+                  type: AddActivityPageInputType.LEADER_ADVICE)
+            ],
+          )
+        : BaseInfoRowByKeyAndValue.build(
+            tr('leader_advice2'),
+            p.leaderAdviceInput ?? '',
+            isTitleTowRow: true,
+            maxLine: 5,
+            style: AppTextStyle.h5,
+          );
   }
 
   Widget _buildCurrentMonthScenario(BuildContext context) {

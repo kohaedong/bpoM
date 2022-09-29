@@ -18,9 +18,9 @@ class SendSuggestionPage extends StatefulWidget {
 }
 
 class _SendSuggestionPageState extends State<SendSuggestionPage> {
-  ScrollController? _textFieldScrollController;
-  ScrollController? _pageScrollController;
-  TextEditingController? _textEditingController;
+  late ScrollController _textFieldScrollController;
+  late ScrollController _pageScrollController;
+  late TextEditingController _textEditingController;
 
   @override
   void initState() {
@@ -32,9 +32,9 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
 
   @override
   void dispose() {
-    _textFieldScrollController!.dispose();
-    _pageScrollController!.dispose();
-    _textEditingController!.dispose();
+    _textFieldScrollController.dispose();
+    _pageScrollController.dispose();
+    _textEditingController.dispose();
     super.dispose();
   }
 
@@ -73,11 +73,11 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
           controller: _textEditingController,
           scrollController: _textFieldScrollController,
           onTap: () {
-            Future.delayed(Duration(milliseconds: 200), () {
-              final maxScrollValue =
-                  _pageScrollController!.position.maxScrollExtent;
-              _pageScrollController!.jumpTo(maxScrollValue);
-            });
+            final maxScrollValue =
+                _pageScrollController.position.maxScrollExtent;
+            _pageScrollController.animateTo(maxScrollValue,
+                duration: Duration(microseconds: 800),
+                curve: Curves.slowMiddle);
           },
           onChanged: (text) {
             final p = context.read<SettingsProvider>();
@@ -121,11 +121,11 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
                       AppColors.whiteText, AppTextStyle.default_18, 0),
               onPressed: () async {
                 hideKeyboard(context);
-                if (_textEditingController!.text.trim().isNotEmpty) {
+                if (_textEditingController.text.trim().isNotEmpty) {
                   final isSended = await provider.sendSuggestion();
                   if (isSended) {
                     AppToast().show(context, '${tr('send_success')}');
-                    _textEditingController!.clear();
+                    _textEditingController.clear();
                   }
                 }
               },
@@ -148,7 +148,7 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
               style: AppTextStyle.w500_22),
           icon: Icon(Icons.close_rounded),
           cachePageTypeCallBack: () =>
-              _textEditingController!.text.trim().isNotEmpty,
+              _textEditingController.text.trim().isNotEmpty,
         ),
         child: LayoutBuilder(
           builder: (context, constraint) {

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-09-23 15:20:55
+ * Last Modified: 2022-09-29 20:58:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -114,8 +114,9 @@ class AppDialog {
         context,
         buildDialogContents(
             context,
-            Center(
-                child: Column(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(padding: EdgeInsets.only(top: AppSize.padding * 2)),
                 AppImage.getImage(ImageType.INFO),
@@ -129,7 +130,7 @@ class AppDialog {
                         .headline3!,
                     maxLines: 5),
               ],
-            )),
+            ),
             true,
             AppSize.smallPopupHeight,
             signgleButtonText: '${tr('ok')}'));

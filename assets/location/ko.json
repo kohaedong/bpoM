@@ -525,6 +525,8 @@
     "client":"거래처",
     "start_sales_activity":"영업활동 시작",
     "stop_sales_activity":"영업활동 종료", 
+    "start_sales_activity2":"활동시작",
+    "stop_sales_activity2":"활동종료", 
     "add_activity_page":"영업활동 등록",
     "activity_is_started":"영업활동이 시작 되였습니다.",
     "activity_is_stoped":"영업활동이 종료 되였습니다.",
@@ -546,6 +548,7 @@
     "result_and_future":"결과/향후 활동",
     "visit_result":"방문결과",
     "leader_advice":"당월 팀장 어드바이스",
+    "leader_advice2":"당월 팀장\n어드바이스",
     "curren_month_scenario":"당월 시나리오",
     "visit_result_history":"과거 방문 결과 ",
     "month_amount_price":"월 예상 매출",
@@ -576,7 +579,9 @@
     "sys_notice":"시스템점검",
     "plz_set_home_address":"집주소 등록후 이용해주세요.",
     "plz_set_office_address":"사무실 주소 등록후 이용해주세요.",
-    "plz_selected_office_address":"사무실 주소를 선택해주세요."
+    "plz_selected_office_address":"사무실 주소를 선택해주세요.",
+    "start_adress":"출발지",
+    "stop_adress":"도착지"
    
    
 }

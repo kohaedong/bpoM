@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-27 21:31:22
+ * Last Modified: 2022-09-29 20:42:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,7 +11,6 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -589,7 +588,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                     }
                   },
                   hintTextStyleCallBack: () => AppTextStyle.default_16,
-                  iconType: InputIconType.SELECT,
+                  iconType: InputIconType.SEARCH,
                   iconColor: AppColors.textFieldUnfoucsColor,
                   hintText: model.maktx,
                   width: (AppSize.defaultContentsWidth * .7) * .85,

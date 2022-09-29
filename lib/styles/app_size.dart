@@ -1,7 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:medsalesportal/styles/app_style.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
 
 // 각종 사이즈 데이터 사전 등록.
 class AppSize {
@@ -24,6 +22,7 @@ class AppSize {
   static double get smallIconWidth => 12;
 
   static double get defaultPopupHeight => 200.h;
+  static double get adressPopupHeight => 210;
   static double get approvalInputHeight => 200.w;
   static double get serverErrorPopupHeight => 300;
   static double get approvalPopupHeight => 350;

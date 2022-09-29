@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-09-29 14:57:45
+ * Last Modified: 2022-09-29 18:59:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
@@ -43,7 +44,7 @@ class SelectLocationProvider extends ChangeNotifier {
   List<SalseActivityLocationModel>? locationList;
   ActivityStatus? activityStatus;
   final _api = ApiService();
-  double height = 200;
+  double height = AppSize.adressPopupHeight;
   int selectedIndex = 0;
   bool isShowSelector = false;
   bool isLoadData = false;
@@ -53,18 +54,19 @@ class SelectLocationProvider extends ChangeNotifier {
   bool get isHomeAddressEmpty =>
       locationList!.where((model) => model.addcat == 'H').isEmpty;
   bool get isOfficeAddressEmpty =>
-      locationList!.where((model) => model.addcat == 'O').isEmpty;
+      locationList!.where((model) => model.addcat != 'H').isEmpty;
   String get homeAddress {
     var list = locationList!.where((model) => model.addcat == 'H').toList();
     return list.isNotEmpty ? list.single.zadd1! : '';
   }
 
   List<SalseActivityLocationModel> get officeAddres =>
-      locationList!.where((model) => model.addcat == 'O').toList();
+      locationList!.where((model) => model.addcat != 'H').toList();
   String get locationType => locationList!
       .where((model) => model.zadd1 == selectedAddress)
       .first
       .addcat!;
+
   void initData(
       SalesActivityDayResponseModel fromParentModel,
       List<SalseActivityLocationModel> fromParentLocationList,
@@ -72,19 +74,16 @@ class SelectLocationProvider extends ChangeNotifier {
     editDayModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
     locationList = fromParentLocationList;
-    locationList?.forEach((element) {
-      pr(element);
-    });
+    if (!isHomeAddressEmpty) {
+      setSelectedAddress(homeAddress, isMounted: false);
+    }
     activityStatus = status;
-    isShowSelector =
-        locationList!.where((model) => model.addcat == 'O').toList().length > 1;
   }
 
-  Future<List<String>> getAddress(
-      List<SalseActivityLocationModel> locationList) async {
+  Future<List<String>> getAddress() async {
     var temp = <String>[];
-    locationList.forEach((model) {
-      if (model.addcat == 'O') {
+    locationList!.forEach((model) {
+      if (model.addcat != 'H') {
         temp.add(model.zadd1!);
       }
     });
@@ -201,7 +200,7 @@ class SelectLocationProvider extends ChangeNotifier {
     notifyListeners();
 
     if (activityStatus == ActivityStatus.STARTED ||
-        activityStatus == ActivityStatus.NOTCONFIRMED) {
+        activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED) {
       await getDistance();
     }
 
@@ -222,7 +221,7 @@ class SelectLocationProvider extends ChangeNotifier {
 
     var time = DateUtil.getTimeNow();
     if (activityStatus == ActivityStatus.STARTED ||
-        activityStatus == ActivityStatus.NOTCONFIRMED) {
+        activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED) {
       // 영업활동 시작 하였으면 >>>  영업활동 종료
       t250 = SalesActivityDayTable250.fromJson(
           editDayModel!.table250!.first.toJson());
@@ -231,7 +230,7 @@ class SelectLocationProvider extends ChangeNotifier {
       t250.faddcat = indexx != 2 ? locationType : 'C';
       t250.fxLatitude = double.parse(lat!.trim());
       t250.fylongitude = double.parse(lon!.trim());
-      t250.ftime = activityStatus == ActivityStatus.NOTCONFIRMED
+      t250.ftime = activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED
           ? '235900'
           : DateUtil.getTimeNow();
       t250.fzaddr = indexx != 2 ? selectedAddress : '';
@@ -296,15 +295,26 @@ class SelectLocationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSelectedAddress(String? str) {
+  void setSelectedAddress(String? str, {bool? isMounted}) {
     selectedAddress = str;
-    notifyListeners();
+    if (isMounted == null) {
+      notifyListeners();
+    }
   }
 
   void setSelectedIndex(int val) {
     selectedIndex = val;
     if (selectedIndex == 2) {
-      selectedAddress = '';
+      selectedAddress = null;
+    }
+    if (selectedIndex == 1) {
+      isShowSelector = officeAddres.length > 1;
+      if (isShowSelector) {
+        height = AppSize.addressPopupHeight + 50;
+      }
+    } else {
+      isShowSelector = false;
+      height = AppSize.adressPopupHeight;
     }
     notifyListeners();
   }

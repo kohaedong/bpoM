@@ -110,7 +110,7 @@ class AppStyles {
   static Widget buildTitleRow(String text, {bool? isNotwithStart}) {
     return Row(children: [
       AppText.text(text, style: AppTextStyle.h4),
-      SizedBox(width: AppSize.defaultListItemSpacing),
+      SizedBox(width: AppSize.defaultListItemSpacing / 2),
       isNotwithStart != null && isNotwithStart
           ? Container()
           : AppText.text('*',

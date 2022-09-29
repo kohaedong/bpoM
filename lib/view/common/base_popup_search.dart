@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-28 19:46:10
+ * Last Modified: 2022-09-29 20:54:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -35,7 +35,6 @@ import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
-import 'package:medsalesportal/view/common/widget_of_null_data.dart';
 import 'package:medsalesportal/view/common/widget_of_last_page_text.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
@@ -703,9 +702,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                           PopupSearchType.SEARCH_MATERIAL
                                       ? _buildMateRialSearchBar(context)
                                       : Container(),
-
           widget.type == PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY ||
-                  widget.type == PopupSearchType.SEARCH_SALSE_PERSON
+                  widget.type == PopupSearchType.SEARCH_SALSE_PERSON ||
+                  widget.type == PopupSearchType.SEARCH_SUGGETION_ITEM
               ? Container()
               : Divider(height: 0.5)
         ],
@@ -752,8 +751,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       padding: EdgeInsets.only(
                           left: AppSize.padding,
                           right: AppSize.padding,
-                          top: AppSize.padding,
-                          bottom: AppSize.buttonHeight + AppSize.padding),
+                          bottom: AppSize.buttonHeight),
                       controller: _scrollController
                         ..addListener(() {
                           if (_scrollController.offset ==
@@ -878,11 +876,13 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                           child: DefaultShimmer.buildDefaultPopupShimmer(),
                         ),
                       )
-                    : Center(
-                        child: AppText.listViewText(
-                            provider.isShhowNotResultText == null
-                                ? ''
-                                : tr('not_search_result')),
+                    : Container(
+                        child: Center(
+                          child: AppText.listViewText(
+                              provider.isShhowNotResultText == null
+                                  ? ''
+                                  : tr('no_data')),
+                        ),
                       );
           });
         });
@@ -1167,7 +1167,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
 
   Widget _buildMaterialContentsItem(BuildContext context,
       OrderManagerMaterialModel model, int index, bool isShowLastPageText) {
-    final p = context.read<BasePopupSearchProvider>();
     return InkWell(
       onTap: () {
         Navigator.pop(context, model);
