@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-09-28 15:44:42
+ * Last Modified: 2022-09-29 14:58:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_text.dart';
@@ -78,44 +77,67 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
     var decration = isLeft
         ? BoxDecoration(border: Border(top: borderSide, right: borderSide))
         : BoxDecoration(border: Border(top: borderSide));
-    return GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () async {
-          if (isLeft) {
-            Navigator.pop(context, null);
-          } else {
-            final p = context.read<SelectLocationProvider>();
-            var index = p.selectedIndex;
-            if (index != 2 && p.selectedAddress == null) {
-              AppToast().show(context, tr('plz_select_office'));
-              return;
-            }
-            if (index == 2 ||
-                (p.selectedAddress != null &&
-                    !p.isHomeAddressEmpty &&
-                    !p.isOfficeAddressEmpty)) {
-              await p.startOrStopActivity(index).then((result) {
-                if (result.isSuccessful) {
-                  //!  table저장완료. 부모창으로 model전달.
-                  Navigator.pop(context,
-                      isLeft ? null : ResultModel(true, data: p.editDayModel));
-                } else {
-                  AppToast().show(context, result.errorMassage!);
+    return Selector<SelectLocationProvider, String?>(
+      selector: (context, provider) => provider.selectedAddress,
+      builder: (context, address, _) {
+        return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () async {
+              if (isLeft) {
+                Navigator.pop(context, null);
+              } else {
+                final p = context.read<SelectLocationProvider>();
+                var index = p.selectedIndex;
+
+                switch (index) {
+                  case 0:
+                    if (p.homeAddress.isNotEmpty) {
+                      p.setSelectedAddress(p.homeAddress);
+                    } else {
+                      AppToast().show(context, tr('plz_set_home_address'));
+                    }
+                    break;
+                  case 1:
+                    if (p.officeAddres.isNotEmpty) {
+                      if (p.selectedAddress == null) {
+                        AppToast()
+                            .show(context, tr('plz_selected_office_address'));
+                      }
+                    } else {
+                      AppToast().show(context, tr('plz_set_office_address'));
+                    }
+                    break;
+                  default:
                 }
-              });
-            }
-          }
-        },
-        child: Container(
-            height: AppSize.buttonHeight,
-            alignment: Alignment.center,
-            decoration: decration,
-            width: AppSize.defaultContentsWidth / 2,
-            child: AppText.text(
-              isLeft ? tr('cancel') : tr('ok'),
-              style: AppTextStyle.menu_18(
-                  isLeft ? AppColors.defaultText : AppColors.primary),
-            )));
+
+                if (address != null && address.isNotEmpty) {
+                  await p.startOrStopActivity(index).then((result) {
+                    if (result.isSuccessful) {
+                      //!  table저장완료. 부모창으로 model전달.
+                      Navigator.pop(
+                          context,
+                          isLeft
+                              ? null
+                              : ResultModel(true, data: p.editDayModel));
+                    } else {
+                      AppToast().show(context, result.errorMassage!);
+                    }
+                  });
+                }
+              }
+            },
+            child: Container(
+                height: AppSize.buttonHeight,
+                alignment: Alignment.center,
+                decoration: decration,
+                width: AppSize.defaultContentsWidth / 2,
+                child: AppText.text(
+                  isLeft ? tr('cancel') : tr('ok'),
+                  style: AppTextStyle.menu_18(
+                      isLeft ? AppColors.defaultText : AppColors.primary),
+                )));
+      },
+    );
   }
 
   Widget _buildBox(BuildContext context, double width,
@@ -139,21 +161,10 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
           final p = context.read<SelectLocationProvider>();
           p.setSelectedIndex(index);
           p.setIsShowSelector(p.isShowSelector);
-          switch (index) {
-            case 0:
-              p.setSelectedAddress(p.homeAddress);
-              pr(p.homeAddress);
-              break;
-            case 1:
-              if (p.isShowSelector) {
-                p.setHeight(250);
-              } else {
-                p.setSelectedAddress(p.officeAddres.single.zadd1);
-                pr(p.officeAddres.single.zadd1);
-              }
-              break;
-            default:
-              p.setHeight(200);
+          if (index == 1 && p.isShowSelector) {
+            p.setHeight(250);
+          } else {
+            p.setHeight(200);
           }
         },
         behavior: HitTestBehavior.opaque,

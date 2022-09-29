@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-09-28 17:45:07
+ * Last Modified: 2022-09-29 14:57:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -54,8 +54,11 @@ class SelectLocationProvider extends ChangeNotifier {
       locationList!.where((model) => model.addcat == 'H').isEmpty;
   bool get isOfficeAddressEmpty =>
       locationList!.where((model) => model.addcat == 'O').isEmpty;
-  String get homeAddress =>
-      locationList!.where((model) => model.addcat == 'H').single.zadd1!;
+  String get homeAddress {
+    var list = locationList!.where((model) => model.addcat == 'H').toList();
+    return list.isNotEmpty ? list.single.zadd1! : '';
+  }
+
   List<SalseActivityLocationModel> get officeAddres =>
       locationList!.where((model) => model.addcat == 'O').toList();
   String get locationType => locationList!
@@ -69,12 +72,12 @@ class SelectLocationProvider extends ChangeNotifier {
     editDayModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
     locationList = fromParentLocationList;
+    locationList?.forEach((element) {
+      pr(element);
+    });
     activityStatus = status;
-
     isShowSelector =
         locationList!.where((model) => model.addcat == 'O').toList().length > 1;
-    selectedAddress = homeAddress;
-    pr(homeAddress);
   }
 
   Future<List<String>> getAddress(

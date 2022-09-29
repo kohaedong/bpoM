@@ -40,37 +40,37 @@ class CheckUpdateAndNoticeService {
           return isStart
               ? downLoadProgressContents(context)
               : Container(
-                  height: updateData!.type == UpdateType.LOCAL_CHOOSE ||
-                          updateData.type == UpdateType.WEB_CHOOSE
-                      ? AppSize.choosePopupHeightForUpdate
-                      : AppSize.enForcePopupHeightForUpdate,
+                  height: AppSize.enForcePopupHeightForUpdate,
                   width: AppSize.defaultContentsWidth,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: AppSize.updatePopupPadding,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AppText.text(
-                                updateData.type == UpdateType.LOCAL_CHOOSE ||
-                                        updateData.type == UpdateType.WEB_CHOOSE
-                                    ? '${tr('update_text_choose')}'
-                                    : '${tr('update_text_enforce')}',
-                                style: AppTextStyle.default_16,
-                                textAlign: TextAlign.start),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                    top: AppSize.defaultListItemSpacing)),
-                            AppText.text('${updateData.model!.appVerDscr}',
-                                style: AppTextStyle.default_16,
-                                textAlign: TextAlign.start),
-                          ],
+                      Expanded(
+                          child: SingleChildScrollView(
+                        child: Padding(
+                          padding: AppSize.updatePopupPadding,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AppText.text(
+                                  updateData!.type == UpdateType.LOCAL_CHOOSE ||
+                                          updateData.type ==
+                                              UpdateType.WEB_CHOOSE
+                                      ? '${tr('update_text_choose')}'
+                                      : '${tr('update_text_enforce')}',
+                                  style: AppTextStyle.default_16,
+                                  textAlign: TextAlign.start),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      top: AppSize.defaultListItemSpacing)),
+                              AppText.text('${updateData.model!.appVerDscr}',
+                                  style: AppTextStyle.default_16,
+                                  textAlign: TextAlign.start),
+                            ],
+                          ),
                         ),
-                      ),
-                      Spacer(),
+                      )),
                       Row(
                         children: [
                           Container(
