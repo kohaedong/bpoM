@@ -157,7 +157,7 @@ class SettingsProvider extends ChangeNotifier {
     final _body = {
       "methodName": RequestType.SEND_SUGGETION.serverMethod,
       "methodParam": {
-        "appId": Platform.isIOS ? '2' : '1',
+        "appId": Platform.isIOS ? '80' : '79',
         "appOpnnExpsrYn": "Y",
         "revicwDscr": "$suggetionText",
         "userId": "${user!.userAccount}"

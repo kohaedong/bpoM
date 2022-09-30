@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-29 20:42:46
+ * Last Modified: 2022-09-30 10:09:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -908,9 +908,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 context,
                 tr('register'),
                 AppSize.realWidth,
-                isValidate && !FocusScope.of(context).hasFocus
-                    ? AppColors.primary
-                    : AppColors.unReadyButton,
+                isValidate ? AppColors.primary : AppColors.unReadyButton,
                 AppTextStyle.menu_18(
                     isValidate ? AppColors.whiteText : AppColors.hintText),
                 0, () {

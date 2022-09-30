@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-09-29 21:16:13
+ * Last Modified: 2022-09-30 12:49:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -749,17 +749,18 @@ class _AddActivityPageState extends State<AddActivityPage> {
   Widget _buildItemSet(BuildContext context,
       AddActivitySuggetionItemModel model, int index, String actionType) {
     final p = context.read<AddActivityPageProvider>();
-
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(
+          width: AppSize.defaultContentsWidth * .3,
+          child: _buildTitleRow('${tr('suggested_item')}${index + 1}',
+              isNotwithStart: index != 0),
+        ),
+        defaultSpacing(isHalf: true),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: AppSize.defaultContentsWidth * .3,
-              child: _buildTitleRow('${tr('suggested_item')}${index + 1}',
-                  isNotwithStart: index != 0),
-            ),
             Expanded(
               child: BaseInputWidget(
                   context: context,
@@ -805,14 +806,16 @@ class _AddActivityPageState extends State<AddActivityPage> {
         ),
         actionType.trim() == '제품신규' && index == 0
             ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   defaultSpacing(),
+                  SizedBox(
+                    width: AppSize.defaultContentsWidth * .3,
+                    child: _buildTitleRow(tr('month_amount_price')),
+                  ),
+                  defaultSpacing(isHalf: true),
                   Row(
                     children: [
-                      SizedBox(
-                        width: AppSize.defaultContentsWidth * .3,
-                        child: _buildTitleRow(tr('month_amount_price')),
-                      ),
                       Expanded(
                           child: Selector<AddActivityPageProvider, String?>(
                         selector: (context, provider) => provider.seletedAmount,

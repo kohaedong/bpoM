@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/screen_capture_util.dart
  * Created Date: 2021-12-14 00:55:19
- * Last Modified: 2022-09-23 15:22:50
+ * Last Modified: 2022-09-30 10:27:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -40,7 +40,7 @@ class ScreenCaptrueUtil {
     Map<String, dynamic> body = {
       "methodName": RequestType.SEND_IMAGE_TO_SERVER.serverMethod,
       "methodParam": {
-        "appGrpId": Platform.isIOS ? '2' : '1',
+        "appGrpId": Platform.isIOS ? '80' : '79',
         "screenId":
             "${esLogin != null ? esLogin.ename : ''}${DateTime.now().toIso8601String()}",
         "screenShot": "$base64Image"

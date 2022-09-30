@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-09-24 17:44:29
+ * Last Modified: 2022-09-30 11:33:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -17,6 +17,7 @@ import 'package:medsalesportal/service/deviceInfo_service.dart';
 
 //*  api url / functionName/ resultTable 사전 정의.
 enum RequestType {
+  ACCESS_PERMISSION,
   RFC_COMMON_CODE,
   CHECK_NOTICE,
   CHECK_UPDATE,
@@ -72,6 +73,7 @@ extension RequestTypeExtension on RequestType {
   String get baseURL => KolonBuildConfig.KOLON_APP_BASE_URL;
   String get v2URL => '$baseURL/common/v2/api';
   String get signURL => '$baseURL/common/v2/api/basiclogin/auth';
+  String get permmionURL => '$baseURL/common/v2/api/participant/accessibleApp';
   String get rfcURL => '$baseURL/sales-group/rfc';
   String get medical => '$baseURL/sales-group/med';
   // api 에 header 추가 필요시 사전 등록.
@@ -108,6 +110,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SEARCH_STAFF:
         return '$rfcURL/common';
+      case RequestType.ACCESS_PERMISSION:
+        return '$permmionURL';
       case RequestType.CONFIRM_ACTIVITY:
         return '$rfcURL/common';
       case RequestType.CREATE_ORDER:

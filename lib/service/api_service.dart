@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/api_service.dart
  * Created Date: 2021-08-22 21:53:15
- * Last Modified: 2022-09-27 11:03:07
+ * Last Modified: 2022-09-30 11:32:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -235,10 +235,10 @@ class ApiService {
 
 // * params 는 GET 에 사용.
 // * body는 POST에 사용.
-  Future<RequestResult?> request({
-    Map<String, dynamic>? body,
-    Map<String, dynamic>? params,
-  }) async {
+  Future<RequestResult?> request(
+      {Map<String, dynamic>? body,
+      Map<String, dynamic>? params,
+      String? passingUrl}) async {
     final CancelToken? cancelToken;
     final tag = requestType!.tag;
     cancelToken = _cancelTokens[tag] ?? CancelToken();
@@ -251,7 +251,7 @@ class ApiService {
     if (requestType!.httpMethod == 'POST' || requestType!.httpMethod == 'GET') {
       try {
         final Response<Map<String, dynamic>> response = await _client!.request(
-            requestType!.url(),
+            passingUrl ?? requestType!.url(),
             data: requestType!.httpMethod == 'POST' ? jsonEncode(body) : null,
             queryParameters: requestType!.httpMethod == 'GET' ? params : null,
             options: Options(

@@ -45,6 +45,9 @@ class SigninProvider extends ChangeNotifier {
 
   void setIdCheckBox() {
     this.isCheckedSaveIdBox = !isCheckedSaveIdBox;
+    if (!this.isCheckedSaveIdBox) {
+      isCheckedAutoSigninBox = false;
+    }
     notifyListeners();
   }
 
@@ -79,7 +82,7 @@ class SigninProvider extends ChangeNotifier {
 
   void setAutoSigninCheckBox() {
     this.isCheckedAutoSigninBox = !isCheckedAutoSigninBox;
-    if (!this.isCheckedSaveIdBox) {
+    if (isCheckedAutoSigninBox) {
       this.isCheckedSaveIdBox = true;
     }
     notifyListeners();
@@ -333,16 +336,29 @@ class SigninProvider extends ChangeNotifier {
     }
   }
 
+  Future<SigninResult> checkAccessPermmision(String userId) async {
+    _api.init(RequestType.ACCESS_PERMISSION);
+    var url =
+        '${RequestType.ACCESS_PERMISSION.url()}/${Platform.isIOS ? '80' : '79'}/$userId';
+    final result = await _api.request(passingUrl: url);
+    if (result != null && result.body != null) {
+      pr(result.body);
+      return SigninResult(true, 'success');
+    }
+    return SigninResult(false, 'permmison biden.');
+  }
+
   Future<SigninResult> signIn({bool? isWithAutoLogin}) async {
+    var ssoUserId = '';
+    var ssoUserPw = '';
     isLoadData = true;
     notifyListeners();
     Map<String, dynamic>? signBody;
     if (isWithAutoLogin != null && isWithAutoLogin) {
       var ssoResultMap = await getUserIdAndPasswordFromSSO();
-      signBody = {
-        "userAccount": "${ssoResultMap['userAccount']}".trim(),
-        "passwd": "${ssoResultMap['password']}".trim()
-      };
+      ssoUserId = "${ssoResultMap['userAccount']}".trim();
+      ssoUserPw = "${ssoResultMap['password']}".trim();
+      signBody = {"userAccount": ssoUserId, "passwd": ssoUserPw};
     } else {
       signBody = {
         "userAccount": userAccount != null ? userAccount!.trim() : '',
@@ -372,6 +388,13 @@ class SigninProvider extends ChangeNotifier {
       if (isWithAutoLogin == null) {
         setAutoLogin(isCheckedAutoSigninBox);
         setIsSaveId(isCheckedSaveIdBox);
+      }
+      var accessPermissionResult = await checkAccessPermmision(
+          isWithAutoLogin != null && isWithAutoLogin
+              ? ssoUserId
+              : userAccount!);
+      if (!accessPermissionResult.isSuccessful) {
+        return SigninResult(false, accessPermissionResult.message);
       }
       await saveUserIdAndPasswordToSSO(
           signBody['userAccount'], signBody['passwd']);
