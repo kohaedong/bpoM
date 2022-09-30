@@ -61,7 +61,7 @@ class _SigninPageState extends State<SigninPage> {
             builder: (context, account, _) {
               return BaseInputWidget(
                 onTap: () {
-                  p.setIsIdFocused(true);
+                  // p.setIsIdFocused(true);
                 },
                 focusNode: idFocus,
                 height: AppSize.buttonHeight,
@@ -95,7 +95,7 @@ class _SigninPageState extends State<SigninPage> {
                 return BaseInputWidget(
                   textEditingController: _passwordController,
                   onTap: () {
-                    p.setIsPwFocused(true);
+                    // p.setIsPwFocused(true);
                   },
                   focusNode: pwFocus,
                   context: context,
@@ -195,61 +195,45 @@ class _SigninPageState extends State<SigninPage> {
 
   Widget _buildSubmmitButton(BuildContext context) {
     final p = context.read<SigninProvider>();
-    return Selector<SigninProvider, Tuple2<bool?, bool?>>(
-      selector: (context, provider) =>
-          Tuple2(provider.isIdFocused, provider.isPwFocused),
-      builder: (context, tuple, _) {
-        return Positioned(
-            left: 0,
-            bottom: (tuple.item1 != null && tuple.item1!) ||
-                    (tuple.item2 != null && tuple.item2!)
-                ? 0
-                : AppSize.realHeight > 800
-                    ? AppSize.realHeight * .2
-                    : 100,
-            child: Padding(
-                padding: AppSize.defaultSidePadding,
-                child: Selector<SigninProvider, Tuple3<bool, bool, bool>>(
-                    selector: (context, provider) => Tuple3(
-                        provider.isCheckedAutoSigninBox,
-                        provider.isCheckedSaveIdBox,
-                        provider.isValueNotNull),
-                    builder: (context, tuple, _) {
-                      return AppStyles.buildButton(
-                          context,
-                          '${tr('signin')}',
-                          AppSize.defaultContentsWidth,
-                          tuple.item3
-                              ? AppColors.primary
-                              : AppColors.unReadyButton,
-                          AppTextStyle.color_18(tuple.item3
-                              ? AppColors.whiteText
-                              : AppColors.unReadyText),
-                          AppSize.radius8,
-                          tuple.item3
-                              ? () async {
-                                  p.startErrorMessage('');
-                                  hideKeyboard(context);
-                                  p.setIsIdFocused(false);
-                                  p.setIsPwFocused(false);
-                                  final result = await p.signIn();
-                                  if (result.isSuccessful) {
-                                    Navigator.popAndPushNamed(
-                                        context, HomePage.routeName);
-                                  } else {
-                                    if (result.isShowPopup != null &&
-                                        result.isShowPopup!) {
-                                      AppDialog.showDangermessage(
-                                          context, '${result.message}');
-                                    } else {
-                                      p.startErrorMessage(result.message);
-                                    }
-                                  }
-                                }
-                              : () {});
-                    })));
-      },
-    );
+    return Padding(
+        padding: AppSize.defaultSidePadding,
+        child: Selector<SigninProvider, Tuple3<bool, bool, bool>>(
+            selector: (context, provider) => Tuple3(
+                provider.isCheckedAutoSigninBox,
+                provider.isCheckedSaveIdBox,
+                provider.isValueNotNull),
+            builder: (context, tuple, _) {
+              return AppStyles.buildButton(
+                  context,
+                  '${tr('signin')}',
+                  AppSize.defaultContentsWidth,
+                  tuple.item3 ? AppColors.primary : AppColors.unReadyButton,
+                  AppTextStyle.color_18(tuple.item3
+                      ? AppColors.whiteText
+                      : AppColors.unReadyText),
+                  AppSize.radius8,
+                  tuple.item3
+                      ? () async {
+                          p.startErrorMessage('');
+                          hideKeyboard(context);
+                          // p.setIsIdFocused(false);
+                          // p.setIsPwFocused(false);
+                          final result = await p.signIn();
+                          if (result.isSuccessful) {
+                            Navigator.popAndPushNamed(
+                                context, HomePage.routeName);
+                          } else {
+                            if (result.isShowPopup != null &&
+                                result.isShowPopup!) {
+                              AppDialog.showDangermessage(
+                                  context, '${result.message}');
+                            } else {
+                              p.startErrorMessage(result.message);
+                            }
+                          }
+                        }
+                      : () {});
+            }));
   }
 
   Widget _buildErrorMessage(BuildContext context) {
@@ -281,32 +265,32 @@ class _SigninPageState extends State<SigninPage> {
         ));
   }
 
-  Widget _buildAutoSpacing(BuildContext context) {
-    return Selector<SigninProvider, Tuple2<bool?, bool?>>(
-      selector: (context, provider) =>
-          Tuple2(provider.isIdFocused, provider.isPwFocused),
-      builder: (context, tuple, _) {
-        Future.delayed(Duration(milliseconds: 500), () {
-          try {
-            _scrollController.animateTo(
-              _scrollController.position.maxScrollExtent,
-              duration: Duration(milliseconds: 300),
-              curve: Curves.fastOutSlowIn,
-            );
-          } catch (e) {}
-        });
-        return Padding(
-          padding: (tuple.item1 != null && tuple.item1!) ||
-                  (tuple.item2 != null && tuple.item2!)
-              ? EdgeInsets.only(top: 100)
-              : EdgeInsets.zero,
-          child: Container(
-            child: AppText.text(''),
-          ),
-        );
-      },
-    );
-  }
+  // Widget _buildAutoSpacing(BuildContext context) {
+  //   return Selector<SigninProvider, Tuple2<bool?, bool?>>(
+  //     selector: (context, provider) =>
+  //         Tuple2(provider.isIdFocused, provider.isPwFocused),
+  //     builder: (context, tuple, _) {
+  //       Future.delayed(Duration(milliseconds: 500), () {
+  //         try {
+  //           _scrollController.animateTo(
+  //             _scrollController.position.maxScrollExtent,
+  //             duration: Duration(milliseconds: 300),
+  //             curve: Curves.fastOutSlowIn,
+  //           );
+  //         } catch (e) {}
+  //       });
+  //       return Padding(
+  //         padding: (tuple.item1 != null && tuple.item1!) ||
+  //                 (tuple.item2 != null && tuple.item2!)
+  //             ? EdgeInsets.only(top: 100)
+  //             : EdgeInsets.zero,
+  //         child: Container(
+  //           child: AppText.text(''),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget _buildLogo() {
     return Padding(
@@ -348,8 +332,8 @@ class _SigninPageState extends State<SigninPage> {
               idFocus!.unfocus();
               pwFocus!.unfocus();
               final p = context.read<SigninProvider>();
-              p.setIsIdFocused(false);
-              p.setIsPwFocused(false);
+              // p.setIsIdFocused(false);
+              // p.setIsPwFocused(false);
             },
             child: FutureBuilder<Map<String, dynamic>?>(
               future: p.setDefaultData(id: id, pw: pw),
@@ -376,11 +360,10 @@ class _SigninPageState extends State<SigninPage> {
                             _buildTextFormForPassword(context),
                             _buildErrorMessage(context),
                             _buildCheckBoxRow(context),
-                            defaultSpacing(),
-                            _buildAutoSpacing(context)
+                            defaultSpacing(times: 4),
+                            _buildSubmmitButton(context),
                           ],
                         ),
-                        _buildSubmmitButton(context),
                         _buildLoadingWidget(context)
                       ],
                     );

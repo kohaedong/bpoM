@@ -44,12 +44,24 @@ class SettingsProvider extends ChangeNotifier {
     return SettingsResult(true, settings: settings);
   }
 
-  void resetNoticeTimeSettings() {
-    notDisturbStartHour = '23';
-    notDisturbStartMinute = '00';
-    notDisturbEndHour = '07';
-    notDisturbEndMinute = '00';
-  }
+  // void resetNoticeTimeSettings() {
+  //   getUserEvn().then((setting) {
+  //     var hourNotNull = setting != null &&
+  //         setting.notDisturbStartHour != null &&
+  //         setting.notDisturbStartHour!.isNotEmpty;
+  //     var minuteNotNull = setting != null &&
+  //         setting.notDisturbStartHour != null &&
+  //         setting.notDisturbStartHour!.isNotEmpty;
+  //     if (hourNotNull && minuteNotNull) {
+  //       settings = setting;
+  //     } else {
+  //       notDisturbStartHour = '23';
+  //       notDisturbStartMinute = '00';
+  //       notDisturbEndHour = '07';
+  //       notDisturbEndMinute = '00';
+  //     }
+  //   });
+  // }
 
   void setSettingsScale(String scale) {
     this.settings!.textScale = scale;

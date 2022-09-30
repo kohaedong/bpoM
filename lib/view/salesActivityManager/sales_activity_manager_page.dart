@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-30 12:54:03
+ * Last Modified: 2022-09-30 17:42:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -606,7 +606,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         'index': index
       });
       if (naviResult != null) {
-        pr('naviResult::::$naviResult');
         naviResult as bool;
         if (!p.isNeedUpdate) {
           p.setIsNeedUpdate(naviResult);
@@ -723,7 +722,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                                   children: [
                                     _buildMenuItem(
                                         context,
-                                        pr('delete_prev_activity'),
+                                        tr('delete_prev_activity'),
                                         MenuType.ACTIVITY_DELETE),
                                     defaultSpacing(times: 2),
                                     _buildMenuItem(context, tr('new_activity'),

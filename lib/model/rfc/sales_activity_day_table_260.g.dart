@@ -55,6 +55,7 @@ SalesActivityDayTable260 _$SalesActivityDayTable260FromJson(
       xLatitude: (json['X_LATITUDE'] as num?)?.toDouble(),
       yLongitude: (json['Y_LONGITUDE'] as num?)?.toDouble(),
       sminute: json['SMINUTE'] as String?,
+      zkmtrust: json['ZKMTRUST'] as String?,
     );
 
 Map<String, dynamic> _$SalesActivityDayTable260ToJson(
@@ -62,6 +63,7 @@ Map<String, dynamic> _$SalesActivityDayTable260ToJson(
     <String, dynamic>{
       'MANDT': instance.mandt,
       'ADATE': instance.adate,
+      'ZKMTRUST': instance.zkmtrust,
       'BZACTNO': instance.bzactno,
       'SEQNO': instance.seqno,
       'ATIME': instance.atime,

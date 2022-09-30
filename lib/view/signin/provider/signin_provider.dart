@@ -27,8 +27,8 @@ class SigninProvider extends ChangeNotifier {
   String errorMessage = '';
   String? userAccount;
   String? password;
-  bool? isIdFocused;
-  bool? isPwFocused;
+  // bool? isIdFocused;
+  // bool? isPwFocused;
   bool isCheckedSaveIdBox = false;
   bool isCheckedAutoSigninBox = false;
   User? user;
@@ -51,16 +51,16 @@ class SigninProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setIsIdFocused(bool val) {
-    isIdFocused = val;
-    pr('id focused');
-    notifyListeners();
-  }
+  // void setIsIdFocused(bool val) {
+  //   isIdFocused = val;
+  //   pr('id focused');
+  //   notifyListeners();
+  // }
 
-  void setIsPwFocused(bool val) {
-    isPwFocused = val;
-    notifyListeners();
-  }
+  // void setIsPwFocused(bool val) {
+  //   isPwFocused = val;
+  //   notifyListeners();
+  // }
 
   Future<Map<String, dynamic>?> setDefaultData({String? id, String? pw}) async {
     Map<String, dynamic>? map = {};

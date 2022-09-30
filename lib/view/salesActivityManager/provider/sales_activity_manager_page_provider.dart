@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-09-29 19:00:34
+ * Last Modified: 2022-09-30 17:24:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -326,7 +326,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-    pr(result?.body);
     if (result != null && result.statusCode != 200) {
       return ResultModel(false);
     }
@@ -355,7 +354,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       if (result != null && result.statusCode == 200) {
         holidayList.clear();
         holidayResponseModel = HolidayResponseModel.fromJson(result.body);
-        pr(holidayResponseModel!.toJson());
         if (holidayResponseModel!.data != null &&
             holidayResponseModel!.data!.isNotEmpty) {
           holidayResponseModel!.data!.forEach((holidayModel) {
@@ -386,7 +384,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       searchKeyResponseModel =
           SearchKeyResponseModel.fromJson(result.body['data']);
-      pr(searchKeyResponseModel?.toJson());
       return ResultModel(true);
     }
     return ResultModel(false);
@@ -510,7 +507,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
           SalesActivityDayResponseModel.fromJson(result.body['data']);
       if (dayResponseModel!.table250!.isNotEmpty) {
         dayResponseModel!.table250!.forEach((element) {
-          pr(element.toJson());
+          pr('250table :: ${element.toJson()}');
         });
       }
       isLoadDayData = false;
@@ -810,8 +807,9 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       if (result != null && result.statusCode == 200) {
         dayResponseModel =
             SalesActivityDayResponseModel.fromJson(result.body['data']);
-        pr(dayResponseModel?.toJson());
-        pr(dayResponseModel?.table250?.first.toJson());
+        dayResponseModel?.table250?.asMap().entries.forEach((map) {
+          pr('250 index ${map.key} - ${map.value.toJson()}');
+        });
         isLoadDayData = false;
         notifyListeners();
         return ResultModel(true);
