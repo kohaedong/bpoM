@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-09-30 11:33:10
+ * Last Modified: 2022-10-01 13:18:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -210,6 +210,8 @@ extension RequestTypeExtension on RequestType {
 // 메소드 사전 등록.
   String get httpMethod {
     switch (this) {
+      case RequestType.ACCESS_PERMISSION:
+        return 'GET';
       default:
         return 'POST';
     }
@@ -402,6 +404,8 @@ extension RequestTypeExtension on RequestType {
       case RequestType.REQEUST_TOKEN:
         return false;
       case RequestType.REFRESHE_TOKEN:
+        return false;
+      case RequestType.ACCESS_PERMISSION:
         return false;
       default:
         return true;

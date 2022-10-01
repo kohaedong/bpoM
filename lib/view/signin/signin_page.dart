@@ -265,33 +265,6 @@ class _SigninPageState extends State<SigninPage> {
         ));
   }
 
-  // Widget _buildAutoSpacing(BuildContext context) {
-  //   return Selector<SigninProvider, Tuple2<bool?, bool?>>(
-  //     selector: (context, provider) =>
-  //         Tuple2(provider.isIdFocused, provider.isPwFocused),
-  //     builder: (context, tuple, _) {
-  //       Future.delayed(Duration(milliseconds: 500), () {
-  //         try {
-  //           _scrollController.animateTo(
-  //             _scrollController.position.maxScrollExtent,
-  //             duration: Duration(milliseconds: 300),
-  //             curve: Curves.fastOutSlowIn,
-  //           );
-  //         } catch (e) {}
-  //       });
-  //       return Padding(
-  //         padding: (tuple.item1 != null && tuple.item1!) ||
-  //                 (tuple.item2 != null && tuple.item2!)
-  //             ? EdgeInsets.only(top: 100)
-  //             : EdgeInsets.zero,
-  //         child: Container(
-  //           child: AppText.text(''),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
   Widget _buildLogo() {
     return Padding(
         padding: AppSize.signinLogoPadding,
@@ -331,9 +304,6 @@ class _SigninPageState extends State<SigninPage> {
             onTap: () {
               idFocus!.unfocus();
               pwFocus!.unfocus();
-              final p = context.read<SigninProvider>();
-              // p.setIsIdFocused(false);
-              // p.setIsPwFocused(false);
             },
             child: FutureBuilder<Map<String, dynamic>?>(
               future: p.setDefaultData(id: id, pw: pw),

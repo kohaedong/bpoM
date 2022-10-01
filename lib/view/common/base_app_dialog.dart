@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-09-29 20:58:09
+ * Last Modified: 2022-10-01 18:35:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
+import 'package:medsalesportal/styles/app_size.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
+import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/styles/export_common.dart';
@@ -110,29 +115,44 @@ class AppDialog {
   }
 
   static dynamic showDangermessage(BuildContext context, String str) {
+    // str = str + "fdsaffsafdsafdsafklasfjdskal;jf\n\nd\n,\n,\n" * 15;
+    var enterLength = FormatUtil.howManyLengthForString(str) + 1;
+    var height =
+        AppSize.buttonHeight * 3 + AppSize.padding * 2 + enterLength * 14;
+    pr('enterLength $enterLength');
     return showPopup(
         context,
         buildDialogContents(
             context,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(padding: EdgeInsets.only(top: AppSize.padding * 2)),
-                AppImage.getImage(ImageType.INFO),
-                Padding(
-                    padding: EdgeInsets.only(top: AppSize.infoBoxSpaccing * 2)),
-                AppText.text('$str',
-                    style: context
-                        .read<AppThemeProvider>()
-                        .themeData
-                        .textTheme
-                        .headline3!,
-                    maxLines: 5),
-              ],
+            Container(
+              padding: EdgeInsets.symmetric(vertical: AppSize.padding),
+              alignment: Alignment.center,
+              height: height > AppSize.realHeight * .6
+                  ? AppSize.realHeight * .6 - AppSize.buttonHeight
+                  : height - AppSize.buttonHeight,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppImage.getImage(ImageType.INFO),
+                    defaultSpacing(),
+                    SingleChildScrollView(
+                      child: AppText.text('$str',
+                          style: context
+                              .read<AppThemeProvider>()
+                              .themeData
+                              .textTheme
+                              .headline3!,
+                          maxLines: 50,
+                          textAlign: TextAlign.center),
+                    )
+                  ],
+                ),
+              ),
             ),
             true,
-            AppSize.smallPopupHeight,
+            height > AppSize.realHeight * .6 ? AppSize.realHeight * .6 : height,
             signgleButtonText: '${tr('ok')}'));
   }
 

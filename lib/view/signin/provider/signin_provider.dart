@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medsalesportal/globalProvider/app_auth_provider.dart';
+import 'package:medsalesportal/model/user/access_permission_model.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/model/user/user.dart';
 import 'package:medsalesportal/enums/account_type.dart';
@@ -27,8 +28,6 @@ class SigninProvider extends ChangeNotifier {
   String errorMessage = '';
   String? userAccount;
   String? password;
-  // bool? isIdFocused;
-  // bool? isPwFocused;
   bool isCheckedSaveIdBox = false;
   bool isCheckedAutoSigninBox = false;
   User? user;
@@ -43,6 +42,12 @@ class SigninProvider extends ChangeNotifier {
 
   var buildType = '${KolonBuildConfig.KOLON_APP_BUILD_TYPE}';
 
+  bool get isValueNotNull =>
+      userAccount != null &&
+      userAccount!.trim().isNotEmpty &&
+      password != null &&
+      password!.trim().isNotEmpty;
+
   void setIdCheckBox() {
     this.isCheckedSaveIdBox = !isCheckedSaveIdBox;
     if (!this.isCheckedSaveIdBox) {
@@ -50,17 +55,6 @@ class SigninProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
-
-  // void setIsIdFocused(bool val) {
-  //   isIdFocused = val;
-  //   pr('id focused');
-  //   notifyListeners();
-  // }
-
-  // void setIsPwFocused(bool val) {
-  //   isPwFocused = val;
-  //   notifyListeners();
-  // }
 
   Future<Map<String, dynamic>?> setDefaultData({String? id, String? pw}) async {
     Map<String, dynamic>? map = {};
@@ -288,12 +282,6 @@ class SigninProvider extends ChangeNotifier {
     };
   }
 
-  bool get isValueNotNull =>
-      userAccount != null &&
-      userAccount!.trim().isNotEmpty &&
-      password != null &&
-      password!.trim().isNotEmpty;
-
   Future<SigninResult> sapLogin(String id) async {
     Map<String, dynamic>? sapBody = {
       "methodName": RequestType.SAP_SIGNIN_INFO.serverMethod,
@@ -342,8 +330,12 @@ class SigninProvider extends ChangeNotifier {
         '${RequestType.ACCESS_PERMISSION.url()}/${Platform.isIOS ? '80' : '79'}/$userId';
     final result = await _api.request(passingUrl: url);
     if (result != null && result.body != null) {
-      pr(result.body);
-      return SigninResult(true, 'success');
+      var accessPermmisionModel =
+          AccessPermissionModel.fromJson(result.body['data']);
+      pr(accessPermmisionModel.toJson());
+      return SigninResult(
+          accessPermmisionModel.accessApp!, accessPermmisionModel.accessMsg!,
+          accessPermissionModel: accessPermmisionModel);
     }
     return SigninResult(false, 'permmison biden.');
   }
@@ -370,12 +362,39 @@ class SigninProvider extends ChangeNotifier {
     pr(signResult?.body);
     if (signResult!.statusCode == 200 && signResult.body['code'] == "NG") {
       isLoadData = false;
+
       notifyListeners();
-      return SigninResult(false, "${tr('check_account')}");
+      var message = signResult.body['message'] as String;
+      var isMessageStartWithNumber =
+          int.tryParse(message.substring(0, 1)) != null;
+      var isShowPopup = false;
+      if (isMessageStartWithNumber) {
+        var number = int.parse(message.substring(0, 1));
+        if (number < 5) {
+          message = tr('password_wrong_for_time', args: ['$number']);
+        } else {
+          message = tr('password_wrong_five_time');
+          isShowPopup = true;
+        }
+      } else {
+        message = "${tr('check_account_or_password')}";
+      }
+      return SigninResult(false, message, isShowPopup: isShowPopup);
     }
-    if (signResult.statusCode == 200 && signResult.body['data'] != null) {
+    if (signResult.statusCode == 200 &&
+        signResult.body['code'] != "NG" &&
+        signResult.body['data'] != null) {
       pr('@@@@@@@${signResult.body}');
+      pr('@@@@code:: ${signResult.body['code']}');
       user = User.fromJson(signResult.body['data']);
+      var accessPermissionResult = await checkAccessPermmision(
+          isWithAutoLogin != null && isWithAutoLogin
+              ? ssoUserId
+              : userAccount!);
+      if (!accessPermissionResult.isSuccessful) {
+        return SigninResult(false, accessPermissionResult.message,
+            isShowPopup: true);
+      }
       final tokenResult =
           await requestToken(signBody['userAccount'], signBody['passwd']);
       if (tokenResult != null) {
@@ -389,13 +408,7 @@ class SigninProvider extends ChangeNotifier {
         setAutoLogin(isCheckedAutoSigninBox);
         setIsSaveId(isCheckedSaveIdBox);
       }
-      var accessPermissionResult = await checkAccessPermmision(
-          isWithAutoLogin != null && isWithAutoLogin
-              ? ssoUserId
-              : userAccount!);
-      if (!accessPermissionResult.isSuccessful) {
-        return SigninResult(false, accessPermissionResult.message);
-      }
+
       await saveUserIdAndPasswordToSSO(
           signBody['userAccount'], signBody['passwd']);
       return await sapLogin(signBody['userAccount'].toUpperCase())
@@ -407,7 +420,6 @@ class SigninProvider extends ChangeNotifier {
           var isTeamLeader = esLogin.xtm == 'X';
           var isMultiAccount =
               esLogin.xtm == '' && esLogin.vkgrp == '' && esLogin.salem == '';
-
           CacheService.saveEsLogin(esLogin);
           CacheService.saveIsLogin(isLogin);
           CacheService.saveUser(user!);
@@ -456,13 +468,13 @@ class SigninProvider extends ChangeNotifier {
           return SigninResult(false, '${sapResult.message}',
               id: userAccount,
               pw: password,
-              isShowPopup: sapResult.message.isNotEmpty ? true : false);
+              isShowPopup: sapResult.message.isNotEmpty);
         }
       });
     }
     isLoadData = false;
     notifyListeners();
-    return SigninResult(false, tr('permission_denied'),
+    return SigninResult(false, tr('server_error'),
         id: userAccount, pw: password, isShowPopup: true);
   }
 
@@ -549,6 +561,7 @@ class SigninResult {
   String? id;
   String? pw;
   bool? isShowPopup;
+  AccessPermissionModel? accessPermissionModel;
   SigninResult(this.isSuccessful, this.message,
-      {this.id, this.pw, this.isShowPopup});
+      {this.id, this.pw, this.isShowPopup, this.accessPermissionModel});
 }

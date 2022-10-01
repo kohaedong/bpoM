@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/util/number_format.dart
  * Created Date: 2021-09-08 09:34:02
- * Last Modified: 2022-08-01 15:08:30
+ * Last Modified: 2022-10-01 18:19:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -246,5 +246,15 @@ class FormatUtil {
     } else {
       return '$saler%';
     }
+  }
+
+  static int howManyLengthForString(String str) {
+    var count = 0;
+    for (var i = 0; i < str.length; i++) {
+      if (str[i] == '\n') {
+        count++;
+      } else {}
+    }
+    return count;
   }
 }
