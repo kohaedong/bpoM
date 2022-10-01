@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-09-30 18:11:00
+ * Last Modified: 2022-10-02 00:52:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -89,8 +89,11 @@ class AddActivityPageProvider extends ChangeNotifier {
     return newSeqno;
   };
 
-  Future<ResultModel> initData(SalesActivityDayResponseModel fromParentModel,
-      ActivityStatus status, int? indexx) async {
+  Future<ResultModel> initData(
+    SalesActivityDayResponseModel fromParentModel,
+    ActivityStatus status,
+    int? indexx,
+  ) async {
     distanceModel = AddActivityDistanceModel();
     fromParentResponseModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
@@ -488,32 +491,31 @@ class AddActivityPageProvider extends ChangeNotifier {
           : () async {
               // 첫번째 데이터
               if (editModel260 == null) {
+                var isFirstEntity = fromParentResponseModel!.table260!.isEmpty;
                 t260.umode = 'I';
                 pr('empty????');
 
-                if (fromParentResponseModel!.table260!.isNotEmpty) {
-                  lastSeqNo = getLastSeqNo();
-                } else {
+                if (isFirstEntity) {
                   lastSeqNo = '0000';
+                } else {
+                  lastSeqNo = getLastSeqNo();
                 }
                 pr('lastSeqNo:::${lastSeqNo}');
 
                 t260.seqno = incrementSeqno(lastSeqNo!);
-                t260.erdat = t250.erdat;
-                t260.erzet = t250.erzet;
-                t260.ernam = t250.ernam;
-                t260.erwid = t250.erwid;
-
-                t260.aenam = t250.aenam;
-                t260.aewid = t250.aewid;
+                t260.erdat = FormatUtil.removeDash(
+                    DateUtil.getDateStr(DateTime.now().toIso8601String()));
+                t260.erzet = DateUtil.getTimeNow(isNotWithColon: true);
+                t260.ernam = esLogin.ename;
+                t260.erwid = esLogin.logid;
+                t260.aenam = esLogin.ename;
+                t260.aewid = esLogin.logid;
                 t260.adate = FormatUtil.removeDash(
                     DateUtil.getDateStr(DateTime.now().toIso8601String()));
-                // t260.etime = DateUtil.getTimeNow(isNotWithColon: true);
               } else {
                 t260 =
                     SalesActivityDayTable260.fromJson(editModel260!.toJson());
                 t260.umode = 'U';
-
                 t260.aenam = esLogin.ename;
                 t260.aewid = esLogin.logid;
               }
@@ -524,7 +526,15 @@ class AddActivityPageProvider extends ChangeNotifier {
       t260.aezet = DateUtil.getTimeNow(isNotWithColon: true);
       // 도착할때만 저장.
       if (t260.atime != null && t260.atime!.trim().isEmpty && isVisit) {
-        t260.atime = DateUtil.getTimeNow(isNotWithColon: true);
+        var isPrevdate =
+            activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
+                activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED;
+        var date = DateUtil.getDate(t260.erdat!);
+        t260.atime = DateUtil.getTimeNow(
+            isNotWithColon: true,
+            dt: isPrevdate
+                ? DateTime(date.year, date.month, date.day, 23, 59, 00)
+                : null);
       }
 
       var latLonMap = await getAddressLatLon(selectedKunnr!.zaddName1!)
@@ -910,10 +920,6 @@ class AddActivityPageProvider extends ChangeNotifier {
         return visitList[index];
       };
       if (visitList.isNotEmpty) {
-        visitList.forEach((element) {
-          pr(element.atime);
-        });
-
         var lastVisitModel =
             visitList.length == 1 ? visitList.single : getLastVist();
         var latLonResult = await getAddressLatLon(selectedKunnr!.zaddName1!);

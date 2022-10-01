@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/date_util.dart
  * Created Date: 2021-11-23 07:56:54
- * Last Modified: 2022-09-21 18:36:15
+ * Last Modified: 2022-10-01 22:43:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -104,8 +104,9 @@ class DateUtil {
     return formatter.format(date);
   }
 
-  static String getTimeNow({bool? isNotWithColon}) {
-    return '${DateTime.now().hour < 10 ? '0${DateTime.now().hour}' : '${DateTime.now().hour}'}${DateTime.now().minute < 10 ? '0${DateTime.now().minute}' : '${DateTime.now().minute}'}${DateTime.now().second < 10 ? '0${DateTime.now().second}' : '${DateTime.now().second}'}';
+  static String getTimeNow({bool? isNotWithColon, DateTime? dt}) {
+    var date = dt ?? DateTime.now();
+    return '${date.hour < 10 ? '0${date.hour}' : '${date.hour}'}${date.minute < 10 ? '0${date.minute}' : '${date.minute}'}${date.second < 10 ? '0${date.second}' : '${date.second}'}';
   }
 
   static DateTime getDate(String dateStr) {

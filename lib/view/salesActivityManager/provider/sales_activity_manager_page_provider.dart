@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-09-30 17:24:14
+ * Last Modified: 2022-10-02 00:17:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -176,16 +176,24 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       {bool? isWithLastWorkdaysNextWorkDay, DateTime? datetime}) async {
     var weekListIndex = 0;
     var weekRowIndex = 0;
-    weekListForMonth.asMap().entries.forEach((map) {
-      var day = DateUtil.getDate(FormatUtil.removeDash(DateUtil.getDateStr('',
-          // datetime :: passing된 date에 대한 확정여부 확인.
-          // isWithLastWorkdaysNextWorkDay::  null 일 경우 지난 영업일에 대한 확정여부 확인.[previousWorkingDay]
-          // 그외에 금일 확정여부 확인.  checkPreviousWorkingDaysNextWorkingDay 사실상 오늘이다.
-          dt: datetime != null
-              ? datetime
-              : isWithLastWorkdaysNextWorkDay == null
-                  ? previousWorkingDay
-                  : checkPreviousWorkingDaysNextWorkingDay)));
+    var day = DateUtil.getDate(FormatUtil.removeDash(DateUtil.getDateStr('',
+        // datetime :: passing된 date에 대한 확정여부 확인.
+        // isWithLastWorkdaysNextWorkDay::  null 일 경우 지난 영업일에 대한 확정여부 확인.[previousWorkingDay]
+        // 그외에 금일 확정여부 확인.  checkPreviousWorkingDaysNextWorkingDay 사실상 오늘이다.
+        dt: datetime != null
+            ? datetime
+            : isWithLastWorkdaysNextWorkDay == null
+                ? previousWorkingDay
+                : checkPreviousWorkingDaysNextWorkingDay)));
+    var dateList = <List<DateTime?>>[];
+    if (DateTime.now().day == 1) {
+      var monthResult = await getMonthData(isPrevMonth: true);
+      dateList = monthResult.data;
+    } else {
+      dateList = weekListForMonth;
+    }
+
+    dateList.asMap().entries.forEach((map) {
       if (map.value.contains(day)) {
         weekListIndex = map.key;
         weekRowIndex = map.value.indexOf(day);
@@ -220,9 +228,12 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     try {
       await checkNextWorkingDayForPreviousWorkingDay(DateTime.now());
       var isNotConfirmed = await checkConfiremStatus();
-      isShowPopup =
-          (checkPreviousWorkingDaysNextWorkingDay!.day == DateTime.now().day) &&
-              isNotConfirmed;
+      var isPrevWorkingDayNotConfirmedInPrevMonth =
+          await checkConfiremStatus(isWithLastWorkdaysNextWorkDay: true);
+      isShowPopup = ((checkPreviousWorkingDaysNextWorkingDay!.day ==
+                  DateTime.now().day) &&
+              isNotConfirmed) ||
+          isPrevWorkingDayNotConfirmedInPrevMonth;
     } catch (e) {
       pr(e);
     }
@@ -389,7 +400,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  Future<ResultModel> getMonthData({bool? isWithLoading}) async {
+  Future<ResultModel> getMonthData(
+      {bool? isWithLoading, bool? isPrevMonth}) async {
     if (isWithLoading != null && isWithLoading) {
       isLoadData = true;
       notifyListeners();
@@ -407,8 +419,11 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         "IV_RESID": esLogin!.logid!.toUpperCase(),
         "IS_LOGIN": isLogin,
         "IV_VKGRP": esLogin.vkgrp,
-        "IV_SPMON": DateUtil.getMonthStr(
-            selectedMonth != null ? selectedMonth! : DateTime.now()),
+        "IV_SPMON": DateUtil.getMonthStr(isPrevMonth != null
+            ? DateTime(DateTime.now().year, DateTime.now().month)
+            : selectedMonth != null
+                ? selectedMonth!
+                : DateTime.now()),
         "resultTables": RequestType.SALESE_ACTIVITY_MONTH_DATA.resultTable,
         "functionName": RequestType.SALESE_ACTIVITY_MONTH_DATA.serverMethod
       }
@@ -422,6 +437,24 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
+      if (isPrevMonth != null) {
+        isLoadData = false;
+        notifyListeners();
+        var temp =
+            SalesActivityMonthResponseModel.fromJson(result.body['data']);
+        var dateList = <List<DateTime?>>[];
+        temp.tList!.forEach((e) {
+          var week0 = e.day0 != null ? DateUtil.getDate(e.day0!) : null;
+          var week1 = e.day1 != null ? DateUtil.getDate(e.day1!) : null;
+          var week2 = e.day2 != null ? DateUtil.getDate(e.day2!) : null;
+          var week3 = e.day3 != null ? DateUtil.getDate(e.day3!) : null;
+          var week4 = e.day4 != null ? DateUtil.getDate(e.day4!) : null;
+          var week5 = e.day5 != null ? DateUtil.getDate(e.day5!) : null;
+          var week6 = e.day6 != null ? DateUtil.getDate(e.day6!) : null;
+          dateList.add([week0, week1, week2, week3, week4, week5, week6]);
+        });
+        return ResultModel(true, data: dateList);
+      }
       monthResponseModel =
           SalesActivityMonthResponseModel.fromJson(result.body['data']);
       if (monthResponseModel!.esReturn!.mtype != 'S') {
@@ -534,7 +567,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     return ResultModel(true);
   }
 
-  Future<ResultModel> confirmAcitivityTable() async {
+  Future<ResultModel> confirmeAcitivityTable() async {
     isLoadDayData = true;
     notifyListeners();
     var isSuccessfulList = <ConfirmModel>[];

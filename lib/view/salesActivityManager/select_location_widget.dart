@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-09-29 18:59:27
+ * Last Modified: 2022-10-01 22:33:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -282,8 +282,8 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
       child: AppStyles.buildTitleRow(
           p.activityStatus == ActivityStatus.STARTED ||
                   p.activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED
-              ? tr('start_adress')
-              : tr('stop_adress')),
+              ? tr('stop_adress')
+              : tr('start_adress')),
     );
   }
 

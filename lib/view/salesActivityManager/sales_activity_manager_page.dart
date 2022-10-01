@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-09-30 17:42:55
+ * Last Modified: 2022-10-02 00:40:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -283,7 +283,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             }
           }
         } else {
-          pr('sb');
           final rs = await BasePopupList(
                   OneCellType.DATE_PICKER, InputIconType.DATA_PICKER)
               .show(context,
@@ -420,6 +419,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
 
   Widget _buildDayListItem(
       BuildContext context, SalesActivityDayTable260 model, int index) {
+    final p = context.read<SalseActivityManagerPageProvider>();
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
@@ -435,8 +435,11 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 AppText.listViewText(model.zskunnrNm!),
-                BaseTagButton.build(
-                    tr(model.xmeet == 'S' ? 'successful' : 'faild'))
+                model.xmeet == 'S' && model.xvisit == 'Y'
+                    ? BaseTagButton.build(tr('successful'))
+                    : model.xmeet == 'S' && model.xvisit == 'Y'
+                        ? BaseTagButton.build(tr('faild'))
+                        : Container()
               ],
             ),
             SingleChildScrollView(
@@ -592,19 +595,14 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     //! [ActivityMenuProvider]  와  [SalseActivityManagerPageProvider] 구분 필요.
     if (index == null) {
       final p = context.read<ActivityMenuProvider>();
-      // await Navigator.popAndPushNamed(context, AddActivityPage.routeName,
-      //     arguments: {
-      //       'model': p.editModel,
-      //       'status': p.activityStatus,
-      //       'index': index
-      //     });
 
       final naviResult = await Navigator.pushNamed(
-          context, AddActivityPage.routeName, arguments: {
-        'model': p.editModel,
-        'status': p.activityStatus,
-        'index': index
-      });
+          context, AddActivityPage.routeName,
+          arguments: {
+            'model': p.editModel,
+            'status': p.activityStatus,
+            'index': index,
+          });
       if (naviResult != null) {
         naviResult as bool;
         if (!p.isNeedUpdate) {
@@ -987,25 +985,29 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 final p = context.read<SalseActivityManagerPageProvider>();
                 if (p.activityStatus! == ActivityStatus.STOPED ||
                     p.activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED) {
-                  p.confirmAcitivityTable().then((result) => result.isSuccessful
-                      ? () {
-                          p.setActivityStatus(ActivityStatus.FINISH);
-                          AppToast().show(context, tr('confirm_successful'));
-                        }()
-                      : () async {
-                          var indexx = result.data['index'];
-                          var message = result.data['message'];
-                          AppToast().show(context, message);
-                          var popResult = await Navigator.pushNamed(
-                              context, AddActivityPage.routeName, arguments: {
-                            'model': p.dayResponseModel,
-                            'status': p.activityStatus,
-                            'index': indexx
-                          });
-                          if (popResult != null) {
-                            p.getDayData(isWithLoading: true);
-                          }
-                        }());
+                  p
+                      .confirmeAcitivityTable()
+                      .then((result) => result.isSuccessful
+                          ? () {
+                              p.setActivityStatus(ActivityStatus.FINISH);
+                              AppToast()
+                                  .show(context, tr('confirm_successful'));
+                            }()
+                          : () async {
+                              var indexx = result.data['index'];
+                              var message = result.data['message'];
+                              AppToast().show(context, message);
+                              var popResult = await Navigator.pushNamed(
+                                  context, AddActivityPage.routeName,
+                                  arguments: {
+                                    'model': p.dayResponseModel,
+                                    'status': p.activityStatus,
+                                    'index': indexx,
+                                  });
+                              if (popResult != null) {
+                                p.getDayData(isWithLoading: true);
+                              }
+                            }());
                 } else if (p.activityStatus != ActivityStatus.FINISH) {
                   AppDialog.showSimpleDialog(
                       context, null, tr('stop_activity_first_commont'),
