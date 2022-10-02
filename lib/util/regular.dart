@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/util/regular.dart
  * Created Date: 2021-08-10 09:40:00
- * Last Modified: 2022-01-21 02:17:05
+ * Last Modified: 2022-10-02 02:41:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -41,5 +41,9 @@ class RegExpUtil {
     } else {
       return str;
     }
+  }
+
+  static String removeSpace(String str) {
+    return str.replaceAll(' ', '');
   }
 }

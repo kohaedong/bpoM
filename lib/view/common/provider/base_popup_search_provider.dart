@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-09-29 19:53:25
+ * Last Modified: 2022-10-02 02:46:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -27,6 +27,7 @@ import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/util/regular.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
@@ -321,7 +322,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
       "methodName": RequestType.SEARCH_STAFF.serverMethod,
       "methodParamMap": {
         "IV_SALESM": "",
-        "IV_SNAME": personInputText ?? '',
+        "IV_SNAME": personInputText != null
+            ? RegExpUtil.removeSpace(personInputText!)
+            : '',
         "IV_DPTNM": isNotDptnm
             ? ''
             : CheckSuperAccount.isMultiAccountOrLeaderAccount()
@@ -407,7 +410,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "pos": pos,
         "partial": partial,
         "IS_LOGIN": isLogin,
-        "IV_ZKMNAME": keymanInputText ?? '',
+        "IV_ZKMNAME": keymanInputText != null
+            ? RegExpUtil.removeSpace(keymanInputText!)
+            : '',
         "resultTables": RequestType.SEARCH_KEY_MAN.resultTable,
         "functionName": RequestType.SEARCH_KEY_MAN.serverMethod,
       }
@@ -482,7 +487,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "IV_MATKL": "",
         "IV_WGBEZ": "",
         "IV_PTYPE": "R",
-        "IV_MAKTX": seletedMaterialSearchKey,
+        "IV_MAKTX": seletedMaterialSearchKey != null
+            ? RegExpUtil.removeSpace(seletedMaterialSearchKey!)
+            : '',
         "IV_SPART": spart,
         "pos": pos,
         "partial": partial,
@@ -578,7 +585,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "IV_SPART": spart,
         "IV_ZBIZ": zbiz,
         "IV_SANUM": esLogin!.logid,
-        "IV_NAME": customerInputText ?? '',
+        "IV_NAME": customerInputText != null
+            ? RegExpUtil.removeSpace(customerInputText!)
+            : '',
         "IV_ORGHK": esLogin.orghk,
         "IS_LOGIN": "$isLogin",
         "pos": "$pos",
@@ -669,7 +678,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "pos": pos,
         "partial": partial,
         "IV_KUNNR": "",
-        "IV_KEYWORD": customerInputText ?? '',
+        "IV_KEYWORD": customerInputText != null
+            ? RegExpUtil.removeSpace(customerInputText!)
+            : '',
         "IS_LOGIN": isLogin,
         "functionName": isBulkOrder != null && isBulkOrder
             ? RequestType.SEARCH_SALLER_FOR_BULK_ORDER.serverMethod
@@ -808,8 +819,12 @@ class BasePopupSearchProvider extends ChangeNotifier {
       "methodParamMap": {
         "IV_PTYPE": "R",
         "IV_MATNR": "",
-        "IV_MAKTX": suggetionItemNameInputText ?? '', // input
-        "IV_MATKL": suggetionItemGroupInputText ?? '', // input
+        "IV_MAKTX": suggetionItemNameInputText != null
+            ? RegExpUtil.removeSpace(suggetionItemNameInputText!)
+            : '', // input
+        "IV_MATKL": suggetionItemGroupInputText != null
+            ? RegExpUtil.removeSpace(suggetionItemGroupInputText!)
+            : '', // input
         "IV_WGBEZ": "",
         "IV_MTART": "",
         "pos": pos,

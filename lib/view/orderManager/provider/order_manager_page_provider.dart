@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-09-30 10:23:01
+ * Last Modified: 2022-10-02 03:56:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -61,8 +61,12 @@ class OrderManagerPageProvider extends ChangeNotifier {
   bool? isSupplierSingleData;
   bool? isEndCustSingleData;
   bool isLoadData = false;
+  bool isModified = false;
   double? amountAvalible;
   final _api = ApiService();
+
+  bool get isModifiyByNewCase => isModified;
+
   double get totalPrice => items != null && items!.isNotEmpty
       ? items!
           .reduce((left, right) => RecentOrderTItemModel(
@@ -429,10 +433,16 @@ class OrderManagerPageProvider extends ChangeNotifier {
   }
 
   void setDeliveryCondition(String str) {
+    if (str.isNotEmpty) {
+      isModified = true;
+    }
     deliveryConditionInputText = str;
   }
 
   void setOrderDescriptionDetai(String str) {
+    if (str.isNotEmpty) {
+      isModified = true;
+    }
     orderDescriptionDetailInputText = str;
   }
 

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-09-23 14:12:56
+ * Last Modified: 2022-10-02 10:51:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -186,17 +186,29 @@ Widget buildTowButtonDialogContents(
     child: Stack(
       children: [
         iswithScrollbale != null
-            ? ListView(
-                children: [
-                  isWithTitle != null ? withTitleContents(title!) : Container(),
-                  contents
-                ],
+            ? SizedBox(
+                height: height - AppSize.buttonHeight,
+                child: ListView(
+                  children: [
+                    isWithTitle != null
+                        ? withTitleContents(title!)
+                        : Container(),
+                    contents
+                  ],
+                ),
               )
-            : Column(
-                children: [
-                  isWithTitle != null ? withTitleContents(title!) : Container(),
-                  contents
-                ],
+            : SizedBox(
+                height: height - AppSize.buttonHeight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    isWithTitle != null
+                        ? withTitleContents(title!)
+                        : Container(),
+                    contents
+                  ],
+                ),
               ),
         Positioned(
             left: 0,

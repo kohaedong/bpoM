@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-09-30 10:09:56
+ * Last Modified: 2022-10-02 11:56:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -935,12 +935,21 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
     return ChangeNotifierProvider(
       create: (context) => OrderManagerPageProvider(),
       builder: (context, _) {
+        final p = context.read<OrderManagerPageProvider>();
         return BaseLayout(
             hasForm: true,
-            appBar: MainAppBar(context,
-                icon: Icon(Icons.clear),
-                titleText: AppText.text('${tr('registor_order')}',
-                    style: AppTextStyle.w500_22)),
+            isWithWillPopScope: true,
+            appBar: MainAppBar(
+              context,
+              icon: Icon(Icons.clear),
+              titleText: AppText.text('${tr('registor_order')}',
+                  style: AppTextStyle.w500_22),
+              callback: () async {
+                if (p.isModifiyByNewCase) {
+                  Navigator.pop(context);
+                }
+              },
+            ),
             child: FutureBuilder<ResultModel>(
                 future: context.read<OrderManagerPageProvider>().initData(),
                 builder: (context, snapshot) {

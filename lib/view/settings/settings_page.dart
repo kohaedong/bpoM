@@ -50,13 +50,9 @@ class SettingsPage extends StatelessWidget {
                             buildTowButtonDialogContents(
                                 context,
                                 AppSize.singlePopupHeight,
-                                Container(
-                                    height: AppSize.singlePopupHeight -
-                                        AppSize.buttonHeight,
-                                    alignment: Alignment.center,
-                                    child: AppText.text(
-                                        '${KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev' ? '(개발)제약 영업포탈' : '제약 영업포탈'}${tr('is_ready_to_logout')}',
-                                        style: AppTextStyle.default_16)),
+                                AppText.text(
+                                    '${KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev' ? '(개발)제약 영업포탈' : '제약 영업포탈'}${tr('is_ready_to_logout')}',
+                                    style: AppTextStyle.default_16),
                                 successButtonText: '${tr('ok')}',
                                 successTextColor: AppColors.primary,
                                 faildButtonText: '${tr('cancel')}'));

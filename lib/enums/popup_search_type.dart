@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/popup_search_type.dart
  * Created Date: 2021-09-10 21:38:04
- * Last Modified: 2022-09-29 20:53:05
+ * Last Modified: 2022-10-02 02:25:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,7 +13,6 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 
 import 'popup_list_type.dart';
 
@@ -130,9 +129,15 @@ extension PopupSearchTypeExtension on PopupSearchType {
       case PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER:
         return AppSize.realHeight * .85;
       case PopupSearchType.SEARCH_END_CUSTOMER:
-        return AppSize.realHeight * .6;
+        return AppSize.realHeight * .7;
       case PopupSearchType.SEARCH_SUPPLIER:
-        return AppSize.realHeight * .6;
+        return AppSize.realHeight * .7;
+      case PopupSearchType.SEARCH_MATERIAL:
+        return AppSize.realHeight * .7;
+      case PopupSearchType.SEARCH_KEY_MAN:
+        return AppSize.realHeight * .5;
+      case PopupSearchType.SEARCH_SALSE_PERSON:
+        return AppSize.realHeight * .5;
       default:
         return AppSize.popupHeightWidthOneRowSearchBar;
     }
@@ -143,7 +148,7 @@ extension PopupSearchTypeExtension on PopupSearchType {
       case PopupSearchType.SEARCH_CUSTOMER:
         return AppSize.defaultTextFieldHeight * 3 +
             AppSize.defaultListItemSpacing * 5 +
-            AppSize.appBarHeight +
+            AppSize.buttonHeight +
             AppSize.secondButtonHeight;
       case PopupSearchType.SEARCH_SUGGETION_ITEM:
         return AppSize.defaultTextFieldHeight * 2 +
@@ -153,21 +158,25 @@ extension PopupSearchTypeExtension on PopupSearchType {
       case PopupSearchType.SEARCH_SALLER:
         return AppSize.defaultTextFieldHeight * 4 +
             AppSize.defaultListItemSpacing * 6 +
-            AppSize.appBarHeight +
+            AppSize.buttonHeight +
             AppSize.secondButtonHeight;
       case PopupSearchType.SEARCH_MATERIAL:
         return AppSize.defaultTextFieldHeight * 2 +
-            AppSize.defaultListItemSpacing * 3 +
-            AppSize.appBarHeight +
+            AppSize.defaultListItemSpacing * 4 +
+            AppSize.buttonHeight +
             AppSize.secondButtonHeight;
       case PopupSearchType.SEARCH_SALSE_PERSON:
+        return AppSize.defaultTextFieldHeight +
+            AppSize.buttonHeight +
+            AppSize.defaultListItemSpacing * 2;
+      case PopupSearchType.SEARCH_KEY_MAN:
         return AppSize.defaultTextFieldHeight +
             AppSize.buttonHeight +
             AppSize.defaultListItemSpacing * 2;
       case PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER:
         return AppSize.defaultTextFieldHeight * 4 +
             AppSize.defaultListItemSpacing * 6 +
-            AppSize.appBarHeight +
+            AppSize.buttonHeight +
             AppSize.secondButtonHeight; // 영업사원
 
       default:

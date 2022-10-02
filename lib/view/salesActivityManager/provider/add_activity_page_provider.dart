@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-02 00:52:01
+ * Last Modified: 2022-10-02 03:46:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -63,6 +63,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   List<String>? activityList;
   List<AddActivitySuggetionItemModel>? suggestedItemList;
   bool isLoadData = false;
+  bool isModified = false;
   bool isVisit = false;
   bool isWithTeamLeader = false;
   bool isUpdate = false;
@@ -71,7 +72,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   bool? isLockOtherSalerSelector;
   int isInterviewIndex = 0;
   final _api = ApiService();
-
+  bool get isModifiyByNewCase => isModified;
   String get dptnm => CacheService.getEsLogin()!.dptnm!;
   bool get isDoNothing =>
       activityStatus == ActivityStatus.NONE ||
@@ -88,6 +89,38 @@ class AddActivityPageProvider extends ChangeNotifier {
     newSeqno = '$newSeqno$recentSeqno';
     return newSeqno;
   };
+  bool get isModifiedByEntity {
+    if (index != null) {
+      var original = fromParentResponseModel!.table260![index!];
+      var withLeaderOnly = isWithTeamLeader && anotherSaller == null;
+      var withLeaderAndSaller = isWithTeamLeader && anotherSaller != null;
+      var withSallerOnly = !isWithTeamLeader && anotherSaller != null;
+      var v1 = original.zskunnr != selectedKunnr!.zskunnr;
+      var v2 = original.zskunnrNm != selectedKunnr!.name;
+      var v3 = original.zaddr != selectedKunnr!.zaddName1;
+      var v4 = original.xvisit != (isVisit ? 'Y' : 'N');
+      var v5 = original.zkmno != selectedKeyMan!.zkmno;
+      var v6 = original.zkmnoNm != selectedKeyMan!.zkmnoNm;
+      var v7 = original.visitRmk != reasonForNotVisit;
+      var v8 = original.xmeet != (isInterviewIndex == 0 ? 'S' : 'F');
+      var v9 = original.meetRmk != reasonForinterviewFailure;
+      var v10 = original.rslt != visitResultInput;
+      var v11 = original.comnt != leaderAdviceInput;
+      var v12 = original.accompany !=
+          (withLeaderOnly
+              ? 'D001'
+              : withSallerOnly
+                  ? 'E001'
+                  : withLeaderAndSaller
+                      ? 'E002'
+                      : '');
+      var trueLIst = <bool>[];
+      trueLIst.addAll([v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12]);
+      return (trueLIst.contains(true));
+    } else {
+      return false;
+    }
+  }
 
   Future<ResultModel> initData(
     SalesActivityDayResponseModel fromParentModel,
@@ -250,23 +283,26 @@ class AddActivityPageProvider extends ChangeNotifier {
       suggestedItemList ??= [];
       distanceModel!.distance = '0.0';
     }
-
+    isModified = false;
     return ResultModel(true);
   }
 
   void setAnotherSaler(saler) {
+    isModified = true;
     saler as EtStaffListModel?;
     anotherSaller = saler;
     notifyListeners();
   }
 
   void setAmount(String? str) {
+    isModified = true;
     seletedAmount = str;
     pr(seletedAmount);
     notifyListeners();
   }
 
   void removeAtSuggestedList(int indexx) {
+    isModified = true;
     var temp = <AddActivitySuggetionItemModel>[];
     temp = [...suggestedItemList!];
     temp.removeAt(indexx);
@@ -275,6 +311,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   }
 
   void insertToSuggestedList() {
+    isModified = true;
     var temp = <AddActivitySuggetionItemModel>[];
     temp = [...suggestedItemList!];
     temp.insert(temp.length == 0 ? 0 : temp.length,
@@ -285,6 +322,7 @@ class AddActivityPageProvider extends ChangeNotifier {
 
   void updateSuggestedList(int indexx,
       {AddActivitySuggetionItemModel? updateModel}) {
+    isModified = true;
     var temp = <AddActivitySuggetionItemModel>[];
     temp = [...suggestedItemList!];
     var model = AddActivitySuggetionItemModel();
@@ -305,6 +343,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   }
 
   void setSelectedActionType(String? str) {
+    isModified = true;
     selectedActionType = str;
     if (suggestedItemList == null || suggestedItemList!.isEmpty) {
       insertToSuggestedList();
@@ -313,18 +352,21 @@ class AddActivityPageProvider extends ChangeNotifier {
   }
 
   void setVisitResultInputText(String? str) {
+    isModified = true;
     visitResultInput = str;
     pr(visitResultInput);
     notifyListeners();
   }
 
   void setLeaderAdviceInputText(String? str) {
+    isModified = true;
     leaderAdviceInput = str;
     pr(leaderAdviceInput);
     notifyListeners();
   }
 
   void setIsInterviewIndex(int indexx) {
+    isModified = true;
     isInterviewIndex = indexx;
     //실패시 제안품목과 활동유형 삭제처리
     if (indexx == 1) {
@@ -336,32 +378,38 @@ class AddActivityPageProvider extends ChangeNotifier {
   }
 
   void setReasonForInterviewFailure(String str) {
+    isModified = true;
     reasonForinterviewFailure = str;
     pr(reasonForinterviewFailure);
   }
 
   void setReasonForNotVisit(String val) {
+    isModified = true;
     reasonForNotVisit = val;
     pr(reasonForNotVisit);
   }
 
   void setIsVisit(bool val) {
+    isModified = true;
     isVisit = val;
     notifyListeners();
   }
 
   void setIsWithTeamLeader(bool? val) {
+    isModified = true;
     isWithTeamLeader = val ?? false;
     notifyListeners();
   }
 
   void setCustomerModel(EtKunnrModel? model) {
+    isModified = true;
     selectedKunnr = model;
     selectedKeyMan = null;
     notifyListeners();
   }
 
   void setKeymanModel(AddActivityKeyManModel? model) {
+    isModified = true;
     selectedKeyMan = model;
     notifyListeners();
   }

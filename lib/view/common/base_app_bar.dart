@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_bar.dart
  * Created Date: 2021-08-29 19:57:10
- * Last Modified: 2022-09-27 18:20:36
+ * Last Modified: 2022-10-02 03:36:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -27,6 +27,7 @@ class MainAppBar extends AppBar {
   final Widget? action;
   final Function? callback;
   final Widget? icon;
+  final bool? popArguments;
   final Function? actionCallback;
   final IsEditPageCallBack? cachePageTypeCallBack;
   MainAppBar(
@@ -36,6 +37,7 @@ class MainAppBar extends AppBar {
     this.callback,
     this.icon,
     this.actionCallback,
+    this.popArguments,
     this.cachePageTypeCallBack,
   }) : super(
             systemOverlayStyle: SystemUiOverlayStyle.dark,
@@ -75,7 +77,7 @@ class MainAppBar extends AppBar {
                             onWillPop: () async => false));
                     result as bool;
                     if (result) {
-                      Navigator.pop(context);
+                      Navigator.pop(context, popArguments);
                     }
                   } else {
                     if (callback != null) {

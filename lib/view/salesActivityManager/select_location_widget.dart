@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-10-01 22:33:06
+ * Last Modified: 2022-10-02 01:22:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -89,29 +89,7 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                 Navigator.pop(context, null);
               } else {
                 var index = p.selectedIndex;
-
-                switch (index) {
-                  case 0:
-                    if (p.homeAddress.isNotEmpty) {
-                      p.setSelectedAddress(p.homeAddress);
-                    } else {
-                      AppToast().show(context, tr('plz_set_home_address'));
-                    }
-                    break;
-                  case 1:
-                    if (p.officeAddres.isNotEmpty) {
-                      if (p.selectedAddress == null) {
-                        AppToast()
-                            .show(context, tr('plz_selected_office_address'));
-                      }
-                    } else {
-                      AppToast().show(context, tr('plz_set_office_address'));
-                    }
-                    break;
-                  default:
-                }
-
-                if (address != null && address.isNotEmpty) {
+                var doAction = () async {
                   await p.startOrStopActivity(index).then((result) {
                     if (result.isSuccessful) {
                       //!  table저장완료. 부모창으로 model전달.
@@ -124,6 +102,33 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                       AppToast().show(context, result.errorMassage!);
                     }
                   });
+                };
+                switch (index) {
+                  case 0:
+                    if (p.homeAddress.isNotEmpty) {
+                      p.setSelectedAddress(p.homeAddress);
+                      doAction.call();
+                    } else {
+                      AppToast().show(context, tr('plz_set_home_address'));
+                    }
+                    break;
+                  case 1:
+                    if (p.officeAddres.isNotEmpty) {
+                      if (p.selectedAddress != null &&
+                          p.officeAddres.contains(p.selectedAddress)) {
+                        doAction.call();
+                      } else {
+                        AppToast()
+                            .show(context, tr('plz_selected_office_address'));
+                      }
+                    } else {
+                      AppToast().show(context, tr('plz_set_office_address'));
+                    }
+                    break;
+                  case 2:
+                    doAction.call();
+                    break;
+                  default:
                 }
               }
             },
@@ -254,14 +259,11 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _buildBox(context, width,
-                      index: 0,
-                      isSelected: isSelectedIndex == 0 ? true : false),
+                      index: 0, isSelected: isSelectedIndex == 0),
                   _buildBox(context, width,
-                      index: 1,
-                      isSelected: isSelectedIndex == 1 ? true : false),
+                      index: 1, isSelected: isSelectedIndex == 1),
                   _buildBox(context, width,
-                      index: 2,
-                      isSelected: isSelectedIndex == 2 ? true : false),
+                      index: 2, isSelected: isSelectedIndex == 2),
                 ],
               );
             }),

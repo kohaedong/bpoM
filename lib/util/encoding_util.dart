@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/util/encoding_util.dart
  * Created Date: 2021-08-21 16:38:26
- * Last Modified: 2022-07-27 19:21:27
+ * Last Modified: 2022-10-02 02:38:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 

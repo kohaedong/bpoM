@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-09-29 20:54:38
+ * Last Modified: 2022-10-02 02:36:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -149,7 +149,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                               '${tr('name')}',
                               ''
                             ])}');
-            })
+            }),
+        defaultSpacing()
       ],
     );
   }
@@ -234,6 +235,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
             p.refresh().then((value) => hideKeyboard(context));
           }
         }, doNotWithPadding: true),
+        defaultSpacing()
       ],
     );
   }
@@ -273,7 +275,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                               '${tr('name')}',
                               ''
                             ])}');
-            })
+            }),
+        defaultSpacing()
       ],
     );
   }
@@ -284,6 +287,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
     return Expanded(
         child: Column(
       children: [
+        defaultSpacing(),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -658,7 +662,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
   Widget _buildSearchBar(BuildContext context) {
     pr('buildBar');
     return Container(
-      height: widget.type.appBarHeight + 0.5,
+      height: widget.type.appBarHeight + 1.5,
       child: Column(
         children: [
           Container(
@@ -673,12 +677,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
             height: 1,
             color: AppColors.textGrey,
           ),
-          widget.type == PopupSearchType.SEARCH_CUSTOMER ||
-                  widget.type == PopupSearchType.SEARCH_SALLER
-              ? defaultSpacing()
-              : Container(),
-          // Padding(
-          //     padding: EdgeInsets.only(top: AppSize.searchBarTitleSidePadding)),
           widget.type == PopupSearchType.SEARCH_SALSE_PERSON ||
                   widget.type ==
                       PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY
@@ -702,11 +700,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                           PopupSearchType.SEARCH_MATERIAL
                                       ? _buildMateRialSearchBar(context)
                                       : Container(),
-          widget.type == PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY ||
-                  widget.type == PopupSearchType.SEARCH_SALSE_PERSON ||
-                  widget.type == PopupSearchType.SEARCH_SUGGETION_ITEM
-              ? Container()
-              : Divider(height: 0.5)
+          Divider(height: 0.5)
         ],
       ),
     );
@@ -749,6 +743,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                 ? RefreshIndicator(
                     child: ListView.builder(
                       padding: EdgeInsets.only(
+                          top: AppSize.padding,
                           left: AppSize.padding,
                           right: AppSize.padding,
                           bottom: AppSize.buttonHeight),
@@ -906,30 +901,30 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         Navigator.pop(context, model);
       },
       child: Padding(
-          padding: index == 0
-              ? EdgeInsets.only(bottom: AppSize.defaultListItemSpacing)
-              : AppSize.searchPopupListPadding,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _horizontalRow(
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppText.text(
-                            '${model.sname} (${model.levelcdnm ?? ''})',
-                            style: AppTextStyle.h3),
-                        AppText.text('${model.dptnm}', style: AppTextStyle.h5)
-                      ],
-                    ),
-                  ],
-                ),
+        padding:
+            index == 0 ? EdgeInsets.all(0) : AppSize.searchPopupListPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _horizontalRow(
+              Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppText.text(
+                          '${model.sname} ${model.levelcdnm!.trim().isEmpty ? '' : '(${model.levelcdnm!})'} ',
+                          style: AppTextStyle.h3),
+                      AppText.text('${model.dptnm}', style: AppTextStyle.h5)
+                    ],
+                  ),
+                ],
               ),
-              isShowLastPageText ? lastPageText() : Container()
-            ],
-          )),
+            ),
+            isShowLastPageText ? lastPageText() : Container()
+          ],
+        ),
+      ),
     );
   }
 

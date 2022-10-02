@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-10-02 00:46:45
+ * Last Modified: 2022-10-02 01:11:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -75,7 +75,7 @@ class SelectLocationProvider extends ChangeNotifier {
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
     locationList = fromParentLocationList;
     if (!isHomeAddressEmpty) {
-      setSelectedAddress(homeAddress, isMounted: false);
+      selectedAddress = homeAddress;
     }
     activityStatus = status;
   }
