@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-02 00:40:23
+ * Last Modified: 2022-10-02 18:58:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -136,15 +136,16 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       BuildContext context, SalesActivitySingleDateModel model) {
     var holidayList =
         context.read<SalseActivityManagerPageProvider>().holidayList;
-    var isDataNotEmpty = ((int.parse(
-                model.column1 != null && model.column1!.isNotEmpty
-                    ? model.column1!
-                    : '0') >
-            0) ||
-        (int.parse(model.column2 != null && model.column2!.isNotEmpty
-                ? model.column2!
-                : '0') >
-            0));
+    var colum1NotEmpty = model.column1 != null &&
+        (int.parse(model.column1!.isNotEmpty ? model.column1! : '0') > 0);
+    var colum2NotEmpty = model.column2 != null &&
+        (int.parse(model.column2!.isNotEmpty ? model.column2! : '0') > 0);
+    var colum3NotEmpty = model.column3 != null &&
+        (int.parse(model.column3!.isNotEmpty ? model.column3! : '0') > 0);
+
+    // print(
+    //     '${model.column1!.trim()} * ${model.column2!.trim()} * ${model.column3!.trim()} * ${model.column4!.trim()}|');
+    var isDataNotEmpty = (colum3NotEmpty || colum2NotEmpty || colum1NotEmpty);
     return GestureDetector(
       onTap: () {
         if (model.dateStr != null && model.dateStr!.trim().isNotEmpty) {
@@ -211,7 +212,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                           fontWeight: FontWeight.bold)),
                   AppText.text(
                       isDataNotEmpty
-                          ? '${model.column1 != null && model.column1!.isNotEmpty ? model.column1!.trim() : '0'}/${model.column2 != null && model.column2!.isNotEmpty ? model.column2!.trim() : '0'}'
+                          ? '${int.parse(model.column3!.isEmpty ? '0' : model.column3!)}/${int.parse(model.column2!.isEmpty ? '0' : model.column2!) + int.parse(model.column3!.isEmpty ? '0' : model.column3!)}'
                           : '',
                       style: AppTextStyle.sub_14)
                 ],
@@ -544,17 +545,17 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       final result = await AppDialog.showPopup(
           context,
           buildDialogContents(
-            context,
-            Container(
-                alignment: Alignment.center,
-                height: AppSize.singlePopupHeight - AppSize.buttonHeight,
-                child: AppText.text(
-                    tr('is_realy_delete_last_activity', args: [date, person]),
-                    maxLines: 4,
-                    style: AppTextStyle.default_16)),
-            false,
-            AppSize.singlePopupHeight,
-          ));
+              context,
+              Container(
+                  alignment: Alignment.center,
+                  height: AppSize.singlePopupHeight - AppSize.buttonHeight,
+                  child: AppText.text(
+                      tr('is_realy_delete_last_activity', args: [date, person]),
+                      maxLines: 4,
+                      style: AppTextStyle.default_16)),
+              false,
+              AppSize.singlePopupHeight,
+              rightButtonText: tr('delete')));
       if (result != null && result) {
         p.deletLastActivity().then((result) {
           if (result.isSuccessful) {
@@ -985,29 +986,45 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 final p = context.read<SalseActivityManagerPageProvider>();
                 if (p.activityStatus! == ActivityStatus.STOPED ||
                     p.activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED) {
-                  p
-                      .confirmeAcitivityTable()
-                      .then((result) => result.isSuccessful
-                          ? () {
-                              p.setActivityStatus(ActivityStatus.FINISH);
-                              AppToast()
-                                  .show(context, tr('confirm_successful'));
-                            }()
-                          : () async {
-                              var indexx = result.data['index'];
-                              var message = result.data['message'];
-                              AppToast().show(context, message);
-                              var popResult = await Navigator.pushNamed(
-                                  context, AddActivityPage.routeName,
-                                  arguments: {
-                                    'model': p.dayResponseModel,
-                                    'status': p.activityStatus,
-                                    'index': indexx,
-                                  });
-                              if (popResult != null) {
-                                p.getDayData(isWithLoading: true);
-                              }
-                            }());
+                  var isPressedTrue = false;
+                  await Future.delayed(Duration.zero, () async {
+                    final popupResult = await AppDialog.showPopup(
+                        context,
+                        buildTowButtonDialogContents(
+                          context,
+                          AppSize.singlePopupHeight,
+                          AppText.listViewText(tr('is_really_confirem')),
+                          successButtonText: tr('confirm'),
+                        ));
+                    if (popupResult != null) {
+                      isPressedTrue = true;
+                    }
+                  });
+                  if (isPressedTrue) {
+                    await p
+                        .confirmeAcitivityTable()
+                        .then((result) => result.isSuccessful
+                            ? () {
+                                p.setActivityStatus(ActivityStatus.FINISH);
+                                AppToast()
+                                    .show(context, tr('confirm_successful'));
+                              }()
+                            : () async {
+                                var indexx = result.data['index'];
+                                var message = result.data['message'];
+                                AppToast().show(context, message);
+                                var popResult = await Navigator.pushNamed(
+                                    context, AddActivityPage.routeName,
+                                    arguments: {
+                                      'model': p.dayResponseModel,
+                                      'status': p.activityStatus,
+                                      'index': indexx,
+                                    });
+                                if (popResult != null) {
+                                  p.getDayData(isWithLoading: true);
+                                }
+                              }());
+                  }
                 } else if (p.activityStatus != ActivityStatus.FINISH) {
                   AppDialog.showSimpleDialog(
                       context, null, tr('stop_activity_first_commont'),

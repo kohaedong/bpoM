@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-02 03:46:38
+ * Last Modified: 2022-10-02 18:15:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -74,6 +74,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   final _api = ApiService();
   bool get isModifiyByNewCase => isModified;
   String get dptnm => CacheService.getEsLogin()!.dptnm!;
+  bool get isUpdattt => isUpdate;
   bool get isDoNothing =>
       activityStatus == ActivityStatus.NONE ||
       activityStatus == ActivityStatus.FINISH;
@@ -839,9 +840,11 @@ class AddActivityPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       fromParentResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
+      isModified = true;
       if (activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED ||
           activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED) {
         isLoadData = false;
+        isUpdate = true;
         notifyListeners();
         fromParentResponseModel!.table250!.asMap().entries.forEach((map) {
           pr('table250 index ${map.key} ${map.value.toJson()}');

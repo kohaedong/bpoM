@@ -7,13 +7,15 @@ import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_text.dart';
 
 class AppStyles {
-  // input Border style.
-  static OutlineInputBorder get textfieldBorder => OutlineInputBorder(
+  static OutlineInputBorder defaultBorder = OutlineInputBorder(
+      gapPadding: 0,
+      borderSide:
+          BorderSide(color: AppColors.unReadyButtonBorderColor, width: 1),
+      borderRadius: BorderRadius.circular(AppSize.radius5));
+  static OutlineInputBorder focusedBorder = OutlineInputBorder(
+      gapPadding: 0,
       borderSide: BorderSide(color: AppColors.primary, width: 1),
       borderRadius: BorderRadius.circular(AppSize.radius5));
-
-  ///  일반 테스트 style 사전 정의.
-  /// [TextStyle]은 [AppTextStyle]에 저의 된 style 적용.
 
   /// [TextButton] 사용시 style 사전 정의.
   static ButtonStyle getButtonStyle(Color backgroundColor, Color forgroundColor,

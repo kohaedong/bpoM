@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-10-02 01:22:41
+ * Last Modified: 2022-10-02 12:45:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -109,7 +109,7 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                       p.setSelectedAddress(p.homeAddress);
                       doAction.call();
                     } else {
-                      AppToast().show(context, tr('plz_set_home_address'));
+                      AppToast().show(context, tr('plz_set_address'));
                     }
                     break;
                   case 1:
@@ -122,7 +122,7 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                             .show(context, tr('plz_selected_office_address'));
                       }
                     } else {
-                      AppToast().show(context, tr('plz_set_office_address'));
+                      AppToast().show(context, tr('plz_set_address'));
                     }
                     break;
                   case 2:

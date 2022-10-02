@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-02 00:17:08
+ * Last Modified: 2022-10-02 16:26:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -197,6 +197,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       if (map.value.contains(day)) {
         weekListIndex = map.key;
         weekRowIndex = map.value.indexOf(day);
+        pr('weekListIndex ::: ${weekListIndex}');
+        pr('weekRowIndex ::: ${weekRowIndex}');
       }
     });
     var model = monthResponseModel!.tList![weekListIndex];
@@ -228,12 +230,11 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     try {
       await checkNextWorkingDayForPreviousWorkingDay(DateTime.now());
       var isNotConfirmed = await checkConfiremStatus();
-      var isPrevWorkingDayNotConfirmedInPrevMonth =
-          await checkConfiremStatus(isWithLastWorkdaysNextWorkDay: true);
+      // var isPrevWorkingDayNotConfirmedInPrevMonth =
+      //     await checkConfiremStatus(isWithLastWorkdaysNextWorkDay: true);
       isShowPopup = ((checkPreviousWorkingDaysNextWorkingDay!.day ==
-                  DateTime.now().day) &&
-              isNotConfirmed) ||
-          isPrevWorkingDayNotConfirmedInPrevMonth;
+              DateTime.now().day) &&
+          isNotConfirmed);
     } catch (e) {
       pr(e);
     }

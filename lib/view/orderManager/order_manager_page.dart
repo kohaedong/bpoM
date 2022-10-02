@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-02 11:56:04
+ * Last Modified: 2022-10-02 17:08:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -169,6 +169,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         return Column(
           children: [
             AppStyles.buildTitleRow(tr('channel')),
+            defaultSpacing(isHalf: true),
             BaseInputWidget(
               context: context,
               iconType: InputIconType.SELECT,
@@ -202,6 +203,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         return Column(
           children: [
             AppStyles.buildTitleRow(tr('product_family')),
+            defaultSpacing(isHalf: true),
             BaseInputWidget(
               context: context,
               isNotInsertAll: CheckSuperAccount.isMultiAccountOrLeaderAccount()
@@ -241,6 +243,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         return Column(
           children: [
             AppStyles.buildTitleRow(tr('sales_office')),
+            defaultSpacing(isHalf: true),
             BaseInputWidget(
               context: context,
               onTap: tuple.item1 == null
@@ -297,22 +300,24 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
   Widget _buildSupplierSelector(BuildContext context) {
     final p = context.read<OrderManagerPageProvider>();
     return Selector<OrderManagerPageProvider,
-        Tuple3<EtCustListModel?, bool?, EtCustomerModel?>>(
-      selector: (context, provider) => Tuple3(provider.selectedSupplierModel,
-          provider.isSupplierSingleData, provider.selectedCustomerModel),
+        Tuple2<EtCustListModel?, List<EtCustListModel>>>(
+      selector: (context, provider) =>
+          Tuple2(provider.selectedSupplierModel, provider.supplierList),
       builder: (context, tuple, _) {
-        return tuple.item2 == null
-            ? Container()
-            : tuple.item2 != null && tuple.item2!
+        return tuple.item2.length == 1
+            ? tuple.item1 != null
                 ? Column(
                     children: [
                       BaseInfoRowByKeyAndValue.build(
                           tr('supplier'), tuple.item1!.kunnrNm!)
                     ],
                   )
-                : Column(
+                : Container()
+            : tuple.item2.length > 1
+                ? Column(
                     children: [
                       AppStyles.buildTitleRow(tr('supplier')),
+                      defaultSpacing(isHalf: true),
                       BaseInputWidget(
                         context: context,
                         iconType: InputIconType.SELECT,
@@ -338,7 +343,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         enable: false,
                       ),
                     ],
-                  );
+                  )
+                : Container();
       },
     );
   }
@@ -346,22 +352,24 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
   Widget _buildEndCustomerSelector(BuildContext context) {
     final p = context.read<OrderManagerPageProvider>();
     return Selector<OrderManagerPageProvider,
-        Tuple3<EtCustListModel?, bool?, EtCustomerModel?>>(
-      selector: (context, provider) => Tuple3(provider.selectedEndCustomerModel,
-          provider.isEndCustSingleData, provider.selectedCustomerModel),
+        Tuple2<EtCustListModel?, List<EtCustListModel>>>(
+      selector: (context, provider) =>
+          Tuple2(provider.selectedEndCustomerModel, provider.endCustList),
       builder: (context, tuple, _) {
-        return tuple.item2 == null
-            ? Container()
-            : tuple.item2 != null && tuple.item2!
-                ? Column(
+        return tuple.item2.length == 1
+            ? tuple.item1 == null
+                ? Container()
+                : Column(
                     children: [
                       BaseInfoRowByKeyAndValue.build(
                           tr('end_user'), tuple.item1!.kunnrNm!),
                     ],
                   )
-                : Column(
+            : tuple.item2.length > 1
+                ? Column(
                     children: [
                       AppStyles.buildTitleRow(tr('end_customer')),
+                      defaultSpacing(isHalf: true),
                       BaseInputWidget(
                         context: context,
                         iconType: InputIconType.SELECT,
@@ -370,10 +378,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         isNotInsertAll: true,
                         hintText: tuple.item1 != null
                             ? tuple.item1!.kunnrNm
-                            : '${tr('plz_select_something_1', args: [
-                                    tr('end_costomer'),
-                                    ''
-                                  ])}',
+                            : tr('plz_select'),
                         // 팀장 일때 만 팀원선택후 삭제가능.
                         width: AppSize.defaultContentsWidth,
                         hintTextStyleCallBack: () => tuple.item1 != null
@@ -387,7 +392,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         enable: false,
                       ),
                     ],
-                  );
+                  )
+                : Container();
       },
     );
   }
@@ -837,41 +843,32 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
           children: [
             AppStyles.buildTitleRow(title, isNotwithStart: true),
             defaultSpacing(isHalf: true),
-            TextFormField(
-              controller: type == 1
-                  ? _deliveryConditionInputController
-                  : _orderDescriptionInputController,
-              onChanged: (text) {
-                final p = context.read<OrderManagerPageProvider>();
-                type == 1
-                    ? p.setDeliveryCondition(text.trim())
-                    : p.setOrderDescriptionDetai(text.trim());
-              },
-              autofocus: false,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(200),
-              ],
-              autocorrect: false,
-              keyboardType: TextInputType.multiline,
-              maxLines: 8,
-              style: AppTextStyle.default_16,
-              decoration: InputDecoration(
-                  fillColor: AppColors.whiteText,
-                  hintText: '${tr('suggestion_hint')}',
-                  hintStyle: AppTextStyle.hint_16,
-                  contentPadding:
-                      EdgeInsets.all(AppSize.defaultListItemSpacing),
-                  border: OutlineInputBorder(
-                      gapPadding: 0,
-                      borderSide: BorderSide(
-                          color: AppColors.unReadyButtonBorderColor, width: 1),
-                      borderRadius: BorderRadius.circular(AppSize.radius5)),
-                  focusedBorder: OutlineInputBorder(
-                      gapPadding: 0,
-                      borderSide:
-                          BorderSide(color: AppColors.primary, width: 1),
-                      borderRadius: BorderRadius.circular(AppSize.radius5))),
-            )
+            TextField(
+                controller: type == 1
+                    ? _deliveryConditionInputController
+                    : _orderDescriptionInputController,
+                onChanged: (text) {
+                  final p = context.read<OrderManagerPageProvider>();
+                  type == 1
+                      ? p.setDeliveryCondition(text.trim())
+                      : p.setOrderDescriptionDetai(text.trim());
+                },
+                autofocus: false,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(200),
+                ],
+                autocorrect: false,
+                keyboardType: TextInputType.multiline,
+                maxLines: 8,
+                style: AppTextStyle.default_16,
+                decoration: InputDecoration(
+                    fillColor: AppColors.whiteText,
+                    hintText: '${tr('suggestion_hint')}',
+                    hintStyle: AppTextStyle.hint_16,
+                    contentPadding:
+                        EdgeInsets.all(AppSize.defaultListItemSpacing),
+                    enabledBorder: AppStyles.defaultBorder,
+                    focusedBorder: AppStyles.focusedBorder))
           ],
         );
       },
@@ -939,16 +936,14 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         return BaseLayout(
             hasForm: true,
             isWithWillPopScope: true,
+            onWillPopResult: true,
+            onwillpopCallback: () => p.isModifiyByNewCase,
             appBar: MainAppBar(
               context,
               icon: Icon(Icons.clear),
               titleText: AppText.text('${tr('registor_order')}',
                   style: AppTextStyle.w500_22),
-              callback: () async {
-                if (p.isModifiyByNewCase) {
-                  Navigator.pop(context);
-                }
-              },
+              cachePageTypeCallBack: () => p.isModifiyByNewCase,
             ),
             child: FutureBuilder<ResultModel>(
                 future: context.read<OrderManagerPageProvider>().initData(),

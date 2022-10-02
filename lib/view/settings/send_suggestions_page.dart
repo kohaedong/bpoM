@@ -69,7 +69,7 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
     return Container(
         height: AppSize.suggestionsBoxHeight,
         width: AppSize.boxWidth,
-        child: TextFormField(
+        child: TextField(
           controller: _textEditingController,
           scrollController: _textFieldScrollController,
           onTap: () {
@@ -96,15 +96,8 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
               fillColor: AppColors.whiteText,
               hintText: '${tr('suggestion_hint')}',
               hintStyle: AppTextStyle.hint_16,
-              border: OutlineInputBorder(
-                  gapPadding: 0,
-                  borderSide: BorderSide(
-                      color: AppColors.unReadyButtonBorderColor, width: 1),
-                  borderRadius: BorderRadius.circular(AppSize.radius5)),
-              focusedBorder: OutlineInputBorder(
-                  gapPadding: 0,
-                  borderSide: BorderSide(color: AppColors.primary, width: 1),
-                  borderRadius: BorderRadius.circular(AppSize.radius5))),
+              border: AppStyles.defaultBorder,
+              focusedBorder: AppStyles.focusedBorder),
         ));
   }
 
@@ -141,6 +134,9 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
   Widget build(BuildContext context) {
     return BaseLayout(
         hasForm: true,
+        isWithWillPopScope: true,
+        onWillPopResult: true,
+        onwillpopCallback: () => _textEditingController.text.trim().isNotEmpty,
         isResizeToAvoidBottomInset: true,
         appBar: MainAppBar(
           context,

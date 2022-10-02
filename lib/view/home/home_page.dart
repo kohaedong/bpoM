@@ -310,7 +310,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               height: 100,
                               child: Center(
                                 child: AppText.listViewText(
-                                    tr('not_search_result')),
+                                    tr('not_recent_notice')),
                               ))
                           : Container(height: 200);
             })));

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-02 12:28:11
+ * Last Modified: 2022-10-02 18:17:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -314,30 +314,31 @@ class _AddActivityPageState extends State<AddActivityPage> {
   }
 
   Widget _buildTitleRow(String text, {bool? isNotwithStart}) {
-    return Row(children: [
-      AppText.text(text, style: AppTextStyle.h4),
-      SizedBox(width: AppSize.defaultListItemSpacing),
-      isNotwithStart != null && isNotwithStart
-          ? Container()
-          : AppText.text('*',
-              style: AppTextStyle.h4.copyWith(color: AppColors.dangerColor))
-    ]);
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AppText.text(text,
+                style: AppTextStyle.h4, textAlign: TextAlign.start),
+            SizedBox(width: AppSize.defaultListItemSpacing),
+            isNotwithStart != null && isNotwithStart
+                ? Container()
+                : AppText.text('*',
+                    style:
+                        AppTextStyle.h4.copyWith(color: AppColors.dangerColor))
+          ]),
+    );
   }
 
   Widget _buildTextField(BuildContext context,
       {required AddActivityPageInputType type}) {
     final p = context.read<AddActivityPageProvider>();
     var accountType = CacheService.getAccountType();
-    var defaultBorder = OutlineInputBorder(
-        gapPadding: 0,
-        borderSide:
-            BorderSide(color: AppColors.textFieldUnfoucsColor, width: .5),
-        borderRadius: BorderRadius.circular(AppSize.radius5));
-    var focusedBorder = OutlineInputBorder(
-        gapPadding: 0,
-        borderSide: BorderSide(color: AppColors.primary, width: .5),
-        borderRadius: BorderRadius.circular(AppSize.radius5));
-    return TextFormField(
+    var defaultBorder = AppStyles.defaultBorder;
+    var focusedBorder = AppStyles.focusedBorder;
+    return TextField(
       readOnly: p.isDoNothing
           ? true
           : type == AddActivityPageInputType.LEADER_ADVICE
@@ -393,6 +394,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   : ''
               : '${tr('suggestion_hint')}',
           hintStyle: AppTextStyle.hint_16,
+          enabledBorder: defaultBorder,
           border: defaultBorder,
           focusedBorder: p.isDoNothing
               ? defaultBorder
@@ -451,34 +453,6 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 selfHeight: AppSize.bottomButtonHeight, () async {
               hideKeyboard(context);
               final p = context.read<AddActivityPageProvider>();
-              // var isHaveEmptyItem = false;
-              // var isValidateNewItem = p.selectedActionType == '제품신규'
-              //     ? p.suggestedItemList != null &&
-              //             p.suggestedItemList!.isNotEmpty
-              //         ? p.seletedAmount != null && p.seletedAmount!.isNotEmpty
-              //         : true
-              //     : true;
-              // p.suggestedItemList!.forEach((item) {
-              //   if (item.matnr == null || item.matnr!.isEmpty) {
-              //     isHaveEmptyItem = true;
-              //   }
-              // });
-
-              // if (isHaveEmptyItem) {
-              //   AppToast().show(
-              //       context,
-              //       tr('plz_select_something_1',
-              //           args: [tr('suggested_item'), '']));
-              //   return;
-              // }
-              // if (!isValidateNewItem) {
-              //   AppToast().show(
-              //       context,
-              //       tr('plz_select_something_1',
-              //           args: [tr('month_amount_price'), '']));
-              //   return;
-              // }
-
               if (p.activityStatus == ActivityStatus.FINISH ||
                   p.activityStatus == ActivityStatus.NONE) {
                 return;
@@ -492,7 +466,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   //     : true;
                   await p.saveTable().then((result) {
                     if (result.isSuccessful) {
-                      AppToast().show(context, tr('success'));
+                      AppToast().show(context, tr('saved'));
                       if (index == null) {
                         Navigator.pop(context, true);
                       }
@@ -564,6 +538,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   Widget _buildIsInterview(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildTitleRow(tr('is_interview'), isNotwithStart: true),
         defaultSpacing(isHalf: true),
@@ -605,6 +580,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
       selector: (context, provider) => provider.selectedActionType,
       builder: (context, type, _) {
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             defaultSpacing(),
             _buildTitleRow(tr('activity_type_2'), isNotwithStart: true),
@@ -683,6 +659,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
     final p = context.read<AddActivityPageProvider>();
     var ismoutiAccount = CheckSuperAccount.isMultiAccountOrLeaderAccount();
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildTitleRow(tr('with_another_saler'), isNotwithStart: true),
         defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
@@ -1076,16 +1053,14 @@ class _AddActivityPageState extends State<AddActivityPage> {
         return BaseLayout(
             hasForm: true,
             isWithWillPopScope: true,
-            onWillPopResult: p.isUpdate,
+            onWillPopResult: p.isUpdattt,
             onwillpopCallback: () =>
                 p.index == null ? p.isModifiyByNewCase : p.isModifiedByEntity,
             appBar: MainAppBar(context,
                 titleText: AppText.text(tr('add_activity_page'),
-                    style: AppTextStyle.w500_22), cachePageTypeCallBack: () {
-              return p.index == null
-                  ? p.isModifiyByNewCase
-                  : p.isModifiedByEntity;
-            }, popArguments: p.isUpdate),
+                    style: AppTextStyle.w500_22), callback: () {
+              Navigator.pop(context, p.isUpdattt);
+            }),
             child: FutureBuilder<ResultModel>(
                 future: context
                     .read<AddActivityPageProvider>()
@@ -1127,6 +1102,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                       builder: (context, tuple, _) {
                                         return tuple.item1
                                             ? Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   _buildIsInterview(context),
                                                   tuple.item1 &&
@@ -1151,6 +1128,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                 builder: (context, tuple, _) {
                                   return tuple.item1 && tuple.item2 == 0
                                       ? Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Padding(
                                               padding:

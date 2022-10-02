@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-09-30 10:36:25
+ * Last Modified: 2022-10-02 13:27:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -94,8 +94,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                   child: Container(
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.symmetric(
-                        horizontal: AppSize.padding,
-                        vertical: AppSize.defaultListItemSpacing),
+                        horizontal: AppSize.padding, vertical: AppSize.padding),
                     child: AppText.text(map.value.itemnm!,
                         textAlign: TextAlign.start,
                         style: AppTextStyle.default_16),

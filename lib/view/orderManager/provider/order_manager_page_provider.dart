@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-02 03:56:51
+ * Last Modified: 2022-10-02 16:17:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -58,8 +58,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
   List<String>? productFamilyDataList;
   List<String>? channelList;
   List<RecentOrderTItemModel>? items;
-  bool? isSupplierSingleData;
-  bool? isEndCustSingleData;
   bool isLoadData = false;
   bool isModified = false;
   double? amountAvalible;
@@ -145,8 +143,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
         break;
       default:
     }
-    isSupplierSingleData = null;
-    isEndCustSingleData = null;
   }
 
   void resetOrderItem() {
@@ -371,6 +367,13 @@ class OrderManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetSupplierAndEndCustData() {
+    selectedSupplierModel = null;
+    selectedEndCustomerModel = null;
+    supplierList = [];
+    endCustList = [];
+  }
+
   void setCustomerModel(dynamic map) async {
     pr(map);
     if (map != null) {
@@ -384,32 +387,39 @@ class OrderManagerPageProvider extends ChangeNotifier {
       }
       selectedCustomerModel = map['model'] as EtCustomerModel?;
       if (selectedCustomerModel != null) {
-        var supplierResult = await searchSupplierAndEndCustomer(true);
-        var endResult = await searchSupplierAndEndCustomer(false);
-
-        isSupplierSingleData = supplierResult.data;
-        isEndCustSingleData = endResult.data;
-      } else {
-        isSupplierSingleData = null;
-        isEndCustSingleData = null;
+        await searchSupplierAndEndCustomer(true);
+        await searchSupplierAndEndCustomer(false);
+        pr('${selectedEndCustomerModel?.toJson()}');
+        pr('${selectedSupplierModel?.toJson()}');
+        endCustList.forEach((element) {
+          pr('end ${element.toJson()}');
+        });
+        supplierList.forEach((element) {
+          pr('supp ${element.toJson()}');
+        });
       }
       resetOrderItem();
       notifyListeners();
     } else {
-      selectedCustomerModel = null;
-      selectedEndCustomerModel = null;
-      isSupplierSingleData = null;
-      isEndCustSingleData = null;
+      resetSupplierAndEndCustData();
       resetData(level: 2);
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   void setSupplier(String? str) {
     if (str != null) {
       var temp = str.substring(str.indexOf('/') + 1);
-      selectedSupplierModel =
-          supplierList.where((supplier) => supplier.kunnr == temp).single;
+      selectedSupplierModel = supplierList
+                  .where((supplier) => supplier.kunnr == temp)
+                  .length >
+              1
+          ? supplierList
+              .where((supplier) => supplier.kunnr == temp)
+              .toList()
+              .where((model) => model.defpa != null && model.defpa!.isNotEmpty)
+              .single
+          : supplierList.where((supplier) => supplier.kunnr == temp).single;
     } else {
       selectedSupplierModel = null;
     }
@@ -419,8 +429,16 @@ class OrderManagerPageProvider extends ChangeNotifier {
   void setEndCust(String? str) {
     if (str != null) {
       var temp = str.substring(str.indexOf('/') + 1);
-      selectedEndCustomerModel =
-          endCustList.where((end) => end.kunnr == temp).single;
+      selectedEndCustomerModel = endCustList
+                  .where((endCust) => endCust.kunnr == temp)
+                  .length >
+              1
+          ? endCustList
+              .where((endCust) => endCust.kunnr == temp)
+              .toList()
+              .where((model) => model.defpa != null && model.defpa!.isNotEmpty)
+              .single
+          : endCustList.where((endCust) => endCust.kunnr == temp).single;
     } else {
       selectedSupplierModel = null;
     }
@@ -687,8 +705,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> searchSupplierAndEndCustomer(bool isSupplier) async {
-    isLoadData = true;
-    notifyListeners();
     _api.init(RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER);
     final isLogin = CacheService.getIsLogin();
     final isloginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
@@ -713,42 +729,90 @@ class OrderManagerPageProvider extends ChangeNotifier {
     };
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {
-      isLoadData = false;
-      notifyListeners();
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
       var temp = EtCustListResponseModel.fromJson(result.body['data']);
+      temp.etCustList?.forEach((element) {
+        pr('isSup: $isSupplier ${element.toJson()} ');
+      });
       if (temp.esReturn!.mtype == 'S') {
         if (temp.etCustList!.isNotEmpty) {
-          if (isSupplier) {
-            supplierList = [];
-            selectedSupplierModel = temp.etCustList!.first;
-            temp.etCustList!.forEach((cust) {
-              supplierList.add(cust);
-            });
-          } else {
-            endCustList = [];
-            selectedEndCustomerModel = temp.etCustList!.first;
-            temp.etCustList!.forEach((cust) {
-              endCustList.add(cust);
-            });
-          }
-        } else {
+          var list = temp.etCustList!;
           if (isSupplier) {
             supplierList = [];
             selectedSupplierModel = null;
+            if (list.length == 1) {
+              selectedSupplierModel = list.single;
+              supplierList.add(list.single);
+            } else {
+              var moreEntityKunnrList = <String>[];
+
+              list.asMap().entries.forEach((map) {
+                var isMoreEntity = list
+                        .where((element) => element.kunnr == map.value.kunnr)
+                        .length >
+                    1;
+                if (isMoreEntity) {
+                  moreEntityKunnrList.add(map.value.kunnr!);
+                } else {
+                  supplierList.add(map.value);
+                }
+              });
+              moreEntityKunnrList.toSet().forEach((kunnr) {
+                var model = list
+                    .where((model) =>
+                        model.kunnr == kunnr && model.defpa!.isNotEmpty)
+                    .single;
+                supplierList.add(model);
+              });
+              if (supplierList.length == 1) {
+                selectedSupplierModel = supplierList.single;
+              } else {
+                selectedSupplierModel = null;
+              }
+              pr('aiai$supplierList');
+              return ResultModel(true);
+            }
           } else {
             endCustList = [];
             selectedEndCustomerModel = null;
+            if (list.length == 1) {
+              selectedEndCustomerModel = list.single;
+              endCustList.add(list.single);
+            } else {
+              var moreEntityKunnrList = <String>[];
+              list.asMap().entries.forEach((map) {
+                var isMoreEntity = list
+                        .where((element) => element.kunnr == map.value.kunnr)
+                        .length >
+                    1;
+                if (isMoreEntity) {
+                  moreEntityKunnrList.add(map.value.kunnr!);
+                } else {
+                  endCustList.add(map.value);
+                }
+              });
+              moreEntityKunnrList.toSet().forEach((kunnr) {
+                var model = list
+                    .where((model) =>
+                        model.kunnr == kunnr && model.defpa!.isNotEmpty)
+                    .single;
+                endCustList.add(model);
+              });
+              if (endCustList.length == 1) {
+                selectedEndCustomerModel = endCustList.single;
+              } else {
+                selectedEndCustomerModel = null;
+              }
+              return ResultModel(true);
+            }
           }
+        } else {
+          pr('reset??');
+          resetSupplierAndEndCustData();
         }
       }
-
-      isLoadData = false;
-      notifyListeners();
-      return ResultModel(true,
-          data: temp.etCustList!.isNotEmpty && temp.etCustList!.length == 1);
     }
     return ResultModel(false);
   }
@@ -789,7 +853,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
                 model.sname == esLogin!.ename && model.logid == esLogin.logid)
             .toList();
       }
-
       selectedSalsePerson = staffList.isNotEmpty ? staffList.first : null;
       return ResultModel(true);
     }

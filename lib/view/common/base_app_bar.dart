@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_bar.dart
  * Created Date: 2021-08-29 19:57:10
- * Last Modified: 2022-10-02 03:36:51
+ * Last Modified: 2022-10-02 17:44:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -60,7 +60,7 @@ class MainAppBar extends AppBar {
                                 height: AppSize.singlePopupHeight -
                                     AppSize.buttonHeight,
                                 child: Center(
-                                  child: AppText.text(
+                                  child: AppText.listViewText(
                                       '${tr('is_exit_current_page')}',
                                       style: context
                                           .read<AppThemeProvider>()
@@ -83,7 +83,7 @@ class MainAppBar extends AppBar {
                     if (callback != null) {
                       callback.call();
                     } else {
-                      Navigator.pop(context);
+                      Navigator.pop(context, popArguments);
                     }
                   }
                 },
