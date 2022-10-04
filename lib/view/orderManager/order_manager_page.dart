@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-05 03:00:09
+ * Last Modified: 2022-10-05 03:57:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -689,15 +689,21 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 Padding(
                     padding:
                         EdgeInsets.only(right: AppSize.defaultListItemSpacing)),
-                Selector<OrderManagerPageProvider, List<double>>(
-                  selector: (context, provider) =>
-                      provider.selectedQuantityList,
-                  builder: (context, quantityList, _) {
-                    var isNotEmpty =
-                        quantityList.isNotEmpty && quantityList[index] != 0.0;
+                Selector<
+                    OrderManagerPageProvider,
+                    Tuple2<List<double>,
+                        List<BulkOrderDetailSearchMetaPriceModel?>>>(
+                  selector: (context, provider) => Tuple2(
+                      provider.selectedQuantityList, provider.priceModelList),
+                  builder: (context, tuple, _) {
+                    var isQuantityNotEmpty =
+                        tuple.item1.isNotEmpty && tuple.item1[index] != 0.0;
+                    var isPriceModelNotEmpty = tuple.item2.isNotEmpty &&
+                        tuple.item2[index] != null &&
+                        tuple.item2[index]!.zfreeQty != 0.0;
                     return GestureDetector(
                       onTap: () async {
-                        if (isNotEmpty) {
+                        if (isQuantityNotEmpty) {
                           final result =
                               await p.checkPrice(index, isNotifier: true);
                           if (result.isSuccessful) {
@@ -718,21 +724,29 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                             .3,
                         height: AppSize.defaultTextFieldHeight,
                         decoration: BoxDecoration(
-                            color: isNotEmpty
-                                ? AppColors.sendButtonColor
-                                : AppColors.unReadyButton,
+                            color: isQuantityNotEmpty && isPriceModelNotEmpty
+                                ? AppColors.unReadyButton
+                                : isQuantityNotEmpty
+                                    ? AppColors.sendButtonColor
+                                    : AppColors.unReadyButton,
                             borderRadius: BorderRadius.all(
                                 Radius.circular(AppSize.radius5)),
                             border: Border.all(
                                 width: .5,
-                                color: isNotEmpty
-                                    ? AppColors.primary
-                                    : AppColors.textFieldUnfoucsColor)),
+                                color:
+                                    isQuantityNotEmpty && isPriceModelNotEmpty
+                                        ? AppColors.textFieldUnfoucsColor
+                                        : isQuantityNotEmpty
+                                            ? AppColors.primary
+                                            : AppColors.textFieldUnfoucsColor)),
                         child: AppText.text(tr('search'),
                             style: AppTextStyle.h4.copyWith(
-                                color: isNotEmpty
-                                    ? AppColors.primary
-                                    : AppColors.hintText)),
+                                color:
+                                    isQuantityNotEmpty && isPriceModelNotEmpty
+                                        ? AppColors.hintText
+                                        : isQuantityNotEmpty
+                                            ? AppColors.primary
+                                            : AppColors.hintText)),
                       ),
                     );
                   },

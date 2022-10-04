@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-10-01 22:25:43
+ * Last Modified: 2022-10-05 04:38:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -109,56 +109,101 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
   Widget _buildQuantityInput(BuildContext context) {
     return BaseColumWithTitleAndTextFiled.build(tr('quantity'),
         TextControllerFactoryWidget(giveTextEditControllerWidget: (controller) {
-      return Selector<AddOrderPopupProvider, Tuple2<String?, bool>>(
+      return Selector<AddOrderPopupProvider,
+          Tuple3<String?, bool, BulkOrderDetailSearchMetaPriceModel?>>(
         selector: (context, provider) =>
-            Tuple2(provider.quantity, provider.isLoadData),
+            Tuple3(provider.quantity, provider.isLoadData, provider.priceModel),
         builder: (context, tuple, _) {
           final p = context.read<AddOrderPopupProvider>();
-          return Stack(
+          var isQuantityNotEmpty = tuple.item1 != null &&
+              tuple.item1!.isNotEmpty &&
+              int.parse(tuple.item1!) != '0';
+          var isPriceModelNotEmpty =
+              tuple.item3 != null && tuple.item3!.zfreeQty != 0.0;
+          return Row(
             children: [
-              Focus(
-                  focusNode: _focusNode,
-                  onFocusChange: (focus) async {
-                    if (!focus) {
-                      if (p.selectedMateria != null) {
-                        await p.checkPrice().then((result) {
-                          if (!result.isSuccessful) {
-                            p.setQuantity(null);
-                            _productQuantityInputController.text = '';
-                            AppDialog.showSignglePopup(
-                                context, result.message!);
-                          } else {
-                            if (p.quantity != null && p.quantity!.isNotEmpty) {
-                              p.setHeight(AppSize.realHeight * .8);
-                            } else {
-                              p.setQuantity(null);
-                              p.setHeight(AppSize.realHeight * .5);
-                            }
-                          }
-                        });
+              BaseInputWidget(
+                context: context,
+                iconType: tuple.item1 != null ? InputIconType.DELETE : null,
+                onChangeCallBack: (t) => p.setQuantity(t),
+                defaultIconCallback: () {
+                  p.setQuantity(null);
+                  _productQuantityInputController.text = '';
+                },
+                textEditingController: _productQuantityInputController,
+                keybordType: TextInputType.number,
+                iconColor: AppColors.textFieldUnfoucsColor,
+                hintText: tuple.item1 ?? tr('plz_enter'),
+                // 팀장 일때 만 팀원선택후 삭제가능.
+                width: (AppSize.defaultContentsWidth -
+                        AppSize.padding * 2 -
+                        AppSize.defaultListItemSpacing) *
+                    .7,
+                hintTextStyleCallBack: () => tuple.item1 != null
+                    ? AppTextStyle.default_16
+                    : AppTextStyle.hint_16,
+                enable: true,
+              ),
+              Padding(
+                  padding:
+                      EdgeInsets.only(right: AppSize.defaultListItemSpacing)),
+              GestureDetector(
+                onTap: () async {
+                  hideKeyboard(context);
+                  if (p.selectedMateria != null && !isPriceModelNotEmpty) {
+                    await p.checkPrice().then((result) {
+                      if (!result.isSuccessful) {
+                        p.setQuantity(null);
+                        _productQuantityInputController.text = '';
+                        AppDialog.showSignglePopup(context, result.message!);
+                      } else {
+                        if (p.quantity != null && p.quantity!.isNotEmpty) {
+                          p.setHeight(AppSize.realHeight * .8);
+                        } else {
+                          p.setQuantity(null);
+                          p.setHeight(AppSize.realHeight * .5);
+                        }
                       }
+                    });
+                  } else {
+                    if (int.parse(p.quantity!) == 0) {
+                      AppToast().show(context, tr('plz_select_quantity'));
+                    } else {
+                      AppToast().show(context, tr('plz_select_material'));
                     }
-                  },
-                  child: BaseInputWidget(
-                    context: context,
-                    iconType: tuple.item1 != null ? InputIconType.DELETE : null,
-                    onChangeCallBack: (t) => p.setQuantity(t),
-                    defaultIconCallback: () {
-                      p.setQuantity(null);
-                      _productQuantityInputController.text = '';
-                    },
-                    textEditingController: _productQuantityInputController,
-                    keybordType: TextInputType.number,
-                    iconColor: AppColors.textFieldUnfoucsColor,
-                    hintText: tuple.item1 ?? tr('plz_enter'),
-                    // 팀장 일때 만 팀원선택후 삭제가능.
-                    width: AppSize.defaultContentsWidth,
-                    hintTextStyleCallBack: () => tuple.item1 != null
-                        ? AppTextStyle.default_16
-                        : AppTextStyle.hint_16,
-                    enable: true,
-                  )),
-              _buildLoadingWidget(context)
+                  }
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  width: (AppSize.defaultContentsWidth -
+                          AppSize.padding * 2 -
+                          AppSize.defaultListItemSpacing) *
+                      .3,
+                  height: AppSize.defaultTextFieldHeight,
+                  decoration: BoxDecoration(
+                      color: isQuantityNotEmpty && isPriceModelNotEmpty
+                          ? AppColors.unReadyButton
+                          : isQuantityNotEmpty
+                              ? AppColors.sendButtonColor
+                              : AppColors.unReadyButton,
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(AppSize.radius5)),
+                      border: Border.all(
+                          width: .5,
+                          color: isQuantityNotEmpty && isPriceModelNotEmpty
+                              ? AppColors.textFieldUnfoucsColor
+                              : isQuantityNotEmpty
+                                  ? AppColors.primary
+                                  : AppColors.textFieldUnfoucsColor)),
+                  child: AppText.text(tr('search'),
+                      style: AppTextStyle.h4.copyWith(
+                          color: isQuantityNotEmpty && isPriceModelNotEmpty
+                              ? AppColors.hintText
+                              : isQuantityNotEmpty
+                                  ? AppColors.primary
+                                  : AppColors.hintText)),
+                ),
+              )
             ],
           );
         },
@@ -249,28 +294,6 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
     );
   }
 
-  Widget _buildLoadingWidget(BuildContext context) {
-    return Selector<AddOrderPopupProvider, bool>(
-      selector: (context, provider) => provider.isLoadData,
-      builder: (context, isLoadData, _) {
-        return isLoadData
-            ? SizedBox(
-                width: AppSize.defaultContentsWidth,
-                height: AppSize.defaultTextFieldHeight,
-                child: Align(
-                    alignment: Alignment.center,
-                    child: SizedBox.fromSize(
-                        size: Size(20, 20),
-                        child: CircularProgressIndicator(
-                          strokeWidth: 1,
-                          color: AppColors.primary,
-                        ))),
-              )
-            : Container();
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -328,12 +351,13 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                         rightButtonText: widget.type == OrderItemType.NEW
                             ? tr('add')
                             : tr('save'), dataCallback: () async {
+                      hideKeyboard(context);
                       if (p.selectedMateria == null || p.quantity == null) {
                         AppToast()
                             .show(context, tr('plz_check_essential_option'));
                         return null;
                       } else {
-                        if (!p.isLoadData && !FocusScope.of(context).hasFocus) {
+                        if (!p.isLoadData && p.priceModel != null) {
                           var orderItemModel = await p.createOrderItemModel();
                           var priceModel = p.priceModel;
                           return {
@@ -351,8 +375,11 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                       if (p.selectedMateria != null &&
                           p.quantity != null &&
                           !p.isLoadData &&
-                          !FocusScope.of(context).hasFocus) {
+                          p.priceModel != null) {
                         return true;
+                      }
+                      if (p.priceModel == null) {
+                        AppToast().show(context, tr('plz_check_price'));
                       }
                       return false;
                     });
