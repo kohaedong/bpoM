@@ -361,13 +361,13 @@ class SigninProvider extends ChangeNotifier {
     final signResult = await _api.request(body: signBody);
     pr(signResult?.body);
     if (signResult!.statusCode == 200 && signResult.body['code'] == "NG") {
-      isLoadData = false;
-
-      notifyListeners();
       var message = signResult.body['message'] as String;
       var isMessageStartWithNumber =
           int.tryParse(message.substring(0, 1)) != null;
       var isShowPopup = false;
+      if (signResult.body['data'] == null) {
+        isShowPopup = true;
+      }
       if (isMessageStartWithNumber) {
         var number = int.parse(message.substring(0, 1));
         if (number < 5) {
@@ -376,11 +376,12 @@ class SigninProvider extends ChangeNotifier {
           message = tr('password_wrong_five_time');
           isShowPopup = true;
         }
-      } else {
-        message = "${tr('check_account_or_password')}";
       }
+      isLoadData = false;
+      notifyListeners();
       return SigninResult(false, message, isShowPopup: isShowPopup);
     }
+
     if (signResult.statusCode == 200 &&
         signResult.body['code'] != "NG" &&
         signResult.body['data'] != null) {

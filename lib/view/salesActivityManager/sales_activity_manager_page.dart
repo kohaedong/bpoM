@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-02 18:58:42
+ * Last Modified: 2022-10-05 00:40:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,6 @@
  */
 
 import 'dart:io';
-import 'package:medsalesportal/view/common/base_date_picker_for_month.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +22,7 @@ import 'package:medsalesportal/service/hive_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
+import 'package:medsalesportal/model/rfc/t_list_model.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
@@ -39,12 +39,14 @@ import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_weeks_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
+import 'package:medsalesportal/view/common/base_date_picker_for_month.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_single_date_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/view/salesActivityManager/add_activity_page.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
 import 'package:medsalesportal/view/salesActivityManager/select_location_widget.dart';
+import 'package:medsalesportal/view/salesActivitySearch/salse_activity_detail_page.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/activity_menu_provider.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/sales_activity_manager_page_provider.dart';
 
@@ -420,7 +422,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
 
   Widget _buildDayListItem(
       BuildContext context, SalesActivityDayTable260 model, int index) {
-    final p = context.read<SalseActivityManagerPageProvider>();
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
@@ -438,7 +439,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 AppText.listViewText(model.zskunnrNm!),
                 model.xmeet == 'S' && model.xvisit == 'Y'
                     ? BaseTagButton.build(tr('successful'))
-                    : model.xmeet == 'S' && model.xvisit == 'Y'
+                    : model.xmeet != 'S' && model.xvisit == 'Y'
                         ? BaseTagButton.build(tr('faild'))
                         : Container()
               ],
@@ -619,16 +620,33 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       }
     } else {
       final p = context.read<SalseActivityManagerPageProvider>();
-      final naviResult = await Navigator.pushNamed(
-          context, AddActivityPage.routeName, arguments: {
-        'model': p.dayResponseModel,
-        'status': p.activityStatus,
-        'index': index
-      });
-      if (naviResult != null) {
-        naviResult as bool;
-        if (naviResult) {
-          p.getDayData(isWithLoading: true);
+      var t250 = p.dayResponseModel!.table250!.single;
+      var t260 = p.dayResponseModel!.table260![index];
+      if (t250.stat == 'C') {
+        var model = TlistModel.fromJson(t250.toJson());
+        model = TlistModel.fromJson(t260.toJson());
+        model.sanumNm = t250.sanumNm;
+        model.zstatus = t260.zstatus;
+        var activityList = await HiveService.getActivityType();
+        var tempStr = activityList!
+            .where((actity) => actity.contains(t260.actcat1!))
+            .single;
+        model.actcat1Nm = tempStr.substring(0, tempStr.indexOf('-'));
+        model.dist = t260.dist;
+        await Navigator.pushNamed(context, SalseActivityDetailPage.routeName,
+            arguments: model);
+      } else {
+        final naviResult = await Navigator.pushNamed(
+            context, AddActivityPage.routeName, arguments: {
+          'model': p.dayResponseModel,
+          'status': p.activityStatus,
+          'index': index
+        });
+        if (naviResult != null) {
+          naviResult as bool;
+          if (naviResult) {
+            p.getDayData(isWithLoading: true);
+          }
         }
       }
     }
@@ -651,6 +669,11 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             AppTextStyle.default_14.copyWith(color: AppColors.primary),
             AppSize.radius25, () async {
           final p = context.read<ActivityMenuProvider>();
+          if (p.isDifreentGoinTime) {
+            AppToast().show(context, tr('stats_is_changed'));
+            Navigator.pop(context, true);
+            return;
+          }
           switch (menuType) {
             case MenuType.ACTIVITY_DELETE:
               //! remove last table.
@@ -984,6 +1007,11 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                         return _actionButton;
                       }), actionCallback: () async {
                 final p = context.read<SalseActivityManagerPageProvider>();
+                if (p.isDifreentGoinTime) {
+                  AppToast().show(context, tr('stats_is_changed'));
+                  p.getDayData(isWithLoading: true);
+                  return;
+                }
                 if (p.activityStatus! == ActivityStatus.STOPED ||
                     p.activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED) {
                   var isPressedTrue = false;

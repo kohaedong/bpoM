@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-02 18:15:41
+ * Last Modified: 2022-10-05 00:26:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -46,8 +46,9 @@ typedef IsThisActivityFrom280 = bool Function(SalesActivityDayTable280);
 class AddActivityPageProvider extends ChangeNotifier {
   AddActivityKeyManResponseModel? keyManResponseModel;
   AddActivitySuggetionResponseModel? suggetionResponseModel;
-  EtKunnrResponseModel? etKunnrResponseModel;
   SalesActivityDayResponseModel? fromParentResponseModel;
+  List<AddActivitySuggetionItemModel>? suggestedItemList;
+  EtKunnrResponseModel? etKunnrResponseModel;
   SalesActivityDayTable260? editModel260;
   AddActivityDistanceModel? distanceModel;
   AddActivityKeyManModel? selectedKeyMan;
@@ -60,17 +61,17 @@ class AddActivityPageProvider extends ChangeNotifier {
   String? visitResultInput;
   String? leaderAdviceInput;
   String? seletedAmount;
+  String? lastSeqNo;
   List<String>? activityList;
-  List<AddActivitySuggetionItemModel>? suggestedItemList;
+
+  bool? isLockOtherSalerSelector;
   bool isLoadData = false;
   bool isModified = false;
   bool isVisit = false;
   bool isWithTeamLeader = false;
   bool isUpdate = false;
-  int? index;
-  String? lastSeqNo;
-  bool? isLockOtherSalerSelector;
   int isInterviewIndex = 0;
+  int? index;
   final _api = ApiService();
   bool get isModifiyByNewCase => isModified;
   String get dptnm => CacheService.getEsLogin()!.dptnm!;
@@ -90,6 +91,8 @@ class AddActivityPageProvider extends ChangeNotifier {
     newSeqno = '$newSeqno$recentSeqno';
     return newSeqno;
   };
+  DateTime? goinToMenuTime;
+  bool get isDifreentGoinTime => goinToMenuTime!.day != DateTime.now().day;
   bool get isModifiedByEntity {
     if (index != null) {
       var original = fromParentResponseModel!.table260![index!];
@@ -128,6 +131,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     ActivityStatus status,
     int? indexx,
   ) async {
+    goinToMenuTime = DateTime.now();
     distanceModel = AddActivityDistanceModel();
     fromParentResponseModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
@@ -576,14 +580,14 @@ class AddActivityPageProvider extends ChangeNotifier {
       // 도착할때만 저장.
       if (t260.atime != null && t260.atime!.trim().isEmpty && isVisit) {
         var isPrevdate =
-            activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
-                activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED;
+            (activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
+                activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED);
         var date = DateUtil.getDate(t260.erdat!);
         t260.atime = DateUtil.getTimeNow(
             isNotWithColon: true,
             dt: isPrevdate
                 ? DateTime(date.year, date.month, date.day, 23, 59, 00)
-                : null);
+                : date);
       }
 
       var latLonMap = await getAddressLatLon(selectedKunnr!.zaddName1!)

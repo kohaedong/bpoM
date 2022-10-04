@@ -589,7 +589,8 @@
     "plz_selected_office_address":"사무실 주소를 선택해주세요.",
     "start_adress":"출발지",
     "stop_adress":"도착지",
-    "not_recent_notice":"최근 공지사항이 없습니다."
+    "not_recent_notice":"최근 공지사항이 없습니다.",
+    "stats_is_changed":"다시 시도해주세요"
    
    
 }

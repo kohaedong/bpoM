@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivitySearch/salse_activity_detail_page.dart
  * Created Date: 2022-07-07 13:41:48
- * Last Modified: 2022-08-24 17:30:12
+ * Last Modified: 2022-10-04 20:42:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -97,12 +97,12 @@ class SalseActivityDetailPage extends StatelessWidget {
               BaseInfoRowByKeyAndValue.build(
                   tr('activity_detail'),
                   model.actDtl != null && model.actDtl!.isNotEmpty
-                      ? model.actDtl!
+                      ? model.actDtl ?? ''
                       : '-'),
               BaseInfoRowByKeyAndValue.build(
                   tr('result'),
                   model.rslt != null && model.rslt!.isNotEmpty
-                      ? model.rslt!
+                      ? model.rslt ?? ''
                       : '-',
                   maxLine: 50)
             ],

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-02 18:17:47
+ * Last Modified: 2022-10-05 00:41:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -452,7 +452,13 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 0,
                 selfHeight: AppSize.bottomButtonHeight, () async {
               hideKeyboard(context);
+
               final p = context.read<AddActivityPageProvider>();
+              if (p.isDifreentGoinTime) {
+                AppToast().show(context, tr('stats_is_changed'));
+                Navigator.pop(context, true);
+                return;
+              }
               if (p.activityStatus == ActivityStatus.FINISH ||
                   p.activityStatus == ActivityStatus.NONE) {
                 return;
@@ -1058,7 +1064,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 p.index == null ? p.isModifiyByNewCase : p.isModifiedByEntity,
             appBar: MainAppBar(context,
                 titleText: AppText.text(tr('add_activity_page'),
-                    style: AppTextStyle.w500_22), callback: () {
+                    style: AppTextStyle.w500_22),
+                icon: Icon(Icons.close), cachePageTypeCallBack: () {
+              return p.index == null
+                  ? p.isModifiyByNewCase
+                  : p.isModifiedByEntity;
+            }, callback: () {
               Navigator.pop(context, p.isUpdattt);
             }),
             child: FutureBuilder<ResultModel>(
