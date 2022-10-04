@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-02 17:08:01
+ * Last Modified: 2022-10-05 03:00:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -523,6 +523,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
     Widget widgetUi,
   ) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
           width: AppSize.defaultContentsWidth * .3,
@@ -624,69 +626,119 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         ),
         defaultSpacing(isHalf: true),
         _buildTextAndInputWidget(
-          tr('quantity'),
-          TextControllerFactoryWidget(
-              giveTextEditControllerWidget: (controller) {
-            return Selector<OrderManagerPageProvider, List<double>>(
-              selector: (context, provider) => provider.selectedQuantityList,
-              builder: (context, quantityList, _) {
-                pr('build quantity');
-                if (controller.text != '${quantityList[index].toInt()}') {
-                  if (quantityList[index].toInt() != 0) {
-                    controller.text = '${quantityList[index].toInt()}';
-                  }
-                }
-                var isNotEmpty =
-                    quantityList.isNotEmpty && quantityList[index] != 0.0;
-                return BaseInputWidget(
-                    context: context,
-                    onTap: () {
-                      if (isNotEmpty) {
-                        controller.text = '${quantityList[index].toInt()}';
+            tr('quantity'),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextControllerFactoryWidget(
+                    giveTextEditControllerWidget: (controller) {
+                  return Selector<OrderManagerPageProvider, List<double>>(
+                    selector: (context, provider) =>
+                        provider.selectedQuantityList,
+                    builder: (context, quantityList, _) {
+                      pr('build quantity');
+                      if (controller.text != '${quantityList[index].toInt()}') {
+                        if (quantityList[index].toInt() != 0) {
+                          controller.text = '${quantityList[index].toInt()}';
+                        }
                       }
+                      var isNotEmpty =
+                          quantityList.isNotEmpty && quantityList[index] != 0.0;
+                      return BaseInputWidget(
+                          context: context,
+                          onTap: () {
+                            if (isNotEmpty) {
+                              controller.text =
+                                  '${quantityList[index].toInt()}';
+                            }
+                          },
+                          textEditingController: controller,
+                          hintText: isNotEmpty
+                              ? '${quantityList[index].toInt()}'
+                              : tr('plz_enter'),
+                          keybordType: TextInputType.number,
+                          hintTextStyleCallBack: () => isNotEmpty
+                              ? AppTextStyle.default_16
+                              : AppTextStyle.hint_16,
+                          unfoucsCallback: () async {
+                            controller.clear();
+                          },
+                          defaultIconCallback: () {
+                            controller.text = '';
+                            p.updateQuantityList(index, 0);
+                            p.setTableQuantity(index, 0, isResetTotal: true);
+                            p.checkPrice(index, isNotifier: true);
+                          },
+                          iconType: isNotEmpty ? InputIconType.DELETE : null,
+                          width: ((AppSize.defaultContentsWidth * .7) -
+                                  AppSize.defaultListItemSpacing) *
+                              .7,
+                          onChangeCallBack: (t) async {
+                            if (double.tryParse(t) != null) {
+                              p.updateQuantityList(index, double.parse(t));
+                              p.setTableQuantity(index, double.parse(t));
+                            } else if (t.isEmpty) {
+                              p.updateQuantityList(index, 0);
+                            }
+                          },
+                          enable: true);
                     },
-                    textEditingController: controller,
-                    unfoucsCallback: () async {
-                      final result =
-                          await p.checkPrice(index, isNotifier: true);
-                      if (result.isSuccessful) {
-                        p.setTableQuantity(
-                            index, p.selectedQuantityList[index]);
-                      } else {
-                        AppDialog.showSignglePopup(context, result.message!);
-                        p.updateQuantityList(index, 0);
-                        p.setTableQuantity(index, 0);
-                        controller.clear();
-                      }
-                    },
-                    hintText: isNotEmpty
-                        ? '${quantityList[index].toInt()}'
-                        : tr('plz_enter'),
-                    keybordType: TextInputType.number,
-                    hintTextStyleCallBack: () => isNotEmpty
-                        ? AppTextStyle.default_16
-                        : AppTextStyle.hint_16,
-                    defaultIconCallback: () {
-                      controller.text = '';
-                      p.updateQuantityList(index, 0);
-                      p.setTableQuantity(index, 0, isResetTotal: true);
-                      p.checkPrice(index, isNotifier: true);
-                    },
-                    iconType: isNotEmpty ? InputIconType.DELETE : null,
-                    width: AppSize.defaultContentsWidth * .7,
-                    onChangeCallBack: (t) async {
-                      if (double.tryParse(t) != null) {
-                        p.updateQuantityList(index, double.parse(t));
-                        p.setTableQuantity(index, double.parse(t));
-                      } else if (t.isEmpty) {
-                        p.updateQuantityList(index, 0);
-                      }
-                    },
-                    enable: true);
-              },
-            );
-          }),
-        ),
+                  );
+                }),
+                Padding(
+                    padding:
+                        EdgeInsets.only(right: AppSize.defaultListItemSpacing)),
+                Selector<OrderManagerPageProvider, List<double>>(
+                  selector: (context, provider) =>
+                      provider.selectedQuantityList,
+                  builder: (context, quantityList, _) {
+                    var isNotEmpty =
+                        quantityList.isNotEmpty && quantityList[index] != 0.0;
+                    return GestureDetector(
+                      onTap: () async {
+                        if (isNotEmpty) {
+                          final result =
+                              await p.checkPrice(index, isNotifier: true);
+                          if (result.isSuccessful) {
+                            p.setTableQuantity(
+                                index, p.selectedQuantityList[index]);
+                          } else {
+                            AppDialog.showSignglePopup(
+                                context, result.message!);
+                            p.updateQuantityList(index, 0);
+                            p.setTableQuantity(index, 0);
+                          }
+                        }
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: ((AppSize.defaultContentsWidth * .7) -
+                                AppSize.defaultListItemSpacing) *
+                            .3,
+                        height: AppSize.defaultTextFieldHeight,
+                        decoration: BoxDecoration(
+                            color: isNotEmpty
+                                ? AppColors.sendButtonColor
+                                : AppColors.unReadyButton,
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(AppSize.radius5)),
+                            border: Border.all(
+                                width: .5,
+                                color: isNotEmpty
+                                    ? AppColors.primary
+                                    : AppColors.textFieldUnfoucsColor)),
+                        child: AppText.text(tr('search'),
+                            style: AppTextStyle.h4.copyWith(
+                                color: isNotEmpty
+                                    ? AppColors.primary
+                                    : AppColors.hintText)),
+                      ),
+                    );
+                  },
+                )
+              ],
+            )),
         defaultSpacing(isHalf: true),
         family.contains('비처방의약품') ||
                 family.contains('건강식품') ||
@@ -816,7 +868,6 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
     return Selector<OrderManagerPageProvider, List<RecentOrderTItemModel>?>(
       selector: (context, provider) => provider.items,
       builder: (context, items, _) {
-        print('build ????');
         return items != null && items.isNotEmpty
             ? Column(
                 children: [
@@ -909,7 +960,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 AppTextStyle.menu_18(
                     isValidate ? AppColors.whiteText : AppColors.hintText),
                 0, () {
-              if (isValidate && !FocusScope.of(context).hasFocus) {
+              if (isValidate) {
                 final p = context.read<OrderManagerPageProvider>();
                 final tp = context.read<TimerProvider>();
                 if (tp.getTimer == null ||
