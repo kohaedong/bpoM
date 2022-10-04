@@ -34,6 +34,7 @@ dependencies:
   open_file: ^3.2.1 #### 폐기의심,현재 까지 사용가능.####  .apk 파일 open 용
   logger: ^1.1.0 # 유지보수 양호
   flutter_inappwebview: ^5.4.3+8 # 유지보수 양호
+  flutter_native_splash: ^2.2.9
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -46,6 +47,9 @@ flutter_icons:
   android: true # can specify file name here e.g. "ic_launcher"
   ios: true # can specify file name here e.g. "My-Launcher-Icon"
   adaptive_icon_background: "#ffffff" # only available for Android 8.0 devices and above
+flutter_native_splash:
+  color: "#FFFFFF"
+  android_12:
 flutter:
   uses-material-design: true
   assets:
