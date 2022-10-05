@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
 import 'package:medsalesportal/enums/notice_type.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/enums/update_type.dart';
 import 'package:medsalesportal/model/notice/notice_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_style.dart';
@@ -30,6 +32,45 @@ class CheckUpdateAndNoticeService {
       _instance = CheckUpdateAndNoticeService._();
     }
     return _instance!;
+  }
+
+  /// bakboem 2022.08.25
+  /// 공지. 추석 특별추가.
+  static Future<void> showSpecialNotice(BuildContext context) async {
+    final p = UpdateAndNoticeProvider();
+    final result = await p.checkSpecialNotice();
+    if (result.isSuccessful) {
+      var dataList = result.data as List;
+      var data = dataList.first as Map<String, dynamic>;
+      var specialNoticeUri = KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev'
+          ? 'http://20.214.160.118/dev'
+          : 'http://20.214.160.118';
+      await AppDialog.showPopup(
+          context,
+          ChangeNotifierProvider(
+            create: (context) => UpdateAndNoticeProvider(),
+            builder: (context, _) {
+              return SafeArea(
+                  child: Column(
+                children: [
+                  Expanded(
+                      child:
+                          BaseWebView('$specialNoticeUri${data['noticeUri']}')),
+                  AppStyles.buildButton(
+                      context,
+                      tr('close'),
+                      AppSize.realWidth,
+                      AppColors.primary,
+                      AppTextStyle.menu_18(AppColors.whiteText),
+                      0, () {
+                    data['isAppCanUse'] ? Navigator.pop(context) : exit(0);
+                  }, selfHeight: AppSize.buttonHeight)
+                ],
+              ));
+            },
+          ),
+          isWithShapeBorder: false);
+    }
   }
 
   static Widget updateContents(BuildContext context, {UpdateData? updateData}) {
@@ -397,11 +438,15 @@ class CheckUpdateAndNoticeService {
         if (loginResult.isSuccessful) {
           signProvider.dispose();
           Navigator.pushNamedAndRemoveUntil(
-              context, HomePage.routeName, (route) => false);
+              KeyService.baseAppKey.currentContext!,
+              HomePage.routeName,
+              (route) => false);
         } else {
           signProvider.dispose();
           Navigator.pushNamedAndRemoveUntil(
-              context, SigninPage.routeName, (route) => false,
+              KeyService.baseAppKey.currentContext!,
+              SigninPage.routeName,
+              (route) => false,
               arguments: {
                 'id': loginResult.id,
                 'pw': loginResult.pw,
@@ -415,7 +460,9 @@ class CheckUpdateAndNoticeService {
         signProvider.dispose();
         Future.delayed(Duration(seconds: 1), () {
           Navigator.pushNamedAndRemoveUntil(
-              context, SigninPage.routeName, (route) => false);
+              KeyService.baseAppKey.currentContext!,
+              SigninPage.routeName,
+              (route) => false);
         });
       }
     }

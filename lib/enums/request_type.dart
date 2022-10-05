@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-10-01 13:18:49
+ * Last Modified: 2022-10-05 16:32:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -17,6 +17,7 @@ import 'package:medsalesportal/service/deviceInfo_service.dart';
 
 //*  api url / functionName/ resultTable 사전 정의.
 enum RequestType {
+  SPECIAL_NOTICE,
   ACCESS_PERMISSION,
   RFC_COMMON_CODE,
   CHECK_NOTICE,
@@ -76,6 +77,16 @@ extension RequestTypeExtension on RequestType {
   String get permmionURL => '$baseURL/common/v2/api/participant/accessibleApp';
   String get rfcURL => '$baseURL/sales-group/rfc';
   String get medical => '$baseURL/sales-group/med';
+
+  /// bakboem 2022.08.25
+  /// 공지. 추것 특별추가
+  bool get isDev => KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev';
+  String get devSpecialNoticeUrl => 'http://20.214.160.118/dev'; // 개발
+  String get prodSpecialNoticeUrl => 'http://20.214.160.118'; // 운영
+  String get specialNoticeUrl => isDev
+      ? '$devSpecialNoticeUrl/notice/restApi/getNoticesByCondition'
+      : '$prodSpecialNoticeUrl/notice/restApi/getNoticesByCondition';
+
   // api 에 header 추가 필요시 사전 등록.
   Future<Map<String, String>> get anotherHeader async {
     final deviceInfo = await DeviceInfoService.getDeviceInfo();
@@ -108,6 +119,8 @@ extension RequestTypeExtension on RequestType {
 
   String url({String? params}) {
     switch (this) {
+      case RequestType.SPECIAL_NOTICE:
+        return '$specialNoticeUrl';
       case RequestType.SEARCH_STAFF:
         return '$rfcURL/common';
       case RequestType.ACCESS_PERMISSION:

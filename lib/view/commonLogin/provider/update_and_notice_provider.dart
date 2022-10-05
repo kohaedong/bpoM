@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/splash/commonLogin/provider/common_login_provider.dart
  * Created Date: 2021-10-06 03:26:46
- * Last Modified: 2022-09-24 20:43:37
+ * Last Modified: 2022-10-05 16:34:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,12 +15,14 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
 import 'package:medsalesportal/enums/notice_type.dart';
 import 'package:medsalesportal/enums/permission_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/enums/update_type.dart';
+import 'package:medsalesportal/globalProvider/special_notice_provider.dart';
 import 'package:medsalesportal/model/commonCode/common_code_response_model.dart';
 import 'package:medsalesportal/model/notice/notice_model.dart';
 import 'package:medsalesportal/model/notice/notice_response_model.dart';
@@ -29,11 +31,13 @@ import 'package:medsalesportal/model/user/user.dart';
 import 'package:medsalesportal/model/user/user_settings.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/service/local_file_servicer.dart';
 import 'package:medsalesportal/service/package_info_service.dart';
 import 'package:medsalesportal/service/permission_service.dart';
 import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
 import 'package:open_file/open_file.dart' as openfile;
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UpdateAndNoticeProvider extends ChangeNotifier {
@@ -56,6 +60,38 @@ class UpdateAndNoticeProvider extends ChangeNotifier {
   void setNotShowAgainForUrlType() {
     this.isUrlTypeNotShowAgain = !isUrlTypeNotShowAgain;
     notifyListeners();
+  }
+
+  /// bakboem 2022.08.25
+  /// 공지. 추석 특별추가.
+  Future<ResultData> checkSpecialNotice() async {
+    var result = ResultData(false);
+    Map<String, dynamic> _param = {'appId': Platform.isIOS ? '2' : '1'};
+    final _baseOption = BaseOptions(
+        method: RequestType.SPECIAL_NOTICE.httpMethod,
+        connectTimeout: 2000,
+        receiveTimeout: 2000,
+        sendTimeout: 2000,
+        contentType: 'application/x-www-form-urlencoded');
+    var dio = Dio(_baseOption);
+    try {
+      var rrs = await dio
+          .request('${RequestType.SPECIAL_NOTICE.url()}',
+              queryParameters: _param)
+          .then((r) => r.data);
+      print('?????$rrs');
+      if (rrs != null && rrs is List) {
+        var np =
+            KeyService.baseAppKey.currentContext!.read<SpecialNoticeProvider>();
+        np.setIsShowSpecialNotice(false);
+        return result =
+            rrs.isEmpty ? ResultData(false) : ResultData(true, data: rrs);
+      }
+    } catch (e) {
+      print('Error 무시하기');
+      return result;
+    }
+    return result;
   }
 
 // --------------------// update // -----------------------------
@@ -315,4 +351,10 @@ class NoticeData {
   List<Map<NoticeType, List<NoticeModel?>>>? noticeList;
 
   NoticeData(this.noticeList);
+}
+
+class ResultData {
+  bool isSuccessful;
+  dynamic data;
+  ResultData(this.isSuccessful, {this.data});
 }
