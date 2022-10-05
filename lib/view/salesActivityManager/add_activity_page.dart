@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-06 02:15:18
+ * Last Modified: 2022-10-06 05:19:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,8 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1164,19 +1166,17 @@ class _AddActivityPageState extends State<AddActivityPage> {
         return BaseLayout(
             hasForm: true,
             isWithWillPopScope: true,
-            onWillPopResult: p.isUpdattt,
-            onwillpopCallback: () =>
-                p.index == null ? p.isModifiyByNewCase : p.isModifiedByEntity,
-            appBar: MainAppBar(context,
-                titleText: AppText.text(tr('add_activity_page'),
-                    style: AppTextStyle.w500_22),
-                icon: Icon(Icons.close), cachePageTypeCallBack: () {
-              return p.index == null
-                  ? p.isModifiyByNewCase
-                  : p.isModifiedByEntity;
-            }, callback: () {
-              Navigator.pop(context, p.isUpdattt);
-            }),
+            appBar: MainAppBar(
+              context,
+              titleText: AppText.text(tr('add_activity_page'),
+                  style: AppTextStyle.w500_22),
+              icon: Icon(Icons.close),
+              cachePageTypeCallBack: () {
+                return p.index == null
+                    ? p.isModifiyByNewCase
+                    : p.isModifiedByEntity;
+              },
+            ),
             child: FutureBuilder<ResultModel>(
                 future: context
                     .read<AddActivityPageProvider>()
@@ -1184,41 +1184,79 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData &&
                       snapshot.connectionState == ConnectionState.done) {
-                    return Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              CustomerinfoWidget.buildSubTitle(
-                                  context, '${tr('activity_report')}'),
-                              Padding(
-                                padding: AppSize.defaultSidePadding,
-                                child: Column(
-                                  children: [
-                                    defaultSpacing(times: 2),
-                                    _buildSelectCustomer(context),
-                                    _buildCustomerDiscription(context),
-                                    _buildSelectKeyMan(context),
-                                    defaultSpacing(),
-                                    _buildIsVisitRow(context),
-                                    _buildDistanceDiscription(context),
-                                    defaultSpacing(),
-                                    _buildWidthTeamLeaderAndOtherSallers(
-                                        context),
-                                    _buildReasonForNotVisit(context),
-                                    defaultSpacing(),
-                                  ],
+                    return WillPopScope(
+                      onWillPop: () async {
+                        if (p.index == null
+                            ? p.isModifiyByNewCase
+                            : p.isModifiedByEntity) {
+                          var popupResult = await AppDialog.showPopup(
+                            context,
+                            buildDialogContents(
+                              context,
+                              SizedBox(
+                                height: AppSize.singlePopupHeight -
+                                    AppSize.buttonHeight,
+                                child: Center(
+                                  child: AppText.listViewText(
+                                      '${tr('is_exit_current_page')}',
+                                      style: context
+                                          .read<AppThemeProvider>()
+                                          .themeData
+                                          .textTheme
+                                          .headline3!),
                                 ),
                               ),
-                              _buildWhenVisitContents(context),
-                              defaultSpacing(times: 10),
-                            ],
+                              false,
+                              AppSize.singlePopupHeight,
+                              leftButtonText: '${tr('cancel')}',
+                              rightButtonText: '${tr('ok')}',
+                            ),
+                          );
+                          if (popupResult != null) {
+                            popupResult as bool;
+                            if (popupResult) {
+                              Navigator.pop(context, true);
+                            }
+                          }
+                        }
+                        return false;
+                      },
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                CustomerinfoWidget.buildSubTitle(
+                                    context, '${tr('activity_report')}'),
+                                Padding(
+                                  padding: AppSize.defaultSidePadding,
+                                  child: Column(
+                                    children: [
+                                      defaultSpacing(times: 2),
+                                      _buildSelectCustomer(context),
+                                      _buildCustomerDiscription(context),
+                                      _buildSelectKeyMan(context),
+                                      defaultSpacing(),
+                                      _buildIsVisitRow(context),
+                                      _buildDistanceDiscription(context),
+                                      defaultSpacing(),
+                                      _buildWidthTeamLeaderAndOtherSallers(
+                                          context),
+                                      _buildReasonForNotVisit(context),
+                                      defaultSpacing(),
+                                    ],
+                                  ),
+                                ),
+                                _buildWhenVisitContents(context),
+                                defaultSpacing(times: 10),
+                              ],
+                            ),
                           ),
-                        ),
-                        _buildSubmmitButton(context),
-                        _buildLoadingWidget(context),
-                      ],
+                          _buildSubmmitButton(context),
+                          _buildLoadingWidget(context),
+                        ],
+                      ),
                     );
                   }
                   return _buildShimmer(context);

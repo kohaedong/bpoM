@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-10-05 00:26:30
+ * Last Modified: 2022-10-06 04:24:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,6 +18,7 @@ import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
@@ -82,34 +83,63 @@ class ActivityMenuProvider extends ChangeNotifier {
   Future<ResultModel> deletLastActivity() async {
     isLoadData = true;
     notifyListeners();
-    assert(editModel!.table260!.isNotEmpty);
-    _api.init(RequestType.DELETE_LAST_ACTIVITY);
+
+    _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
-    var esLogin = CacheService.getEsLogin();
     Map<String, dynamic> _body = {
-      "methodName": RequestType.DELETE_LAST_ACTIVITY.serverMethod,
+      "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {
-        "IV_PTYPE": "D",
-        "confirmType": "Y",
+        "IV_PTYPE": "R",
+        "IV_ADATE":
+            FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now())),
         "IS_LOGIN": isLogin,
-        "IV_SANUM": esLogin!.logid!.toUpperCase(),
-        "IV_ADATE": DateUtil.getDateStr(DateTime.now().toIso8601String()),
-        "resultTables": RequestType.DELETE_LAST_ACTIVITY.resultTable,
-        "functionName": RequestType.DELETE_LAST_ACTIVITY.serverMethod
+        "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
+        "functionName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       }
     };
-    final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    final dayResult = await _api.request(body: _body);
+    if (dayResult != null && dayResult.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return ResultModel(false, errorMassage: result.errorMessage);
+      return ResultModel(false);
     }
-    if (result != null && result.statusCode == 200) {
-      pr(result.body);
-      isLoadData = false;
-      notifyListeners();
-      return ResultModel(true);
+    if (dayResult != null && dayResult.statusCode == 200) {
+      editModel =
+          SalesActivityDayResponseModel.fromJson(dayResult.body['data']);
+      if (editModel != null && editModel!.table260!.isEmpty) {
+        isLoadData = false;
+        notifyListeners();
+        return ResultModel(false, data: 'empty');
+      }
+      _api.init(RequestType.DELETE_LAST_ACTIVITY);
+      var isLogin = CacheService.getIsLogin();
+      var esLogin = CacheService.getEsLogin();
+      Map<String, dynamic> _body = {
+        "methodName": RequestType.DELETE_LAST_ACTIVITY.serverMethod,
+        "methodParamMap": {
+          "IV_PTYPE": "D",
+          "confirmType": "Y",
+          "IS_LOGIN": isLogin,
+          "IV_SANUM": esLogin!.logid!.toUpperCase(),
+          "IV_ADATE": DateUtil.getDateStr(DateTime.now().toIso8601String()),
+          "resultTables": RequestType.DELETE_LAST_ACTIVITY.resultTable,
+          "functionName": RequestType.DELETE_LAST_ACTIVITY.serverMethod
+        }
+      };
+      final result = await _api.request(body: _body);
+      if (result != null && result.statusCode != 200) {
+        isLoadData = false;
+        notifyListeners();
+        return ResultModel(false, errorMassage: result.errorMessage);
+      }
+      if (result != null && result.statusCode == 200) {
+        pr(result.body);
+        isLoadData = false;
+        notifyListeners();
+        return ResultModel(true);
+      }
     }
-    return ResultModel(false, errorMassage: result!.errorMessage);
+
+    return ResultModel(false, errorMassage: dayResult!.errorMessage);
   }
 }

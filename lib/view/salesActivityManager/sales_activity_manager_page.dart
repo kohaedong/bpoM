@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-06 02:15:03
+ * Last Modified: 2022-10-06 05:17:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -50,6 +50,8 @@ import 'package:medsalesportal/view/salesActivityManager/select_location_widget.
 import 'package:medsalesportal/view/salesActivitySearch/salse_activity_detail_page.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/activity_menu_provider.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/sales_activity_manager_page_provider.dart';
+
+typedef UpdateHook = Function(bool);
 
 class SalseActivityManagerPage extends StatefulWidget {
   const SalseActivityManagerPage({Key? key}) : super(key: key);
@@ -540,34 +542,33 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
 
   void _showIsDeleteLastAvtivityPopup(BuildContext context) async {
     final p = context.read<ActivityMenuProvider>();
-    if (p.editModel!.table260!.isNotEmpty) {
-      var date = DateUtil.getDateStrForKR(
-          DateUtil.getDate(p.editModel!.table260![0].adate!));
-      var person = p.editModel!.table260![0].ernam!;
-      final result = await AppDialog.showPopup(
-          context,
-          buildDialogContents(
-              context,
-              Container(
-                  alignment: Alignment.center,
-                  height: AppSize.singlePopupHeight - AppSize.buttonHeight,
-                  child: AppText.text(
-                      tr('is_realy_delete_last_activity', args: [date, person]),
-                      maxLines: 4,
-                      style: AppTextStyle.default_16)),
-              false,
-              AppSize.singlePopupHeight,
-              rightButtonText: tr('delete')));
-      if (result != null && result) {
-        p.deletLastActivity().then((result) {
-          if (result.isSuccessful) {
-            AppToast().show(context, tr('success'));
-            Navigator.pop(context, true);
-          }
-        });
-      }
-    } else {
-      AppToast().show(context, tr('nothing_to_delete'));
+
+    var date = DateUtil.getDateStrForKR(
+        DateUtil.getDate(p.editModel!.table250![0].adate!));
+    var person = p.editModel!.table250![0].ernam!;
+    final result = await AppDialog.showPopup(
+        context,
+        buildDialogContents(
+            context,
+            Container(
+                alignment: Alignment.center,
+                height: AppSize.singlePopupHeight - AppSize.buttonHeight,
+                child: AppText.text(
+                    tr('is_realy_delete_last_activity', args: [date, person]),
+                    maxLines: 4,
+                    style: AppTextStyle.default_16)),
+            false,
+            AppSize.singlePopupHeight,
+            rightButtonText: tr('delete')));
+    if (result != null && result) {
+      p.deletLastActivity().then((result) {
+        if (result.isSuccessful) {
+          AppToast().show(context, tr('success'));
+          Navigator.pop(context, true);
+        } else if (!result.isSuccessful && result.data == 'empty') {
+          AppToast().show(context, tr('nothing_to_delete'));
+        }
+      });
     }
   }
 
@@ -593,7 +594,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   }
 
   Future<void> _routeToAddActivityPage(BuildContext context,
-      {int? index}) async {
+      {int? index, UpdateHook? hook}) async {
     //! context 가 다릅니다.
     //! [ActivityMenuProvider]  와  [SalseActivityManagerPageProvider] 구분 필요.
     if (index == null) {
@@ -608,16 +609,21 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           });
       if (naviResult != null) {
         naviResult as bool;
-        if (!p.isNeedUpdate) {
-          p.setIsNeedUpdate(naviResult);
+        pr('????');
+        pr(naviResult);
+        if (hook != null) {
+          hook.call(naviResult);
         }
-        if (naviResult) {
-          try {
-            Navigator.pop(context, p.isNeedUpdate);
-          } catch (e) {
-            pr('nothing');
-          }
-        }
+        // if (!p.isNeedUpdate) {
+        //   p.setIsNeedUpdate(naviResult);
+        // }
+        // if (naviResult) {
+        //   try {
+        //     Navigator.pop(context, p.isNeedUpdate);
+        //   } catch (e) {
+        //     pr('nothing');
+        //   }
+        // }
       }
     } else {
       final p = context.read<SalseActivityManagerPageProvider>();
@@ -653,7 +659,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     }
   }
 
-  Widget _buildMenuItem(BuildContext context, String text, MenuType menuType) {
+  Widget _buildMenuItem(BuildContext context, String text, MenuType menuType,
+      {UpdateHook? hook}) {
     return Selector<ActivityMenuProvider, ActivityStatus?>(
       selector: (context, provider) => provider.activityStatus,
       builder: (context, status, _) {
@@ -682,7 +689,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
               break;
             case MenuType.ACTIVITY_ADD:
               if (p.activityStatus == ActivityStatus.STARTED) {
-                _routeToAddActivityPage(context);
+                _routeToAddActivityPage(context, hook: hook);
               } else {
                 p.setIsNeedUpdate(true);
                 _showIsStartAvtivityPopup(context);
@@ -717,6 +724,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       SalesActivityDayResponseModel fromParentWindowModel,
       ActivityStatus? activityStatus,
       SalseActivityLocationResponseModel officeAddress,
+      UpdateHook hook,
       {bool? isNotConfirmed}) {
     return ChangeNotifierProvider(
       create: (context) => ActivityMenuProvider(),
@@ -749,7 +757,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                                         MenuType.ACTIVITY_DELETE),
                                     defaultSpacing(times: 2),
                                     _buildMenuItem(context, tr('new_activity'),
-                                        MenuType.ACTIVITY_ADD),
+                                        MenuType.ACTIVITY_ADD,
+                                        hook: hook),
                                     defaultSpacing(times: 2),
                                   ],
                                 ),
@@ -799,9 +808,18 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 context: context,
                 builder: (context) {
                   // dialog 내부 provider model 전달.
-                  return _buildDialogContents(context, p.dayResponseModel!,
-                      p.activityStatus, p.locationResponseModel!,
-                      isNotConfirmed: isNotConfirmed);
+                  return _buildDialogContents(
+                    context,
+                    p.dayResponseModel!,
+                    p.activityStatus,
+                    p.locationResponseModel!,
+                    (isupdate) {
+                      if (isupdate) {
+                        p.getDayData();
+                      }
+                    },
+                    isNotConfirmed: isNotConfirmed,
+                  );
                 });
             if (result != null) {
               result as bool;

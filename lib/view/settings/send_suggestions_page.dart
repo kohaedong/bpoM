@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
+import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -135,8 +138,6 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
     return BaseLayout(
         hasForm: true,
         isWithWillPopScope: true,
-        onWillPopResult: true,
-        onwillpopCallback: () => _textEditingController.text.trim().isNotEmpty,
         isResizeToAvoidBottomInset: true,
         appBar: MainAppBar(
           context,
@@ -146,26 +147,61 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
           cachePageTypeCallBack: () =>
               _textEditingController.text.trim().isNotEmpty,
         ),
-        child: LayoutBuilder(
-          builder: (context, constraint) {
-            return SingleChildScrollView(
-              controller: _pageScrollController,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraint.maxHeight),
-                child: IntrinsicHeight(
-                  child: Column(
-                    children: <Widget>[
-                      buildDiscription(),
-                      buildSuggetionCenterPadding(),
-                      buildTextFieldBox(),
-                      Spacer(),
-                      buildSubmmitButton()
-                    ],
+        child: WillPopScope(
+          onWillPop: () async {
+            if (_textEditingController.text.trim().isNotEmpty) {
+              var popupResult = await AppDialog.showPopup(
+                context,
+                buildDialogContents(
+                  context,
+                  SizedBox(
+                    height: AppSize.singlePopupHeight - AppSize.buttonHeight,
+                    child: Center(
+                      child: AppText.listViewText(
+                          '${tr('is_exit_current_page')}',
+                          style: context
+                              .read<AppThemeProvider>()
+                              .themeData
+                              .textTheme
+                              .headline3!),
+                    ),
+                  ),
+                  false,
+                  AppSize.singlePopupHeight,
+                  leftButtonText: '${tr('cancel')}',
+                  rightButtonText: '${tr('ok')}',
+                ),
+              );
+              if (popupResult != null) {
+                popupResult as bool;
+                if (popupResult) {
+                  Navigator.pop(context, true);
+                }
+              }
+            }
+            return false;
+          },
+          child: LayoutBuilder(
+            builder: (context, constraint) {
+              return SingleChildScrollView(
+                controller: _pageScrollController,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraint.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      children: <Widget>[
+                        buildDiscription(),
+                        buildSuggetionCenterPadding(),
+                        buildTextFieldBox(),
+                        Spacer(),
+                        buildSubmmitButton()
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ));
   }
 }

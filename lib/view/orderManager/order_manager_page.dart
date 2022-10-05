@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-05 03:57:13
+ * Last Modified: 2022-10-06 05:13:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,8 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -1001,8 +1003,6 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         return BaseLayout(
             hasForm: true,
             isWithWillPopScope: true,
-            onWillPopResult: true,
-            onwillpopCallback: () => p.isModifiyByNewCase,
             appBar: MainAppBar(
               context,
               icon: Icon(Icons.clear),
@@ -1015,73 +1015,110 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData &&
                       snapshot.connectionState == ConnectionState.done) {
-                    return Stack(
-                      children: [
-                        SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              CustomerinfoWidget.buildSubTitle(
-                                  context, '${tr('default_info')}'),
-                              Padding(
-                                padding: AppSize.defaultSidePadding,
-                                child: Column(
-                                  children: [
-                                    defaultSpacing(),
-                                    _buildGroupSelector(context),
-                                    defaultSpacing(),
-                                    _buildStaffSelector(context),
-                                    defaultSpacing(),
-                                    _buildChannelSelector(context),
-                                    defaultSpacing(),
-                                    _buildProductFamilySelector(context),
-                                    defaultSpacing(),
-                                    _buildSalseOfficeSelector(context),
-                                    _buildSupplierSelector(context),
-                                    defaultSpacing(),
-                                    _buildEndCustomerSelector(context),
-                                    defaultSpacing(),
-                                  ],
+                    return WillPopScope(
+                      onWillPop: () async {
+                        if (p.isModifiyByNewCase) {
+                          var popupResult = await AppDialog.showPopup(
+                            context,
+                            buildDialogContents(
+                              context,
+                              SizedBox(
+                                height: AppSize.singlePopupHeight -
+                                    AppSize.buttonHeight,
+                                child: Center(
+                                  child: AppText.listViewText(
+                                      '${tr('is_exit_current_page')}',
+                                      style: context
+                                          .read<AppThemeProvider>()
+                                          .themeData
+                                          .textTheme
+                                          .headline3!),
                                 ),
                               ),
-                              CustomerinfoWidget.buildSubTitle(
-                                  context, '${tr('order_product_info')}'),
-                              Padding(
-                                padding: AppSize.defaultSidePadding,
-                                child: Column(
-                                  children: [
-                                    defaultSpacing(),
-                                    _buildAddProductTitleRow(context),
-                                    defaultSpacing(),
-                                    _buildRecentOrderTextButton(context),
-                                    defaultSpacing(),
-                                    _buildOrderItemList(context),
-                                    defaultSpacing(),
-                                  ],
+                              false,
+                              AppSize.singlePopupHeight,
+                              leftButtonText: '${tr('cancel')}',
+                              rightButtonText: '${tr('ok')}',
+                            ),
+                          );
+                          if (popupResult != null) {
+                            popupResult as bool;
+                            if (popupResult) {
+                              Navigator.pop(context, true);
+                            }
+                          }
+                        }
+                        return false;
+                      },
+                      child: Stack(
+                        children: [
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                CustomerinfoWidget.buildSubTitle(
+                                    context, '${tr('default_info')}'),
+                                Padding(
+                                  padding: AppSize.defaultSidePadding,
+                                  child: Column(
+                                    children: [
+                                      defaultSpacing(),
+                                      _buildGroupSelector(context),
+                                      defaultSpacing(),
+                                      _buildStaffSelector(context),
+                                      defaultSpacing(),
+                                      _buildChannelSelector(context),
+                                      defaultSpacing(),
+                                      _buildProductFamilySelector(context),
+                                      defaultSpacing(),
+                                      _buildSalseOfficeSelector(context),
+                                      _buildSupplierSelector(context),
+                                      defaultSpacing(),
+                                      _buildEndCustomerSelector(context),
+                                      defaultSpacing(),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              CustomerinfoWidget.buildSubTitle(
-                                  context, '${tr('other_info')}'),
-                              Padding(
-                                padding: AppSize.defaultSidePadding,
-                                child: Column(
-                                  children: [
-                                    defaultSpacing(),
-                                    _buildDeliveryConditionInput(context, 1,
-                                        tr('special_delivery_condition')),
-                                    defaultSpacing(),
-                                    _buildOrderDescriptionDetail(context, 2,
-                                        tr('order_reason_discription')),
-                                    defaultSpacing(),
-                                  ],
+                                CustomerinfoWidget.buildSubTitle(
+                                    context, '${tr('order_product_info')}'),
+                                Padding(
+                                  padding: AppSize.defaultSidePadding,
+                                  child: Column(
+                                    children: [
+                                      defaultSpacing(),
+                                      _buildAddProductTitleRow(context),
+                                      defaultSpacing(),
+                                      _buildRecentOrderTextButton(context),
+                                      defaultSpacing(),
+                                      _buildOrderItemList(context),
+                                      defaultSpacing(),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              defaultSpacing(height: AppSize.appBarHeight * 1.5)
-                            ],
+                                CustomerinfoWidget.buildSubTitle(
+                                    context, '${tr('other_info')}'),
+                                Padding(
+                                  padding: AppSize.defaultSidePadding,
+                                  child: Column(
+                                    children: [
+                                      defaultSpacing(),
+                                      _buildDeliveryConditionInput(context, 1,
+                                          tr('special_delivery_condition')),
+                                      defaultSpacing(),
+                                      _buildOrderDescriptionDetail(context, 2,
+                                          tr('order_reason_discription')),
+                                      defaultSpacing(),
+                                    ],
+                                  ),
+                                ),
+                                defaultSpacing(
+                                    height: AppSize.appBarHeight * 1.5)
+                              ],
+                            ),
                           ),
-                        ),
-                        _buildSubmmitButton(context),
-                        _buildLoadingWidget(context)
-                      ],
+                          _buildSubmmitButton(context),
+                          _buildLoadingWidget(context)
+                        ],
+                      ),
                     );
                   }
                   return DefaultShimmer.buildDefaultPageShimmer(5,
