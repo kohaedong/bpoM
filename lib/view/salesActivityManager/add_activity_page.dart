@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-05 17:29:36
+ * Last Modified: 2022-10-06 02:15:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -542,41 +542,51 @@ class _AddActivityPageState extends State<AddActivityPage> {
   }
 
   Widget _buildIsInterview(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildTitleRow(tr('is_interview'), isNotwithStart: true),
-        defaultSpacing(isHalf: true),
-        Selector<AddActivityPageProvider, int>(
-            selector: (context, provider) => provider.isInterviewIndex,
-            builder: (context, index, _) {
-              return Row(
-                children: [
-                  _buildBox(context, AppSize.defaultContentsWidth / 2,
-                      tr('successful'),
-                      index: 0, isSelected: index == 0 ? true : false),
-                  _buildBox(
-                      context, AppSize.defaultContentsWidth / 2, tr('faild'),
-                      index: 1, isSelected: index == 1 ? true : false),
-                ],
-              );
-            })
-      ],
+    return Padding(
+      padding: AppSize.defaultSidePadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTitleRow(tr('is_interview'), isNotwithStart: true),
+          defaultSpacing(isHalf: true),
+          Selector<AddActivityPageProvider, int>(
+              selector: (context, provider) => provider.isInterviewIndex,
+              builder: (context, index, _) {
+                return Row(
+                  children: [
+                    _buildBox(context, AppSize.defaultContentsWidth / 2,
+                        tr('successful'),
+                        index: 0, isSelected: index == 0 ? true : false),
+                    _buildBox(
+                        context, AppSize.defaultContentsWidth / 2, tr('faild'),
+                        index: 1, isSelected: index == 1 ? true : false),
+                  ],
+                );
+              })
+        ],
+      ),
     );
   }
 
   Widget _buildReasonForInterviewFailure(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        defaultSpacing(times: 2),
-        _buildTitleRow(tr('reason_for_interview_failure'),
-            isNotwithStart: true),
-        defaultSpacing(),
-        _buildTextField(context, type: AddActivityPageInputType.INTERVIEW)
-      ],
-    );
+    return Selector<AddActivityPageProvider, int>(
+        selector: (context, provider) => provider.isInterviewIndex,
+        builder: (context, interviewIndex, _) {
+          return interviewIndex == 0
+              ? Container()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    defaultSpacing(times: 2),
+                    _buildTitleRow(tr('reason_for_interview_failure'),
+                        isNotwithStart: true),
+                    defaultSpacing(),
+                    _buildTextField(context,
+                        type: AddActivityPageInputType.INTERVIEW)
+                  ],
+                );
+        });
   }
 
   Widget _buildActivityType(BuildContext context) {
@@ -1034,6 +1044,102 @@ class _AddActivityPageState extends State<AddActivityPage> {
     );
   }
 
+  Widget _buildWhenVisitContents(BuildContext context) {
+    return Selector<AddActivityPageProvider, bool>(
+      selector: (context, provider) => provider.isVisit,
+      builder: (context, isVisit, _) {
+        return isVisit
+            ? Column(
+                children: [
+                  _buildIsInterview(context),
+                  _buildReasonForInterviewFailure(context),
+                  defaultSpacing(times: 2),
+                  _buildWhenInterviewSuccessContents(context),
+                  CustomerinfoWidget.buildSubTitle(
+                      context, '${tr('result_and_future')}'),
+                  Padding(
+                      padding: AppSize.defaultSidePadding,
+                      child: Column(
+                        children: [
+                          defaultSpacing(),
+                          _buildVisitResult(context),
+                          defaultSpacing(times: 2),
+                          _buildTeamLeaderAdvice(context),
+                          defaultSpacing(times: 2),
+                          _buildCurrentMonthScenario(context),
+                          defaultSpacing(times: 2),
+                        ],
+                      )),
+                ],
+              )
+            : Container();
+      },
+    );
+  }
+
+  Widget _buildWhenInterviewSuccessContents(BuildContext context) {
+    return Selector<AddActivityPageProvider, int>(
+      selector: (context, provider) => provider.isInterviewIndex,
+      builder: (context, isInterviewIndex, _) {
+        return isInterviewIndex == 0
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: AppSize.defaultSidePadding,
+                    child: _buildActivityType(context),
+                  ),
+                  defaultSpacing(),
+                  CustomerinfoWidget.buildSubTitle(
+                      context, '${tr('activity_type_2')}'),
+                  Padding(
+                      padding: AppSize.defaultSidePadding,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildSuggestedItems(context),
+                          defaultSpacing(),
+                          _buildAddSuggestedItemButton(context),
+                          defaultSpacing(times: 2)
+                        ],
+                      )),
+                ],
+              )
+            : Container();
+      },
+    );
+  }
+
+  Widget _buildWidthTeamLeaderAndOtherSallers(BuildContext context) {
+    return Selector<AddActivityPageProvider, bool>(
+      selector: (context, provider) => provider.isVisit,
+      builder: (context, isVist, _) {
+        return isVist
+            ? Column(
+                children: [
+                  _buildIsWithTeamLeader(context),
+                  defaultSpacing(times: 2),
+                  _buildIsWithAnotherSales(context),
+                  defaultSpacing(times: 2),
+                ],
+              )
+            : Container();
+      },
+    );
+  }
+
+  Widget _buildShimmer(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          CustomerinfoWidget.buildSubTitle(context, '${tr('activity_report')}'),
+          DefaultShimmer.buildDefaultPageShimmer(5,
+              isWithSet: true, setLenght: 10)
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var arguments =
@@ -1098,110 +1204,14 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                     _buildIsVisitRow(context),
                                     _buildDistanceDiscription(context),
                                     defaultSpacing(),
-                                    _buildIsWithTeamLeader(context),
-                                    defaultSpacing(times: 2),
-                                    _buildIsWithAnotherSales(context),
-                                    defaultSpacing(times: 2),
+                                    _buildWidthTeamLeaderAndOtherSallers(
+                                        context),
                                     _buildReasonForNotVisit(context),
                                     defaultSpacing(),
-                                    Selector<AddActivityPageProvider,
-                                        Tuple2<bool, int>>(
-                                      selector: (context, provider) => Tuple2(
-                                          provider.isVisit,
-                                          provider.isInterviewIndex),
-                                      builder: (context, tuple, _) {
-                                        return tuple.item1
-                                            ? Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  _buildIsInterview(context),
-                                                  tuple.item1 &&
-                                                          tuple.item2 == 1
-                                                      ? _buildReasonForInterviewFailure(
-                                                          context)
-                                                      : Container(),
-                                                  defaultSpacing(times: 2),
-                                                ],
-                                              )
-                                            : Container();
-                                      },
-                                    )
                                   ],
                                 ),
                               ),
-                              Selector<AddActivityPageProvider,
-                                  Tuple2<bool, int>>(
-                                selector: (context, provider) => Tuple2(
-                                    provider.isVisit,
-                                    provider.isInterviewIndex),
-                                builder: (context, tuple, _) {
-                                  return tuple.item1 && tuple.item2 == 0
-                                      ? Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  AppSize.defaultSidePadding,
-                                              child:
-                                                  _buildActivityType(context),
-                                            ),
-                                            defaultSpacing(),
-                                            CustomerinfoWidget.buildSubTitle(
-                                                context,
-                                                '${tr('activity_type_2')}'),
-                                            Padding(
-                                                padding:
-                                                    AppSize.defaultSidePadding,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    _buildSuggestedItems(
-                                                        context),
-                                                    defaultSpacing(),
-                                                    _buildAddSuggestedItemButton(
-                                                        context),
-                                                    defaultSpacing(times: 2)
-                                                  ],
-                                                )),
-                                          ],
-                                        )
-                                      : Container();
-                                },
-                              ),
-                              Selector<AddActivityPageProvider, bool>(
-                                selector: (context, provider) =>
-                                    provider.isVisit,
-                                builder: (context, isVisit, _) {
-                                  return isVisit
-                                      ? Column(
-                                          children: [
-                                            CustomerinfoWidget.buildSubTitle(
-                                                context,
-                                                '${tr('result_and_future')}'),
-                                            Padding(
-                                                padding:
-                                                    AppSize.defaultSidePadding,
-                                                child: Column(
-                                                  children: [
-                                                    defaultSpacing(),
-                                                    _buildVisitResult(context),
-                                                    defaultSpacing(times: 2),
-                                                    _buildTeamLeaderAdvice(
-                                                        context),
-                                                    defaultSpacing(times: 2),
-                                                    _buildCurrentMonthScenario(
-                                                        context),
-                                                    defaultSpacing(times: 2),
-                                                  ],
-                                                )),
-                                          ],
-                                        )
-                                      : Container();
-                                },
-                              ),
+                              _buildWhenVisitContents(context),
                               defaultSpacing(times: 10),
                             ],
                           ),
@@ -1211,16 +1221,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                       ],
                     );
                   }
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        CustomerinfoWidget.buildSubTitle(
-                            context, '${tr('activity_report')}'),
-                        DefaultShimmer.buildDefaultPageShimmer(5,
-                            isWithSet: true, setLenght: 10)
-                      ],
-                    ),
-                  );
+                  return _buildShimmer(context);
                 }));
       },
     );

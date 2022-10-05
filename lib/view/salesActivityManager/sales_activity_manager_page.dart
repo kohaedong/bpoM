@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-05 00:40:20
+ * Last Modified: 2022-10-06 02:15:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'dart:io';
+import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -974,7 +975,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             ]));
   }
 
-  Widget _buildShimmerView(BuildContext context) {
+  Widget _buildShimmerCalndar(BuildContext context) {
     return Expanded(
         child: ListView(
       children: [
@@ -988,6 +989,94 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             child: DefaultShimmer.buildCalindaShimmer())
       ],
     ));
+  }
+
+  Widget _buildUpdateDayDataHook(BuildContext context) {
+    final p = context.read<SalseActivityManagerPageProvider>();
+    return Selector<ActivityStateProvider, bool>(
+        selector: (context, provider) => provider.isNeedUpdateDayData,
+        builder: (context, isNeedUpdate, _) {
+          Future.delayed(Duration.zero, () {
+            if (isNeedUpdate) {
+              p.getDayData();
+            }
+          });
+          return Container();
+        });
+  }
+
+  Widget _buildErrorPopup(BuildContext context, String error) {
+    return Builder(builder: (ctx) {
+      Future.delayed(Duration.zero, () async {
+        var popupsult = await AppDialog.showSignglePopup(ctx, error);
+        if (popupsult != null) {
+          Navigator.pop(context);
+        }
+      });
+      return Container();
+    });
+  }
+
+  Widget _buildShimmerView(BuildContext context) {
+    return Column(
+      children: [
+        _buildTabBar(context),
+        Divider(color: AppColors.textGrey, height: 0),
+        _buildShimmerCalndar(context),
+      ],
+    );
+  }
+
+  Future<void> doConfirmTable(BuildContext context) async {
+    final p = context.read<SalseActivityManagerPageProvider>();
+    if (p.isDifreentGoinTime) {
+      AppToast().show(context, tr('stats_is_changed'));
+      p.getDayData(isWithLoading: true);
+      return;
+    }
+    if (p.activityStatus! == ActivityStatus.STOPED ||
+        p.activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED) {
+      var isPressedTrue = false;
+      await Future.delayed(Duration.zero, () async {
+        final popupResult = await AppDialog.showPopup(
+            context,
+            buildTowButtonDialogContents(
+              context,
+              AppSize.singlePopupHeight,
+              AppText.listViewText(tr('is_really_confirem')),
+              successButtonText: tr('confirm'),
+            ));
+        if (popupResult != null) {
+          isPressedTrue = true;
+        }
+      });
+      if (isPressedTrue) {
+        await p.confirmeAcitivityTable().then((result) => result.isSuccessful
+            ? () {
+                p.setActivityStatus(ActivityStatus.FINISH);
+                AppToast().show(context, tr('confirm_successful'));
+              }()
+            : () async {
+                var indexx = result.data['index'];
+                var message = result.data['message'];
+                AppToast().show(context, message);
+                var popResult = await Navigator.pushNamed(
+                    context, AddActivityPage.routeName,
+                    arguments: {
+                      'model': p.dayResponseModel,
+                      'status': p.activityStatus,
+                      'index': indexx,
+                    });
+                if (popResult != null) {
+                  p.getDayData(isWithLoading: true);
+                }
+              }());
+      }
+    } else if (p.activityStatus != ActivityStatus.FINISH) {
+      AppDialog.showSimpleDialog(
+          context, null, tr('stop_activity_first_commont'),
+          isSingleButton: true);
+    }
   }
 
   @override
@@ -1005,60 +1094,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                       valueListenable: _actionButton,
                       builder: (context, _actionButton, _) {
                         return _actionButton;
-                      }), actionCallback: () async {
-                final p = context.read<SalseActivityManagerPageProvider>();
-                if (p.isDifreentGoinTime) {
-                  AppToast().show(context, tr('stats_is_changed'));
-                  p.getDayData(isWithLoading: true);
-                  return;
-                }
-                if (p.activityStatus! == ActivityStatus.STOPED ||
-                    p.activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED) {
-                  var isPressedTrue = false;
-                  await Future.delayed(Duration.zero, () async {
-                    final popupResult = await AppDialog.showPopup(
-                        context,
-                        buildTowButtonDialogContents(
-                          context,
-                          AppSize.singlePopupHeight,
-                          AppText.listViewText(tr('is_really_confirem')),
-                          successButtonText: tr('confirm'),
-                        ));
-                    if (popupResult != null) {
-                      isPressedTrue = true;
-                    }
-                  });
-                  if (isPressedTrue) {
-                    await p
-                        .confirmeAcitivityTable()
-                        .then((result) => result.isSuccessful
-                            ? () {
-                                p.setActivityStatus(ActivityStatus.FINISH);
-                                AppToast()
-                                    .show(context, tr('confirm_successful'));
-                              }()
-                            : () async {
-                                var indexx = result.data['index'];
-                                var message = result.data['message'];
-                                AppToast().show(context, message);
-                                var popResult = await Navigator.pushNamed(
-                                    context, AddActivityPage.routeName,
-                                    arguments: {
-                                      'model': p.dayResponseModel,
-                                      'status': p.activityStatus,
-                                      'index': indexx,
-                                    });
-                                if (popResult != null) {
-                                  p.getDayData(isWithLoading: true);
-                                }
-                              }());
-                  }
-                } else if (p.activityStatus != ActivityStatus.FINISH) {
-                  AppDialog.showSimpleDialog(
-                      context, null, tr('stop_activity_first_commont'),
-                      isSingleButton: true);
-                }
-              }),
+                      }),
+                  actionCallback: () async => await doConfirmTable(context)),
               child: FutureBuilder<ResultModel>(
                   future: p.getMonthData(),
                   builder: (context, snapshot) {
@@ -1070,28 +1107,13 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                           Divider(color: AppColors.textGrey, height: 0),
                           snapshot.data!.isSuccessful
                               ? _buildTapBarView(context)
-                              : Builder(builder: (ctx) {
-                                  Future.delayed(Duration.zero, () async {
-                                    var popupsult =
-                                        await AppDialog.showSignglePopup(
-                                            ctx, snapshot.data!.errorMassage!);
-                                    if (popupsult != null) {
-                                      Navigator.pop(context);
-                                    }
-                                  });
-                                  return Container();
-                                })
-                        ],
-                      );
-                    } else {
-                      return Column(
-                        children: [
-                          _buildTabBar(context),
-                          Divider(color: AppColors.textGrey, height: 0),
-                          _buildShimmerView(context),
+                              : _buildErrorPopup(
+                                  context, snapshot.data!.errorMassage!),
+                          _buildUpdateDayDataHook(context)
                         ],
                       );
                     }
+                    return _buildShimmerView(context);
                   }));
         });
   }
