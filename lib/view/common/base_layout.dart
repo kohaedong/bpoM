@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_widget.dart
  * Created Date: 2021-08-19 11:37:50
- * Last Modified: 2022-10-06 05:07:50
+ * Last Modified: 2022-10-06 05:28:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,14 +12,9 @@
  */
 
 import 'dart:io';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
-import 'package:provider/provider.dart';
 
 typedef IsShowAppBarCallBack = bool Function();
 typedef OnwillpopCallback = bool Function();

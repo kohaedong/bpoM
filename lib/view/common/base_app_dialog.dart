@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-10-01 18:35:14
+ * Last Modified: 2022-10-06 05:28:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,19 +11,17 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
-import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/util/encoding_util.dart';
-import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/base_error_dialog_contents.dart';
 
 typedef DiaLogCallBack = Function(bool);

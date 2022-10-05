@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-06 05:19:24
+ * Last Modified: 2022-10-06 05:26:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -1142,6 +1142,39 @@ class _AddActivityPageState extends State<AddActivityPage> {
     );
   }
 
+  Future<void> willPopCallback(BuildContext context) async {
+    final p = context.read<AddActivityPageProvider>();
+    if (p.index == null ? p.isModifiyByNewCase : p.isModifiedByEntity) {
+      var popupResult = await AppDialog.showPopup(
+        context,
+        buildDialogContents(
+          context,
+          SizedBox(
+            height: AppSize.singlePopupHeight - AppSize.buttonHeight,
+            child: Center(
+              child: AppText.listViewText('${tr('is_exit_current_page')}',
+                  style: context
+                      .read<AppThemeProvider>()
+                      .themeData
+                      .textTheme
+                      .headline3!),
+            ),
+          ),
+          false,
+          AppSize.singlePopupHeight,
+          leftButtonText: '${tr('cancel')}',
+          rightButtonText: '${tr('ok')}',
+        ),
+      );
+      if (popupResult != null) {
+        popupResult as bool;
+        if (popupResult) {
+          Navigator.pop(context, true);
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var arguments =
@@ -1186,39 +1219,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                       snapshot.connectionState == ConnectionState.done) {
                     return WillPopScope(
                       onWillPop: () async {
-                        if (p.index == null
-                            ? p.isModifiyByNewCase
-                            : p.isModifiedByEntity) {
-                          var popupResult = await AppDialog.showPopup(
-                            context,
-                            buildDialogContents(
-                              context,
-                              SizedBox(
-                                height: AppSize.singlePopupHeight -
-                                    AppSize.buttonHeight,
-                                child: Center(
-                                  child: AppText.listViewText(
-                                      '${tr('is_exit_current_page')}',
-                                      style: context
-                                          .read<AppThemeProvider>()
-                                          .themeData
-                                          .textTheme
-                                          .headline3!),
-                                ),
-                              ),
-                              false,
-                              AppSize.singlePopupHeight,
-                              leftButtonText: '${tr('cancel')}',
-                              rightButtonText: '${tr('ok')}',
-                            ),
-                          );
-                          if (popupResult != null) {
-                            popupResult as bool;
-                            if (popupResult) {
-                              Navigator.pop(context, true);
-                            }
-                          }
-                        }
+                        await willPopCallback(context);
                         return false;
                       },
                       child: Stack(
