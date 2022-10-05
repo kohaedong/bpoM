@@ -179,12 +179,12 @@ class AppSize {
       EdgeInsets.fromLTRB(
           12.w,
           boxHeight != null
-              ? ((boxHeight - textHeight) / 2) - 2
-              : ((defaultTextFieldHeight - textHeight) / 2) - 2,
+              ? ((boxHeight - textHeight - 2) / 2)
+              : ((defaultTextFieldHeight - textHeight - 2) / 2),
           12.w,
           boxHeight != null
-              ? (boxHeight - textHeight) / 2
-              : ((defaultTextFieldHeight - textHeight) / 2) - 2);
+              ? (boxHeight - textHeight - 2) / 2
+              : ((defaultTextFieldHeight - textHeight - 2) / 2));
   static EdgeInsets defaultTextFieldPaddingWidthSigninPage(double fontSize,
           {bool? isSmallButton, double? boxHeight}) =>
       EdgeInsets.fromLTRB(

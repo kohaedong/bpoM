@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-10-02 13:27:10
+ * Last Modified: 2022-10-05 16:13:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -316,7 +316,6 @@ class _DetailBookPageState extends State<DetailBookPage> {
       builder: (contetx, searchKeyStr, _) {
         return BaseInputWidget(
           context: context,
-          height: AppSize.defaultTextFieldHeight,
           hintTextStyleCallBack: () => AppTextStyle.hint_16,
           textEditingController: _textEditingController,
           width: AppSize.defaultContentsWidth,
