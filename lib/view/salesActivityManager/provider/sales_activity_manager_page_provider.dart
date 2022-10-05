@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-05 00:23:50
+ * Last Modified: 2022-10-05 17:10:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -227,12 +227,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   Future<void> checkIsShowPopup() async {
     // 지난영업일 확인.
-    try {
-      isShowPopup =
-          await checkNextWorkingDayForPreviousWorkingDay(DateTime.now());
-    } catch (e) {
-      pr(e);
-    }
+    await checkPreviousWorkingDay('', dt: DateTime.now());
+    isShowPopup = await checkConfiremStatus(datetime: previousWorkingDay);
     notifyListeners();
   }
 
@@ -286,26 +282,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     getDayData(isWithLoading: true);
   }
 
-  Future<bool> checkNextWorkingDayForPreviousWorkingDay(DateTime dt) async {
-    await checkPreviousWorkingDay('', dt: dt);
-    checkPreviousWorkingDaysNextWorkingDay =
-        DateUtil.nextDay(dt: previousWorkingDay);
-    var isNotConfirmed = await checkConfiremStatus(
-        datetime: checkPreviousWorkingDaysNextWorkingDay);
-    while ((checkPreviousWorkingDaysNextWorkingDay!.weekday == 7 &&
-            !isNotConfirmed) ||
-        (checkPreviousWorkingDaysNextWorkingDay!.weekday == 6 &&
-            !isNotConfirmed) ||
-        holidayList.contains(checkPreviousWorkingDaysNextWorkingDay)) {
-      checkPreviousWorkingDaysNextWorkingDay =
-          DateUtil.nextDay(dt: checkPreviousWorkingDaysNextWorkingDay);
-      isNotConfirmed = await checkConfiremStatus(
-          datetime: checkPreviousWorkingDaysNextWorkingDay);
-    }
-    return isNotConfirmed;
-  }
-
-  Future<bool> checkPreviousWorkingDay(String day, {DateTime? dt}) async {
+  Future<void> checkPreviousWorkingDay(String day, {DateTime? dt}) async {
     previousWorkingDay = DateUtil.previousDay(dt: dt ?? DateUtil.getDate(day));
     var isNotConfirmed =
         await checkConfiremStatus(datetime: previousWorkingDay);
@@ -315,7 +292,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       previousWorkingDay = DateUtil.previousDay(dt: previousWorkingDay);
       isNotConfirmed = await checkConfiremStatus(datetime: previousWorkingDay);
     }
-    return isNotConfirmed;
   }
 
   Future<ResultModel> getOfficeAddress() async {

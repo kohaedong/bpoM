@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-05 00:26:45
+ * Last Modified: 2022-10-05 17:26:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -96,30 +96,20 @@ class AddActivityPageProvider extends ChangeNotifier {
   bool get isModifiedByEntity {
     if (index != null) {
       var original = fromParentResponseModel!.table260![index!];
-      var withLeaderOnly = isWithTeamLeader && anotherSaller == null;
-      var withLeaderAndSaller = isWithTeamLeader && anotherSaller != null;
-      var withSallerOnly = !isWithTeamLeader && anotherSaller != null;
-      var v1 = original.zskunnr != selectedKunnr!.zskunnr;
-      var v2 = original.zskunnrNm != selectedKunnr!.name;
-      var v3 = original.zaddr != selectedKunnr!.zaddName1;
+      var v1 = original.zskunnr != selectedKunnr?.zskunnr;
+      var v2 = original.zskunnrNm != selectedKunnr?.name;
+      var v3 = original.zaddr != selectedKunnr?.zaddName1;
       var v4 = original.xvisit != (isVisit ? 'Y' : 'N');
-      var v5 = original.zkmno != selectedKeyMan!.zkmno;
-      var v6 = original.zkmnoNm != selectedKeyMan!.zkmnoNm;
+      var v5 = original.zkmno != selectedKeyMan?.zkmno;
+      var v6 = original.zkmnoNm != selectedKeyMan?.zkmnoNm;
       var v7 = original.visitRmk != reasonForNotVisit;
-      var v8 = original.xmeet != (isInterviewIndex == 0 ? 'S' : 'F');
       var v9 = original.meetRmk != reasonForinterviewFailure;
       var v10 = original.rslt != visitResultInput;
       var v11 = original.comnt != leaderAdviceInput;
-      var v12 = original.accompany !=
-          (withLeaderOnly
-              ? 'D001'
-              : withSallerOnly
-                  ? 'E001'
-                  : withLeaderAndSaller
-                      ? 'E002'
-                      : '');
+
       var trueLIst = <bool>[];
-      trueLIst.addAll([v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12]);
+      trueLIst.addAll([v1, v2, v3, v4, v5, v6, v7, v9, v10, v11]);
+      pr(trueLIst);
       return (trueLIst.contains(true));
     } else {
       return false;
@@ -141,7 +131,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       pr('250:: index: ${map.key} -  ${map.value.toJson()}');
     });
     fromParentModel.table260!.asMap().entries.forEach((map) {
-      pr('250:: index: ${map.key} -  ${map.value.toJson()}');
+      pr('260:: index: ${map.key} -  ${map.value.toJson()}');
     });
     index = indexx;
     if (index != null) {

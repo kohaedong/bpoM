@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-05 00:41:54
+ * Last Modified: 2022-10-05 17:29:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,13 +11,12 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
+import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/enums/account_type.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
@@ -1203,7 +1202,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                       : Container();
                                 },
                               ),
-                              defaultSpacing(times: 5),
+                              defaultSpacing(times: 10),
                             ],
                           ),
                         ),
