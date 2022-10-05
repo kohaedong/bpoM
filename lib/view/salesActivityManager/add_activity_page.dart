@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-06 05:26:39
+ * Last Modified: 2022-10-06 08:36:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -65,6 +65,7 @@ class AddActivityPage extends StatefulWidget {
 class _AddActivityPageState extends State<AddActivityPage> {
   late TextEditingController _notVisitEditingController;
   late TextEditingController _amountEditingController;
+  late TextEditingController _reviewEditingController;
   late TextEditingController _interviewTextEditingController;
   late TextEditingController _visitResultTextEditingController;
   late TextEditingController _leaderAdviceTextEditingController;
@@ -75,6 +76,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
   @override
   void initState() {
     _notVisitEditingController = TextEditingController();
+    _reviewEditingController = TextEditingController();
     _amountEditingController = TextEditingController();
     _interviewTextEditingController = TextEditingController();
     _visitResultTextEditingController = TextEditingController();
@@ -91,6 +93,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
   void dispose() {
     _notVisitEditingController.dispose();
     _amountEditingController.dispose();
+    _reviewEditingController.dispose();
     _interviewTextEditingController.dispose();
     _visitResultTextEditingController.dispose();
     _leaderAdviceTextEditingController.dispose();
@@ -181,9 +184,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
   Widget _buildSelectKeyMan(BuildContext context) {
     final p = context.read<AddActivityPageProvider>();
     return Selector<AddActivityPageProvider,
-        Tuple2<AddActivityKeyManModel?, EtKunnrModel?>>(
-      selector: (context, provider) =>
-          Tuple2(provider.selectedKeyMan, provider.selectedKunnr),
+        Tuple3<AddActivityKeyManModel?, EtKunnrModel?, bool>>(
+      selector: (context, provider) => Tuple3(
+          provider.selectedKeyMan, provider.selectedKunnr, provider.isVisit),
       builder: (context, tuple, _) {
         return BaseColumWithTitleAndTextFiled.build(
           tr('key_man'),
@@ -191,14 +194,14 @@ class _AddActivityPageState extends State<AddActivityPage> {
             context: context,
             onTap: () {
               if (tuple.item2 == null) {
-                AppDialog.showSignglePopup(context, tr('select_customer'));
+                AppToast().show(context, tr('select_customer'));
               }
             },
             hintTextStyleCallBack: () =>
                 tuple.item1 != null && tuple.item1!.zkmnoNm != null
                     ? AppTextStyle.default_16
                     : AppTextStyle.hint_16,
-            popupSearchType: p.isDoNothing
+            popupSearchType: p.isDoNothing || tuple.item3
                 ? PopupSearchType.DO_NOTHING
                 : tuple.item2 == null
                     ? null
@@ -207,12 +210,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
               return p.setKeymanModel(keymanModel);
             },
             deleteIconCallback: () => p.setKeymanModel(null),
-            iconType: p.isDoNothing ? null : InputIconType.SEARCH,
-            isShowDeleteForHintText: p.isDoNothing
-                ? false
-                : tuple.item1 != null && tuple.item1!.zkmnoNm != null
-                    ? true
-                    : false,
+            iconType:
+                p.isDoNothing || tuple.item3 ? null : InputIconType.SEARCH,
             iconColor: AppColors.textFieldUnfoucsColor,
             defaultIconCallback: () => p.setKeymanModel(null),
             hintText: tuple.item1 != null && tuple.item1!.zkmnoNm != null
@@ -354,7 +353,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
               ? _notVisitEditingController
               : type == AddActivityPageInputType.VISIT_RESULT
                   ? _visitResultTextEditingController
-                  : _leaderAdviceTextEditingController,
+                  : type == AddActivityPageInputType.REVIEW
+                      ? _reviewEditingController
+                      : _leaderAdviceTextEditingController,
       scrollController: type == AddActivityPageInputType.INTERVIEW
           ? _interviewTextFieldScrollController
           : type == AddActivityPageInputType.NOT_VISIT
@@ -366,6 +367,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
         switch (type) {
           case AddActivityPageInputType.INTERVIEW:
             p.setReasonForInterviewFailure(text.trim());
+            break;
+          case AddActivityPageInputType.REVIEW:
+            p.setReview(text.trim());
             break;
           case AddActivityPageInputType.NOT_VISIT:
             p.setReasonForNotVisit(text.trim());
@@ -576,17 +580,20 @@ class _AddActivityPageState extends State<AddActivityPage> {
         builder: (context, interviewIndex, _) {
           return interviewIndex == 0
               ? Container()
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    defaultSpacing(times: 2),
-                    _buildTitleRow(tr('reason_for_interview_failure'),
-                        isNotwithStart: true),
-                    defaultSpacing(),
-                    _buildTextField(context,
-                        type: AddActivityPageInputType.INTERVIEW)
-                  ],
+              : Padding(
+                  padding: AppSize.defaultSidePadding,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      defaultSpacing(times: 2),
+                      _buildTitleRow(tr('reason_for_interview_failure'),
+                          isNotwithStart: true),
+                      defaultSpacing(),
+                      _buildTextField(context,
+                          type: AddActivityPageInputType.INTERVIEW)
+                    ],
+                  ),
                 );
         });
   }
@@ -803,7 +810,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   defaultSpacing(),
                   SizedBox(
                     width: AppSize.defaultContentsWidth * .3,
-                    child: _buildTitleRow(tr('month_amount_price')),
+                    child: _buildTitleRow(tr('month_amount_price'),
+                        isNotwithStart: true),
                   ),
                   defaultSpacing(isHalf: true),
                   Row(
@@ -972,7 +980,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 return;
               }
             } else {
-              AppDialog.showSignglePopup(context, tr('select_customer'));
+              AppToast().show(context, tr('select_customer'));
             }
           },
           child: AppText.text(text,
@@ -1026,6 +1034,25 @@ class _AddActivityPageState extends State<AddActivityPage> {
           );
   }
 
+  Widget _buildReview(BuildContext context) {
+    final p = context.read<AddActivityPageProvider>();
+    return CheckSuperAccount.isLeaderAccount()
+        ? Column(
+            children: [
+              _buildTitleRow(tr('review'), isNotwithStart: true),
+              defaultSpacing(),
+              _buildTextField(context,
+                  type: AddActivityPageInputType.LEADER_ADVICE)
+            ],
+          )
+        : BaseInfoRowByKeyAndValue.build(
+            tr('review'),
+            p.review ?? '',
+            maxLine: 5,
+            style: AppTextStyle.h5,
+          );
+  }
+
   Widget _buildCurrentMonthScenario(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1066,6 +1093,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                           defaultSpacing(),
                           _buildVisitResult(context),
                           defaultSpacing(times: 2),
+                          _buildReview(context),
+                          defaultSpacing(),
                           _buildTeamLeaderAdvice(context),
                           defaultSpacing(times: 2),
                           _buildCurrentMonthScenario(context),

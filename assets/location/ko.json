@@ -63,7 +63,8 @@
     "registor_order":"주문요청 등록",
     "not_find_unread_alarm":"미확인 알림이 없습니다.",
     "notice_detail":"공지사항 상세",
-    "select_customer":"고객을 선택해 주세요.",
+    "select_customer":"고객을 먼저 선택해 주세요.",
+    "password_wrong":"아이디 또는 비밀번호를 확인해 주세요.",
     "search_sustomer_general_info":"고객 일반정보 조회",
     "search_recent_sales_opportunity_info":"최근 영업기회 정보 조회",
     "search_recent_order_info":"최근 주문 정보 조회",
@@ -538,7 +539,7 @@
     "plz_select_office":"사무실을 선택해 주세요.",
     "have_unconfirmed_activity":"전일 영업활동이 미확정 상태입니다.\n{} 영업활동을 확정해주세요.",
     "stop_activity_first_commont":"영업활동 종료 후 확정 가능합니다.",
-    "start_activity_first_commont":"영업활동 시작후 신규 활동 추가가 가능합니다.\n영업활동을 시작 하시겠습니까?",
+    "start_activity_first_commont":"영업활동 시작 후 신규 활동 추가가 가능합니다.\n영업활동을 시작하시겠습니까?",
     "customer_search":"고객 조회",
     "arrival":"도착",
     "reason_for_interview_failure":"면담 실패 사유",
@@ -593,7 +594,8 @@
     "stats_is_changed":"다시 시도해주세요",
     "plz_select_material":"재료를 선택해주세요.",
     "plz_select_quantity":"수량을 입력해주세요.",
-    "plz_check_price":"수량 조회를 해주세요."
+    "plz_check_price":"수량 조회를 해주세요.",
+    "review":"review"
    
    
 }

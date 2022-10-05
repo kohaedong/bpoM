@@ -337,7 +337,7 @@ class SigninProvider extends ChangeNotifier {
           accessPermmisionModel.accessApp!, accessPermmisionModel.accessMsg!,
           accessPermissionModel: accessPermmisionModel);
     }
-    return SigninResult(false, 'permmison biden.');
+    return SigninResult(false, tr('permmison biden'));
   }
 
   Future<SigninResult> signIn({bool? isWithAutoLogin}) async {
@@ -367,11 +367,13 @@ class SigninProvider extends ChangeNotifier {
       var isShowPopup = false;
       if (signResult.body['data'] == null) {
         isShowPopup = true;
+        message = tr('permission_denied');
       }
       if (isMessageStartWithNumber) {
         var number = int.parse(message.substring(0, 1));
         if (number < 5) {
-          message = tr('password_wrong_for_time', args: ['$number']);
+          // message = tr('password_wrong_for_time', args: ['$number']);
+          message = tr('password_wrong');
         } else {
           message = tr('password_wrong_five_time');
           isShowPopup = true;

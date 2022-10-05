@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-10-02 02:36:26
+ * Last Modified: 2022-10-06 08:19:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -904,22 +904,17 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         padding:
             index == 0 ? EdgeInsets.all(0) : AppSize.searchPopupListPadding,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _horizontalRow(
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppText.text(
-                          '${model.sname} ${model.levelcdnm!.trim().isEmpty ? '' : '(${model.levelcdnm!})'} ',
-                          style: AppTextStyle.h3),
-                      AppText.text('${model.dptnm}', style: AppTextStyle.h5)
-                    ],
-                  ),
-                ],
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppText.text(
+                    '${model.sname} ${model.levelcdnm!.trim().isEmpty ? '' : '(${model.levelcdnm!})'} ',
+                    style: AppTextStyle.h3,
+                    textAlign: TextAlign.start),
+                AppText.text('${model.dptnm}', style: AppTextStyle.h5)
+              ],
             ),
             isShowLastPageText ? lastPageText() : Container()
           ],

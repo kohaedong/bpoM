@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-06 06:54:47
+ * Last Modified: 2022-10-06 08:32:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -62,6 +62,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   String? leaderAdviceInput;
   String? seletedAmount;
   String? lastSeqNo;
+  String? review;
   List<String>? activityList;
 
   bool? isLockOtherSalerSelector;
@@ -110,7 +111,10 @@ class AddActivityPageProvider extends ChangeNotifier {
       var trueLIst = <bool>[];
       trueLIst.addAll([v1, v2, v3, v4, v5, v6, v7, v9, v10, v11]);
       pr(trueLIst);
-      return (editModel260 == null ? trueLIst.contains(true) : true);
+      pr('trueLIst.contains(true)${trueLIst.contains(true)}');
+      pr('editModel260 == null  ${editModel260 == null}');
+      pr('sb ${editModel260 == null ? trueLIst.contains(true) : true}');
+      return (trueLIst.contains(true));
     } else {
       return false;
     }
@@ -136,12 +140,14 @@ class AddActivityPageProvider extends ChangeNotifier {
     index = indexx;
     if (index != null) {
       lastSeqNo = getLastSeqNo();
+
       var temp = fromParentResponseModel!.table260![index!];
       if (index != null) {
         editModel260 = SalesActivityDayTable260.fromJson(
             fromParentResponseModel?.table260?[index!].toJson());
       }
       isVisit = temp.xvisit != null && temp.xvisit == 'Y';
+      review = temp.comntM;
       selectedKunnr = EtKunnrModel();
       selectedKunnr!.name = temp.zskunnrNm;
       selectedKunnr!.zskunnr = temp.zskunnr;
@@ -303,6 +309,11 @@ class AddActivityPageProvider extends ChangeNotifier {
     temp = [...suggestedItemList!];
     temp.removeAt(indexx);
     suggestedItemList = [...temp];
+    notifyListeners();
+  }
+
+  void setReview(String str) {
+    review = str;
     notifyListeners();
   }
 
@@ -597,16 +608,22 @@ class AddActivityPageProvider extends ChangeNotifier {
           FormatUtil.removeDash(DateUtil.getDateStr(now.toIso8601String()));
       t260.aezet = DateUtil.getTimeNow(isNotWithColon: true);
       // 도착할때만 저장.
-      if (t260.atime != null && t260.atime!.trim().isEmpty && isVisit) {
+
+      if ((t260.atime == null ||
+              (t260.atime != null && t260.atime!.trim().isEmpty)) &&
+          isVisit) {
         var isPrevdate =
             (activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
                 activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED);
-        var date = DateUtil.getDate(t260.erdat!);
-        t260.atime = DateUtil.getTimeNow(
+        var prevDay = DateUtil.getDate(t260.erdat!);
+        var today = DateTime.now();
+        t260.atime = DateUtil.getTimeNow2(
             isNotWithColon: true,
             dt: isPrevdate
-                ? DateTime(date.year, date.month, date.day, 23, 59, 00)
-                : date);
+                ? DateTime(prevDay.year, prevDay.month, prevDay.day, 23, 59, 00)
+                : today);
+        t260.sminute = '1';
+        pr('t260.atime  ${t260.atime}');
       }
 
       var latLonMap = await getAddressLatLon(selectedKunnr!.zaddName1!)
@@ -617,6 +634,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       t260.dist = isVisit ? double.parse(distanceModel!.distance!) : 0.0;
       t260.isGps = 'X';
       t260.callType = 'M';
+      t260.comntM = review ?? '';
       t260.zskunnr = selectedKunnr!.zskunnr;
       t260.zskunnrNm = selectedKunnr!.name;
       t260.zaddr = selectedKunnr!.zaddName1;
@@ -745,6 +763,10 @@ class AddActivityPageProvider extends ChangeNotifier {
           map as MapEntry<int, AddActivitySuggetionItemModel>;
           switch (map.key) {
             case 0:
+              t280!.amount1 =
+                  seletedAmount != null && seletedAmount!.trim().isNotEmpty
+                      ? double.parse(seletedAmount!)
+                      : 0.0;
               t280!.matnr1 = map.value.matnr;
               t280!.zmatkl1 = map.value.matkl;
               t280!.xsampl1 =
@@ -805,7 +827,10 @@ class AddActivityPageProvider extends ChangeNotifier {
             FormatUtil.removeDash(DateUtil.getDateStr(now.toIso8601String()));
         t280!.aezet = DateUtil.getTimeNow(isNotWithColon: true);
         t280!.aenam = esLogin.ename;
-        t280!.amount1 = double.parse(seletedAmount ?? '0');
+        t280!.amount1 =
+            seletedAmount != null && seletedAmount!.trim().isNotEmpty
+                ? double.parse(seletedAmount!)
+                : 0.0;
       } else {
         if (t280 != null) {
           t280!.umode = 'D';
