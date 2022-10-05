@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-05 17:26:56
+ * Last Modified: 2022-10-06 06:54:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -110,7 +110,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       var trueLIst = <bool>[];
       trueLIst.addAll([v1, v2, v3, v4, v5, v6, v7, v9, v10, v11]);
       pr(trueLIst);
-      return (trueLIst.contains(true));
+      return (editModel260 == null ? trueLIst.contains(true) : true);
     } else {
       return false;
     }
@@ -275,6 +275,7 @@ class AddActivityPageProvider extends ChangeNotifier {
 
       await saveActivityType().then((value) => pr(suggestedItemList));
     } else {
+      await getDayData();
       suggestedItemList ??= [];
       distanceModel!.distance = '0.0';
     }
@@ -407,6 +408,34 @@ class AddActivityPageProvider extends ChangeNotifier {
     isModified = true;
     selectedKeyMan = model;
     notifyListeners();
+  }
+
+  Future<ResultModel> getDayData() async {
+    _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
+    var isLogin = CacheService.getIsLogin();
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
+      "methodParamMap": {
+        "IV_PTYPE": "R",
+        "IV_ADATE":
+            FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now())),
+        "IS_LOGIN": isLogin,
+        "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
+        "functionName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
+      }
+    };
+    final dayResult = await _api.request(body: _body);
+    if (dayResult != null && dayResult.statusCode != 200) {
+      isLoadData = false;
+      notifyListeners();
+      return ResultModel(false);
+    }
+    if (dayResult != null && dayResult.statusCode == 200) {
+      fromParentResponseModel =
+          SalesActivityDayResponseModel.fromJson(dayResult.body['data']);
+      return ResultModel(true);
+    }
+    return ResultModel(false);
   }
 
 // 제안품목명 구하기 위한 api.

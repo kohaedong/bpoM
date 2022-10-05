@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-06 05:17:03
+ * Last Modified: 2022-10-06 06:53:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -614,16 +614,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         if (hook != null) {
           hook.call(naviResult);
         }
-        // if (!p.isNeedUpdate) {
-        //   p.setIsNeedUpdate(naviResult);
-        // }
-        // if (naviResult) {
-        //   try {
-        //     Navigator.pop(context, p.isNeedUpdate);
-        //   } catch (e) {
-        //     pr('nothing');
-        //   }
-        // }
       }
     } else {
       final p = context.read<SalseActivityManagerPageProvider>();
@@ -652,6 +642,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         if (naviResult != null) {
           naviResult as bool;
           if (naviResult) {
+            pr('is pop? $naviResult');
             p.getDayData(isWithLoading: true);
           }
         }
@@ -815,7 +806,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     p.locationResponseModel!,
                     (isupdate) {
                       if (isupdate) {
-                        p.getDayData();
+                        p.getDayData(isWithLoading: true);
                       }
                     },
                     isNotConfirmed: isNotConfirmed,
