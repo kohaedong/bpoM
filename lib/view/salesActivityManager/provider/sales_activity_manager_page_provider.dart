@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-06 05:41:49
+ * Last Modified: 2022-10-06 18:00:50
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -170,13 +170,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
-  bool isHaveUnconfirmedActivity(
-      bool isNotConfirm, String? val1, String? val2) {
-    return isNotConfirm &&
-        (int.parse(val1 != null && val1.isNotEmpty ? val1.trim() : '0') !=
-            int.parse(val2 != null && val2.isNotEmpty ? val2.trim() : '0'));
-  }
-
   Future<bool> checkConfiremStatus(
       {bool? isWithLastWorkdaysNextWorkDay, DateTime? datetime}) async {
     var weekListIndex = 0;
@@ -202,25 +195,18 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     });
     var model = monthResponseModel!.tList![weekListIndex];
     var isNotConfirmed = (weekRowIndex == 0
-        ? isHaveUnconfirmedActivity(
-            model.day04 != 'C', model.day01, model.day02)
+        ? model.day04 != 'C'
         : weekRowIndex == 1
-            ? isHaveUnconfirmedActivity(
-                model.day14 != 'C', model.day11, model.day12)
+            ? model.day14 != 'C'
             : weekRowIndex == 2
-                ? isHaveUnconfirmedActivity(
-                    model.day24 != 'C', model.day21, model.day22)
+                ? model.day24 != 'C'
                 : weekRowIndex == 3
-                    ? isHaveUnconfirmedActivity(
-                        model.day34 != 'C', model.day31, model.day32)
+                    ? model.day34 != 'C'
                     : weekRowIndex == 4
-                        ? isHaveUnconfirmedActivity(
-                            model.day44 != 'C', model.day41, model.day42)
+                        ? model.day44 != 'C'
                         : weekRowIndex == 5
-                            ? isHaveUnconfirmedActivity(
-                                model.day54 != 'C', model.day51, model.day52)
-                            : isHaveUnconfirmedActivity(
-                                model.day64 != 'C', model.day61, model.day62));
+                            ? model.day54 != 'C'
+                            : model.day64 != 'C');
     pr('isNotConfirmed  $isNotConfirmed');
     return isNotConfirmed;
   }
@@ -382,7 +368,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       date = DateTime(today.year, today.month, day);
       pr(day);
     }
-    currentMonthFirstWorkingDay = date;
+    currentMonthFirstWorkingDay = DateUtil.nextDay(dt: date);
     pr('currentMonthFirstDay : $currentMonthFirstWorkingDay');
   }
 
@@ -531,11 +517,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       dayResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
-      if (dayResponseModel!.table250!.isNotEmpty) {
-        dayResponseModel!.table250!.forEach((element) {
-          pr('250table :: ${element.toJson()}');
-        });
-      }
       isLoadDayData = false;
       // 영업활동 종료 후 다시 페이지로 돌아 왔을때 대비.
       var t250 = dayResponseModel!.table250;
@@ -833,11 +814,13 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       if (result != null && result.statusCode == 200) {
         dayResponseModel =
             SalesActivityDayResponseModel.fromJson(result.body['data']);
-        dayResponseModel?.table250?.asMap().entries.forEach((map) {
-          pr('250 index ${map.key} - ${map.value.toJson()}');
-        });
+        // dayResponseModel?.table250?.asMap().entries.forEach((map) {
+        //   pr('250 index ${map.key} - ${map.value.toJson()}');
+        // });
+
         isLoadDayData = false;
         notifyListeners();
+        getMonthData();
         return ResultModel(true);
       }
       pr('???');

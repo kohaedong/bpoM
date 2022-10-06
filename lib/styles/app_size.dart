@@ -22,12 +22,12 @@ class AppSize {
   static double get smallIconWidth => 12;
 
   static double get defaultPopupHeight => 200.h;
-  static double get adressPopupHeight => 210;
+  static double get addressPopupHeight => 240;
   static double get approvalInputHeight => 200.w;
   static double get serverErrorPopupHeight => 300;
   static double get approvalPopupHeight => 350;
   static double get networkErrorPopupHeight => 380;
-  static double get addressPopupHeight => 350;
+  static double get addressPopupHeight2 => 350;
   static double get padding => 16.w;
   static double get boxWidth => 328.w;
   static double get popHeight => 430.h;
@@ -186,20 +186,16 @@ class AppSize {
               ? (boxHeight - textHeight - 2) / 2
               : ((defaultTextFieldHeight - textHeight - 2) / 2));
   static EdgeInsets defaultTextFieldPaddingWidthSigninPage(double fontSize,
-          {bool? isSmallButton, double? boxHeight}) =>
+          {double? boxHeight}) =>
       EdgeInsets.fromLTRB(
         12.w,
-        isSmallButton == null
-            ? boxHeight != null
-                ? ((boxHeight - fontSize) / 2) - 2
-                : ((defaultTextFieldHeight - fontSize) / 2) - 2
-            : (smallButtonHeight - fontSize) / 2,
+        boxHeight != null
+            ? (boxHeight - fontSize - 2) / 2
+            : (defaultTextFieldHeight - fontSize - 2) / 2,
         12.w,
-        isSmallButton == null
-            ? boxHeight != null
-                ? ((boxHeight - fontSize) / 2) - 2
-                : ((defaultTextFieldHeight - fontSize) / 2) - 2
-            : (smallButtonHeight - fontSize) / 2,
+        boxHeight != null
+            ? (boxHeight - fontSize - 2) / 2
+            : (defaultTextFieldHeight - fontSize - 2) / 2,
       );
   static EdgeInsets get zipCodeContentsPadding =>
       EdgeInsets.fromLTRB(16.w, 28.w, 16.w, 0.w);

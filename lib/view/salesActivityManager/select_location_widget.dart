@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-10-02 12:45:14
+ * Last Modified: 2022-10-06 17:43:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -118,8 +118,7 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                           p.officeAddres.contains(p.selectedAddress)) {
                         doAction.call();
                       } else {
-                        AppToast()
-                            .show(context, tr('plz_selected_office_address'));
+                        AppToast().show(context, tr('plz_selected_address'));
                       }
                     } else {
                       AppToast().show(context, tr('plz_set_address'));
@@ -177,7 +176,7 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
         child: Container(
           alignment: Alignment.center,
           width: width,
-          height: AppSize.smallButtonHeight,
+          height: AppSize.defaultTextFieldHeight,
           decoration: BoxDecoration(
               color: isSelected ? AppColors.primary : AppColors.whiteText,
               borderRadius: borderradius,
@@ -206,12 +205,10 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                 tr('office'),
                 BaseInputWidget(
                     context: context,
-                    height: AppSize.smallButtonHeight,
                     hintTextStyleCallBack: () => selectedAddress != null
-                        ? AppTextStyle.default_14
-                        : AppTextStyle.default_14
+                        ? AppTextStyle.default_16
+                        : AppTextStyle.default_16
                             .copyWith(color: AppColors.subText),
-                    textStyle: AppTextStyle.default_14,
                     oneCellType: OneCellType.SELECT_OFFICE_ADDRESS,
                     commononeCellDataCallback: () => p.getAddress(),
                     iconType: InputIconType.SELECT,
@@ -267,6 +264,7 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
                 ],
               );
             }),
+        defaultSpacing(),
         Selector<SelectLocationProvider, bool>(
           selector: (context, provider) => provider.isShowSelector,
           builder: (context, isShowSelector, _) {

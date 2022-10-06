@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-10-05 16:09:29
+ * Last Modified: 2022-10-06 17:24:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -366,18 +366,9 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                   hintMaxLines: 1,
                   errorMaxLines: 1,
                   filled: true,
-                  contentPadding: widget.height != null
-                      ? AppSize.defaultTextFieldPaddingWidthSigninPage(
-                          widget.textStyle != null
-                              ? widget.textStyle!.fontSize!
-                              : AppTextStyle.default_16.fontSize!,
-                          isSmallButton: widget.oneCellType ==
-                                  OneCellType.SELECT_OFFICE_ADDRESS
-                              ? true
-                              : null,
-                          boxHeight: widget.height)
-                      : AppSize.defaultTextFieldPadding(
-                          AppTextStyle.default_16.fontSize!),
+                  contentPadding: AppSize.defaultTextFieldPadding(
+                      AppTextStyle.default_16.fontSize!,
+                      boxHeight: widget.height),
                   border: widget._disabledBorder,
                   enabledBorder: widget._enabledBorder,
                   disabledBorder: widget.enable ? null : widget._disabledBorder,

@@ -362,15 +362,14 @@ class SigninProvider extends ChangeNotifier {
     pr(signResult?.body);
     if (signResult!.statusCode == 200 && signResult.body['code'] == "NG") {
       var message = signResult.body['message'] as String;
+      pr(message);
       var isMessageStartWithNumber =
-          int.tryParse(message.substring(0, 1)) != null;
+          int.tryParse(message.trim().substring(0, 1)) != null;
       var isShowPopup = false;
-      if (signResult.body['data'] == null) {
-        isShowPopup = true;
-        message = tr('permission_denied');
-      }
+
       if (isMessageStartWithNumber) {
-        var number = int.parse(message.substring(0, 1));
+        pr(message.trim().substring(0, 1));
+        var number = int.parse(message.trim().substring(0, 1));
         if (number < 5) {
           // message = tr('password_wrong_for_time', args: ['$number']);
           message = tr('password_wrong');
@@ -378,6 +377,10 @@ class SigninProvider extends ChangeNotifier {
           message = tr('password_wrong_five_time');
           isShowPopup = true;
         }
+      }
+      if (!isMessageStartWithNumber && signResult.body['data'] == null) {
+        isShowPopup = true;
+        message = tr('permission_denied');
       }
       isLoadData = false;
       notifyListeners();
@@ -395,7 +398,13 @@ class SigninProvider extends ChangeNotifier {
               ? ssoUserId
               : userAccount!);
       if (!accessPermissionResult.isSuccessful) {
-        return SigninResult(false, accessPermissionResult.message,
+        isLoadData = false;
+        notifyListeners();
+        return SigninResult(
+            false,
+            accessPermissionResult.message == '앱실행불가'
+                ? tr('permission_denied')
+                : accessPermissionResult.message,
             isShowPopup: true);
       }
       final tokenResult =

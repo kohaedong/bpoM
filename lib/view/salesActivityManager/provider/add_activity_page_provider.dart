@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-06 08:32:29
+ * Last Modified: 2022-10-06 16:58:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -125,6 +125,8 @@ class AddActivityPageProvider extends ChangeNotifier {
     ActivityStatus status,
     int? indexx,
   ) async {
+    index = indexx;
+    pr('seletedAmount  $seletedAmount');
     goinToMenuTime = DateTime.now();
     distanceModel = AddActivityDistanceModel();
     fromParentResponseModel =
@@ -137,11 +139,11 @@ class AddActivityPageProvider extends ChangeNotifier {
     fromParentModel.table260!.asMap().entries.forEach((map) {
       pr('260:: index: ${map.key} -  ${map.value.toJson()}');
     });
-    index = indexx;
     if (index != null) {
       lastSeqNo = getLastSeqNo();
 
-      var temp = fromParentResponseModel!.table260![index!];
+      var temp = SalesActivityDayTable260.fromJson(
+          fromParentResponseModel!.table260![index!].toJson());
       if (index != null) {
         editModel260 = SalesActivityDayTable260.fromJson(
             fromParentResponseModel?.table260?[index!].toJson());
@@ -214,21 +216,21 @@ class AddActivityPageProvider extends ChangeNotifier {
       // 활동 유형 및 제안제품 초기화.
       var saveActivityType = () async {
         IsThisActivityFrom280 isThisActivityFor280 =
-            (SalesActivityDayTable280 table) {
-          return table.bzactno == temp.bzactno && table.seqno == temp.seqno;
+            (SalesActivityDayTable280 t) {
+          return t.bzactno == temp.bzactno && t.seqno == temp.seqno;
         };
         var temp280List = fromParentResponseModel!.table280!
             .where((table) => isThisActivityFor280(table))
             .toList();
+        temp280List.asMap().entries.forEach((map) {
+          pr('index ${map.key} ${map.value.toJson()}');
+        });
         if (temp280List.isNotEmpty) {
           // only one!
           var data = SalesActivityDayTable280();
-          temp280List.forEach((element) {
-            pr('###${element.toJson()}');
-          });
           try {
             //! more
-            data = temp280List.last;
+            data = temp280List.single;
             seletedAmount = data.amount1 != null ? '${data.amount1}' : '0';
           } catch (e) {
             pr(e);

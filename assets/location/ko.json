@@ -587,7 +587,7 @@
     "plz_check_item2":"{} 를 먼저 선택해 주세요.",
     "sys_notice":"시스템점검",
     "plz_set_address":"주소 등록 후 이용해 주세요.",
-    "plz_selected_office_address":"사무실 주소를 선택해주세요.",
+    "plz_selected_address":"주소를 선택해 주세요.",
     "start_adress":"출발지",
     "stop_adress":"도착지",
     "not_recent_notice":"최근 공지사항이 없습니다.",
