@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-06 18:00:50
+ * Last Modified: 2022-10-06 18:10:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -170,6 +170,13 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
+  bool isHaveUnconfirmedActivity(
+      bool isNotConfirm, String? val1, String? val2) {
+    var temp1 = int.parse(val1 != null && val1.isNotEmpty ? val1.trim() : '0');
+    var temp2 = int.parse(val2 != null && val2.isNotEmpty ? val2.trim() : '0');
+    return isNotConfirm && (temp2 > 0 || temp1 > 0);
+  }
+
   Future<bool> checkConfiremStatus(
       {bool? isWithLastWorkdaysNextWorkDay, DateTime? datetime}) async {
     var weekListIndex = 0;
@@ -195,18 +202,25 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     });
     var model = monthResponseModel!.tList![weekListIndex];
     var isNotConfirmed = (weekRowIndex == 0
-        ? model.day04 != 'C'
+        ? isHaveUnconfirmedActivity(
+            model.day04 != 'C', model.day01, model.day02)
         : weekRowIndex == 1
-            ? model.day14 != 'C'
+            ? isHaveUnconfirmedActivity(
+                model.day14 != 'C', model.day11, model.day12)
             : weekRowIndex == 2
-                ? model.day24 != 'C'
+                ? isHaveUnconfirmedActivity(
+                    model.day24 != 'C', model.day21, model.day22)
                 : weekRowIndex == 3
-                    ? model.day34 != 'C'
+                    ? isHaveUnconfirmedActivity(
+                        model.day34 != 'C', model.day31, model.day32)
                     : weekRowIndex == 4
-                        ? model.day44 != 'C'
+                        ? isHaveUnconfirmedActivity(
+                            model.day44 != 'C', model.day41, model.day42)
                         : weekRowIndex == 5
-                            ? model.day54 != 'C'
-                            : model.day64 != 'C');
+                            ? isHaveUnconfirmedActivity(
+                                model.day54 != 'C', model.day51, model.day52)
+                            : isHaveUnconfirmedActivity(
+                                model.day64 != 'C', model.day61, model.day62));
     pr('isNotConfirmed  $isNotConfirmed');
     return isNotConfirmed;
   }
