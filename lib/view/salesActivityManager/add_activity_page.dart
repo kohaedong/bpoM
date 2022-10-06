@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-06 20:23:33
+ * Last Modified: 2022-10-06 23:49:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -437,8 +437,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
     final p = context.read<AddActivityPageProvider>();
     var arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    var index = arguments['index'] as int?;
-    var isNewActivity = (index == null);
+    var seqNo = arguments['seqNo'] as String?;
+    var isNewActivity = (seqNo == null);
 
     return Positioned(
         bottom: 0,
@@ -963,8 +963,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
               } else {
                 Navigator.pushNamed(context, VisitResultHistoryPage.routeName,
                     arguments: {
-                      'date': p.index != null
-                          ? p.fromParentResponseModel!.table260![p.index!].adate
+                      'date': p.currenSeqNo != null
+                          ? p.fromParentResponseModel!.table260!
+                              .where((table) => table.seqno == p.currenSeqNo)
+                              .single
+                              .adate
                           : DateUtil.getDateStr('', dt: DateTime.now()),
                       'zskunnr': p.selectedKunnr != null
                           ? p.selectedKunnr!.zskunnr
@@ -1175,16 +1178,21 @@ class _AddActivityPageState extends State<AddActivityPage> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     var model = arguments['model'] as SalesActivityDayResponseModel;
     var activityStatus = arguments['status'] as ActivityStatus;
-    var index = arguments['index'] as int?;
-    if (index != null) {
-      _interviewTextEditingController.text = model.table260![index].meetRmk!;
-      _notVisitEditingController.text = model.table260![index].visitRmk!;
-      _visitResultTextEditingController.text = model.table260![index].rslt!;
-      _leaderAdviceTextEditingController.text = model.table260![index].comnt!;
-      _amountEditingController.text = model.table280!.isNotEmpty
-          //! 공용 amount1
-          ? '${model.table280!.first.amount1 ?? ''}'
-          : '';
+    var seqNo = arguments['seqNo'] as String?;
+    if (seqNo != null) {
+      var temp = model.table260!.where((table) => table.seqno == seqNo).single;
+      _interviewTextEditingController.text = temp.meetRmk!;
+      _notVisitEditingController.text = temp.visitRmk!;
+      _visitResultTextEditingController.text = temp.rslt!;
+      _leaderAdviceTextEditingController.text = temp.comnt!;
+      var has280Data =
+          model.table280!.where((table) => table.seqno == seqNo).isNotEmpty;
+
+      if (has280Data) {
+        var amount =
+            model.table280!.where((table) => table.seqno == seqNo).single;
+        _amountEditingController.text = '${amount.amount1!}';
+      }
     }
     return ChangeNotifierProvider(
       create: (context) => AddActivityPageProvider(),
@@ -1205,7 +1213,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
             child: FutureBuilder<ResultModel>(
                 future: context
                     .read<AddActivityPageProvider>()
-                    .initData(model, activityStatus, index),
+                    .initData(model, activityStatus, seqno: seqNo),
                 builder: (context, snapshot) {
                   if (snapshot.hasData &&
                       snapshot.connectionState == ConnectionState.done) {

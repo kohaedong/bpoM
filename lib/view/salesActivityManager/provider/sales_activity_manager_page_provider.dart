@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-06 20:23:14
+ * Last Modified: 2022-10-06 22:16:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -641,11 +641,13 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
               isMeetFailReasonNotEmpty &&
               isNotVisitReasonNotEmpty;
           isSuccessfulList.add(ConfirmModel(
-              isSuccessful: validate, index: map.key, message: message));
+              isSuccessful: validate,
+              seqNo: map.value.seqno,
+              message: message));
         });
       }
       isSuccessfulList.forEach((element) {
-        pr('index ${element.index}');
+        pr('index ${element.seqNo}');
         pr('index ${element.isSuccessful}');
         pr('index ${element.message}');
       });
@@ -656,11 +658,11 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (failedList.isNotEmpty) {
       // var indexx = comfirmList.first.index;
       // var message = comfirmList.first.message;
-      var indexx = failedList.first.index;
+      var seqNo = failedList.first.seqNo;
       var message = failedList.first.message;
       isLoadDayData = false;
       notifyListeners();
-      return ResultModel(false, data: {'index': indexx, 'message': message});
+      return ResultModel(false, data: {'seqNo': seqNo, 'message': message});
     } else {
       var t250Base64 = ''; // base
       var t260Base64 = ''; // 영업활동 상세
@@ -836,7 +838,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
 class ConfirmModel {
   bool isSuccessful;
-  int? index;
+  String? seqNo;
   String? message;
-  ConfirmModel({required this.isSuccessful, this.index, this.message});
+  ConfirmModel({required this.isSuccessful, this.seqNo, this.message});
 }

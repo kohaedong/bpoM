@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-06 06:53:19
+ * Last Modified: 2022-10-06 22:19:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -424,11 +424,11 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   }
 
   Widget _buildDayListItem(
-      BuildContext context, SalesActivityDayTable260 model, int index) {
+      BuildContext context, SalesActivityDayTable260 model, String seqNo) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        _routeToAddActivityPage(context, index: index);
+        _routeToAddActivityPage(context, seqNo: seqNo);
       },
       child: Padding(
         padding: AppSize.defaultSidePadding,
@@ -594,10 +594,10 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   }
 
   Future<void> _routeToAddActivityPage(BuildContext context,
-      {int? index, UpdateHook? hook}) async {
+      {String? seqNo, UpdateHook? hook}) async {
     //! context 가 다릅니다.
     //! [ActivityMenuProvider]  와  [SalseActivityManagerPageProvider] 구분 필요.
-    if (index == null) {
+    if (seqNo == null) {
       final p = context.read<ActivityMenuProvider>();
 
       final naviResult = await Navigator.pushNamed(
@@ -605,7 +605,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           arguments: {
             'model': p.editModel,
             'status': p.activityStatus,
-            'index': index,
+            'seqNo': null,
           });
       if (naviResult != null) {
         naviResult as bool;
@@ -618,7 +618,9 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     } else {
       final p = context.read<SalseActivityManagerPageProvider>();
       var t250 = p.dayResponseModel!.table250!.single;
-      var t260 = p.dayResponseModel!.table260![index];
+      var t260 = p.dayResponseModel!.table260!
+          .where((table) => table.seqno == seqNo)
+          .single;
       if (t250.stat == 'C') {
         var model = TlistModel.fromJson(t250.toJson());
         model = TlistModel.fromJson(t260.toJson());
@@ -637,7 +639,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             context, AddActivityPage.routeName, arguments: {
           'model': p.dayResponseModel,
           'status': p.activityStatus,
-          'index': index
+          'seqNo': seqNo
         });
         if (naviResult != null) {
           naviResult as bool;
@@ -852,7 +854,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                                   .asMap()
                                   .entries
                                   .map((map) => _buildDayListItem(
-                                      context, map.value, map.key))
+                                      context, map.value, map.value.seqno!))
                                   .toList()
                             ],
                           )
@@ -1066,7 +1068,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 AppToast().show(context, tr('confirm_successful'));
               }()
             : () async {
-                var indexx = result.data['index'];
+                var seqNo = result.data['seqNo'];
                 var message = result.data['message'];
                 AppToast().show(context, message);
                 var popResult = await Navigator.pushNamed(
@@ -1074,7 +1076,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     arguments: {
                       'model': p.dayResponseModel,
                       'status': p.activityStatus,
-                      'index': indexx,
+                      'seqNo': seqNo,
                     });
                 if (popResult != null) {
                   p.getDayData(isWithLoading: true);

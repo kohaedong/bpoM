@@ -464,7 +464,9 @@ class SigninProvider extends ChangeNotifier {
                     .setThemeType(type);
                 setIsWaterMarkeUser();
                 isLoadData = false;
-                notifyListeners();
+                try {
+                  notifyListeners();
+                } catch (e) {}
                 return SigninResult(true, 'ok');
               }
             }
