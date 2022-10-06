@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-06 16:28:50
+ * Last Modified: 2022-10-06 20:23:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,8 +11,6 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
-import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +32,6 @@ import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
@@ -270,9 +267,13 @@ class _AddActivityPageState extends State<AddActivityPage> {
                         } else if (!p.isVisit) {
                           p.getDistance().then((result) => result.isSuccessful
                               ? () {
-                                  p.saveTable().then(
-                                      (value) => p.setIsInterviewIndex(0));
-                                  _interviewTextEditingController.text = '';
+                                  p.saveTable().then((result) {
+                                    if (result.isSuccessful) {
+                                      p.setIsInterviewIndex(0);
+                                      _interviewTextEditingController.text = '';
+                                      AppToast().show(context, tr('saved'));
+                                    }
+                                  });
                                 }()
                               : DoNothingAction());
                         }
@@ -478,9 +479,6 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   await p.saveTable().then((result) {
                     if (result.isSuccessful) {
                       AppToast().show(context, tr('saved'));
-                      if (index == null) {
-                        Navigator.pop(context, true);
-                      }
                     }
                   });
                 }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-06 17:54:36
+ * Last Modified: 2022-10-06 20:23:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,8 +11,6 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
-import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';

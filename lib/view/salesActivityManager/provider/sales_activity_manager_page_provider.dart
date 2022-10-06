@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-06 18:10:55
+ * Last Modified: 2022-10-06 20:23:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -315,7 +315,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       locationResponseModel =
           SalseActivityLocationResponseModel.fromJson(result.body['data']);
-      pr('office :::${locationResponseModel?.toJson()}');
       return ResultModel(true);
     }
     return ResultModel(false);
@@ -383,7 +382,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       pr(day);
     }
     currentMonthFirstWorkingDay = DateUtil.nextDay(dt: date);
-    pr('currentMonthFirstDay : $currentMonthFirstWorkingDay');
   }
 
   Future<ResultModel> getMonthData(
@@ -447,7 +445,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       monthResponseModel =
           SalesActivityMonthResponseModel.fromJson(result.body['data']);
       if (monthResponseModel!.esReturn!.mtype != 'S') {
-        pr('get monthData faild!!!!!!!!');
         isLoadData = false;
         notifyListeners();
         return ResultModel(false,
@@ -661,8 +658,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       // var message = comfirmList.first.message;
       var indexx = failedList.first.index;
       var message = failedList.first.message;
-      pr(indexx);
-      pr(message);
       isLoadDayData = false;
       notifyListeners();
       return ResultModel(false, data: {'index': indexx, 'message': message});
@@ -816,9 +811,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         }
       };
 
-      pr('t250Base64 $t250Base64');
-      pr('t260Base64 $t260Base64');
-      pr('t280Base64 $t280Base64');
       final result = await _api.request(body: _body);
       if (result != null && result.statusCode != 200) {
         isLoadData = false;
@@ -828,16 +820,11 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       if (result != null && result.statusCode == 200) {
         dayResponseModel =
             SalesActivityDayResponseModel.fromJson(result.body['data']);
-        // dayResponseModel?.table250?.asMap().entries.forEach((map) {
-        //   pr('250 index ${map.key} - ${map.value.toJson()}');
-        // });
-
         isLoadDayData = false;
         notifyListeners();
         getMonthData();
         return ResultModel(true);
       }
-      pr('???');
       isLoadDayData = false;
       try {
         notifyListeners();
