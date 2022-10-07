@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-10-06 05:50:24
+ * Last Modified: 2022-10-07 01:00:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,14 +12,17 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
 
@@ -83,15 +86,19 @@ class ActivityMenuProvider extends ChangeNotifier {
   Future<ResultModel> deletLastActivity() async {
     isLoadData = true;
     notifyListeners();
-
+    var ap =
+        KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {
         "IV_PTYPE": "R",
-        "IV_ADATE":
-            FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now())),
+        "IV_ADATE": FormatUtil.removeDash(DateUtil.getDateStr('',
+            dt: activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
+                    activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED
+                ? await ap.checkPreviousWorkingDay()
+                : DateTime.now())),
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
         "functionName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,

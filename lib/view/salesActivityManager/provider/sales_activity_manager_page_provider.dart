@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-06 22:16:47
+ * Last Modified: 2022-10-07 01:02:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,8 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
@@ -29,6 +31,7 @@ import 'package:medsalesportal/model/rfc/sales_activity_day_table_280.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_month_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
+import 'package:provider/provider.dart';
 
 typedef IsThisActivityFrom361 = bool Function(SalesActivityDayTable361);
 typedef IsThisActivityFrom280 = bool Function(SalesActivityDayTable280);
@@ -282,6 +285,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   Future<void> checkPreviousWorkingDay(String day, {DateTime? dt}) async {
     previousWorkingDay = DateUtil.previousDay(dt: dt ?? DateUtil.getDate(day));
+
     var isNotConfirmed =
         await checkConfiremStatus(datetime: previousWorkingDay);
     while ((previousWorkingDay!.weekday == 7 && !isNotConfirmed) ||
@@ -290,6 +294,9 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       previousWorkingDay = DateUtil.previousDay(dt: previousWorkingDay);
       isNotConfirmed = await checkConfiremStatus(datetime: previousWorkingDay);
     }
+    var ap =
+        KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
+    ap.setPrevWorkingDay(previousWorkingDay!);
   }
 
   Future<ResultModel> getOfficeAddress() async {
@@ -647,9 +654,9 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         });
       }
       isSuccessfulList.forEach((element) {
-        pr('index ${element.seqNo}');
-        pr('index ${element.isSuccessful}');
-        pr('index ${element.message}');
+        pr('seqNo ${element.seqNo}');
+        pr('isSuccessful ${element.isSuccessful}');
+        pr('message ${element.message}');
       });
       return isSuccessfulList;
     };

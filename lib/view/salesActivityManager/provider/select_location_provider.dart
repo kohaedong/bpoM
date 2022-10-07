@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-10-06 18:42:46
+ * Last Modified: 2022-10-07 01:21:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -17,16 +17,19 @@ import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_250.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
+import 'package:provider/provider.dart';
 
 // ---------------  description  --------------------
 // 1. [ActivityMenuProvider]에서  model 가져와 editDayModel에 저장한다.
@@ -260,14 +263,19 @@ class SelectLocationProvider extends ChangeNotifier {
       temp.addAll([...editDayModel!.table260!.map((e) => e.toJson())]);
       t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
     }
+    var ap =
+        KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {
         "IV_PTYPE": "U",
         "T_ZLTSP0250S": t250Base64,
         "T_ZLTSP0260S": t260Base64,
-        "IV_ADATE":
-            FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now())),
+        "IV_ADATE": FormatUtil.removeDash(DateUtil.getDateStr('',
+            dt: activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
+                    activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED
+                ? await ap.checkPreviousWorkingDay()
+                : DateTime.now())),
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
         "functionName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,

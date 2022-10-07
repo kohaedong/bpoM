@@ -374,8 +374,7 @@ class SigninProvider extends ChangeNotifier {
           // message = tr('password_wrong_for_time', args: ['$number']);
           message = tr('password_wrong');
         } else {
-          message = tr('password_wrong_five_time');
-          isShowPopup = true;
+          // message = tr('password_wrong');
         }
       }
       if (!isMessageStartWithNumber && signResult.body['data'] == null) {

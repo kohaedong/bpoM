@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-06 23:51:20
+ * Last Modified: 2022-10-07 00:56:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
 import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
@@ -38,6 +39,7 @@ import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart'
 import 'package:medsalesportal/model/rfc/add_activity_key_man_response_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_suggetion_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
+import 'package:provider/provider.dart';
 
 typedef IncrementSeqNo = String Function(String);
 typedef IsThisActivityFrom361 = bool Function(SalesActivityDayTable361);
@@ -386,14 +388,19 @@ class AddActivityPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> getDayData() async {
+    var ap =
+        KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {
         "IV_PTYPE": "R",
-        "IV_ADATE":
-            FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now())),
+        "IV_ADATE": FormatUtil.removeDash(DateUtil.getDateStr('',
+            dt: activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
+                    activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED
+                ? await ap.checkPreviousWorkingDay()
+                : DateTime.now())),
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
         "functionName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
@@ -518,6 +525,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     t250.aedat =
         FormatUtil.removeDash(DateUtil.getDateStr(now.toIso8601String()));
     t250.aezet = DateUtil.getTimeNow(isNotWithColon: true);
+    pr('${esLogin?.toJson()}');
     t250.aenam = esLogin!.ename;
     temp.addAll([t250.toJson()]);
     t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);

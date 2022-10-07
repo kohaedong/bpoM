@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-06 23:49:51
+ * Last Modified: 2022-10-07 01:27:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -70,6 +70,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
   late ScrollController _interviewTextFieldScrollController;
   late ScrollController _visitTextFieldScrollController;
   late ScrollController _leaderAdviceTextFieldScrollController;
+  late ScrollController _reviewTextFieldScrollController;
   @override
   void initState() {
     _notVisitEditingController = TextEditingController();
@@ -81,6 +82,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
     _textFieldScrollController = ScrollController();
     _interviewTextFieldScrollController = ScrollController();
     _visitTextFieldScrollController = ScrollController();
+    _reviewTextFieldScrollController = ScrollController();
     _leaderAdviceTextFieldScrollController = ScrollController();
 
     super.initState();
@@ -91,6 +93,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
     _notVisitEditingController.dispose();
     _amountEditingController.dispose();
     _reviewEditingController.dispose();
+    _reviewTextFieldScrollController.dispose();
     _interviewTextEditingController.dispose();
     _visitResultTextEditingController.dispose();
     _leaderAdviceTextEditingController.dispose();
@@ -120,12 +123,6 @@ class _AddActivityPageState extends State<AddActivityPage> {
               isSelectedStrCallBack: (costomerModel) {
                 return p.setCustomerModel(costomerModel);
               },
-              isShowDeleteForHintText: p.isDoNothing || tuple.item2
-                  ? false
-                  : tuple.item1 != null
-                      ? true
-                      : false,
-              deleteIconCallback: () => p.setCustomerModel(null),
               iconType:
                   p.isDoNothing || tuple.item2 ? null : InputIconType.SEARCH,
               iconColor: AppColors.textFieldUnfoucsColor,
@@ -363,7 +360,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
               ? _textFieldScrollController
               : type == AddActivityPageInputType.VISIT_RESULT
                   ? _visitTextFieldScrollController
-                  : _leaderAdviceTextFieldScrollController,
+                  : type == AddActivityPageInputType.REVIEW
+                      ? _reviewTextFieldScrollController
+                      : _leaderAdviceTextFieldScrollController,
       onChanged: (text) {
         switch (type) {
           case AddActivityPageInputType.INTERVIEW:
@@ -1019,6 +1018,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
     final p = context.read<AddActivityPageProvider>();
     return CheckSuperAccount.isLeaderAccount()
         ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildTitleRow(tr('leader_advice'), isNotwithStart: true),
               defaultSpacing(),
@@ -1039,11 +1039,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
     final p = context.read<AddActivityPageProvider>();
     return CheckSuperAccount.isLeaderAccount()
         ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildTitleRow(tr('review'), isNotwithStart: true),
               defaultSpacing(),
-              _buildTextField(context,
-                  type: AddActivityPageInputType.LEADER_ADVICE)
+              _buildTextField(context, type: AddActivityPageInputType.REVIEW)
             ],
           )
         : BaseInfoRowByKeyAndValue.build(
@@ -1095,7 +1095,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                           _buildVisitResult(context),
                           defaultSpacing(times: 2),
                           _buildReview(context),
-                          defaultSpacing(),
+                          defaultSpacing(times: 2),
                           _buildTeamLeaderAdvice(context),
                           defaultSpacing(times: 2),
                           _buildCurrentMonthScenario(context),

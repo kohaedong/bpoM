@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/provider/alarm_provider.dart
  * Created Date: 2022-01-03 14:00:12
- * Last Modified: 2022-09-24 16:05:01
+ * Last Modified: 2022-10-07 00:18:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -58,7 +58,7 @@ class NoticeProvider extends ChangeNotifier {
         "resultColumns": RequestType.HOME_NOTICE_DETAIL.resultColums,
         //! 하드코딩.
         // "IV_NOTICENO": noticeNumber,
-        "IV_NOTICENO": noticeNumber.length < 10 ? "NT1000000080" : noticeNumber,
+        "IV_NOTICENO": noticeNumber,
         "IS_LOGIN": "$isLogin",
         "IV_PTYPE": "R",
       }
@@ -95,12 +95,12 @@ class NoticeProvider extends ChangeNotifier {
       "methodParamMap": {
         "functionName": RequestType.HOME_NOTICE.serverMethod,
         "resultTables": RequestType.HOME_NOTICE.resultTable,
-        "resultColumns": RequestType.HOME_NOTICE.resultColums,
+        // "resultColumns": RequestType.HOME_NOTICE.resultColums,
         "IS_LOGIN": "$isLogin",
-        "IV_SANUM_NM": "",
+        "IV_SANUM_NM": CacheService.getEsLogin()!.ename,
         "partial": partial,
         "pos": pos,
-        "IV_FRMDT": DateUtil.prevMonth(), // start date
+        "IV_FRMDT": FormatUtil.removeDash(DateUtil.prevMonth()), // start date
         "IV_TODT": FormatUtil.removeDash(
             DateUtil.getDateStr(DateTime.now().toIso8601String())), // end date
         "IV_NTYPE": ""
@@ -116,6 +116,7 @@ class NoticeProvider extends ChangeNotifier {
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = HomeNoticeResponseModel.fromJson(result.body['data']);
+      pr(temp.toJson());
       if (temp.tZltsp0710 != null && temp.tZltsp0710!.length != partial) {
         hasMore = false;
         notifyListeners();
