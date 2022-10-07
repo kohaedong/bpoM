@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-10-07 01:21:20
+ * Last Modified: 2022-10-07 14:39:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -135,6 +135,7 @@ class SelectLocationProvider extends ChangeNotifier {
     var isTable260Null = editDayModel!.table260!.isEmpty;
     if (isActivityEndByZeroLatLon || isTable260Null) {
       // 거리 계산 안함.
+      pr('caonima');
       return ResultModel(true);
     }
     var startX = '';
@@ -191,7 +192,7 @@ class SelectLocationProvider extends ChangeNotifier {
     }
     if (result != null && result.statusCode == 200) {
       distanceModel = AddActivityDistanceModel.fromJson(result.body['data']);
-      pr(distanceModel?.toJson());
+      pr(distanceModel!.toJson());
       return ResultModel(true);
     }
     return ResultModel(false);
@@ -199,9 +200,12 @@ class SelectLocationProvider extends ChangeNotifier {
 
   // Future<double> _getDistanceForFinishCourse() async {}
   Future<ResultModel> startOrStopActivity(int indexx) async {
-    isLoadData = true;
-    notifyListeners();
-
+    // isLoadData = true;
+    // notifyListeners();
+    pr(activityStatus);
+    pr(activityStatus);
+    pr(activityStatus);
+    pr(activityStatus);
     if (activityStatus == ActivityStatus.STARTED ||
         activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED) {
       await getDistance();
@@ -225,14 +229,14 @@ class SelectLocationProvider extends ChangeNotifier {
     var time = DateUtil.getTimeNow();
     if (activityStatus == ActivityStatus.STARTED ||
         activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED) {
-      if (distanceModel != null && indexx != 2) {
-        t250.rtnDist = double.parse(distanceModel!.distance!);
-      }
       // 영업활동 시작 하였으면 >>>  영업활동 종료
       t250 = SalesActivityDayTable250.fromJson(
           editDayModel!.table250!.first.toJson());
       t250.umode = 'U';
       t250.fcallType = 'M';
+      t250.rtnDist =
+          indexx != 2 ? double.parse(distanceModel!.distance!.trim()) : 0;
+      pr('t250.rtnDist::: ${t250.rtnDist}');
       t250.faddcat = indexx != 2 ? locationType : 'C';
       t250.fxLatitude = double.parse(lat!.trim());
       t250.fylongitude = double.parse(lon!.trim());
@@ -258,11 +262,13 @@ class SelectLocationProvider extends ChangeNotifier {
     }
     temp.addAll([t250.toJson()]);
     t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    pr('250base64$t250Base64');
     if (editDayModel!.table260!.isNotEmpty) {
       temp.clear();
       temp.addAll([...editDayModel!.table260!.map((e) => e.toJson())]);
       t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
     }
+
     var ap =
         KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
     Map<String, dynamic> _body = {
