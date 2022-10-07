@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-07 15:37:24
+ * Last Modified: 2022-10-07 17:29:50
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -1102,7 +1102,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   titleText: AppText.text('${tr('salse_activity_manager')}',
                       style: AppTextStyle.w500_22),
                   callback: () {
-                    if (!p.isLoadData && p.isShowPopup != null) {
+                    if (!p.isLoadData) {
+                      pr('???');
                       Navigator.pop(context);
                     }
                   },
