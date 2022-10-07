@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-06 22:19:07
+ * Last Modified: 2022-10-07 15:17:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'dart:io';
 import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
+import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -530,7 +531,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         if (p.activityStatus == ActivityStatus.INIT) {
           var parentModel = popupResult.data as SalesActivityDayResponseModel;
           p.initData(parentModel, ActivityStatus.STARTED, isMounted: true);
-          pr('2');
           p.setIsNeedUpdate(true);
           AppToast().show(context, tr('activity_is_started'));
           // await _routeToAddActivityPage(context);
@@ -672,7 +672,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           final p = context.read<ActivityMenuProvider>();
           if (p.isDifreentGoinTime) {
             AppToast().show(context, tr('stats_is_changed'));
-            Navigator.pop(context, true);
+            popToFirst(context);
             return;
           }
           switch (menuType) {
@@ -1042,7 +1042,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     final p = context.read<SalseActivityManagerPageProvider>();
     if (p.isDifreentGoinTime) {
       AppToast().show(context, tr('stats_is_changed'));
-      p.getDayData(isWithLoading: true);
+      popToFirst(context);
       return;
     }
     if (p.activityStatus! == ActivityStatus.STOPED ||

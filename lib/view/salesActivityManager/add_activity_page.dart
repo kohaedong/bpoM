@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-07 01:27:09
+ * Last Modified: 2022-10-07 15:17:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -253,7 +254,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     onTap: () {
                       if (isVisit ||
                           p.isDoNothing ||
-                          p.activityStatus == ActivityStatus.STOPED) {
+                          p.activityStatus == ActivityStatus.STOPED ||
+                          p.activityStatus ==
+                              ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
+                          p.activityStatus ==
+                              ActivityStatus.PREV_WORK_DAY_STOPED) {
                         return;
                       } else {
                         if ((p.selectedKunnr == null ||
@@ -284,7 +289,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
                       decoration: BoxDecoration(
                           color: isVisit ||
                                   p.isDoNothing ||
-                                  p.activityStatus == ActivityStatus.STOPED
+                                  p.activityStatus == ActivityStatus.STOPED ||
+                                  p.activityStatus ==
+                                      ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
+                                  p.activityStatus ==
+                                      ActivityStatus.PREV_WORK_DAY_STOPED
                               ? AppColors.unReadyButton
                               : AppColors.sendButtonColor,
                           borderRadius: BorderRadius.all(
@@ -293,14 +302,26 @@ class _AddActivityPageState extends State<AddActivityPage> {
                               width: .5,
                               color: isVisit ||
                                       p.isDoNothing ||
-                                      p.activityStatus == ActivityStatus.STOPED
+                                      p.activityStatus ==
+                                          ActivityStatus.STOPED ||
+                                      p.activityStatus ==
+                                          ActivityStatus
+                                              .PREV_WORK_DAY_EN_STOPED ||
+                                      p.activityStatus ==
+                                          ActivityStatus.PREV_WORK_DAY_STOPED
                                   ? AppColors.textFieldUnfoucsColor
                                   : AppColors.primary)),
                       child: AppText.text(tr('arrival'),
                           style: AppTextStyle.h4.copyWith(
                               color: isVisit ||
                                       p.isDoNothing ||
-                                      p.activityStatus == ActivityStatus.STOPED
+                                      p.activityStatus ==
+                                          ActivityStatus.STOPED ||
+                                      p.activityStatus ==
+                                          ActivityStatus
+                                              .PREV_WORK_DAY_EN_STOPED ||
+                                      p.activityStatus ==
+                                          ActivityStatus.PREV_WORK_DAY_STOPED
                                   ? AppColors.hintText
                                   : AppColors.primary)),
                     ),
@@ -461,7 +482,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
               final p = context.read<AddActivityPageProvider>();
               if (p.isDifreentGoinTime) {
                 AppToast().show(context, tr('stats_is_changed'));
-                Navigator.pop(context, true);
+                popToFirst(context);
                 return;
               }
               if (p.activityStatus == ActivityStatus.FINISH ||
@@ -1191,7 +1212,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
       if (has280Data) {
         var amount =
             model.table280!.where((table) => table.seqno == seqNo).single;
-        _amountEditingController.text = '${amount.amount1!}';
+        _amountEditingController.text = '${amount.amount1!.toInt()}';
       }
     }
     return ChangeNotifierProvider(

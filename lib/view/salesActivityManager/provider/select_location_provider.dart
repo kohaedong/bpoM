@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-10-07 14:39:23
+ * Last Modified: 2022-10-07 15:25:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -54,6 +54,10 @@ class SelectLocationProvider extends ChangeNotifier {
   String? selectedAddress;
   String? lat;
   String? lon;
+
+  DateTime? goinToMenuTime;
+  bool get isDifreentGoinTime => goinToMenuTime!.day != DateTime.now().day;
+
   bool get isHomeAddressEmpty =>
       locationList!.where((model) => model.addcat == 'H').isEmpty;
   bool get isOfficeAddressEmpty =>
@@ -74,6 +78,7 @@ class SelectLocationProvider extends ChangeNotifier {
       SalesActivityDayResponseModel fromParentModel,
       List<SalseActivityLocationModel> fromParentLocationList,
       ActivityStatus status) {
+    goinToMenuTime = DateTime.now();
     editDayModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
     locationList = fromParentLocationList;
@@ -135,7 +140,6 @@ class SelectLocationProvider extends ChangeNotifier {
     var isTable260Null = editDayModel!.table260!.isEmpty;
     if (isActivityEndByZeroLatLon || isTable260Null) {
       // 거리 계산 안함.
-      pr('caonima');
       return ResultModel(true);
     }
     var startX = '';
@@ -198,16 +202,47 @@ class SelectLocationProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
+  Future<ResultModel> getDayData() async {
+    var ap =
+        KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
+    _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
+    var isLogin = CacheService.getIsLogin();
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
+      "methodParamMap": {
+        "IV_PTYPE": "R",
+        "IV_ADATE": FormatUtil.removeDash(DateUtil.getDateStr('',
+            dt: activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
+                    activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED
+                ? await ap.checkPreviousWorkingDay()
+                : DateTime.now())),
+        "IS_LOGIN": isLogin,
+        "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
+        "functionName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
+      }
+    };
+    final dayResult = await _api.request(body: _body);
+    if (dayResult != null && dayResult.statusCode != 200) {
+      return ResultModel(false);
+    }
+    if (dayResult != null && dayResult.statusCode == 200) {
+      pr(dayResult.body);
+      editDayModel =
+          SalesActivityDayResponseModel.fromJson(dayResult.body['data']);
+      return ResultModel(true);
+    }
+    return ResultModel(false);
+  }
+
   // Future<double> _getDistanceForFinishCourse() async {}
   Future<ResultModel> startOrStopActivity(int indexx) async {
-    // isLoadData = true;
-    // notifyListeners();
-    pr(activityStatus);
-    pr(activityStatus);
+    isLoadData = true;
+    notifyListeners();
     pr(activityStatus);
     pr(activityStatus);
     if (activityStatus == ActivityStatus.STARTED ||
         activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED) {
+      await getDayData();
       await getDistance();
     }
 
@@ -231,7 +266,7 @@ class SelectLocationProvider extends ChangeNotifier {
         activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED) {
       // 영업활동 시작 하였으면 >>>  영업활동 종료
       t250 = SalesActivityDayTable250.fromJson(
-          editDayModel!.table250!.first.toJson());
+          editDayModel!.table250!.single.toJson());
       t250.umode = 'U';
       t250.fcallType = 'M';
       t250.rtnDist =
@@ -271,6 +306,10 @@ class SelectLocationProvider extends ChangeNotifier {
 
     var ap =
         KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
+    var prevDay = await ap.checkPreviousWorkingDay();
+    pr(prevDay);
+    pr(prevDay);
+    pr(prevDay);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {
@@ -280,7 +319,7 @@ class SelectLocationProvider extends ChangeNotifier {
         "IV_ADATE": FormatUtil.removeDash(DateUtil.getDateStr('',
             dt: activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
                     activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED
-                ? await ap.checkPreviousWorkingDay()
+                ? prevDay
                 : DateTime.now())),
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,

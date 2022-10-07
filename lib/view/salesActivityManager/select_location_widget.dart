@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-10-07 14:40:38
+ * Last Modified: 2022-10-07 15:18:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/styles/app_style.dart';
+import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_text.dart';
@@ -85,6 +86,10 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
         return GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () async {
+              if (p.isDifreentGoinTime) {
+                AppToast().show(context, tr('stats_is_changed'));
+                popToFirst(context);
+              }
               if (isLeft) {
                 Navigator.pop(context, null);
               } else {
