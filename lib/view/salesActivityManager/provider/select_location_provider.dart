@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-10-07 15:25:19
+ * Last Modified: 2022-10-07 18:25:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -306,10 +306,6 @@ class SelectLocationProvider extends ChangeNotifier {
 
     var ap =
         KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
-    var prevDay = await ap.checkPreviousWorkingDay();
-    pr(prevDay);
-    pr(prevDay);
-    pr(prevDay);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {
@@ -319,7 +315,7 @@ class SelectLocationProvider extends ChangeNotifier {
         "IV_ADATE": FormatUtil.removeDash(DateUtil.getDateStr('',
             dt: activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
                     activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED
-                ? prevDay
+                ? await ap.checkPreviousWorkingDay()
                 : DateTime.now())),
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
@@ -333,6 +329,7 @@ class SelectLocationProvider extends ChangeNotifier {
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
+      pr(result.body);
       editDayModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
       isLoadData = false;

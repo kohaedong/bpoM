@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/activity_state_provder.dart
  * Created Date: 2022-10-06 01:55:53
- * Last Modified: 2022-10-07 00:57:02
+ * Last Modified: 2022-10-07 18:28:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -49,17 +49,17 @@ class ActivityStateProvider extends ChangeNotifier {
 
   Future<ResultModel> getHolidayListForMonth() async {
     final _api = ApiService();
-    var now = DateTime.now();
+    var today = DateTime.now();
     _api.init(RequestType.CHECK_HOLIDAY);
-    final result = await _api.request(body: {
-      'year': now.year,
-      'month': now.month < 10 ? '0${now.month}' : '${now.month}',
+    final holidayResult = await _api.request(body: {
+      'year': today.year,
+      'month': today.month < 10 ? '0${today.month}' : '${today.month}',
     });
-    if (result != null && result.statusCode != 200) {
+    if (holidayResult != null && holidayResult.statusCode != 200) {
       return ResultModel(false);
     }
-    if (result != null && result.statusCode == 200) {
-      holidayResponseModel = HolidayResponseModel.fromJson(result.body);
+    if (holidayResult != null && holidayResult.statusCode == 200) {
+      holidayResponseModel = HolidayResponseModel.fromJson(holidayResult.body);
       if (holidayResponseModel!.data != null &&
           holidayResponseModel!.data!.isNotEmpty) {
         holidayResponseModel!.data?.forEach((holidayModel) {

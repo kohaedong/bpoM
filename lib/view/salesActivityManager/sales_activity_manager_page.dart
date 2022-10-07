@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-07 17:29:50
+ * Last Modified: 2022-10-07 18:01:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -390,24 +390,29 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           selector: (context, provider) => provider.monthResponseModel?.tList,
           builder: (context, weeks, _) {
             return weeks != null
-                ? ListView(
-                    physics: ClampingScrollPhysics(),
-                    children: [
-                      defaultSpacing(),
-                      _buildDateSelector(context, isMonthSelector: true),
-                      defaultSpacing(),
-                      Divider(),
-                      _buildWeekTitle(),
-                      Column(
-                        children: [
-                          ...weeks
-                              .asMap()
-                              .entries
-                              .map((map) => _buildWeekRow(context, map.value))
-                              .toList()
-                        ],
-                      )
-                    ],
+                ? RefreshIndicator(
+                    onRefresh: () async {
+                      pr('refresh');
+                    },
+                    child: ListView(
+                      physics: ClampingScrollPhysics(),
+                      children: [
+                        defaultSpacing(),
+                        _buildDateSelector(context, isMonthSelector: true),
+                        defaultSpacing(),
+                        Divider(),
+                        _buildWeekTitle(),
+                        Column(
+                          children: [
+                            ...weeks
+                                .asMap()
+                                .entries
+                                .map((map) => _buildWeekRow(context, map.value))
+                                .toList()
+                          ],
+                        )
+                      ],
+                    ),
                   )
                 : Container();
           },
