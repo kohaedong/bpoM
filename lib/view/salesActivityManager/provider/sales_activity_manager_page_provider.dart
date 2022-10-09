@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-07 18:37:36
+ * Last Modified: 2022-10-09 22:35:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -608,7 +608,10 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
                   table.actcat1 != null && table.actcat1!.isNotEmpty;
               isActivityResultNotEmpty =
                   table.rslt != null && table.rslt!.isNotEmpty;
-              isSuggetionItemNotEmpty = t280List.isNotEmpty;
+              if (isAmountNotEmpty) {
+                isSuggetionItemNotEmpty =
+                    t280List.where((t) => table.seqno == t.seqno).isNotEmpty;
+              }
               if (isNeedCheckAmount) {
                 isAmountNotEmpty = t280List
                     .where(
