@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-07 00:56:00
+ * Last Modified: 2022-10-09 22:31:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -815,13 +815,23 @@ class AddActivityPageProvider extends ChangeNotifier {
       temp.addAll([...t280List.map((table) => table.toJson())]);
       t280Base64 = await EncodingUtils.base64ConvertForListMap(temp);
     }
+
+    DateTime? provDay;
+    var isProvDay = activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
+        activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED;
+    if (isProvDay) {
+      final ap =
+          KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
+      provDay = await ap.checkPreviousWorkingDay();
+    }
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,
       "methodParamMap": {
         "IV_PTYPE": "U",
-        "IV_ADATE": FormatUtil.removeDash(
-            DateUtil.getDateStr(DateTime.now().toIso8601String())),
+        "IV_ADATE": FormatUtil.removeDash(DateUtil.getDateStr(isProvDay
+            ? provDay!.toIso8601String()
+            : DateTime.now().toIso8601String())),
         "T_ZLTSP0250S": t250Base64,
         "T_ZLTSP0260S": t260Base64,
         "T_ZLTSP0280S": t280Base64,
