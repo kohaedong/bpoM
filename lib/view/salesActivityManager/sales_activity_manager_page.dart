@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-11 02:58:14
+ * Last Modified: 2022-10-11 04:18:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -384,48 +384,45 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   Widget _buildMonthView(BuildContext context) {
     final p = context.read<SalseActivityManagerPageProvider>();
     return WillPopScope(
-      onWillPop: () async => !p.isLoadData,
+      onWillPop: () async => !p.isLoadMonthData,
       child: Stack(
         alignment: Alignment.center,
         children: [
           Selector<SalseActivityManagerPageProvider,
-              List<SalesActivityWeeksModel>?>(
-            selector: (context, provider) => provider.monthResponseModel?.tList,
-            builder: (context, weeks, _) {
-              return weeks != null
-                  ? RefreshIndicator(
-                      onRefresh: () async {
-                        pr('refresh');
-                      },
-                      child: ListView(
-                        physics: ClampingScrollPhysics(),
-                        children: [
-                          defaultSpacing(),
-                          _buildDateSelector(context, isMonthSelector: true),
-                          defaultSpacing(),
-                          Divider(),
-                          _buildWeekTitle(),
-                          Column(
+              Tuple2<List<SalesActivityWeeksModel>?, bool>>(
+            selector: (context, provider) => Tuple2(
+                provider.monthResponseModel?.tList, provider.isLoadMonthData),
+            builder: (context, tuple, _) {
+              return tuple.item2
+                  ? _buildShimmerCalndar(context, true)
+                  : tuple.item1 != null
+                      ? RefreshIndicator(
+                          onRefresh: () async {
+                            pr('refresh');
+                            await p.getMonthData(isWithLoading: true);
+                          },
+                          child: ListView(
                             children: [
-                              ...weeks
-                                  .asMap()
-                                  .entries
-                                  .map((map) =>
-                                      _buildWeekRow(context, map.value))
-                                  .toList()
+                              defaultSpacing(),
+                              _buildDateSelector(context,
+                                  isMonthSelector: true),
+                              defaultSpacing(),
+                              Divider(),
+                              _buildWeekTitle(),
+                              Column(
+                                children: [
+                                  ...tuple.item1!
+                                      .asMap()
+                                      .entries
+                                      .map((map) =>
+                                          _buildWeekRow(context, map.value))
+                                      .toList()
+                                ],
+                              )
                             ],
-                          )
-                        ],
-                      ),
-                    )
-                  : Container();
-            },
-          ),
-          Selector<SalseActivityManagerPageProvider, bool>(
-            selector: (context, provider) => provider.isLoadData,
-            builder: (context, isLoadData, _) {
-              return BaseLoadingViewOnStackWidget.build(context, isLoadData,
-                  color: Colors.transparent, icon: Container());
+                          ),
+                        )
+                      : Container();
             },
           ),
           _buildPopupView(context),
@@ -833,36 +830,41 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             List<SalesActivityDayTable260>?>(
           selector: (context, provider) => provider.dayResponseModel?.table260,
           builder: (context, list260, _) {
-            return ListView(
-              physics: ClampingScrollPhysics(),
-              children: [
-                defaultSpacing(),
-                _buildDateSelector(context, isMonthSelector: false),
-                defaultSpacing(),
-                Divider(),
-                defaultSpacing(),
-                _buildTotalCount(list260?.length,
-                    isNotEmpty: list260?.isNotEmpty),
-                defaultSpacing(),
-                list260 != null
-                    ? list260.isNotEmpty
-                        ? Column(
-                            children: [
-                              ...list260
-                                  .asMap()
-                                  .entries
-                                  .map((map) => _buildDayListItem(
-                                      context, map.value, map.value.seqno!))
-                                  .toList()
-                            ],
-                          )
-                        : Container(
-                            height: AppSize.realHeight * .5,
-                            alignment: Alignment.center,
-                            child: AppText.listViewText(tr('no_data')),
-                          )
-                    : Container()
-              ],
+            return RefreshIndicator(
+              onRefresh: () async {
+                final p = context.read<SalseActivityManagerPageProvider>();
+                await p.getDayData();
+              },
+              child: ListView(
+                children: [
+                  defaultSpacing(),
+                  _buildDateSelector(context, isMonthSelector: false),
+                  defaultSpacing(),
+                  Divider(),
+                  defaultSpacing(),
+                  _buildTotalCount(list260?.length,
+                      isNotEmpty: list260?.isNotEmpty),
+                  defaultSpacing(),
+                  list260 != null
+                      ? list260.isNotEmpty
+                          ? Column(
+                              children: [
+                                ...list260
+                                    .asMap()
+                                    .entries
+                                    .map((map) => _buildDayListItem(
+                                        context, map.value, map.value.seqno!))
+                                    .toList()
+                              ],
+                            )
+                          : Container(
+                              height: AppSize.realHeight * .5,
+                              alignment: Alignment.center,
+                              child: AppText.listViewText(tr('no_data')),
+                            )
+                      : Container()
+                ],
+              ),
             );
           },
         ),
@@ -972,6 +974,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   // 버튼 없에기.
                   p.setIsShowConfirm(false);
                   _actionButton.value = Container();
+                  p.getMonthData(isWithLoading: true);
                 }
                 if (_tabController.index == 1) {
                   _actionButton.value = _pageType.value!.actionWidget;
@@ -998,20 +1001,33 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             ]));
   }
 
-  Widget _buildShimmerCalndar(BuildContext context) {
-    return Expanded(
-        child: ListView(
-      children: [
-        defaultSpacing(),
-        _buildDateSelector(context, isMonthSelector: true),
-        defaultSpacing(),
-        Divider(),
-        _buildWeekTitle(),
-        Padding(
-            padding: AppSize.defaultSidePadding,
-            child: DefaultShimmer.buildCalindaShimmer())
-      ],
-    ));
+  Widget _buildShimmerCalndar(BuildContext context, bool isFromRefresh) {
+    return isFromRefresh
+        ? ListView(
+            children: [
+              defaultSpacing(),
+              _buildDateSelector(context, isMonthSelector: true),
+              defaultSpacing(),
+              Divider(),
+              _buildWeekTitle(),
+              Padding(
+                  padding: AppSize.defaultSidePadding,
+                  child: DefaultShimmer.buildCalindaShimmer())
+            ],
+          )
+        : Expanded(
+            child: ListView(
+            children: [
+              defaultSpacing(),
+              _buildDateSelector(context, isMonthSelector: true),
+              defaultSpacing(),
+              Divider(),
+              _buildWeekTitle(),
+              Padding(
+                  padding: AppSize.defaultSidePadding,
+                  child: DefaultShimmer.buildCalindaShimmer())
+            ],
+          ));
   }
 
   Widget _buildUpdateDayDataHook(BuildContext context) {
@@ -1045,7 +1061,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       children: [
         _buildTabBar(context),
         Divider(color: AppColors.textGrey, height: 0),
-        _buildShimmerCalndar(context),
+        _buildShimmerCalndar(context, false),
       ],
     );
   }
@@ -1114,8 +1130,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                       style: AppTextStyle.w500_22),
                   callback: () {
                     final p = context.read<SalseActivityManagerPageProvider>();
-                    if (!p.isLoadData) {
-                      pr('???');
+                    if (!p.isLoadMonthData) {
                       Navigator.pop(context);
                     }
                   },

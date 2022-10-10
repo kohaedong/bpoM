@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-11 03:01:33
+ * Last Modified: 2022-10-11 03:51:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -44,7 +44,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   HolidayResponseModel? holidayResponseModel;
   List<List<DateTime?>> weekListForMonth = [];
 
-  bool isLoadData = false;
+  bool isLoadMonthData = false;
   bool isLoadDayData = false;
   bool isLoadUpdateData = false;
   bool isLoadConfirmData = false;
@@ -388,7 +388,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   Future<ResultModel> getMonthData(
       {bool? isWithLoading, bool? isPrevMonth}) async {
-    isLoadData = true;
+    isLoadMonthData = true;
     if (isWithLoading != null && isWithLoading) {
       notifyListeners();
     }
@@ -419,7 +419,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     };
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {
-      isLoadData = false;
+      isLoadMonthData = false;
       if (isWithLoading != null && isWithLoading) {
         notifyListeners();
       }
@@ -427,7 +427,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     }
     if (result != null && result.statusCode == 200) {
       if (isPrevMonth != null) {
-        isLoadData = false;
+        isLoadMonthData = false;
         notifyListeners();
         var temp =
             SalesActivityMonthResponseModel.fromJson(result.body['data']);
@@ -447,7 +447,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       monthResponseModel =
           SalesActivityMonthResponseModel.fromJson(result.body['data']);
       if (monthResponseModel!.esReturn!.mtype != 'S') {
-        isLoadData = false;
+        isLoadMonthData = false;
         notifyListeners();
         return ResultModel(false,
             errorMassage: monthResponseModel!.esReturn!.message);
@@ -470,13 +470,13 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
         await getHolidayListForMonth(selectedMonth ?? DateTime.now());
         await checkIsShowPopup();
-        isLoadData = false;
+        isLoadMonthData = false;
         notifyListeners();
         return ResultModel(true);
       }
     }
     if (isWithLoading != null && isWithLoading) {
-      isLoadData = false;
+      isLoadMonthData = false;
     }
     notifyListeners();
     return ResultModel(false);
