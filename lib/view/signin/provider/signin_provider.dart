@@ -33,6 +33,7 @@ class SigninProvider extends ChangeNotifier {
   User? user;
   bool? isFindKolonApps;
   bool isLoadData = false;
+  double keybordHeight = 0;
   UserSettings? userSettings;
   SapLoginInfoResponseModel? sapLoginInfoResponseModel;
   var _api = ApiService();
@@ -54,6 +55,10 @@ class SigninProvider extends ChangeNotifier {
       isCheckedAutoSigninBox = false;
     }
     notifyListeners();
+  }
+
+  void setKeyBordHeight(double val) {
+    keybordHeight = val;
   }
 
   Future<Map<String, dynamic>?> setDefaultData({String? id, String? pw}) async {

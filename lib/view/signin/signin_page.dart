@@ -267,8 +267,9 @@ class _SigninPageState extends State<SigninPage> {
 
   Widget _buildLogo() {
     return Padding(
-        padding: AppSize.signinLogoPadding,
-        child: Center(child: AppImage.getImage(ImageType.SPLASH_ICON)));
+      padding: AppSize.signinLogoPadding,
+      child: Center(child: AppImage.getImage(ImageType.SPLASH_ICON)),
+    );
   }
 
   _buildLoadingWidget(BuildContext context) {
@@ -301,6 +302,7 @@ class _SigninPageState extends State<SigninPage> {
             isShowPopup = arguments['isShowPopup'] ?? false;
           }
           return GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () {
               idFocus!.unfocus();
               pwFocus!.unfocus();
@@ -321,8 +323,7 @@ class _SigninPageState extends State<SigninPage> {
                     }
                     return Stack(
                       children: [
-                        ListView(
-                          controller: _scrollController,
+                        Column(
                           children: [
                             _buildLogo(),
                             _buildTextFormForId(context),
@@ -332,6 +333,7 @@ class _SigninPageState extends State<SigninPage> {
                             _buildCheckBoxRow(context),
                             defaultSpacing(times: 4),
                             _buildSubmmitButton(context),
+                            Spacer()
                           ],
                         ),
                         _buildLoadingWidget(context)

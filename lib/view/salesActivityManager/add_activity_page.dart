@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-11 07:20:22
+ * Last Modified: 2022-10-11 07:36:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -463,14 +463,20 @@ class _AddActivityPageState extends State<AddActivityPage> {
     return Positioned(
         bottom: 0,
         left: 0,
-        child: Selector<AddActivityPageProvider, Tuple2<bool, bool>>(
-          selector: (context, provider) => Tuple2(
-              provider.selectedKunnr != null, provider.selectedKeyMan != null),
+        child: Selector<AddActivityPageProvider, Tuple3<bool, bool, bool>>(
+          selector: (context, provider) => Tuple3(
+              provider.selectedKunnr != null,
+              provider.selectedKeyMan != null,
+              provider.currenSeqNo == null),
           builder: (context, tuple, _) {
             var canShow = !p.isDoNothing && tuple.item1 && tuple.item2;
             return AppStyles.buildButton(
                 context,
-                isNewActivity ? tr('submmit') : tr('order_save'),
+                isNewActivity
+                    ? tuple.item3
+                        ? tr('submmit')
+                        : tr('order_save')
+                    : tr('order_save'),
                 AppSize.realWidth,
                 canShow ? AppColors.primary : AppColors.unReadyButton,
                 AppTextStyle.menu_18(
