@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-10-11 00:49:33
+ * Last Modified: 2022-10-11 02:02:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -268,8 +268,11 @@ class SelectLocationProvider extends ChangeNotifier {
           editDayModel!.table250!.single.toJson());
       t250.umode = 'U';
       t250.fcallType = 'M';
-      t250.rtnDist =
-          indexx != 2 ? double.parse(distanceModel!.distance!.trim()) : 0;
+      t250.rtnDist = indexx != 2
+          ? distanceModel != null
+              ? double.parse(distanceModel!.distance!.trim())
+              : 0
+          : 0;
       pr('t250.rtnDist::: ${t250.rtnDist}');
       t250.faddcat = indexx != 2 ? locationType : 'C';
       t250.fxLatitude = double.parse(lat!.trim());

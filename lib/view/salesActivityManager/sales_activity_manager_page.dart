@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-10 22:14:24
+ * Last Modified: 2022-10-11 02:58:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'dart:io';
 import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,6 @@ import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart'
 import 'package:medsalesportal/view/salesActivityManager/add_activity_page.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
 import 'package:medsalesportal/view/salesActivityManager/select_location_widget.dart';
-import 'package:medsalesportal/view/salesActivitySearch/salse_activity_detail_page.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/activity_menu_provider.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/sales_activity_manager_page_provider.dart';
 
@@ -382,50 +382,55 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   }
 
   Widget _buildMonthView(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Selector<SalseActivityManagerPageProvider,
-            List<SalesActivityWeeksModel>?>(
-          selector: (context, provider) => provider.monthResponseModel?.tList,
-          builder: (context, weeks, _) {
-            return weeks != null
-                ? RefreshIndicator(
-                    onRefresh: () async {
-                      pr('refresh');
-                    },
-                    child: ListView(
-                      physics: ClampingScrollPhysics(),
-                      children: [
-                        defaultSpacing(),
-                        _buildDateSelector(context, isMonthSelector: true),
-                        defaultSpacing(),
-                        Divider(),
-                        _buildWeekTitle(),
-                        Column(
-                          children: [
-                            ...weeks
-                                .asMap()
-                                .entries
-                                .map((map) => _buildWeekRow(context, map.value))
-                                .toList()
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                : Container();
-          },
-        ),
-        Selector<SalseActivityManagerPageProvider, bool>(
-          selector: (context, provider) => provider.isLoadData,
-          builder: (context, isLoadData, _) {
-            return BaseLoadingViewOnStackWidget.build(context, isLoadData,
-                color: Colors.transparent, icon: Container());
-          },
-        ),
-        _buildPopupView(context),
-      ],
+    final p = context.read<SalseActivityManagerPageProvider>();
+    return WillPopScope(
+      onWillPop: () async => !p.isLoadData,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Selector<SalseActivityManagerPageProvider,
+              List<SalesActivityWeeksModel>?>(
+            selector: (context, provider) => provider.monthResponseModel?.tList,
+            builder: (context, weeks, _) {
+              return weeks != null
+                  ? RefreshIndicator(
+                      onRefresh: () async {
+                        pr('refresh');
+                      },
+                      child: ListView(
+                        physics: ClampingScrollPhysics(),
+                        children: [
+                          defaultSpacing(),
+                          _buildDateSelector(context, isMonthSelector: true),
+                          defaultSpacing(),
+                          Divider(),
+                          _buildWeekTitle(),
+                          Column(
+                            children: [
+                              ...weeks
+                                  .asMap()
+                                  .entries
+                                  .map((map) =>
+                                      _buildWeekRow(context, map.value))
+                                  .toList()
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  : Container();
+            },
+          ),
+          Selector<SalseActivityManagerPageProvider, bool>(
+            selector: (context, provider) => provider.isLoadData,
+            builder: (context, isLoadData, _) {
+              return BaseLoadingViewOnStackWidget.build(context, isLoadData,
+                  color: Colors.transparent, icon: Container());
+            },
+          ),
+          _buildPopupView(context),
+        ],
+      ),
     );
   }
 
@@ -433,8 +438,21 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       BuildContext context, SalesActivityDayTable260 model, String seqNo) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () {
-        _routeToAddActivityPage(context, seqNo: seqNo);
+      onTap: () async {
+        final p = context.read<SalseActivityManagerPageProvider>();
+        final naviResult = await Navigator.pushNamed(
+            context, AddActivityPage.routeName, arguments: {
+          'model': p.dayResponseModel,
+          'status': p.activityStatus,
+          'seqNo': seqNo
+        });
+        if (naviResult != null) {
+          naviResult as bool;
+          if (naviResult) {
+            pr('is pop? $naviResult');
+            p.getDayData(isWithLoading: true);
+          }
+        }
       },
       child: Padding(
         padding: AppSize.defaultSidePadding,
@@ -531,7 +549,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         if (p.activityStatus == ActivityStatus.STARTED ||
             p.activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED) {
           AppToast().show(context, tr('activity_is_stoped'));
-          Navigator.pop(context, true);
+          Navigator.pop(context);
         }
         if (p.activityStatus == ActivityStatus.INIT) {
           var parentModel = popupResult.data as SalesActivityDayResponseModel;
@@ -539,7 +557,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           p.setIsNeedUpdate(true);
           AppToast().show(context, tr('activity_is_started'));
           // await _routeToAddActivityPage(context);
-
+          Navigator.pop(context, true);
         }
       }
     }
@@ -547,10 +565,15 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
 
   void _showIsDeleteLastAvtivityPopup(BuildContext context) async {
     final p = context.read<ActivityMenuProvider>();
-
-    var date = DateUtil.getDateStrForKR(
-        DateUtil.getDate(p.editModel!.table250![0].adate!));
-    var person = p.editModel!.table250![0].ernam!;
+    final isProvDay =
+        p.activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
+            p.activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED;
+    var date = DateUtil.getDateStrForKR(isProvDay
+        ? DateUtil.getDate(p.editModel!.table250![0].adate!)
+        : DateTime.now());
+    var person = isProvDay
+        ? p.editModel!.table250![0].ernam!
+        : CacheService.getEsLogin()!.ename!;
     final result = await AppDialog.showPopup(
         context,
         buildDialogContents(
@@ -599,20 +622,18 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   }
 
   Future<void> _routeToAddActivityPage(BuildContext context,
-      {String? seqNo, UpdateHook? hook}) async {
+      {UpdateHook? hook}) async {
     //! context 가 다릅니다.
     //! [ActivityMenuProvider]  와  [SalseActivityManagerPageProvider] 구분 필요.
-    final p = context.read<SalseActivityManagerPageProvider>();
-
-    var t250 = p.dayResponseModel!.table250!.single;
-
+    final p = context.read<ActivityMenuProvider>();
+    var t250 = p.editModel!.table250!.single;
     if (t250.stat == 'C') {
       pr('confiremState:: finish!');
       //
-    } else if (seqNo == null) {
+    } else {
       final p = context.read<ActivityMenuProvider>();
 
-      final naviResult = await Navigator.pushNamed(
+      final naviResult = await Navigator.popAndPushNamed(
           context, AddActivityPage.routeName,
           arguments: {
             'model': p.editModel,
@@ -621,24 +642,9 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           });
       if (naviResult != null) {
         naviResult as bool;
-        pr('????');
         pr(naviResult);
         if (hook != null) {
           hook.call(naviResult);
-        }
-      }
-    } else {
-      final naviResult = await Navigator.pushNamed(
-          context, AddActivityPage.routeName, arguments: {
-        'model': p.dayResponseModel,
-        'status': p.activityStatus,
-        'seqNo': seqNo
-      });
-      if (naviResult != null) {
-        naviResult as bool;
-        if (naviResult) {
-          pr('is pop? $naviResult');
-          p.getDayData(isWithLoading: true);
         }
       }
     }
@@ -800,7 +806,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     p.locationResponseModel!,
                     (isupdate) {
                       if (isupdate) {
-                        p.getDayData(isWithLoading: true);
+                        p.getDayData(isUpdateLoading: true);
                       }
                     },
                     isNotConfirmed: isNotConfirmed,
@@ -881,7 +887,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           selector: (context, provider) => provider.isLoadDayData,
           builder: (context, isLoadDayData, _) {
             return BaseLoadingViewOnStackWidget.build(context, isLoadDayData,
-                color: Colors.transparent, icon: Container());
+                color: Colors.transparent);
           },
         ),
         Selector<SalseActivityManagerPageProvider, bool>(
@@ -889,6 +895,13 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           builder: (context, isLoadConfirmData, _) {
             return BaseLoadingViewOnStackWidget.build(
                 context, isLoadConfirmData);
+          },
+        ),
+        Selector<SalseActivityManagerPageProvider, bool>(
+          selector: (context, provider) => provider.isLoadUpdateData,
+          builder: (context, isLoadUpdateData, _) {
+            return BaseLoadingViewOnStackWidget.build(
+                context, isLoadUpdateData);
           },
         ),
       ],
@@ -1094,13 +1107,13 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     return ChangeNotifierProvider(
         create: (context) => SalseActivityManagerPageProvider(),
         builder: (context, _) {
-          final p = context.read<SalseActivityManagerPageProvider>();
           return BaseLayout(
               hasForm: true,
               appBar: MainAppBar(context,
                   titleText: AppText.text('${tr('salse_activity_manager')}',
                       style: AppTextStyle.w500_22),
                   callback: () {
+                    final p = context.read<SalseActivityManagerPageProvider>();
                     if (!p.isLoadData) {
                       pr('???');
                       Navigator.pop(context);
@@ -1113,7 +1126,9 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                       }),
                   actionCallback: () async => await doConfirmTable(context)),
               child: FutureBuilder<ResultModel>(
-                  future: p.getMonthData(),
+                  future: context
+                      .read<SalseActivityManagerPageProvider>()
+                      .getMonthData(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData &&
                         snapshot.connectionState == ConnectionState.done) {

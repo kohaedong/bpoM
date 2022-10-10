@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-11 00:37:42
+ * Last Modified: 2022-10-11 03:01:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -46,6 +46,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   bool isLoadData = false;
   bool isLoadDayData = false;
+  bool isLoadUpdateData = false;
   bool isLoadConfirmData = false;
   bool isShowAnimation = false;
   bool? isShowConfirm;
@@ -387,8 +388,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   Future<ResultModel> getMonthData(
       {bool? isWithLoading, bool? isPrevMonth}) async {
+    isLoadData = true;
     if (isWithLoading != null && isWithLoading) {
-      isLoadData = true;
       notifyListeners();
     }
     if (searchKeyResponseModel == null) {
@@ -418,8 +419,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     };
     final result = await _api.request(body: _body);
     if (result != null && result.statusCode != 200) {
+      isLoadData = false;
       if (isWithLoading != null && isWithLoading) {
-        isLoadData = false;
         notifyListeners();
       }
       return ResultModel(false);
@@ -469,9 +470,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
         await getHolidayListForMonth(selectedMonth ?? DateTime.now());
         await checkIsShowPopup();
-        if (isWithLoading != null && isWithLoading) {
-          isLoadData = false;
-        }
+        isLoadData = false;
         notifyListeners();
         return ResultModel(true);
       }
@@ -479,12 +478,12 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (isWithLoading != null && isWithLoading) {
       isLoadData = false;
     }
-    isLoadData = false;
     notifyListeners();
-    return ResultModel(true);
+    return ResultModel(false);
   }
 
-  Future<ResultModel> getDayData({bool? isWithLoading}) async {
+  Future<ResultModel> getDayData(
+      {bool? isWithLoading, bool? isUpdateLoading}) async {
     isShowConfirm = false;
     // activityStatus = ActivityStatus.NONE;
     notifyListeners();
@@ -497,6 +496,10 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     }
     if (isWithLoading != null && isWithLoading) {
       isLoadDayData = true;
+      notifyListeners();
+    }
+    if (isUpdateLoading != null && isUpdateLoading) {
+      isLoadUpdateData = true;
       notifyListeners();
     }
     await getHolidayListForMonth(selectedDay ?? DateTime.now());
@@ -522,12 +525,18 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
           notifyListeners();
         } catch (e) {}
       }
+      if (isUpdateLoading != null && isUpdateLoading) {
+        isLoadUpdateData = false;
+        try {
+          notifyListeners();
+        } catch (e) {}
+      }
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
       dayResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
-      isLoadDayData = false;
+
       // 영업활동 종료 후 다시 페이지로 돌아 왔을때 대비.
       var t250 = dayResponseModel!.table250;
       var isStoped = t250 != null &&
@@ -541,6 +550,12 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       }
       isResetDay = null;
       await checkShowConfirm();
+      if (isWithLoading != null && isWithLoading) {
+        isLoadDayData = false;
+      }
+      if (isUpdateLoading != null && isUpdateLoading) {
+        isLoadUpdateData = false;
+      }
       try {
         notifyListeners();
       } catch (e) {}
@@ -549,8 +564,11 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (isWithLoading != null && isWithLoading) {
       isLoadDayData = false;
     }
+    if (isUpdateLoading != null && isUpdateLoading) {
+      isLoadUpdateData = false;
+    }
     notifyListeners();
-    return ResultModel(true);
+    return ResultModel(false);
   }
 
   Future<ResultModel> confirmeAcitivityTable() async {
@@ -829,9 +847,12 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       }
       if (result != null && result.statusCode == 200) {
         var temp = SalesActivityDayResponseModel.fromJson(result.body['data']);
+        var isSuccess = temp.esReturn != null && temp.esReturn!.mtype == 'S';
+        if (isSuccess) {
+          getDayData(isWithLoading: true);
+        }
         isLoadConfirmData = false;
         notifyListeners();
-        getDayData(isWithLoading: true);
         return ResultModel(true);
       }
       isLoadConfirmData = false;

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-11 00:44:10
+ * Last Modified: 2022-10-11 01:21:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -78,7 +78,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   final _api = ApiService();
   bool get isModifiyByNewCase => isModified;
   String get dptnm => CacheService.getEsLogin()!.dptnm!;
-  bool get isUpdattt => isUpdate;
+  bool get isUpdatee => isUpdate;
   bool get isDoNothing =>
       activityStatus == ActivityStatus.NONE ||
       activityStatus == ActivityStatus.FINISH;
@@ -95,6 +95,14 @@ class AddActivityPageProvider extends ChangeNotifier {
     return newSeqno;
   };
   DateTime? goinToMenuTime;
+  bool get isNotToday {
+    final t260 = fromParentResponseModel!.table260!;
+    var isToday = t260.isNotEmpty
+        ? DateUtil.isToday(DateTime.now(), DateUtil.getDate(t260.first.erdat!))
+        : true;
+    return !isToday;
+  }
+
   bool get isDifreentGoinTime => goinToMenuTime!.day != DateTime.now().day;
 
   Future<ResultModel> initData(

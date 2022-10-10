@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-07 15:17:30
+ * Last Modified: 2022-10-11 02:48:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -660,7 +660,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
           value: isChecked,
           onChanged: (val) {
             final p = context.read<AddActivityPageProvider>();
-            if (p.isDoNothing) return;
+            if (p.isDoNothing || p.isNotToday) return;
             if (isWithSuggetedItem != null && isWithSuggetedItem) {
               // p.updateSuggestedList(index!);
               if (p.suggestedItemList![index!].matnr != null) {
@@ -737,7 +737,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 hintTextStyleCallBack: () => tuple.item1 != null
                     ? AppTextStyle.default_16
                     : AppTextStyle.hint_16,
-                popupSearchType: p.isDoNothing
+                popupSearchType: p.isDoNothing || p.isNotToday
                     ? PopupSearchType.DO_NOTHING
                     : tuple.item2 != null && tuple.item2!
                         ? PopupSearchType.DO_NOTHING
@@ -1228,7 +1228,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   style: AppTextStyle.w500_22),
               icon: Icon(Icons.close),
               callback: () {
-                Navigator.pop(context, p.isUpdate);
+                if (!p.isLoadData) {
+                  Navigator.pop(context, p.isUpdate);
+                }
               },
             ),
             child: FutureBuilder<ResultModel>(
@@ -1238,41 +1240,44 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData &&
                       snapshot.connectionState == ConnectionState.done) {
-                    return Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              CustomerinfoWidget.buildSubTitle(
-                                  context, '${tr('activity_report')}'),
-                              Padding(
-                                padding: AppSize.defaultSidePadding,
-                                child: Column(
-                                  children: [
-                                    defaultSpacing(times: 2),
-                                    _buildSelectCustomer(context),
-                                    _buildCustomerDiscription(context),
-                                    _buildSelectKeyMan(context),
-                                    defaultSpacing(),
-                                    _buildIsVisitRow(context),
-                                    _buildDistanceDiscription(context),
-                                    defaultSpacing(),
-                                    _buildWidthTeamLeaderAndOtherSallers(
-                                        context),
-                                    _buildReasonForNotVisit(context),
-                                    defaultSpacing(),
-                                  ],
+                    return WillPopScope(
+                      onWillPop: () async => !p.isLoadData,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                CustomerinfoWidget.buildSubTitle(
+                                    context, '${tr('activity_report')}'),
+                                Padding(
+                                  padding: AppSize.defaultSidePadding,
+                                  child: Column(
+                                    children: [
+                                      defaultSpacing(times: 2),
+                                      _buildSelectCustomer(context),
+                                      _buildCustomerDiscription(context),
+                                      _buildSelectKeyMan(context),
+                                      defaultSpacing(),
+                                      _buildIsVisitRow(context),
+                                      _buildDistanceDiscription(context),
+                                      defaultSpacing(),
+                                      _buildWidthTeamLeaderAndOtherSallers(
+                                          context),
+                                      _buildReasonForNotVisit(context),
+                                      defaultSpacing(),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              _buildWhenVisitContents(context),
-                              defaultSpacing(times: 10),
-                            ],
+                                _buildWhenVisitContents(context),
+                                defaultSpacing(times: 10),
+                              ],
+                            ),
                           ),
-                        ),
-                        _buildSubmmitButton(context),
-                        _buildLoadingWidget(context),
-                      ],
+                          _buildSubmmitButton(context),
+                          _buildLoadingWidget(context),
+                        ],
+                      ),
                     );
                   }
                   return _buildShimmer(context);

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/date_util.dart
  * Created Date: 2021-11-23 07:56:54
- * Last Modified: 2022-10-06 07:23:11
+ * Last Modified: 2022-10-11 01:16:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -63,6 +63,12 @@ class DateUtil {
     int v = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
     pr(v);
     return v ~/ (86400000 * 30);
+  }
+
+  static bool isToday(DateTime start, DateTime end) {
+    return start.year == end.year &&
+        start.month == end.month &&
+        start.day == end.day;
   }
 
   static String prevWeek() {
