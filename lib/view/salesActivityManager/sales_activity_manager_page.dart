@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-09 22:26:44
+ * Last Modified: 2022-10-10 16:47:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -631,11 +631,14 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         model = TlistModel.fromJson(t260.toJson());
         model.sanumNm = t250.sanumNm;
         model.zstatus = t260.zstatus;
-        var activityList = await HiveService.getActivityType();
-        var tempStr = activityList!
-            .where((actity) => actity.contains(t260.actcat1!))
-            .single;
-        model.actcat1Nm = tempStr.substring(0, tempStr.indexOf('-'));
+        if (model.actcat1!.isNotEmpty) {
+          var activityList = await HiveService.getActivityType();
+          var tempStr = activityList!
+              .where((actity) =>
+                  actity.contains(t260.actcat1!) && (!actity.contains('사용불가')))
+              .single;
+          model.actcat1Nm = tempStr.substring(0, tempStr.indexOf('-'));
+        }
         model.dist = t260.dist;
         await Navigator.pushNamed(context, SalseActivityDetailPage.routeName,
             arguments: model);
@@ -895,6 +898,13 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
           builder: (context, isLoadDayData, _) {
             return BaseLoadingViewOnStackWidget.build(context, isLoadDayData,
                 color: Colors.transparent, icon: Container());
+          },
+        ),
+        Selector<SalseActivityManagerPageProvider, bool>(
+          selector: (context, provider) => provider.isLoadConfirmData,
+          builder: (context, isLoadConfirmData, _) {
+            return BaseLoadingViewOnStackWidget.build(
+                context, isLoadConfirmData);
           },
         ),
       ],

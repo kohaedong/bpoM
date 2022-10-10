@@ -220,8 +220,8 @@ class _SigninPageState extends State<SigninPage> {
                           // p.setIsPwFocused(false);
                           final result = await p.signIn();
                           if (result.isSuccessful) {
-                            Navigator.pushReplacementNamed(
-                                context, HomePage.routeName);
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, HomePage.routeName, (route) => false);
                           } else {
                             if (result.isShowPopup != null &&
                                 result.isShowPopup!) {

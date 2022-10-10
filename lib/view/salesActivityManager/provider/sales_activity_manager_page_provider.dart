@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-09 22:35:29
+ * Last Modified: 2022-10-10 16:52:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -46,6 +46,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   bool isLoadData = false;
   bool isLoadDayData = false;
+  bool isLoadConfirmData = false;
   bool isShowAnimation = false;
   bool? isShowConfirm;
   bool? isResetDay;
@@ -105,7 +106,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     getMonthData(isWithLoading: true);
   }
 
-  void checkShowConfirm() async {
+  Future<void> checkShowConfirm() async {
     var t250 = dayResponseModel!.table250;
     var isStoped = t250 != null &&
         t250.isNotEmpty &&
@@ -113,6 +114,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         t250.single.faddcat!.isNotEmpty &&
         t250.single.ftime != null &&
         t250.single.ftime!.isNotEmpty;
+    var isConfirmed =
+        t250 != null && t250.isNotEmpty && t250.single.stat == 'C';
     await checkPreviousWorkingDay('', dt: DateTime.now());
     var previouWorkday = previousWorkingDay;
     var isToday = (selectedDay!.year == DateTime.now().year) &&
@@ -125,12 +128,15 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         await checkConfiremStatus(datetime: previouWorkday);
     isShowConfirm =
         (isToday || seletedDayIsWorkingDayBeforeToday) ? true : null;
+
     pr('isShowConfirm:: $isShowConfirm');
     if (seletedDayIsWorkingDayBeforeToday) {
       activityStatus = isPreviouDayNotConfirmed
-          ? isStoped
-              ? ActivityStatus.PREV_WORK_DAY_STOPED
-              : ActivityStatus.PREV_WORK_DAY_EN_STOPED
+          ? isConfirmed
+              ? ActivityStatus.FINISH
+              : isStoped
+                  ? ActivityStatus.PREV_WORK_DAY_STOPED
+                  : ActivityStatus.PREV_WORK_DAY_EN_STOPED
           : ActivityStatus.FINISH;
     } else if (isToday) {
       var table250 = dayResponseModel!.table250!;
@@ -548,8 +554,10 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         activityStatus = ActivityStatus.STOPED;
       }
       isResetDay = null;
-      checkShowConfirm();
-      notifyListeners();
+      await checkShowConfirm();
+      try {
+        notifyListeners();
+      } catch (e) {}
       return ResultModel(true);
     }
     if (isWithLoading != null && isWithLoading) {
@@ -560,7 +568,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> confirmeAcitivityTable() async {
-    isLoadDayData = true;
+    isLoadConfirmData = true;
     notifyListeners();
     var isSuccessfulList = <ConfirmModel>[];
     var validateTables = () async {
@@ -670,7 +678,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       // var message = comfirmList.first.message;
       var seqNo = failedList.first.seqNo;
       var message = failedList.first.message;
-      isLoadDayData = false;
+      isLoadConfirmData = false;
       notifyListeners();
       return ResultModel(false, data: {'seqNo': seqNo, 'message': message});
     } else {
@@ -697,6 +705,10 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         var temp250 = t250List.single;
         temp250.stat = 'C';
         temp250.umode = 'U';
+        if (activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
+            activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED) {
+          pr(temp250.toJson());
+        }
         temp.clear();
         temp.add(temp250.toJson());
         t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
@@ -825,19 +837,18 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
       final result = await _api.request(body: _body);
       if (result != null && result.statusCode != 200) {
-        isLoadData = false;
+        isLoadConfirmData = false;
         notifyListeners();
         return ResultModel(false);
       }
       if (result != null && result.statusCode == 200) {
-        dayResponseModel =
-            SalesActivityDayResponseModel.fromJson(result.body['data']);
-        isLoadDayData = false;
+        var temp = SalesActivityDayResponseModel.fromJson(result.body['data']);
+        isLoadConfirmData = false;
         notifyListeners();
-        getMonthData();
+        getDayData(isWithLoading: true);
         return ResultModel(true);
       }
-      isLoadDayData = false;
+      isLoadConfirmData = false;
       try {
         notifyListeners();
       } catch (e) {}

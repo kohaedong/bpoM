@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-09 22:31:18
+ * Last Modified: 2022-10-10 16:25:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -107,6 +107,13 @@ class AddActivityPageProvider extends ChangeNotifier {
     if (fromParentResponseModel!.table280 != null) {
       fromParentResponseModel!.table280!.forEach((element) {
         pr('280   ::: ${element.toJson()}');
+      });
+    } else {
+      pr('null');
+    }
+    if (fromParentResponseModel!.table361 != null) {
+      fromParentResponseModel!.table361!.forEach((element) {
+        pr('table361   ::: ${element.toJson()}');
       });
     } else {
       pr('null');
@@ -529,6 +536,12 @@ class AddActivityPageProvider extends ChangeNotifier {
     t250.aenam = esLogin!.ename;
     temp.addAll([t250.toJson()]);
     t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    var _isPrevDay =
+        (activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
+            activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED);
+    final _ap =
+        KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
+    var _prevDay = await _ap.checkPreviousWorkingDay();
     // 영업활동 처리. - 260
     var newT260 = () async {
       currenSeqNo != null
@@ -571,15 +584,12 @@ class AddActivityPageProvider extends ChangeNotifier {
       if ((t260.atime == null ||
               (t260.atime != null && t260.atime!.trim().isEmpty)) &&
           isVisit) {
-        var isPrevdate =
-            (activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
-                activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED);
-        var prevDay = DateUtil.getDate(t260.erdat!);
         var today = DateTime.now();
         t260.atime = DateUtil.getTimeNow2(
             isNotWithColon: true,
-            dt: isPrevdate
-                ? DateTime(prevDay.year, prevDay.month, prevDay.day, 23, 59, 00)
+            dt: _isPrevDay
+                ? DateTime(
+                    _prevDay.year, _prevDay.month, _prevDay.day, 23, 59, 00)
                 : today);
         t260.sminute = '1';
       }
@@ -657,11 +667,10 @@ class AddActivityPageProvider extends ChangeNotifier {
           t361!.seqno = t260.seqno;
           t361!.ernam = esLogin.ename;
           t361!.erwid = esLogin.logid;
-          t361!.erdat =
-              FormatUtil.removeDash(DateUtil.getDateStr(now.toIso8601String()));
           t361!.erzet = DateUtil.getTimeNow(isNotWithColon: true);
         }
-
+        t361!.erdat = FormatUtil.removeDash(DateUtil.getDateStr(
+            _isPrevDay ? _prevDay.toIso8601String() : now.toIso8601String()));
         t361!.aedat =
             FormatUtil.removeDash(DateUtil.getDateStr(now.toIso8601String()));
         t361!.aezet = DateUtil.getTimeNow(isNotWithColon: true);
@@ -775,10 +784,11 @@ class AddActivityPageProvider extends ChangeNotifier {
           t280!.erwid = esLogin.logid;
           t280!.bzactno = t260.bzactno;
           t280!.seqno = t260.seqno;
-          t280!.erdat =
-              FormatUtil.removeDash(DateUtil.getDateStr(now.toIso8601String()));
+
           t280!.erzet = DateUtil.getTimeNow(isNotWithColon: true);
         }
+        t280!.erdat = FormatUtil.removeDash(DateUtil.getDateStr(
+            _isPrevDay ? _prevDay.toIso8601String() : now.toIso8601String()));
         t280!.aedat =
             FormatUtil.removeDash(DateUtil.getDateStr(now.toIso8601String()));
         t280!.aezet = DateUtil.getTimeNow(isNotWithColon: true);
