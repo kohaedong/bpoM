@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-11 02:48:19
+ * Last Modified: 2022-10-11 07:20:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -1025,7 +1025,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildTitleRow(tr('visit_result'), isNotwithStart: true),
-            _buildLinkedText(context, '${tr('visit_result_history')} 보기',
+            _buildLinkedText(context, '${tr('look_visit_result_history')}',
                 isCurrentMonthScenario: false)
           ],
         ),
@@ -1080,7 +1080,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         _buildTitleRow(tr('curren_month_scenario'), isNotwithStart: true),
-        _buildLinkedText(context, '${tr('curren_month_scenario')} 보기',
+        _buildLinkedText(context, '${tr('look_curren_month_scenario')}',
             isCurrentMonthScenario: true)
       ],
     );

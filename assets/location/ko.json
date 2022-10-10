@@ -557,7 +557,9 @@
     "leader_advice":"당월 팀장 어드바이스",
     "leader_advice2":"당월 팀장\n어드바이스",
     "curren_month_scenario":"당월 시나리오",
+    "look_curren_month_scenario":"당월 시나리오 보기",
     "visit_result_history":"과거 방문 결과 ",
+    "look_visit_result_history":"과거 방문결과 보기",
     "month_amount_price":"월 예상 매출",
     "nothing_to_delete":"삭제 할 내역이 없습니다.",
     "order_product_info":"주문 제품 정보",
@@ -595,7 +597,8 @@
     "plz_select_material":"재료를 선택해주세요.",
     "plz_select_quantity":"수량을 입력해주세요.",
     "plz_check_price":"수량 조회를 해주세요.",
-    "review":"review"
+    "review":"review",
+    "is_give_sample":"셈플 전달"
    
    
 }

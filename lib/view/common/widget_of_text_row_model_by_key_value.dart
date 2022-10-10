@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/text_row_model_by_key_value.dart
  * Created Date: 2021-09-06 11:46:11
- * Last Modified: 2022-08-15 09:56:36
+ * Last Modified: 2022-10-11 07:17:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -31,6 +31,7 @@ class TextRowModelByKeyValue extends StatelessWidget {
       this.callback,
       this.showAllButtonText,
       this.icon,
+      this.isLeftIcon,
       this.exceptionColor,
       this.isWithShimmer,
       this.shimmerRow,
@@ -38,6 +39,7 @@ class TextRowModelByKeyValue extends StatelessWidget {
       this.isTitleTwoRow,
       this.discription2,
       this.maxLine,
+      this.showAllButtonWidth,
       this.contentsTextWidth,
       this.leadingTextWidth,
       this.style})
@@ -47,11 +49,13 @@ class TextRowModelByKeyValue extends StatelessWidget {
   final String discription;
   final String? discription2;
   final bool isWithShowAllButton;
+  final double? showAllButtonWidth;
   final bool isWithEndShowAllButton;
   final Function? callback;
   final int? maxLine;
   final String? showAllButtonText;
   final Widget? icon;
+  final bool? isLeftIcon;
   final Color? exceptionColor;
   final bool? isWithShimmer;
   final bool? isWithStar;
@@ -66,9 +70,11 @@ class TextRowModelByKeyValue extends StatelessWidget {
       padding: EdgeInsets.only(top: AppSize.textRowModelShowAllIconTopPadding),
       child: Container(
         width: isWithShowAllButton
-            ? contentsTextWidth != null
-                ? contentsTextWidth! * .25
-                : (AppSize.realWidth - AppSize.padding * 2) * .3
+            ? showAllButtonWidth != null
+                ? showAllButtonWidth
+                : contentsTextWidth != null
+                    ? contentsTextWidth! * .25
+                    : (AppSize.realWidth - AppSize.padding * 2) * .3
             : isWithStar != null
                 ? (AppSize.realWidth - AppSize.padding * 2) * .35
                 : (AppSize.realWidth - AppSize.padding * 2) * .3,
@@ -103,11 +109,15 @@ class TextRowModelByKeyValue extends StatelessWidget {
     return InkWell(
         onTap: () => callback != null ? callback!.call() : DoNothingAction(),
         child: Container(
-          width: contentsTextWidth != null
-              ? contentsTextWidth! * .25
-              : (AppSize.realWidth - AppSize.padding * 2) * .25,
+          width: isLeftIcon != null && isLeftIcon!
+              ? (AppSize.realWidth - AppSize.padding * 2) * .7
+              : contentsTextWidth != null
+                  ? contentsTextWidth! * .25
+                  : (AppSize.realWidth - AppSize.padding * 2) * .25,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: isLeftIcon != null && isLeftIcon!
+                ? MainAxisAlignment.start
+                : MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AppText.text('${showAllButtonText ?? ''}',
@@ -156,15 +166,17 @@ class TextRowModelByKeyValue extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-            width: isWithEndShowAllButton
-                ? contentsTextWidth != null
-                    ? contentsTextWidth! * .75
-                    : (AppSize.realWidth - AppSize.padding * 2) * .45
-                : contentsTextWidth != null
-                    ? contentsTextWidth
-                    : isWithStar != null
-                        ? (AppSize.realWidth - AppSize.padding * 2) * .65
-                        : (AppSize.realWidth - AppSize.padding * 2) * .7,
+            width: isLeftIcon != null && isLeftIcon!
+                ? 0
+                : isWithEndShowAllButton
+                    ? contentsTextWidth != null
+                        ? contentsTextWidth! * .75
+                        : (AppSize.realWidth - AppSize.padding * 2) * .45
+                    : contentsTextWidth != null
+                        ? contentsTextWidth
+                        : isWithStar != null
+                            ? (AppSize.realWidth - AppSize.padding * 2) * .65
+                            : (AppSize.realWidth - AppSize.padding * 2) * .7,
             child: InkWell(
                 onTap: () {
                   // 전화번호 클릭 -> 벡그라운드 진입 -> 포그라운드로 돌아올때 업데이트 체크안함.

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_info_row_by_key_and_value.dart
  * Created Date: 2021-10-03 02:10:59
- * Last Modified: 2022-08-15 09:55:37
+ * Last Modified: 2022-10-11 07:17:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -59,12 +59,14 @@ class BaseInfoRowByKeyAndValue {
       String? showAllButtonText,
       Widget? icon,
       bool? isWithEndShowAllButton,
+      bool? isLeftIcon,
       Function? callback,
       bool? isTitleTowRow,
       bool? isWithMoneyAndUnit,
       String? discription2,
       double? leadingTextWidth,
       double? contentsTextWidth,
+      double? showAllButtonWidth,
       int? maxLine,
       Color? exceptionColor,
       bool? isWithStar,
@@ -82,7 +84,9 @@ class BaseInfoRowByKeyAndValue {
                     : formatType.formate('$body')
             : '$body',
         isWithShowAllButton ?? false,
+        showAllButtonWidth: showAllButtonWidth,
         isWithEndShowAllButton ?? false,
+        isLeftIcon: isLeftIcon,
         isWithShimmer: isWithShimmer,
         shimmerRow: shimmerRow,
         style: style,

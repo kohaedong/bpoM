@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-11 04:18:52
+ * Last Modified: 2022-10-11 05:30:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,6 +15,7 @@ import 'dart:io';
 import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
+import 'package:medsalesportal/view/salesActivityManager/activity_finish_page.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,6 @@ import 'package:medsalesportal/service/hive_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
-import 'package:medsalesportal/model/rfc/t_list_model.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
@@ -437,17 +437,28 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       behavior: HitTestBehavior.opaque,
       onTap: () async {
         final p = context.read<SalseActivityManagerPageProvider>();
-        final naviResult = await Navigator.pushNamed(
-            context, AddActivityPage.routeName, arguments: {
-          'model': p.dayResponseModel,
-          'status': p.activityStatus,
-          'seqNo': seqNo
-        });
-        if (naviResult != null) {
-          naviResult as bool;
-          if (naviResult) {
-            pr('is pop? $naviResult');
-            p.getDayData(isWithLoading: true);
+        var isFinish = p.dayResponseModel!.table250!.isNotEmpty &&
+            p.dayResponseModel!.table250!.single.stat == 'C';
+        if (isFinish) {
+          await Navigator.pushNamed(context, SalseActivityFinishPage.routeName,
+              arguments: {
+                't260': model,
+                't250': p.dayResponseModel!.table250!.single,
+                'dayModel': p.dayResponseModel
+              });
+        } else {
+          final naviResult = await Navigator.pushNamed(
+              context, AddActivityPage.routeName, arguments: {
+            'model': p.dayResponseModel,
+            'status': p.activityStatus,
+            'seqNo': seqNo
+          });
+          if (naviResult != null) {
+            naviResult as bool;
+            if (naviResult) {
+              pr('is pop? $naviResult');
+              p.getDayData(isWithLoading: true);
+            }
           }
         }
       },
@@ -972,10 +983,22 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
               ..addListener(() {
                 if (_tabController.index == 0) {
                   // 버튼 없에기.
-                  p.setIsShowConfirm(false);
-                  _actionButton.value = Container();
-                  p.getMonthData(isWithLoading: true);
+                  var isLock = false;
+                  if (!isLock && !p.isLoadMonthData) {
+                    p.setIsShowConfirm(false);
+                    p.setSelectedMonth(DateTime.now());
+                    _actionButton.value = Container();
+                    p
+                        .getMonthData(isWithLoading: true)
+                        .then((value) => isLock = true);
+                    // if (!(p.selectedMonth != null &&
+                    //     p.selectedMonth!.year == DateTime.now().year &&
+                    //     p.selectedMonth!.month == DateTime.now().month)) {
+
+                    // }
+                  }
                 }
+
                 if (_tabController.index == 1) {
                   _actionButton.value = _pageType.value!.actionWidget;
                   final p = context.read<SalseActivityManagerPageProvider>();

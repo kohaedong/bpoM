@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-11 03:51:28
+ * Last Modified: 2022-10-11 05:20:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -387,7 +387,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> getMonthData(
-      {bool? isWithLoading, bool? isPrevMonth}) async {
+      {bool? isWithLoading, bool? isCurrenMonth}) async {
     isLoadMonthData = true;
     if (isWithLoading != null && isWithLoading) {
       notifyListeners();
@@ -408,8 +408,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         "IV_RESID": esLogin!.logid!.toUpperCase(),
         "IS_LOGIN": isLogin,
         "IV_VKGRP": esLogin.vkgrp,
-        "IV_SPMON": DateUtil.getMonthStr(isPrevMonth != null
-            ? DateTime(DateTime.now().year, DateTime.now().month)
+        "IV_SPMON": DateUtil.getMonthStr(isCurrenMonth != null && isCurrenMonth
+            ? DateTime.now()
             : selectedMonth != null
                 ? selectedMonth!
                 : DateTime.now()),
@@ -426,24 +426,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       return ResultModel(false);
     }
     if (result != null && result.statusCode == 200) {
-      if (isPrevMonth != null) {
-        isLoadMonthData = false;
-        notifyListeners();
-        var temp =
-            SalesActivityMonthResponseModel.fromJson(result.body['data']);
-        var dateList = <List<DateTime?>>[];
-        temp.tList!.forEach((e) {
-          var week0 = e.day0 != null ? DateUtil.getDate(e.day0!) : null;
-          var week1 = e.day1 != null ? DateUtil.getDate(e.day1!) : null;
-          var week2 = e.day2 != null ? DateUtil.getDate(e.day2!) : null;
-          var week3 = e.day3 != null ? DateUtil.getDate(e.day3!) : null;
-          var week4 = e.day4 != null ? DateUtil.getDate(e.day4!) : null;
-          var week5 = e.day5 != null ? DateUtil.getDate(e.day5!) : null;
-          var week6 = e.day6 != null ? DateUtil.getDate(e.day6!) : null;
-          dateList.add([week0, week1, week2, week3, week4, week5, week6]);
-        });
-        return ResultModel(true, data: dateList);
-      }
       monthResponseModel =
           SalesActivityMonthResponseModel.fromJson(result.body['data']);
       if (monthResponseModel!.esReturn!.mtype != 'S') {
