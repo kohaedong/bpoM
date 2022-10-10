@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-10-09 22:28:53
+ * Last Modified: 2022-10-11 00:43:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -97,7 +97,7 @@ class ActivityMenuProvider extends ChangeNotifier {
         "IV_ADATE": FormatUtil.removeDash(DateUtil.getDateStr('',
             dt: activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
                     activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED
-                ? await ap.checkPreviousWorkingDay()
+                ? await ap.previousWorkingDay!
                 : DateTime.now())),
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,

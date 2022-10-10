@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-10 16:25:43
+ * Last Modified: 2022-10-11 00:44:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -406,7 +406,7 @@ class AddActivityPageProvider extends ChangeNotifier {
         "IV_ADATE": FormatUtil.removeDash(DateUtil.getDateStr('',
             dt: activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
                     activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED
-                ? await ap.checkPreviousWorkingDay()
+                ? await ap.previousWorkingDay!
                 : DateTime.now())),
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
@@ -541,7 +541,7 @@ class AddActivityPageProvider extends ChangeNotifier {
             activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED);
     final _ap =
         KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
-    var _prevDay = await _ap.checkPreviousWorkingDay();
+    var _prevDay = await _ap.previousWorkingDay!;
     // 영업활동 처리. - 260
     var newT260 = () async {
       currenSeqNo != null
@@ -832,7 +832,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     if (isProvDay) {
       final ap =
           KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
-      provDay = await ap.checkPreviousWorkingDay();
+      provDay = await ap.previousWorkingDay;
     }
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     Map<String, dynamic> _body = {

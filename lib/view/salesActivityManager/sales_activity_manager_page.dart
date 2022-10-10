@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-10 16:47:18
+ * Last Modified: 2022-10-10 22:14:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -602,7 +602,14 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       {String? seqNo, UpdateHook? hook}) async {
     //! context 가 다릅니다.
     //! [ActivityMenuProvider]  와  [SalseActivityManagerPageProvider] 구분 필요.
-    if (seqNo == null) {
+    final p = context.read<SalseActivityManagerPageProvider>();
+
+    var t250 = p.dayResponseModel!.table250!.single;
+
+    if (t250.stat == 'C') {
+      pr('confiremState:: finish!');
+      //
+    } else if (seqNo == null) {
       final p = context.read<ActivityMenuProvider>();
 
       final naviResult = await Navigator.pushNamed(
@@ -621,40 +628,17 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         }
       }
     } else {
-      final p = context.read<SalseActivityManagerPageProvider>();
-      var t250 = p.dayResponseModel!.table250!.single;
-      var t260 = p.dayResponseModel!.table260!
-          .where((table) => table.seqno == seqNo)
-          .single;
-      if (t250.stat == 'C') {
-        var model = TlistModel.fromJson(t250.toJson());
-        model = TlistModel.fromJson(t260.toJson());
-        model.sanumNm = t250.sanumNm;
-        model.zstatus = t260.zstatus;
-        if (model.actcat1!.isNotEmpty) {
-          var activityList = await HiveService.getActivityType();
-          var tempStr = activityList!
-              .where((actity) =>
-                  actity.contains(t260.actcat1!) && (!actity.contains('사용불가')))
-              .single;
-          model.actcat1Nm = tempStr.substring(0, tempStr.indexOf('-'));
-        }
-        model.dist = t260.dist;
-        await Navigator.pushNamed(context, SalseActivityDetailPage.routeName,
-            arguments: model);
-      } else {
-        final naviResult = await Navigator.pushNamed(
-            context, AddActivityPage.routeName, arguments: {
-          'model': p.dayResponseModel,
-          'status': p.activityStatus,
-          'seqNo': seqNo
-        });
-        if (naviResult != null) {
-          naviResult as bool;
-          if (naviResult) {
-            pr('is pop? $naviResult');
-            p.getDayData(isWithLoading: true);
-          }
+      final naviResult = await Navigator.pushNamed(
+          context, AddActivityPage.routeName, arguments: {
+        'model': p.dayResponseModel,
+        'status': p.activityStatus,
+        'seqNo': seqNo
+      });
+      if (naviResult != null) {
+        naviResult as bool;
+        if (naviResult) {
+          pr('is pop? $naviResult');
+          p.getDayData(isWithLoading: true);
         }
       }
     }

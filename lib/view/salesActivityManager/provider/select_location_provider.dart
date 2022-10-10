@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-10-07 18:25:48
+ * Last Modified: 2022-10-11 00:49:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -214,7 +214,7 @@ class SelectLocationProvider extends ChangeNotifier {
         "IV_ADATE": FormatUtil.removeDash(DateUtil.getDateStr('',
             dt: activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
                     activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED
-                ? await ap.checkPreviousWorkingDay()
+                ? await ap.previousWorkingDay
                 : DateTime.now())),
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,
@@ -245,7 +245,6 @@ class SelectLocationProvider extends ChangeNotifier {
       await getDayData();
       await getDistance();
     }
-
     if (selectedAddress != null) {
       await getAddressLatLon(selectedAddress!);
     } else {
@@ -315,7 +314,7 @@ class SelectLocationProvider extends ChangeNotifier {
         "IV_ADATE": FormatUtil.removeDash(DateUtil.getDateStr('',
             dt: activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
                     activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED
-                ? await ap.checkPreviousWorkingDay()
+                ? await ap.previousWorkingDay
                 : DateTime.now())),
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SALESE_ACTIVITY_DAY_DATA.resultTable,

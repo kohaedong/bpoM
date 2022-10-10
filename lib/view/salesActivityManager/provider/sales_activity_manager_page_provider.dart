@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-10 16:52:45
+ * Last Modified: 2022-10-11 00:37:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -58,7 +58,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   DateTime? selectedMonth;
   DateTime? selectedDay;
   DateTime? previousWorkingDay;
-  DateTime? currentMonthFirstWorkingDay;
   DateTime? checkPreviousWorkingDaysNextWorkingDay;
   List<DateTime> holidayList = [];
 
@@ -128,7 +127,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         await checkConfiremStatus(datetime: previouWorkday);
     isShowConfirm =
         (isToday || seletedDayIsWorkingDayBeforeToday) ? true : null;
-
     pr('isShowConfirm:: $isShowConfirm');
     if (seletedDayIsWorkingDayBeforeToday) {
       activityStatus = isPreviouDayNotConfirmed
@@ -294,9 +292,11 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
     var isNotConfirmed =
         await checkConfiremStatus(datetime: previousWorkingDay);
-    while ((previousWorkingDay!.weekday == 7 && !isNotConfirmed) ||
-        (previousWorkingDay!.weekday == 6 && !isNotConfirmed) ||
-        holidayList.contains(previousWorkingDay)) {
+
+    while ((previousWorkingDay!.weekday == 7 ||
+            previousWorkingDay!.weekday == 6 ||
+            holidayList.contains(previousWorkingDay)) &&
+        !isNotConfirmed) {
       previousWorkingDay = DateUtil.previousDay(dt: previousWorkingDay);
       isNotConfirmed = await checkConfiremStatus(datetime: previousWorkingDay);
     }
@@ -385,18 +385,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  Future<void> saveCurrentMonthFirestWorkingDay() async {
-    var today = DateTime.now();
-    var day = 1;
-    var date = DateTime(today.year, today.month, day);
-    while (date.weekday == 6 || date.weekday == 7) {
-      day++;
-      date = DateTime(today.year, today.month, day);
-      pr(day);
-    }
-    currentMonthFirstWorkingDay = DateUtil.nextDay(dt: date);
-  }
-
   Future<ResultModel> getMonthData(
       {bool? isWithLoading, bool? isPrevMonth}) async {
     if (isWithLoading != null && isWithLoading) {
@@ -480,7 +468,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         }
 
         await getHolidayListForMonth(selectedMonth ?? DateTime.now());
-        await saveCurrentMonthFirestWorkingDay();
         await checkIsShowPopup();
         if (isWithLoading != null && isWithLoading) {
           isLoadData = false;
@@ -512,7 +499,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       isLoadDayData = true;
       notifyListeners();
     }
-
     await getHolidayListForMonth(selectedDay ?? DateTime.now());
     await getOfficeAddress();
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
