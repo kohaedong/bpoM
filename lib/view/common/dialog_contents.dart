@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-10-12 21:13:44
+ * Last Modified: 2022-10-12 22:18:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
+import 'package:medsalesportal/util/format_util.dart';
 
 typedef SuccessCallback = String Function();
 typedef PopContextDataCallback = Future<dynamic> Function();
@@ -104,6 +105,73 @@ Widget buildDialogContents(BuildContext context, Widget widget,
                   radius: radius,
                   callback: dataCallback,
                   canPopCallBackk: canPopCallBackk)
+        ],
+      ));
+}
+
+Widget buildTowButtonTextContents(BuildContext context, String text,
+    {String? faildButtonText, String? successButtonText}) {
+  var enterLength = FormatUtil.howManyLengthForString(text) + 1;
+  var height =
+      AppSize.buttonHeight * 2 + AppSize.padding * 2 + enterLength * 14;
+  return Container(
+      height: height,
+      width: AppSize.defaultContentsWidth,
+      child: Stack(
+        children: [
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: AppSize.defaultSidePadding,
+            width: AppSize.defaultContentsWidth,
+            height: height - AppSize.buttonHeight,
+            child: AppText.listViewText(text,
+                textAlign: TextAlign.left, maxLines: 20),
+          ),
+          Positioned(
+              left: 0,
+              bottom: 0,
+              child: Row(
+                children: [
+                  Container(
+                    width: AppSize.defaultContentsWidth / 2,
+                    height: AppSize.buttonHeight,
+                    decoration: BoxDecoration(
+                        border: Border(
+                            right: BorderSide(
+                                width: .5, color: AppColors.textGrey),
+                            top: BorderSide(
+                                width: .5, color: AppColors.textGrey))),
+                    child: TextButton(
+                        style: AppStyles.getButtonStyle(
+                            AppColors.whiteText,
+                            AppColors.defaultText,
+                            AppTextStyle.hint_16,
+                            AppSize.radius15),
+                        onPressed: () {
+                          Navigator.pop(context, false);
+                        },
+                        child: Text('${faildButtonText ?? tr('cancel')}')),
+                  ),
+                  Container(
+                    width: AppSize.defaultContentsWidth / 2,
+                    height: AppSize.buttonHeight,
+                    decoration: BoxDecoration(
+                        border: Border(
+                            top: BorderSide(
+                                width: .5, color: AppColors.textGrey))),
+                    child: TextButton(
+                        style: AppStyles.getButtonStyle(
+                            AppColors.whiteText,
+                            AppColors.primary,
+                            AppTextStyle.hint_16,
+                            AppSize.radius15),
+                        onPressed: () {
+                          Navigator.pop(context, true);
+                        },
+                        child: Text('${successButtonText ?? tr('ok')}')),
+                  )
+                ],
+              ))
         ],
       ));
 }

@@ -47,16 +47,11 @@ class SettingsPage extends StatelessWidget {
                       onPressed: () async {
                         var result = await AppDialog.showPopup(
                             context,
-                            buildTowButtonDialogContents(
-                                context,
-                                AppSize.singlePopupHeight,
-                                AppText.text(
-                                    '${KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev' ? '(개발)제약 영업포탈' : '제약 영업포탈'}${tr('is_ready_to_logout')}',
-                                    style: AppTextStyle.default_16,
-                                    textAlign: TextAlign.left),
-                                successButtonText: '${tr('ok')}',
-                                successTextColor: AppColors.primary,
-                                faildButtonText: '${tr('cancel')}'));
+                            buildTowButtonTextContents(
+                              context,
+                              '${KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev' ? '(개발)제약 영업포탈' : '제약 영업포탈'}${tr('is_ready_to_logout')}',
+                            ));
+
                         if (result != null) {
                           CacheService.deleteUserInfoWhenSignOut();
                           final p = context.read<SettingsProvider>();

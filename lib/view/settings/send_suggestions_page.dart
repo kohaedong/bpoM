@@ -151,27 +151,11 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
           onWillPop: () async {
             if (_textEditingController.text.trim().isNotEmpty) {
               var popupResult = await AppDialog.showPopup(
-                context,
-                buildDialogContents(
                   context,
-                  SizedBox(
-                    height: AppSize.singlePopupHeight - AppSize.buttonHeight,
-                    child: Center(
-                      child: AppText.listViewText(
-                          '${tr('is_exit_current_page')}',
-                          style: context
-                              .read<AppThemeProvider>()
-                              .themeData
-                              .textTheme
-                              .headline3!),
-                    ),
-                  ),
-                  false,
-                  AppSize.singlePopupHeight,
-                  leftButtonText: '${tr('cancel')}',
-                  rightButtonText: '${tr('ok')}',
-                ),
-              );
+                  buildTowButtonTextContents(
+                    context,
+                    '${tr('is_exit_current_page')}',
+                  ));
               if (popupResult != null) {
                 popupResult as bool;
                 if (popupResult) {

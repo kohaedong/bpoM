@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_bar.dart
  * Created Date: 2021-08-29 19:57:10
- * Last Modified: 2022-10-12 21:17:19
+ * Last Modified: 2022-10-12 22:02:50
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -52,29 +52,12 @@ class MainAppBar extends AppBar {
                     final result = await AppDialog.showPopup(
                         context,
                         WillPopScope(
-                            child: buildDialogContents(
+                            child: buildTowButtonTextContents(
                               context,
-                              SizedBox(
-                                height: AppSize.singlePopupHeight -
-                                    AppSize.buttonHeight,
-                                child: Center(
-                                  child: AppText.listViewText(
-                                      '${tr('is_exit_current_page')}',
-                                      style: context
-                                          .read<AppThemeProvider>()
-                                          .themeData
-                                          .textTheme
-                                          .headline3!),
-                                ),
-                              ),
-                              false,
-                              AppSize.singlePopupHeight,
-                              leftButtonText: '${tr('cancel')}',
-                              rightButtonText: '${tr('ok')}',
+                              '${tr('is_exit_current_page')}',
                             ),
                             onWillPop: () async => false));
-                    result as bool;
-                    if (result) {
+                    if (result != null && result) {
                       Navigator.pop(context, true);
                     }
                   } else {

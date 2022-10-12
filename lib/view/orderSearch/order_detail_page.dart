@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_detail_page.dart
  * Created Date: 2022-07-12 15:20:28
- * Last Modified: 2022-09-07 13:40:34
+ * Last Modified: 2022-10-12 22:32:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,8 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -162,17 +164,25 @@ class OrderDetailPage extends StatelessWidget {
               action: isShowCancel
                   ? InkWell(
                       onTap: () async {
-                        final p = context.read<OrderDetailPageProvider>();
-                        final result =
-                            await p.orderCancel(modelList.first.vbeln!);
-                        if (result.isSuccessful) {
-                          AppToast().show(context, result.message!);
-                          Navigator.pop(context, modelList);
-                        } else {
-                          AppToast().show(
-                              context,
-                              tr('faild_for_something',
-                                  args: ['${tr('order_cancel')}']));
+                        final dialogResult = await AppDialog.showPopup(
+                            context,
+                            buildTowButtonTextContents(
+                                context, tr('is_realy_cancel_order'),
+                                successButtonText: tr('order_cancel'),
+                                faildButtonText: tr('close')));
+                        if (dialogResult != null && dialogResult) {
+                          final p = context.read<OrderDetailPageProvider>();
+                          final result =
+                              await p.orderCancel(modelList.first.vbeln!);
+                          if (result.isSuccessful) {
+                            AppToast().show(context, result.message!);
+                            Navigator.pop(context, modelList);
+                          } else {
+                            AppToast().show(
+                                context,
+                                tr('faild_for_something',
+                                    args: ['${tr('order_cancel')}']));
+                          }
                         }
                       },
                       child: Container(

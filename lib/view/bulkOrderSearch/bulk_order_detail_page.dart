@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-09-05 11:13:42
+ * Last Modified: 2022-10-12 22:42:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -138,31 +138,17 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
           final p = context.read<BulkOrderDetailProvider>();
           final dialogResult = await AppDialog.showPopup(
               context,
-              buildDialogContents(
-                  context,
-                  Container(
-                      height: AppSize.singlePopupHeight - AppSize.buttonHeight,
-                      alignment: Alignment.center,
-                      child: AppText.text(tr('is_realy_cancel_order'),
-                          style: AppTextStyle.default_16)),
-                  false,
-                  AppSize.singlePopupHeight,
-                  leftButtonText: tr('cancel'),
-                  rightButtonText: tr('ok')));
-          if (dialogResult != null) {
-            dialogResult as bool;
-            if (dialogResult) {
-              await p.orderCancelOrSave(true).then((result) {
-                AppToast().show(
-                    context,
-                    result.isSuccessful
-                        ? result.message!
-                        : result.errorMassage!);
-                if (result.isSuccessful) {
-                  Navigator.pop(context, true);
-                }
-              });
-            }
+              buildTowButtonTextContents(context, tr('is_realy_cancel_order'),
+                  successButtonText: tr('order_cancel'),
+                  faildButtonText: tr('close')));
+          if (dialogResult != null && dialogResult) {
+            await p.orderCancelOrSave(true).then((result) {
+              AppToast().show(context,
+                  result.isSuccessful ? result.message! : result.errorMassage!);
+              if (result.isSuccessful) {
+                Navigator.pop(context, true);
+              }
+            });
           }
         }),
         AppStyles.buildButton(
@@ -213,7 +199,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
             alignment: Alignment.topLeft,
             child: Column(
               children: [
-                defaultSpacing(),
+                defaultSpacing(times: 2),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -226,7 +212,8 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                           style: AppTextStyle.blod_16),
                     )
                   ],
-                )
+                ),
+                defaultSpacing()
               ],
             ));
       },
@@ -242,8 +229,8 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
             key: Key('first'),
             animationSwich: tuple.item2 ? null : () => tuple.item1,
             body: _buildAnimationBody(context),
-            height: AppSize.buttonHeight * 2.5,
-            offset: Offset(0, (AppSize.buttonHeight * 2.5)),
+            height: AppSize.buttonHeight * 3,
+            offset: Offset(0, (AppSize.buttonHeight * 3)),
             offsetType: OffsetDirectionType.UP);
       },
     );

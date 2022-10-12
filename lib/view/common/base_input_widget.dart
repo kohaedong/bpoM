@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-10-06 17:24:46
+ * Last Modified: 2022-10-12 22:17:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -246,18 +246,11 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
             PopupSearchType.SEARCH_SALSE_PERSON_FOR_ACTIVITY) {
           final dialogResult = await AppDialog.showPopup(
               context,
-              buildDialogContents(
-                  context,
-                  Container(
-                    height: AppSize.singlePopupHeight - AppSize.buttonHeight,
-                    alignment: Alignment.center,
-                    child: AppText.text(tr('is_realy_with_another_saller'),
-                        style: AppTextStyle.default_16, maxLines: 4),
-                  ),
-                  false,
-                  AppSize.singlePopupHeight,
-                  leftButtonText: tr('cancel'),
-                  rightButtonText: tr('ok')));
+              buildTowButtonTextContents(
+                context,
+                tr('is_realy_with_another_saller'),
+              ));
+
           if (dialogResult != null && !dialogResult) {
             return;
           }
