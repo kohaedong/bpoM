@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:provider/provider.dart';

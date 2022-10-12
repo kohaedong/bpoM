@@ -359,6 +359,7 @@
     "essential":"필수",
     "essential_option":"필수사항",
     "plz_check_essential_option":"필수항목을 모두 입력해 주세요.",
+    "plz_check_essential_option2":"필수항목을 먼저 입력해 주세요.",
     "plz_enter_comments":"의견을 입력해 주세요.",
     "to_do_approval":"으로 승인합니다.",
     "approval_with_new_customer_number":"신규 고객코드로 생성됩니다.",

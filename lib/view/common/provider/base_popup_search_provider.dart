@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-13 06:32:40
+ * Last Modified: 2022-10-13 07:41:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -28,7 +28,6 @@ import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/util/regular.dart';
-import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';

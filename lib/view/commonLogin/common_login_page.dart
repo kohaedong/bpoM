@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
 import 'package:medsalesportal/globalProvider/connectivity_state_provider.dart';
 import 'package:medsalesportal/globalProvider/special_notice_provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';

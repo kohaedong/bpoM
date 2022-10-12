@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-10-13 00:50:24
+ * Last Modified: 2022-10-13 07:40:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,6 @@
  */
 import 'dart:math' as math;
 import 'package:medsalesportal/enums/input_icon_type.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
