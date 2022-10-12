@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-10-06 08:01:53
+ * Last Modified: 2022-10-13 06:57:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -122,7 +122,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
         dptnm: CheckSuperAccount.isMultiAccountOrLeaderAccount() ? '' : null);
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
-    selectedProductsFamily = selectedProcessingStatus = tr('all');
+    // selectedProductsFamily = selectedProcessingStatus = tr('all');
     return onSearch(false);
   }
 

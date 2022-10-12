@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-12 15:36:51
+ * Last Modified: 2022-10-13 06:54:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -114,13 +114,9 @@ class OrderManagerPageProvider extends ChangeNotifier {
     productFamilyDataList = await HiveService.getProductFamily();
     channelList = await HiveService.getChannel();
     pr(channelList);
-    if (!CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
-      var temp = channelList!.where((str) => str.contains('내수')).single;
-      selectedSalseChannel = temp.substring(0, temp.indexOf('-'));
-      channelCode = temp.substring(temp.indexOf('-') + 1);
-    } else {
-      selectedSalseChannel = tr('all');
-    }
+    var temp = channelList!.where((str) => str.contains('내수')).single;
+    selectedSalseChannel = temp.substring(0, temp.indexOf('-'));
+    channelCode = temp.substring(temp.indexOf('-') + 1);
 
     return ResultModel(true);
   }

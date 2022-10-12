@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-11 07:36:18
+ * Last Modified: 2022-10-13 07:19:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -848,8 +848,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                               context: context,
                               keybordType: TextInputType.number,
                               hintText: amount == null || amount.isEmpty
-                                  ? tr('plz_enter_search_key_for_something_1',
-                                      args: [tr('expected_amount'), ''])
+                                  ? tr('plz_select')
                                   : amount,
                               hintTextStyleCallBack: () =>
                                   amount == null || amount.isEmpty

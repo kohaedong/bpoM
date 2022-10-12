@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-13 06:01:21
+ * Last Modified: 2022-10-13 07:39:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -103,12 +103,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         oneCellType: OneCellType.SEARCH_BUSINESS_GROUP,
                         // oneCellType: OneCellType.DO_NOTHING,
                         isSelectedStrCallBack: (str) => p.setSalseGroup(str),
-                        hintText: salesGroup != null
-                            ? salesGroup
-                            : '${tr('plz_select_something_1', args: [
-                                    tr('salse_group'),
-                                    ''
-                                  ])}');
+                        hintText:
+                            salesGroup != null ? salesGroup : tr('plz_select'));
                   }),
               defaultSpacing()
             ],
@@ -177,6 +173,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               hintText:
                   tuple.item1 != null ? tuple.item1 : '${tr('plz_select')}',
               width: AppSize.defaultContentsWidth,
+              isNotInsertAll: true,
               hintTextStyleCallBack: tuple.item1 != null
                   ? () => AppTextStyle.default_16
                   : () => AppTextStyle.hint_16,
@@ -504,7 +501,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                   }
                 });
               } else {
-                AppToast().show(context, tr('plz_check_essential_option'));
+                AppToast().show(context, tr('plz_check_essential_option2'));
               }
             },
             child: AppText.text(tr('get_recent_order'),

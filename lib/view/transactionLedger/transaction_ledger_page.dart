@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-10-13 04:35:27
+ * Last Modified: 2022-10-13 07:19:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -295,11 +295,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                     iconColor: AppColors.textFieldUnfoucsColor,
                                     deleteIconCallback: () =>
                                         p.setCustomerName(null),
-                                    hintText: tuple.item1 ??
-                                        '${tr('plz_select_something_2', args: [
-                                              tr('sales_office'),
-                                              ''
-                                            ])}',
+                                    hintText: tuple.item1 ?? tr('plz_select'),
                                     // 팀장 일때 만 팀원선택후 삭제가능.
                                     isShowDeleteForHintText:
                                         tuple.item1 != null ? true : false,
@@ -368,10 +364,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                             p.setEndCustomerModel(null),
                                         hintText: tuple.item3.isEmpty ||
                                                 tuple.item2 == null
-                                            ? '${tr('plz_select_something_1', args: [
-                                                    tr('end_customer'),
-                                                    ''
-                                                  ])}'
+                                            ? tr('plz_select')
                                             : tuple.item2!.kunnrNm!,
                                         width: AppSize.defaultContentsWidth,
                                         isNotInsertAll: true,
