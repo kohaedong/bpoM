@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_bar.dart
  * Created Date: 2021-08-29 19:57:10
- * Last Modified: 2022-10-12 22:02:50
+ * Last Modified: 2022-10-13 00:49:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -27,6 +27,7 @@ class MainAppBar extends AppBar {
   final Widget? action;
   final Function? callback;
   final Widget? icon;
+  final bool? isDisableUpdate;
   final Function? actionCallback;
   final IsEditPageCallBack? cachePageTypeCallBack;
   MainAppBar(
@@ -35,6 +36,7 @@ class MainAppBar extends AppBar {
     this.action,
     this.callback,
     this.icon,
+    this.isDisableUpdate,
     this.actionCallback,
     this.cachePageTypeCallBack,
   }) : super(
@@ -57,8 +59,9 @@ class MainAppBar extends AppBar {
                               '${tr('is_exit_current_page')}',
                             ),
                             onWillPop: () async => false));
-                    if (result != null && result) {
-                      Navigator.pop(context, true);
+                    result as bool;
+                    if (result) {
+                      Navigator.pop(context, isDisableUpdate ?? true);
                     }
                   } else {
                     if (callback != null) {

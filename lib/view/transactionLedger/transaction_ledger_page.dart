@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-10-12 20:57:17
+ * Last Modified: 2022-10-13 02:40:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -452,8 +452,9 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           : '${model.fkimgC!}/${model.freeQtyC == null || model.freeQtyC!.isEmpty ? '0' : model.freeQtyC}',
                   2,
                   isBody: true,
-                  alignment: Alignment.centerRight,
-                  isTotalRow: isTotalRow),
+                  alignmentt: Alignment.centerRight,
+                  isTotalRow: isTotalRow,
+                  isWithRightPadding: true),
             ]),
           ],
         ),
@@ -471,18 +472,28 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   isTotalRow
                       ? model.spmon!.contains('총 계')
                           ? '총 합계'
-                          : model.spmon!
+                          : FormatUtil.addDashForMonth(model.spmon!
+                              .replaceAll('-', '')
+                              .replaceAll('<', '')
+                              .replaceAll('>', '')
+                              .trim())
                       : FormatUtil.addDashForDateStr2(
                           model.spmon!.replaceAll('-', '')),
                   0,
                   isBody: true,
                   isTotalRow: isTotalRow),
               _buildTableBox(model.netwrTC!, 1,
-                  isBody: true, isTotalRow: isTotalRow),
+                  // alignmentt: Alignment.centerRight,
+                  isBody: true,
+                  isTotalRow: isTotalRow),
               _buildTableBox(model.dmbtrC!, 2,
-                  isBody: true, isTotalRow: isTotalRow),
+                  // alignmentt: Alignment.centerRight,
+                  isBody: true,
+                  isTotalRow: isTotalRow),
               _buildTableBox(model.otherC!, 3,
-                  isBody: true, isTotalRow: isTotalRow),
+                  // alignmentt: Alignment.centerRight,
+                  isBody: true,
+                  isTotalRow: isTotalRow),
             ])
           ],
         ),
@@ -525,7 +536,11 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   isTotalRow
                       ? isLastRow
                           ? ''
-                          : model.spmon!
+                          : FormatUtil.addDashForMonth(model.spmon!
+                              .replaceAll('-', '')
+                              .replaceAll('<', '')
+                              .replaceAll('>', '')
+                              .trim())
                       : FormatUtil.addDashForDateStr2(
                           model.spmon!.replaceAll('-', '')),
                   1,
@@ -548,11 +563,23 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   isLandSpace: true,
                   isTotalRow: isTotalRow),
               _buildTableBox(model.netwrTC!, 4,
-                  isBody: true, isLandSpace: true, isTotalRow: isTotalRow),
+                  alignmentt: Alignment.centerRight,
+                  isBody: true,
+                  isLandSpace: true,
+                  isTotalRow: isTotalRow,
+                  isWithRightPadding: true),
               _buildTableBox(model.dmbtrC!, 5,
-                  isBody: true, isLandSpace: true, isTotalRow: isTotalRow),
+                  alignmentt: Alignment.centerRight,
+                  isBody: true,
+                  isLandSpace: true,
+                  isTotalRow: isTotalRow,
+                  isWithRightPadding: true),
               _buildTableBox(model.otherC!, 6,
-                  isBody: true, isLandSpace: true, isTotalRow: isTotalRow),
+                  alignmentt: Alignment.centerRight,
+                  isBody: true,
+                  isLandSpace: true,
+                  isTotalRow: isTotalRow,
+                  isWithRightPadding: true),
             ])
           ],
         ),
@@ -562,9 +589,11 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
 
   Widget _buildTableBox(String text, int index,
       {bool? isBody,
-      AlignmentGeometry? alignment,
+      AlignmentGeometry? alignmentt,
       bool? isTotalRow,
+      bool? isWithRightPadding,
       bool? isLandSpace}) {
+    text = text.trim();
     return Container(
         padding: EdgeInsets.only(
             left: index == 0
@@ -574,7 +603,13 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                 : isLandSpace != null && isLandSpace
                     ? AppSize.defaultListItemSpacing / 2
                     : AppSize.defaultListItemSpacing,
-            right: alignment != null ? AppSize.padding : AppSize.zero),
+            right: isWithRightPadding != null && isWithRightPadding
+                ? AppSize.defaultListItemSpacing / 2
+                : isBody != null && isBody && alignmentt != null
+                    ? 0
+                    : alignmentt != null
+                        ? AppSize.padding
+                        : AppSize.zero),
         height: isLandSpace != null && isLandSpace
             ? AppSize.defaultTextFieldHeight * .4
             : AppSize.defaultTextFieldHeight * .6,
@@ -584,13 +619,26 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                     ? AppColors.tableBorderColor.withOpacity(.2)
                     : AppColors.whiteText
                 : AppColors.tableBorderColor.withOpacity(.2)),
-        alignment: alignment != null ? alignment : Alignment.centerLeft,
-        child: AppText.text(text,
-            style: isBody != null && isBody
-                ? isTotalRow != null && isTotalRow && text.contains('계')
-                    ? AppTextStyle.blod_16
-                    : null
-                : AppTextStyle.blod_16.copyWith(fontWeight: FontWeight.w600)));
+        alignment: alignmentt != null ? alignmentt : Alignment.centerLeft,
+        child: alignmentt != null
+            ? Align(
+                alignment: alignmentt,
+                child: AppText.text(text,
+                    style: isBody != null && isBody
+                        ? isTotalRow != null && isTotalRow && text.contains('계')
+                            ? AppTextStyle.blod_16
+                            : null
+                        : AppTextStyle.blod_16
+                            .copyWith(fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.right),
+              )
+            : AppText.text(text,
+                style: isBody != null && isBody
+                    ? isTotalRow != null && isTotalRow && text.contains('계')
+                        ? AppTextStyle.blod_16
+                        : null
+                    : AppTextStyle.blod_16
+                        .copyWith(fontWeight: FontWeight.w600)));
   }
 
   Widget _buildResultTitle(BuildContext context) {
@@ -902,7 +950,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                   head.dmbtrD!.isNotEmpty &&
                                   head.dmbtr != null &&
                                   head.dmbtr!.isNotEmpty
-                              ? '${head.dmbtr}/${head.dmbtr}'
+                              ? '${head.dmbtr}/-'
                               : head.dmbtr != null && head.dmbtr!.isNotEmpty
                                   ? '${head.dmbtr}'
                                   : head.dmbtrD != null &&
@@ -1029,11 +1077,20 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
               _buildTableBox(tr('quantity_and_add'), 3,
                   isBody: false, isTotalRow: true, isLandSpace: true),
               _buildTableBox(tr('total_sales'), 4,
-                  isBody: false, isTotalRow: true, isLandSpace: true),
+                  alignmentt: Alignment.centerRight,
+                  isBody: false,
+                  isTotalRow: true,
+                  isLandSpace: true),
               _buildTableBox(tr('collection_amount'), 5,
-                  isBody: false, isTotalRow: true, isLandSpace: true),
+                  alignmentt: Alignment.centerRight,
+                  isBody: false,
+                  isTotalRow: true,
+                  isLandSpace: true),
               _buildTableBox(tr('other_amount'), 6,
-                  isBody: false, isTotalRow: true, isLandSpace: true),
+                  alignmentt: Alignment.centerRight,
+                  isBody: false,
+                  isTotalRow: true,
+                  isLandSpace: true),
             ]),
           ],
         ),

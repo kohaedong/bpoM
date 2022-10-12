@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-10-13 00:01:29
+ * Last Modified: 2022-10-13 00:50:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -62,7 +62,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
     super.dispose();
   }
 
-  Widget _buildAnimationTitleBar(BuildContext context) {
+  Widget _buildAnimationTitleBar(BuildContext context, {bool? isStatusA}) {
     return Selector<BulkOrderDetailProvider, Tuple2<bool, double>>(
       selector: (context, provider) =>
           Tuple2(provider.isShowShadow, provider.orderTotal),
@@ -75,7 +75,9 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
           },
           child: Container(
             width: AppSize.realWidth,
-            height: AppSize.buttonHeight,
+            height: isStatusA != null && isStatusA
+                ? AppSize.buttonHeight
+                : AppSize.buttonHeight * 1.3,
             decoration: BoxDecoration(
                 color: AppColors.whiteText,
                 boxShadow: tuple.item1
@@ -223,7 +225,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
     );
   }
 
-  Widget _buildBottomAnimationBox(BuildContext context) {
+  Widget _buildBottomAnimationBox(BuildContext context, {bool? isStatusA}) {
     return Selector<BulkOrderDetailProvider, Tuple2<bool, bool>>(
       selector: (context, provider) =>
           Tuple2(provider.isOpenBottomSheet, provider.isAnimationNotReady),
@@ -232,21 +234,30 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
             key: Key('first'),
             animationSwich: tuple.item2 ? null : () => tuple.item1,
             body: _buildAnimationBody(context),
-            height: AppSize.buttonHeight * 3,
-            offset: Offset(0, (AppSize.buttonHeight * 3)),
+            height: isStatusA != null && isStatusA
+                ? AppSize.buttonHeight * 3
+                : AppSize.buttonHeight * 2.3,
+            offset: Offset(
+                0,
+                (isStatusA != null && isStatusA
+                    ? AppSize.buttonHeight * 3
+                    : AppSize.buttonHeight * 2.3)),
             offsetType: OffsetDirectionType.UP);
       },
     );
   }
 
-  Widget _buildBottomAnimationStatusBar(BuildContext context) {
+  Widget _buildBottomAnimationStatusBar(BuildContext context,
+      {bool? isStatusA}) {
     return Positioned(
         bottom: 0,
         left: 0,
         child: Column(
           children: [
-            _buildAnimationTitleBar(context),
-            _buildCancelButtonAndSaveButton(context)
+            _buildAnimationTitleBar(context, isStatusA: isStatusA),
+            isStatusA != null && isStatusA
+                ? _buildCancelButtonAndSaveButton(context)
+                : Container()
           ],
         ));
   }
@@ -308,12 +319,12 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                             .map((map) => _buildItem(context, map.value,
                                 map.key, model.tHead!.single))
                             .toList(),
-                        isStatusA ? defaultSpacing(times: 3) : defaultSpacing()
+                        defaultSpacing(times: 7)
                       ],
                     )
                   : Container(),
-              isStatusA ? _buildBottomAnimationBox(context) : Container(),
-              isStatusA ? _buildBottomAnimationStatusBar(context) : Container(),
+              _buildBottomAnimationBox(context, isStatusA: isStatusA),
+              _buildBottomAnimationStatusBar(context, isStatusA: isStatusA),
               Positioned(
                   bottom: 0,
                   left: 0,
@@ -367,7 +378,6 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                           selector: (context, provider) =>
                               provider.editItemList[index].kwmeng,
                           builder: (context, quantity, _) {
-                            pr('buildaa');
                             return OrderItemInputWidget(
                               onSubmittedCallBack: (str) =>
                                   p.setQuantityAndCheckPrice(str, index),
@@ -446,6 +456,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
   Widget build(BuildContext context) {
     final model =
         ModalRoute.of(context)!.settings.arguments as BulkOrderEtTListModel;
+    var isStatusA = model.zdmstatus == 'A';
     return ChangeNotifierProvider(
         create: (context) => BulkOrderDetailProvider(),
         builder: (context, _) {
@@ -459,6 +470,9 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                   final p = context.read<BulkOrderDetailProvider>();
                   Navigator.pop(context, p.isOrderSaved ? true : null);
                 },
+                cachePageTypeCallBack: isStatusA ? () => true : null,
+                isDisableUpdate: false,
+                icon: isStatusA ? Icon(Icons.close) : null,
               ),
               child: WillPopScope(
                 onWillPop: () async {

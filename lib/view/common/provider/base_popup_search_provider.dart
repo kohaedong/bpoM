@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-12 01:21:16
+ * Last Modified: 2022-10-13 02:53:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -99,7 +99,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return null;
   }
 
-  Future<void> initData({String? productFamilyy}) async {
+  Future<void> initData() async {
     // data(String) 를 map으로 받아와 조건에 맞는 model로 초기화 해준다.
     // 제품군 / 영업사원
     if (isFirestRun && bodyMap != null) {
@@ -305,12 +305,17 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   Future<BasePoupSearchResult> searchPerson(bool isMounted,
       {bool? isFromSearchSaller}) async {
+    if (isFirestRun) {
+      isFirestRun = false;
+      return BasePoupSearchResult(true);
+    }
     if (isFromSearchSaller == null) {
       isLoadData = true;
       if (isMounted) {
         notifyListeners();
       }
     }
+
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();
     final esLogin = CacheService.getEsLogin();

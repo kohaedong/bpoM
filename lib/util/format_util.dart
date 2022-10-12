@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/util/number_format.dart
  * Created Date: 2021-09-08 09:34:02
- * Last Modified: 2022-10-01 18:19:40
+ * Last Modified: 2022-10-13 02:39:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -156,6 +156,8 @@ class FormatUtil {
   static String addDashForMonth(String str) {
     if (str.length == 8) {
       return str.substring(4).replaceRange(2, 2, '-');
+    } else if (str.length == 6) {
+      return str.replaceRange(4, 4, '-');
     } else
       return str;
   }

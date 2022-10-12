@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-10-06 05:28:00
+ * Last Modified: 2022-10-13 01:06:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,7 +22,6 @@ import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
-import 'package:medsalesportal/view/common/base_error_dialog_contents.dart';
 
 typedef DiaLogCallBack = Function(bool);
 
@@ -94,22 +93,6 @@ class AppDialog {
               ),
               actions: actionWidget);
         });
-  }
-
-  static dynamic showNetworkErrorDialog(BuildContext context) {
-    return showPopup(
-        context,
-        buildDialogContents(context, BaseNetworkErrorDialogContents.build(),
-            true, AppSize.networkErrorPopupHeight,
-            signgleButtonText: '${tr('ok')}'));
-  }
-
-  static dynamic showServerErrorDialog(BuildContext context) {
-    return showPopup(
-        context,
-        buildDialogContents(context, BaseServerErrorDialogContents.build(),
-            true, AppSize.serverErrorPopupHeight,
-            signgleButtonText: '${tr('ok')}'));
   }
 
   static dynamic showDangermessage(BuildContext context, String str) {
@@ -205,16 +188,16 @@ class AppDialog {
             Padding(
                 padding: EdgeInsets.only(top: AppSize.appBarHeight * .6),
                 child: Container(
+                  alignment: Alignment.centerLeft,
                   width: AppSize.defaultContentsWidth,
-                  child: Center(
-                    child: AppText.text('$contents',
-                        style: context
-                            .read<AppThemeProvider>()
-                            .themeData
-                            .textTheme
-                            .headline3!,
-                        maxLines: 3),
-                  ),
+                  child: AppText.text('$contents',
+                      style: context
+                          .read<AppThemeProvider>()
+                          .themeData
+                          .textTheme
+                          .headline3!,
+                      textAlign: TextAlign.start,
+                      maxLines: 3),
                 )),
             true,
             height ?? AppSize.singlePopupHeight,

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-10-12 01:19:00
+ * Last Modified: 2022-10-13 01:12:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -37,6 +37,7 @@ import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
 import 'package:medsalesportal/view/bulkOrderSearch/bulk_order_detail_page.dart';
 import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
 import 'package:medsalesportal/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart';
+import 'package:tuple/tuple.dart';
 
 class BulkOrderSearchPage extends StatefulWidget {
   const BulkOrderSearchPage({Key? key}) : super(key: key);
@@ -282,10 +283,12 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                     isNotShowStar: true);
                               },
                             ),
-                            Selector<BulkOrderSearchPageProvider, String?>(
-                              selector: (context, provider) =>
+                            Selector<BulkOrderSearchPageProvider,
+                                Tuple2<String?, String?>>(
+                              selector: (context, provider) => Tuple2(
                                   provider.customerName,
-                              builder: (context, customerName, _) {
+                                  provider.selectedProductsFamily),
+                              builder: (context, tuple, _) {
                                 return BaseColumWithTitleAndTextFiled.build(
                                     '${tr('sales_office')}',
                                     BaseInputWidget(
@@ -307,17 +310,17 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                           AppColors.textFieldUnfoucsColor,
                                       deleteIconCallback: () =>
                                           p.setCustomerName(null),
-                                      hintText: customerName ??
+                                      hintText: tuple.item1 ??
                                           '${tr('plz_select_something_2', args: [
                                                 tr('sales_office'),
                                                 ''
                                               ])}',
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       isShowDeleteForHintText:
-                                          customerName != null ? true : false,
+                                          tuple.item1 != null ? true : false,
                                       width: AppSize.defaultContentsWidth,
                                       hintTextStyleCallBack: () =>
-                                          customerName != null
+                                          tuple.item1 != null
                                               ? AppTextStyle.default_16
                                               : AppTextStyle.hint_16,
                                       popupSearchType: PopupSearchType
@@ -326,9 +329,8 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                         return p.setCustomerModel(customer);
                                       },
                                       bodyMap: {
-                                        'product_family':
-                                            p.selectedProductsFamily,
-                                        'staff': p.staffName
+                                        'product_family': tuple.item2,
+                                        'staff': p.staffName,
                                       },
                                       enable: false,
                                     ),
@@ -379,7 +381,10 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
             context, BulkOrderDetailPage.routeName,
             arguments: model);
         if (result != null) {
-          p.refresh();
+          result as bool;
+          if (result) {
+            p.refresh();
+          }
         }
       },
       child: Padding(
