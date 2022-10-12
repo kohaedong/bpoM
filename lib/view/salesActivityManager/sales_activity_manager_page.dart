@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-11 07:30:36
+ * Last Modified: 2022-10-11 15:55:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'dart:io';
 import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:medsalesportal/view/salesActivityManager/activity_finish_page.dart';
 import 'package:tuple/tuple.dart';
@@ -363,14 +364,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   tr('have_unconfirmed_activity', args: [
                     '${DateUtil.getDateStrForKR(p.previousWorkingDay!)}'
                   ]), callBack: (isPressedTrue) {
-                Navigator.pop(context);
-                // final p = context.read<SalseActivityManagerPageProvider>();
-                // p.setSelectedDate(p.previousWorkingDay!);
-                // p.setIsResetDay(false);
-                // p.getDayData(isWithLoading: true);
-                // if (_tabController.index == 0) {
-                //   _tabController.animateTo(1);
-                // }
+                Navigator.of(KeyService.activityPageKey.currentContext!).pop();
                 p.resetIsShowPopup();
               }, isSingleButton: true);
             });
@@ -1148,6 +1142,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         create: (context) => SalseActivityManagerPageProvider(),
         builder: (context, _) {
           return BaseLayout(
+              key: KeyService.activityPageKey,
               hasForm: true,
               appBar: MainAppBar(context,
                   titleText: AppText.text('${tr('salse_activity_manager')}',

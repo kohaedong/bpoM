@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/add_order_popup_provider.dart
  * Created Date: 2022-09-04 17:56:07
- * Last Modified: 2022-10-05 04:18:52
+ * Last Modified: 2022-10-12 14:05:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -59,7 +59,8 @@ class AddOrderPopupProvider extends ChangeNotifier {
           BulkOrderDetailSearchMetaPriceModel.fromJson(priceModell.toJson());
       pr('priceModel.toJson() ${priceModel!.toJson()}');
       try {
-        quantity = priceModell.kwmeng != 0.0 ? '${priceModell.kwmeng}' : null;
+        quantity =
+            priceModell.kwmeng != 0.0 ? '${priceModell.kwmeng!.toInt()}' : null;
         surcharge =
             editModell.zfreeQty != 0.0 ? '${editModell.zfreeQty}' : null;
       } catch (e) {

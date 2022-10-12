@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-06 16:16:32
+ * Last Modified: 2022-10-12 01:21:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -327,11 +327,13 @@ class BasePopupSearchProvider extends ChangeNotifier {
             : '',
         "IV_DPTNM": isNotDptnm
             ? ''
-            : CheckSuperAccount.isMultiAccountOrLeaderAccount()
-                ? dptnm != null
-                    ? dptnm
-                    : ''
-                : esLogin!.dptnm,
+            : CheckSuperAccount.isLeaderAccount()
+                ? esLogin!.dptnm
+                : CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                    ? dptnm != null
+                        ? dptnm
+                        : ''
+                    : esLogin!.dptnm,
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SEARCH_STAFF.resultTable,
         "functionName": RequestType.SEARCH_STAFF.serverMethod,
