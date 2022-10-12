@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart
  * Created Date: 2022-07-21 14:21:16
- * Last Modified: 2022-08-24 17:34:36
+ * Last Modified: 2022-10-13 00:11:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -61,9 +61,20 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setQuantityAndCheckPrice(String str, int index) {
-    editItemList[index].kwmeng = double.parse(str);
-    checkMetaPriceAndStock(index);
+  void setQuantityAndCheckPrice(String? str, int index) {
+    pr(index);
+    if (str != null && str.isNotEmpty) {
+      editItemList[index].kwmeng = double.parse(str);
+      checkMetaPriceAndStock(index);
+    } else {
+      editItemList[index].kwmeng = 0;
+      // checkMetaPriceAndStock(index);
+    }
+    notifyListeners();
+  }
+
+  void resetMessage(int index) {
+    editItemList[index].zmsg = '';
     notifyListeners();
   }
 
@@ -102,6 +113,9 @@ class BulkOrderDetailProvider extends ChangeNotifier {
 
   Future<bool> checkIsItemInStock() async {
     isShowLoading = true;
+    pr('editItemList.length:: ${editItemList.length}');
+    pr('editItemList.length:: ${editItemList.length}');
+    pr('editItemList.length:: ${editItemList.length}');
     notifyListeners();
     await Future.forEach(editItemList.asMap().entries, (map) async {
       map as MapEntry<int, BulkOrderDetailTItemModel>;
@@ -112,7 +126,6 @@ class BulkOrderDetailProvider extends ChangeNotifier {
       isShowLoading = false;
       notifyListeners();
     });
-
     return editItemList.where((item) => item.zmsg != '정상').toList().isEmpty;
   }
 
@@ -261,6 +274,7 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       bulkOrderDetailAmountResponseModel =
           BulkOrderDetailAmountResponseModel.fromJson(result.body['data']);
+      pr(bulkOrderDetailAmountResponseModel?.toJson());
       amountAvailable =
           bulkOrderDetailAmountResponseModel!.tCreditLimit!.single.amount!;
       notifyListeners();
@@ -315,7 +329,7 @@ class BulkOrderDetailProvider extends ChangeNotifier {
                 .add(BulkOrderDetailTItemModel.fromJson(item.toJson()))
             : DoNothingAction();
       });
-      getAmountAvailableForOrderEntry();
+      await getAmountAvailableForOrderEntry();
       return ResultModel(true);
     }
 

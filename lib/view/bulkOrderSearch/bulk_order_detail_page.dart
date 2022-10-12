@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-10-12 22:42:24
+ * Last Modified: 2022-10-13 00:01:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,8 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 import 'dart:math' as math;
+import 'package:medsalesportal/enums/input_icon_type.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -159,12 +161,13 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
             AppTextStyle.default_18.copyWith(color: AppColors.whiteText),
             AppSize.zero, () async {
           final p = context.read<BulkOrderDetailProvider>();
+          //! 여신잔액 확인 안하고 바로 저장!.
           var overThan = p.amountAvailable.isNotEmpty &&
               double.parse(p.amountAvailable) > p.orderTotal;
 
-          if (overThan) {
-            await p.checkIsItemInStock().then((isInStockAll) async {
-              if (isInStockAll) {
+          await p.checkIsItemInStock().then((isInStockAll) async {
+            if (isInStockAll) {
+              if (overThan) {
                 await p.orderCancelOrSave(false).then((result) {
                   AppToast().show(
                       context,
@@ -173,18 +176,18 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                           : result.errorMassage!);
                 });
               } else {
-                var message = p.editItemList
-                    .where((item) => item.zmsg != '정상')
-                    .toList()
-                    .first
-                    .zmsg;
-                AppToast().show(context, message!);
+                AppToast().show(
+                    context, tr('amount_available_for_order_entry_is_fail'));
               }
-            });
-          } else {
-            AppToast()
-                .show(context, tr('amount_available_for_order_entry_is_fail'));
-          }
+            } else {
+              var message = p.editItemList
+                  .where((item) => item.zmsg != '정상')
+                  .toList()
+                  .first
+                  .zmsg;
+              AppToast().show(context, message!);
+            }
+          });
         })
       ],
     );
@@ -309,6 +312,8 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                       ],
                     )
                   : Container(),
+              isStatusA ? _buildBottomAnimationBox(context) : Container(),
+              isStatusA ? _buildBottomAnimationStatusBar(context) : Container(),
               Positioned(
                   bottom: 0,
                   left: 0,
@@ -323,8 +328,6 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                           : Container();
                     },
                   )),
-              isStatusA ? _buildBottomAnimationBox(context) : Container(),
-              isStatusA ? _buildBottomAnimationStatusBar(context) : Container()
             ],
           );
         });
@@ -360,10 +363,22 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                               style: AppTextStyle.h6,
                               textAlign: TextAlign.left),
                         ),
-                        OrderItemInputWidget(
-                          onSubmittedCallBack: (str) =>
-                              p.setQuantityAndCheckPrice(str, index),
-                          defaultValue: model.kwmeng!.toInt().toString(),
+                        Selector<BulkOrderDetailProvider, double?>(
+                          selector: (context, provider) =>
+                              provider.editItemList[index].kwmeng,
+                          builder: (context, quantity, _) {
+                            pr('buildaa');
+                            return OrderItemInputWidget(
+                              onSubmittedCallBack: (str) =>
+                                  p.setQuantityAndCheckPrice(str, index),
+                              deleteCallback: () {
+                                p.setQuantityAndCheckPrice(null, index);
+                                p.resetMessage(index);
+                              },
+                              icon: quantity == 0 ? null : InputIconType.DELETE,
+                              defaultValue: model.kwmeng!.toInt().toString(),
+                            );
+                          },
                         )
                       ],
                     )
