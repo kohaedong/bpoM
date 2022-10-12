@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-10-06 08:19:20
+ * Last Modified: 2022-10-13 06:41:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -874,9 +874,14 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     : Container(
                         child: Center(
                           child: AppText.listViewText(
-                              provider.isShhowNotResultText == null
-                                  ? ''
-                                  : tr('no_data')),
+                              widget.type == PopupSearchType.SEARCH_SALLER
+                                  ? provider.isShhowNotResultText == null ||
+                                          !provider.isShhowNotResultText!
+                                      ? ''
+                                      : tr('no_data')
+                                  : provider.isShhowNotResultText == null
+                                      ? ''
+                                      : tr('no_data')),
                         ),
                       );
           });

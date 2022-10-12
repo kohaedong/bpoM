@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/api_service.dart
  * Created Date: 2021-08-22 21:53:15
- * Last Modified: 2022-09-30 11:32:19
+ * Last Modified: 2022-10-13 05:44:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -10,17 +10,17 @@
  * 												Discription													
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
-import 'dart:convert';
 import 'dart:io';
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:medsalesportal/model/http/request_result.dart';
-import 'package:medsalesportal/service/deviceInfo_service.dart';
+import 'package:medsalesportal/util/log_util.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/local_file_servicer.dart';
-import 'package:medsalesportal/util/encoding_util.dart';
-import 'package:medsalesportal/util/log_util.dart';
+import 'package:medsalesportal/service/deviceInfo_service.dart';
+import 'package:medsalesportal/model/http/request_result.dart';
 
 // * 서버 에러 statusCode -1 으로 리턴.
 // * 넷트워크 에러 statusCode  99 으로  리턴.
@@ -166,6 +166,7 @@ class ApiService {
       //   'requestType: $requestType',
       // );
     }
+    handler.next(error);
   }
 
   Future<File?> downloadAndroid(String url, String dirPath,

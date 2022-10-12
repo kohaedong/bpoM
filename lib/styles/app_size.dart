@@ -54,7 +54,7 @@ class AppSize {
   static double get buttomPaddingForTitleAndTextField => 18.w;
   static double get homeSubmmitButtonPadding => 50.w;
   static double get consultationContentsBoxHeight => 100.w;
-  static EdgeInsets get signinLogoPadding => EdgeInsets.fromLTRB(0, 80, 0, 45);
+  static EdgeInsets get signinLogoPadding => EdgeInsets.fromLTRB(0, 50, 0, 30);
   static double buildWidth(BuildContext context, double multiple) =>
       MediaQuery.of(context).size.width * multiple;
   static double get updatePopupWidth => 328.w;

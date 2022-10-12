@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_list.dart
  * Created Date: 2021-09-10 09:48:38
- * Last Modified: 2022-09-08 13:58:27
+ * Last Modified: 2022-10-13 04:23:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:medsalesportal/enums/input_icon_type.dart';
+import 'package:medsalesportal/view/common/base_date_picker_for_month.dart';
 import 'package:medsalesportal/view/common/provider/base_one_cell_popup_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -185,6 +186,25 @@ class BasePopupList {
       CheckBoxDefaultValue? checkBoxDefaultValue,
       CheckBoxType? checkBoxType,
       String? selectedDateStr}) async {
+    if (type == OneCellType.DATE_PICKER_FORMONTH) {
+      DateTime? selectedDate = selectedDateStr != null
+          ? DateUtil.getDate(selectedDateStr)
+          : DateTime.now();
+      var resultDate = '';
+      final result = await AppDialog.showPopup(
+          context,
+          BaseDatePickerForMonth(
+            initDate: selectedDate,
+          ));
+      if (result != null) {
+        var date = DateUtil.getDate(result);
+        resultDate =
+            '${date.year}-${date.month < 10 ? '0${date.month}' : '${date.month}'}-${date.day < 10 ? '0${date.day}' : '${date.day}'}';
+        return resultDate;
+      }
+      return null;
+    }
+
     if (type == OneCellType.DATE_PICKER) {
       // DateTime? selectedDate = DateTime.now();
       DateTime? selectedDate = selectedDateStr != null

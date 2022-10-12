@@ -287,7 +287,7 @@ class _SigninPageState extends State<SigninPage> {
   Widget build(BuildContext context) {
     return BaseLayout(
       hasForm: true,
-      isResizeToAvoidBottomInset: true,
+      isResizeToAvoidBottomInset: false,
       appBar: null,
       child: ChangeNotifierProvider(
         create: (context) => SigninProvider(),

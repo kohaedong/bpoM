@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-10-13 02:40:05
+ * Last Modified: 2022-10-13 04:35:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -130,8 +130,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                                 ? FormatUtil.removeDash(
                                                     startDate)
                                                 : null,
-                                            oneCellType:
-                                                OneCellType.DATE_PICKER,
+                                            oneCellType: OneCellType
+                                                .DATE_PICKER_FORMONTH,
                                             hintTextStyleCallBack: () =>
                                                 startDate != null
                                                     ? AppTextStyle.default_16
@@ -159,8 +159,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                             dateStr: endDate != null
                                                 ? FormatUtil.removeDash(endDate)
                                                 : null,
-                                            oneCellType:
-                                                OneCellType.DATE_PICKER,
+                                            oneCellType: OneCellType
+                                                .DATE_PICKER_FORMONTH,
                                             hintTextStyleCallBack: () =>
                                                 endDate != null
                                                     ? AppTextStyle.default_16
@@ -359,7 +359,9 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                                 return 'continue';
                                               }
                                             : null,
-                                        iconType: InputIconType.SELECT,
+                                        iconType: tuple.item3.length == 1
+                                            ? null
+                                            : InputIconType.SELECT,
                                         iconColor:
                                             AppColors.textFieldUnfoucsColor,
                                         deleteIconCallback: () =>
@@ -374,10 +376,11 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                         width: AppSize.defaultContentsWidth,
                                         isNotInsertAll: true,
                                         hintTextStyleCallBack: () =>
-                                            tuple.item1 != null
+                                            tuple.item2 != null
                                                 ? AppTextStyle.default_16
                                                 : AppTextStyle.hint_16,
-                                        oneCellType: tuple.item3.isEmpty
+                                        oneCellType: tuple.item3.isEmpty ||
+                                                tuple.item3.length == 1
                                             ? OneCellType.DO_NOTHING
                                             : OneCellType.END_CUSTOMER,
                                         commononeCellDataCallback: () =>
@@ -797,7 +800,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                 ? AppSize.realHeight * .1
                                 : AppSize.realHeight * .5,
                             alignment: Alignment.center,
-                            child: AppText.listViewText(tr('no_data')),
+                            child: AppText.listViewText(
+                                p.firstIn ? '' : tr('no_data')),
                           );
                         }),
             // Padding(padding: EdgeInsets.only(top: AppSize.buttonHeight))
@@ -1222,6 +1226,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   Widget _buildPortraitView(BuildContext context) {
     final p = context.read<TransactionLedgerPageProvider>();
     return Stack(
+      fit: StackFit.expand,
       children: [
         RefreshIndicator(
           onRefresh: () async {

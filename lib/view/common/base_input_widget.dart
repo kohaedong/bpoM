@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-10-12 22:17:30
+ * Last Modified: 2022-10-13 04:08:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -194,6 +194,7 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
         if (widget.oneCellType == OneCellType.DO_NOTHING) {
           return;
         }
+
         if (widget.oneCellType == OneCellType.CONSULTATION_REPORT_TYPE) {
           print(widget.checkBoxCallBack.runtimeType);
           final result = await BasePopupList(

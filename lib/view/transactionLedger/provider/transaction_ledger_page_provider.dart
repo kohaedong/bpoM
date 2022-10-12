@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-10-12 20:58:05
+ * Last Modified: 2022-10-13 04:30:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -34,12 +34,14 @@ import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 class TransactionLedgerPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirstRun = true;
+  bool firstIn = true;
   bool? hasResultData;
   bool isAnimationNotReady = true;
   bool isOpenBottomSheet = true;
   bool isOpenBottomSheetForLandSpace = true;
   bool isShowShadow = true;
   bool isShowAppBar = true;
+  bool hasData = false;
   String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
@@ -223,10 +225,10 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     var model = map['model'] as EtCustomerModel?;
     selectedCustomerModel = model;
     customerName = selectedCustomerModel?.kunnrNm;
+    selectedEndCustomerModel = null;
+    endCustomerList = [];
     if (selectedCustomerModel != null) {
       await searchEndCustomer();
-    } else {
-      selectedEndCustomerModel = null;
     }
 
     notifyListeners();
@@ -382,6 +384,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
       }
       isLoadData = false;
       isFirstRun = false;
+      firstIn = false;
       hasResultData = transLedgerResponseModel != null &&
           transLedgerResponseModel!.tList!.isNotEmpty;
       notifyListeners();

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-13 02:53:33
+ * Last Modified: 2022-10-13 06:32:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -28,6 +28,7 @@ import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/util/regular.dart';
+import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
@@ -305,10 +306,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   Future<BasePoupSearchResult> searchPerson(bool isMounted,
       {bool? isFromSearchSaller}) async {
-    if (isFirestRun) {
-      isFirestRun = false;
-      return BasePoupSearchResult(true);
-    }
     if (isFromSearchSaller == null) {
       isLoadData = true;
       if (isMounted) {
@@ -393,7 +390,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
       return BasePoupSearchResult(true);
     }
     isLoadData = false;
-
     notifyListeners();
     return BasePoupSearchResult(false);
   }
@@ -644,9 +640,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
     // 검색 하기 전에 popup body 에는  '조회결관가 없습니다.' 문구만 보여주기 위해.
     // 첫 진입시 data 초기화 작업만 해주고 BasePoupSearchResult(false) 로 return 한다;
     if (isFirestRun || !isMounted) {
-      await initData();
-      isFirestRun = false;
-      return BasePoupSearchResult(false);
+      await initData().whenComplete(() => isFirestRun = false);
+      return BasePoupSearchResult(true);
     }
 
     isLoadData = true;
@@ -704,6 +699,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     if (result != null && result.statusCode != 200) {
       isLoadData = false;
       staList = null;
+      isFirestRun = false;
       notifyListeners();
       return BasePoupSearchResult(false);
     }
@@ -725,14 +721,17 @@ class BasePopupSearchProvider extends ChangeNotifier {
           etCustomerResponseModel = null;
         }
         isLoadData = false;
+        isFirestRun = false;
         isShhowNotResultText = etCustomerResponseModel != null &&
             etCustomerResponseModel!.etCustomer!.isEmpty;
+        isShhowNotResultText = false;
         notifyListeners();
         return BasePoupSearchResult(true);
       }
     }
     isLoadData = false;
     isShhowNotResultText = true;
+    isFirestRun = false;
     try {
       notifyListeners();
     } catch (e) {}

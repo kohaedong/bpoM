@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:medsalesportal/enums/image_type.dart';
+import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
+import 'package:medsalesportal/globalProvider/connectivity_state_provider.dart';
 import 'package:medsalesportal/globalProvider/special_notice_provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
@@ -31,6 +33,7 @@ class _CommonLoginPageState extends State<CommonLoginPage> {
       CheckUpdateAndNoticeService.check(
           context, CheckType.UPDATE_AND_NOTICE, false);
     });
+
     super.initState();
   }
 
@@ -52,6 +55,8 @@ class _CommonLoginPageState extends State<CommonLoginPage> {
       CheckUpdateAndNoticeService.check(
           context, CheckType.UPDATE_AND_NOTICE, false);
     });
+    final cp = context.read<ConnectivityStatusProvider>();
+    cp.init();
     return BaseLayout(
         hasForm: false,
         appBar: null,

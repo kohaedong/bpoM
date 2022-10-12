@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:medsalesportal/globalProvider/connectivity_state_provider.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
 import './home_icon_map.dart';
@@ -71,7 +72,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState lifeCycle) async {
     super.didChangeAppLifecycleState(lifeCycle);
-
+    final cp = context.read<ConnectivityStatusProvider>();
+    if (cp.connectivityResult == ConnectionState.done) {
+      return;
+    }
     var _isForeground = (lifeCycle == AppLifecycleState.resumed);
     var paused = (lifeCycle == AppLifecycleState.paused);
     final arguments = ModalRoute.of(context)!.settings.arguments;

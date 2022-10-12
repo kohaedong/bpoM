@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/list_group_type.dart
  * Created Date: 2021-09-10 09:52:32
- * Last Modified: 2022-09-24 20:08:31
+ * Last Modified: 2022-10-13 04:03:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -56,6 +56,7 @@ enum OneCellType {
   SEARCH_TARIFF,
   SEARCH_SHIPPING,
   DATE_PICKER,
+  DATE_PICKER_FORMONTH,
   REPORT_TYPE,
   CUSTOMER_IMPORTANTS,
   CUSTOMER_RELATION,

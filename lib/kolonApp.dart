@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/kolonApp.dart
  * Created Date: 2022-07-02 14:46:59
- * Last Modified: 2022-10-06 01:58:09
+ * Last Modified: 2022-10-13 05:01:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
+import 'package:medsalesportal/globalProvider/connectivity_state_provider.dart';
 
 import 'service/key_service.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,9 @@ class KolonAppState extends State<KolonApp> {
         ),
         ChangeNotifierProvider<ActivityStateProvider>(
           create: (_) => ActivityStateProvider(),
+        ),
+        ChangeNotifierProvider<ConnectivityStatusProvider>(
+          create: (_) => ConnectivityStatusProvider(),
         ),
       ],
       child: MediaQuery(

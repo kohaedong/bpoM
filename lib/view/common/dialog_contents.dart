@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-10-12 22:18:40
+ * Last Modified: 2022-10-13 03:59:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -267,18 +267,15 @@ Widget buildTowButtonDialogContents(
               )
             : SizedBox(
                 height: height - AppSize.buttonHeight,
-                child: Padding(
-                  padding: AppSize.defaultSidePadding,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      isWithTitle != null
-                          ? withTitleContents(title!)
-                          : Container(),
-                      contents
-                    ],
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    isWithTitle != null
+                        ? withTitleContents(title!)
+                        : Container(),
+                    contents
+                  ],
                 ),
               ),
         Positioned(
