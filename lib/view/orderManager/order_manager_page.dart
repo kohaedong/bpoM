@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-12 14:04:58
+ * Last Modified: 2022-10-12 15:40:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -482,7 +482,9 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         InkWell(
             onTap: () {
               final p = context.read<OrderManagerPageProvider>();
-              if (p.selectedCustomerModel != null) {
+              if (p.selectedCustomerModel != null &&
+                  p.selectedEndCustomerModel != null &&
+                  p.selectedSupplierModel != null) {
                 p.checkRecentOrders().then((result) {
                   if (result.isSuccessful) {
                     var map = result.data as Map<String, dynamic>;
@@ -501,10 +503,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                   }
                 });
               } else {
-                AppToast().show(
-                    context,
-                    tr('plz_select_something_2',
-                        args: [tr('sales_office'), '']));
+                AppToast().show(context, tr('plz_check_essential_option'));
               }
             },
             child: AppText.text(tr('get_recent_order'),
@@ -658,9 +657,9 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                           hintTextStyleCallBack: () => isNotEmpty
                               ? AppTextStyle.default_16
                               : AppTextStyle.hint_16,
-                          unfoucsCallback: () async {
-                            controller.clear();
-                          },
+                          // unfoucsCallback: () async {
+                          //   controller.clear();
+                          // },
                           defaultIconCallback: () {
                             controller.text = '';
                             p.updateQuantityList(index, 0);
@@ -678,6 +677,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                             } else if (t.isEmpty) {
                               p.updateQuantityList(index, 0);
                             }
+                            p.updatePriceList(
+                                index, BulkOrderDetailSearchMetaPriceModel());
                           },
                           enable: true);
                     },

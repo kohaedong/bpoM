@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-10-01 19:28:08
+ * Last Modified: 2022-10-12 20:57:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -178,96 +178,96 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                 ],
                               ),
                             ),
-                            Selector<TransactionLedgerPageProvider, String?>(
-                              selector: (context, provider) =>
-                                  provider.selectedProductsFamily,
-                              builder: (context, family, _) {
-                                return BaseColumWithTitleAndTextFiled.build(
-                                    '${tr('product_family')}',
-                                    BaseInputWidget(
-                                      context: context,
-                                      iconType: InputIconType.SELECT,
-                                      iconColor:
-                                          AppColors.textFieldUnfoucsColor,
-                                      hintText: family ??
-                                          '${tr('plz_select_something_1', args: [
-                                                tr('product_family'),
-                                                ''
-                                              ])}',
-                                      // 팀장 일때 만 팀원선택후 삭제가능.
-                                      isShowDeleteForHintText: false,
-                                      width: AppSize.defaultContentsWidth,
-                                      hintTextStyleCallBack: () =>
-                                          family != null
-                                              ? AppTextStyle.default_16
-                                              : AppTextStyle.hint_16,
-                                      oneCellType:
-                                          OneCellType.SEARCH_PRODUCT_FAMILY,
-                                      commononeCellDataCallback:
-                                          p.getProductsFamily,
-                                      isSelectedStrCallBack: (status) {
-                                        return p.setProductsFamily(status);
-                                      },
-                                      enable: false,
-                                    ),
-                                    isNotShowStar: true);
-                              },
-                            ),
-                            Selector<TransactionLedgerPageProvider, String?>(
-                              selector: (context, provider) =>
-                                  provider.staffName,
-                              builder: (context, staffName, _) {
-                                return BaseColumWithTitleAndTextFiled.build(
-                                    '${tr('manager')}',
-                                    BaseInputWidget(
-                                      context: context,
-                                      iconType: CheckSuperAccount
-                                              .isMultiAccountOrLeaderAccount()
-                                          ? InputIconType.SEARCH
-                                          : null,
-                                      iconColor:
-                                          AppColors.textFieldUnfoucsColor,
-                                      hintText: staffName ??
-                                          '${tr('plz_select_something_1', args: [
-                                                tr('manager'),
-                                                ''
-                                              ])}',
-                                      // 팀장 일때 만 팀원선택후 삭제가능.
-                                      isShowDeleteForHintText: CheckSuperAccount
-                                                  .isMultiAccountOrLeaderAccount() &&
-                                              staffName != null &&
-                                              staffName != tr('all')
-                                          ? true
-                                          : false,
-                                      deleteIconCallback: () => CheckSuperAccount
-                                              .isMultiAccountOrLeaderAccount()
-                                          ? p.setStaffName(tr('all'))
-                                          : p.setStaffName(null),
-                                      width: AppSize.defaultContentsWidth,
-                                      hintTextStyleCallBack: () =>
-                                          staffName != null
-                                              ? AppTextStyle.default_16
-                                              : AppTextStyle.hint_16,
-                                      popupSearchType: CheckSuperAccount
-                                              .isMultiAccountOrLeaderAccount()
-                                          ? PopupSearchType.SEARCH_SALSE_PERSON
-                                          : null,
-                                      isSelectedStrCallBack: (persion) {
-                                        return p.setSalesPerson(persion);
-                                      },
-                                      // 멀티계정 전부 조회.
-                                      // 팀장계정 조속팀 조회.
-                                      bodyMap: CheckSuperAccount
-                                              .isMultiAccount()
-                                          ? {'dptnm': ''}
-                                          : CheckSuperAccount.isLeaderAccount()
-                                              ? {'dptnm': p.dptnm}
-                                              : null,
-                                      enable: false,
-                                    ),
-                                    isNotShowStar: true);
-                              },
-                            ),
+                            // Selector<TransactionLedgerPageProvider, String?>(
+                            //   selector: (context, provider) =>
+                            //       provider.selectedProductsFamily,
+                            //   builder: (context, family, _) {
+                            //     return BaseColumWithTitleAndTextFiled.build(
+                            //         '${tr('product_family')}',
+                            //         BaseInputWidget(
+                            //           context: context,
+                            //           iconType: InputIconType.SELECT,
+                            //           iconColor:
+                            //               AppColors.textFieldUnfoucsColor,
+                            //           hintText: family ??
+                            //               '${tr('plz_select_something_1', args: [
+                            //                     tr('product_family'),
+                            //                     ''
+                            //                   ])}',
+                            //           // 팀장 일때 만 팀원선택후 삭제가능.
+                            //           isShowDeleteForHintText: false,
+                            //           width: AppSize.defaultContentsWidth,
+                            //           hintTextStyleCallBack: () =>
+                            //               family != null
+                            //                   ? AppTextStyle.default_16
+                            //                   : AppTextStyle.hint_16,
+                            //           oneCellType:
+                            //               OneCellType.SEARCH_PRODUCT_FAMILY,
+                            //           commononeCellDataCallback:
+                            //               p.getProductsFamily,
+                            //           isSelectedStrCallBack: (status) {
+                            //             return p.setProductsFamily(status);
+                            //           },
+                            //           enable: false,
+                            //         ),
+                            //         isNotShowStar: true);
+                            //   },
+                            // ),
+                            // Selector<TransactionLedgerPageProvider, String?>(
+                            //   selector: (context, provider) =>
+                            //       provider.staffName,
+                            //   builder: (context, staffName, _) {
+                            //     return BaseColumWithTitleAndTextFiled.build(
+                            //         '${tr('manager')}',
+                            //         BaseInputWidget(
+                            //           context: context,
+                            //           iconType: CheckSuperAccount
+                            //                   .isMultiAccountOrLeaderAccount()
+                            //               ? InputIconType.SEARCH
+                            //               : null,
+                            //           iconColor:
+                            //               AppColors.textFieldUnfoucsColor,
+                            //           hintText: staffName ??
+                            //               '${tr('plz_select_something_1', args: [
+                            //                     tr('manager'),
+                            //                     ''
+                            //                   ])}',
+                            //           // 팀장 일때 만 팀원선택후 삭제가능.
+                            //           isShowDeleteForHintText: CheckSuperAccount
+                            //                       .isMultiAccountOrLeaderAccount() &&
+                            //                   staffName != null &&
+                            //                   staffName != tr('all')
+                            //               ? true
+                            //               : false,
+                            //           deleteIconCallback: () => CheckSuperAccount
+                            //                   .isMultiAccountOrLeaderAccount()
+                            //               ? p.setStaffName(tr('all'))
+                            //               : p.setStaffName(null),
+                            //           width: AppSize.defaultContentsWidth,
+                            //           hintTextStyleCallBack: () =>
+                            //               staffName != null
+                            //                   ? AppTextStyle.default_16
+                            //                   : AppTextStyle.hint_16,
+                            //           popupSearchType: CheckSuperAccount
+                            //                   .isMultiAccountOrLeaderAccount()
+                            //               ? PopupSearchType.SEARCH_SALSE_PERSON
+                            //               : null,
+                            //           isSelectedStrCallBack: (persion) {
+                            //             return p.setSalesPerson(persion);
+                            //           },
+                            //           // 멀티계정 전부 조회.
+                            //           // 팀장계정 조속팀 조회.
+                            //           bodyMap: CheckSuperAccount
+                            //                   .isMultiAccount()
+                            //               ? {'dptnm': ''}
+                            //               : CheckSuperAccount.isLeaderAccount()
+                            //                   ? {'dptnm': p.dptnm}
+                            //                   : null,
+                            //           enable: false,
+                            //         ),
+                            //         isNotShowStar: true);
+                            //   },
+                            // ),
                             Selector<TransactionLedgerPageProvider,
                                 Tuple3<String?, String?, EtStaffListModel?>>(
                               selector: (context, provider) => Tuple3(

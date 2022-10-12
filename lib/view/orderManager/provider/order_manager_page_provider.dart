@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-12 14:01:33
+ * Last Modified: 2022-10-12 15:36:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -478,9 +478,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
 
   Future<ResultModel> getAmountAvailableForOrderEntry(
       {required bool isNotifier}) async {
-    if (amountAvalible != null) {
-      return ResultModel(true);
-    }
     if (isNotifier) {
       isLoadData = true;
       notifyListeners();
@@ -642,7 +639,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
         "IV_KUNWE": selectedSupplierModel != null
             ? selectedSupplierModel!.kunnr
             : selectedCustomerModel!.kunnr,
-        "IV_ZZKUNNR_END": selectedCustomerModel!.kunnr,
+        "IV_ZZKUNNR_END": selectedEndCustomerModel!.kunnr,
         "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
         "T_HEAD": tHeadBase64,
         "T_ITEM": tItemBase64,

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/provider/alarm_provider.dart
  * Created Date: 2022-01-03 14:00:12
- * Last Modified: 2022-10-07 00:18:03
+ * Last Modified: 2022-10-12 14:19:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -119,7 +119,9 @@ class NoticeProvider extends ChangeNotifier {
       pr(temp.toJson());
       if (temp.tZltsp0710 != null && temp.tZltsp0710!.length != partial) {
         hasMore = false;
-        notifyListeners();
+        try {
+          notifyListeners();
+        } catch (e) {}
       }
 
       if (homeNoticeResponseModel == null) {
