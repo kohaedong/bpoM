@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-10-13 07:20:00
+ * Last Modified: 2022-10-13 15:32:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -407,9 +407,8 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
               width: AppSize.defaultContentsWidth,
               child: Row(
                 children: [
-                  AppText.listViewText(
-                      '${tr('salse_order_number')}:${model.zreqno!}',
-                      isSubTitle: true),
+                  AppText.text('${tr('salse_order_number')}:${model.zreqno!}',
+                      style: AppTextStyle.sub_12),
                   model.zdmstatus == 'A'
                       ? Container()
                       : model.vbeln != null && model.vbeln!.isNotEmpty
@@ -417,12 +416,13 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                           : Container(),
                   model.vbeln != null && model.vbeln!.isNotEmpty
                       ? Expanded(
-                          child: AppText.listViewText(
+                          child: AppText.text(
                               // 주문요청상태시 주문번호 없음.
                               model.zdmstatus == 'A'
                                   ? ''
                                   : '${tr('request_order_number')}:${model.vbeln!}',
-                              isSubTitle: true))
+                              style: AppTextStyle.sub_12,
+                              textAlign: TextAlign.start))
                       : Container(),
                 ],
               ),

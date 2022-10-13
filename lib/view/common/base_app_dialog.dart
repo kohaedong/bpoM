@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-10-13 01:06:27
+ * Last Modified: 2022-10-13 17:00:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -181,26 +181,27 @@ class AppDialog {
 
   static showSignglePopup(BuildContext context, String contents,
       {double? height}) {
+    var enterLength = FormatUtil.howManyLengthForString(contents) + 1;
+    var height =
+        AppSize.buttonHeight * 2 + AppSize.padding * 2 + enterLength * 14;
     return showPopup(
         context,
         buildDialogContents(
             context,
-            Padding(
-                padding: EdgeInsets.only(top: AppSize.appBarHeight * .6),
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  width: AppSize.defaultContentsWidth,
-                  child: AppText.text('$contents',
-                      style: context
-                          .read<AppThemeProvider>()
-                          .themeData
-                          .textTheme
-                          .headline3!,
-                      textAlign: TextAlign.start,
-                      maxLines: 3),
-                )),
+            Container(
+              alignment: Alignment.centerLeft,
+              height: height - AppSize.buttonHeight,
+              child: AppText.text('$contents',
+                  style: context
+                      .read<AppThemeProvider>()
+                      .themeData
+                      .textTheme
+                      .headline3!,
+                  textAlign: TextAlign.start,
+                  maxLines: 3),
+            ),
             true,
-            height ?? AppSize.singlePopupHeight,
+            height,
             signgleButtonText: '${tr('ok')}'));
   }
 }

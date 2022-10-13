@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -52,7 +54,7 @@ class SettingsPage extends StatelessWidget {
                               '${KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev' ? '(개발)제약 영업포탈' : '제약 영업포탈'}${tr('is_ready_to_logout')}',
                             ));
 
-                        if (result != null) {
+                        if (result != null && result) {
                           CacheService.deleteUserInfoWhenSignOut();
                           final p = context.read<SettingsProvider>();
                           await p.signOut();
@@ -137,6 +139,9 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.read<SettingsProvider>();
+    pr(CheckSuperAccount.isMultiAccount());
+    pr(CheckSuperAccount.isMultiAccount());
+    pr(CheckSuperAccount.isMultiAccount());
     return BaseLayout(
         hasForm: true,
         appBar: MainAppBar(context,

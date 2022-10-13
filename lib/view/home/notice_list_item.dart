@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_list_item.dart
  * Created Date: 2022-01-04 00:52:36
- * Last Modified: 2022-09-22 13:29:53
+ * Last Modified: 2022-10-13 15:52:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -44,8 +44,11 @@ Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
                             radius: 3,
                           ))
                       : Container(),
-              AppText.listViewText(model.nTitle!,
-                  maxLines: 2, style: isHomeList ? null : AppTextStyle.blod_16)
+              Expanded(
+                  child: AppText.listViewText(model.nTitle!,
+                      maxLines: 2,
+                      style: isHomeList ? null : AppTextStyle.blod_16,
+                      textAlign: TextAlign.start))
             ],
           ),
           defaultSpacing(),
@@ -56,7 +59,6 @@ Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
                   : Row(
                       children: [
                         AppText.listViewText(
-                          //! 하드코딩
                           '${model.nType == 'A' ? tr('notice') : model.nType == 'B' ? tr('sys_notice') : model.nType}',
                           style: AppTextStyle.h4.copyWith(
                               fontSize: AppTextStyle.h4.fontSize! - 2,

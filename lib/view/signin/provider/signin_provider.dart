@@ -435,7 +435,7 @@ class SigninProvider extends ChangeNotifier {
           var isLogin = sapLoginInfoResponseModel!.data!.isLogin!;
           var isTeamLeader = esLogin.xtm == 'X';
           var isMultiAccount =
-              esLogin.xtm == '' && esLogin.vkgrp == '' && esLogin.salem == '';
+              (esLogin.xtm == '' && esLogin.vkgrp == '' && esLogin.salem == '');
           CacheService.saveEsLogin(esLogin);
           CacheService.saveIsLogin(isLogin);
           CacheService.saveUser(user!);

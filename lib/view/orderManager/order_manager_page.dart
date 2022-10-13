@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-13 07:39:30
+ * Last Modified: 2022-10-13 17:04:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -256,12 +256,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               iconType: InputIconType.SEARCH,
               iconColor: AppColors.textFieldUnfoucsColor,
               deleteIconCallback: () => p.setCustomerModel(null),
-              hintText: tuple.item2 != null
-                  ? tuple.item2!.kunnrNm
-                  : '${tr('plz_select_something_2', args: [
-                          tr('sales_office'),
-                          ''
-                        ])}',
+              hintText:
+                  tuple.item2 != null ? tuple.item2!.kunnrNm : tr('plz_select'),
               // 팀장 일때 만 팀원선택후 삭제가능.
               isShowDeleteForHintText: tuple.item2 != null ? true : false,
               width: AppSize.defaultContentsWidth,

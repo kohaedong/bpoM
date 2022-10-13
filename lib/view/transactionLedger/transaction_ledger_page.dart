@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-10-13 07:19:46
+ * Last Modified: 2022-10-13 17:54:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -114,7 +114,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             BaseColumWithTitleAndTextFiled.build(
-                              '${tr('date', args: [''])}',
+                              tr('course'),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -140,7 +140,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                                 ? FormatUtil.monthStr(startDate,
                                                     isWithDash: true)
                                                 : '${tr('plz_enter_date')}',
-                                            iconType: InputIconType.DATA_PICKER,
+                                            iconType: InputIconType.SELECT,
                                             isSelectedStrCallBack: (str) =>
                                                 p.setStartDate(context, str),
                                             width: AppSize.timeBoxWidth,
@@ -169,7 +169,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                                 ? FormatUtil.monthStr(endDate,
                                                     isWithDash: true)
                                                 : '${tr('plz_enter_date')}',
-                                            iconType: InputIconType.DATA_PICKER,
+                                            iconType: InputIconType.SELECT,
                                             isSelectedStrCallBack: (str) =>
                                                 p.setEndDate(context, str),
                                             width: AppSize.timeBoxWidth,
@@ -404,7 +404,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                   });
                                 } else {
                                   AppToast().show(context,
-                                      '${tr('essential_option')}${tr('selecte_first')}');
+                                      tr('plz_check_essential_option'));
                                 }
                               });
                             })
@@ -436,7 +436,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
               _buildTableBox(model.bschlTx!, 0,
                   isBody: true, isTotalRow: isTotalRow),
               _buildTableBox(model.arktx!.trim(), 1,
-                  isBody: true, isTotalRow: isTotalRow),
+                  isBody: true, isTotalRow: isTotalRow, isWithToptic: true),
               _buildTableBox(
                   model.fkimgC != null &&
                           model.fkimgC!.isNotEmpty &&
@@ -468,26 +468,28 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   isTotalRow
                       ? model.spmon!.contains('총 계')
                           ? '총 합계'
-                          : FormatUtil.addDashForMonth(model.spmon!
-                              .replaceAll('-', '')
-                              .replaceAll('<', '')
-                              .replaceAll('>', '')
-                              .trim())
+                          : FormatUtil.addDashForMonth(
+                              model.spmon!
+                                  .replaceAll('-', '')
+                                  .replaceAll('<', '')
+                                  .replaceAll('>', '')
+                                  .trim(),
+                              isYYMM: true)
                       : FormatUtil.addDashForDateStr2(
                           model.spmon!.replaceAll('-', '')),
                   0,
                   isBody: true,
                   isTotalRow: isTotalRow),
               _buildTableBox(model.netwrTC!, 1,
-                  // alignmentt: Alignment.centerRight,
+                  alignmentt: Alignment.centerRight,
                   isBody: true,
                   isTotalRow: isTotalRow),
               _buildTableBox(model.dmbtrC!, 2,
-                  // alignmentt: Alignment.centerRight,
+                  alignmentt: Alignment.centerRight,
                   isBody: true,
                   isTotalRow: isTotalRow),
               _buildTableBox(model.otherC!, 3,
-                  // alignmentt: Alignment.centerRight,
+                  alignmentt: Alignment.centerRight,
                   isBody: true,
                   isTotalRow: isTotalRow),
             ])
@@ -516,13 +518,13 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   color: AppColors.unReadyButtonBorderColor, width: .4)),
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           columnWidths: {
-            0: FlexColumnWidth(.12),
-            1: FlexColumnWidth(.12),
-            2: FlexColumnWidth(.24),
+            0: FlexColumnWidth(.11),
+            1: FlexColumnWidth(.11),
+            2: FlexColumnWidth(.2),
             3: FlexColumnWidth(.12),
-            4: FlexColumnWidth(.133),
-            5: FlexColumnWidth(.133),
-            6: FlexColumnWidth(.133),
+            4: FlexColumnWidth(.153),
+            5: FlexColumnWidth(.153),
+            6: FlexColumnWidth(.153),
           },
           children: [
             TableRow(children: [
@@ -532,11 +534,13 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   isTotalRow
                       ? isLastRow
                           ? ''
-                          : FormatUtil.addDashForMonth(model.spmon!
-                              .replaceAll('-', '')
-                              .replaceAll('<', '')
-                              .replaceAll('>', '')
-                              .trim())
+                          : FormatUtil.addDashForMonth(
+                              model.spmon!
+                                  .replaceAll('-', '')
+                                  .replaceAll('<', '')
+                                  .replaceAll('>', '')
+                                  .trim(),
+                              isYYMM: true)
                       : FormatUtil.addDashForDateStr2(
                           model.spmon!.replaceAll('-', '')),
                   1,
@@ -544,7 +548,10 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   isLandSpace: true,
                   isTotalRow: isTotalRow),
               _buildTableBox(model.arktx!.trim(), 2,
-                  isBody: true, isLandSpace: true, isTotalRow: isTotalRow),
+                  isBody: true,
+                  isLandSpace: true,
+                  isTotalRow: isTotalRow,
+                  isWithToptic: true),
               _buildTableBox(
                   model.fkimgC != null &&
                           model.fkimgC!.isNotEmpty &&
@@ -588,53 +595,65 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
       AlignmentGeometry? alignmentt,
       bool? isTotalRow,
       bool? isWithRightPadding,
-      bool? isLandSpace}) {
+      bool? isLandSpace,
+      bool? isWithToptic}) {
+    var tempWidget = () {
+      return Container(
+          padding: EdgeInsets.only(
+              left: index == 0
+                  ? isLandSpace != null && isLandSpace
+                      ? AppSize.padding / 2
+                      : AppSize.padding
+                  : isLandSpace != null && isLandSpace
+                      ? AppSize.defaultListItemSpacing / 2
+                      : AppSize.defaultListItemSpacing,
+              right: isWithRightPadding != null && isWithRightPadding
+                  ? AppSize.defaultListItemSpacing / 2
+                  : isBody != null && isBody && alignmentt != null
+                      ? 0
+                      : alignmentt != null
+                          ? AppSize.padding
+                          : AppSize.zero),
+          height: isLandSpace != null && isLandSpace
+              ? AppSize.defaultTextFieldHeight * .4
+              : AppSize.defaultTextFieldHeight * .6,
+          decoration: BoxDecoration(
+              color: isBody != null && isBody
+                  ? isTotalRow != null && isTotalRow
+                      ? AppColors.tableBorderColor.withOpacity(.2)
+                      : AppColors.whiteText
+                  : AppColors.tableBorderColor.withOpacity(.2)),
+          alignment: alignmentt != null ? alignmentt : Alignment.centerLeft,
+          child: alignmentt != null
+              ? Align(
+                  alignment: alignmentt,
+                  child: AppText.text(text,
+                      style: isBody != null && isBody
+                          ? isTotalRow != null &&
+                                  isTotalRow &&
+                                  text.contains('계')
+                              ? AppTextStyle.blod_16
+                              : null
+                          : AppTextStyle.blod_16
+                              .copyWith(fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.right),
+                )
+              : AppText.text(text,
+                  style: isBody != null && isBody
+                      ? isTotalRow != null && isTotalRow && text.contains('계')
+                          ? AppTextStyle.blod_16
+                          : null
+                      : AppTextStyle.blod_16
+                          .copyWith(fontWeight: FontWeight.w600)));
+    };
+
     text = text.trim();
-    return Container(
-        padding: EdgeInsets.only(
-            left: index == 0
-                ? isLandSpace != null && isLandSpace
-                    ? AppSize.padding / 2
-                    : AppSize.padding
-                : isLandSpace != null && isLandSpace
-                    ? AppSize.defaultListItemSpacing / 2
-                    : AppSize.defaultListItemSpacing,
-            right: isWithRightPadding != null && isWithRightPadding
-                ? AppSize.defaultListItemSpacing / 2
-                : isBody != null && isBody && alignmentt != null
-                    ? 0
-                    : alignmentt != null
-                        ? AppSize.padding
-                        : AppSize.zero),
-        height: isLandSpace != null && isLandSpace
-            ? AppSize.defaultTextFieldHeight * .4
-            : AppSize.defaultTextFieldHeight * .6,
-        decoration: BoxDecoration(
-            color: isBody != null && isBody
-                ? isTotalRow != null && isTotalRow
-                    ? AppColors.tableBorderColor.withOpacity(.2)
-                    : AppColors.whiteText
-                : AppColors.tableBorderColor.withOpacity(.2)),
-        alignment: alignmentt != null ? alignmentt : Alignment.centerLeft,
-        child: alignmentt != null
-            ? Align(
-                alignment: alignmentt,
-                child: AppText.text(text,
-                    style: isBody != null && isBody
-                        ? isTotalRow != null && isTotalRow && text.contains('계')
-                            ? AppTextStyle.blod_16
-                            : null
-                        : AppTextStyle.blod_16
-                            .copyWith(fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.right),
-              )
-            : AppText.text(text,
-                style: isBody != null && isBody
-                    ? isTotalRow != null && isTotalRow && text.contains('계')
-                        ? AppTextStyle.blod_16
-                        : null
-                    : AppTextStyle.blod_16
-                        .copyWith(fontWeight: FontWeight.w600)));
+    return isWithToptic != null
+        ? Tooltip(
+            message: text,
+            child: tempWidget(),
+          )
+        : tempWidget();
   }
 
   Widget _buildResultTitle(BuildContext context) {
@@ -1055,13 +1074,13 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
               color: AppColors.unReadyButtonBorderColor, width: .4),
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           columnWidths: {
-            0: FlexColumnWidth(.12),
-            1: FlexColumnWidth(.12),
-            2: FlexColumnWidth(.24),
+            0: FlexColumnWidth(.11),
+            1: FlexColumnWidth(.11),
+            2: FlexColumnWidth(.2),
             3: FlexColumnWidth(.12),
-            4: FlexColumnWidth(.133),
-            5: FlexColumnWidth(.133),
-            6: FlexColumnWidth(.133),
+            4: FlexColumnWidth(.153),
+            5: FlexColumnWidth(.153),
+            6: FlexColumnWidth(.153),
           },
           children: [
             TableRow(children: [
@@ -1223,20 +1242,21 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
       children: [
         RefreshIndicator(
           onRefresh: () async {
-            if (_scrollController2.position.atEdge && _panelSwich.value) {
-              _panelSwich.value = false;
-              return p.refresh().then((value) {
-                hideKeyboard(context);
-                Future.delayed(Duration(seconds: 1), () {
-                  if (p.transLedgerResponseModel == null ||
-                      p.transLedgerResponseModel!.tList!.isEmpty) {
-                    Future.delayed(Duration(seconds: 1), () {
-                      _panelSwich.value = true;
-                    });
-                  }
-                });
+            // if (_scrollController2.position.atEdge && _panelSwich.value) {
+
+            // }
+            _panelSwich.value = false;
+            return p.refresh().then((value) {
+              hideKeyboard(context);
+              Future.delayed(Duration(seconds: 1), () {
+                if (p.transLedgerResponseModel == null ||
+                    p.transLedgerResponseModel!.tList!.isEmpty) {
+                  Future.delayed(Duration(seconds: 1), () {
+                    _panelSwich.value = true;
+                  });
+                }
               });
-            }
+            });
           },
           child: ListView(
             controller: _scrollController2,

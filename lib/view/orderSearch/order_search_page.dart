@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-10-13 07:21:37
+ * Last Modified: 2022-10-13 18:00:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -292,7 +292,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           ? () {
                                               AppToast().show(
                                                   context,
-                                                  tr('plz_select_something_1',
+                                                  tr('plz_select_something_first_1',
                                                       args: [
                                                         tr('product_family'),
                                                         ''

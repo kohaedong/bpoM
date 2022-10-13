@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/provider/alarm_provider.dart
  * Created Date: 2022-01-03 14:00:12
- * Last Modified: 2022-10-12 14:19:17
+ * Last Modified: 2022-10-13 15:47:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -97,10 +97,11 @@ class NoticeProvider extends ChangeNotifier {
         "resultTables": RequestType.HOME_NOTICE.resultTable,
         // "resultColumns": RequestType.HOME_NOTICE.resultColums,
         "IS_LOGIN": "$isLogin",
-        "IV_SANUM_NM": CacheService.getEsLogin()!.ename,
+        "IV_SANUM_NM": '',
         "partial": partial,
         "pos": pos,
-        "IV_FRMDT": FormatUtil.removeDash(DateUtil.prevMonth()), // start date
+        // "IV_FRMDT": FormatUtil.removeDash(DateUtil.prevMonth()), // start date
+        "IV_FRMDT": '19990101', // start date
         "IV_TODT": FormatUtil.removeDash(
             DateUtil.getDateStr(DateTime.now().toIso8601String())), // end date
         "IV_NTYPE": ""

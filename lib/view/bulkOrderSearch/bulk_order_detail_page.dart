@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-10-13 07:40:58
+ * Last Modified: 2022-10-13 15:39:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -469,8 +469,6 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                   final p = context.read<BulkOrderDetailProvider>();
                   Navigator.pop(context, p.isOrderSaved ? true : null);
                 },
-                cachePageTypeCallBack: isStatusA ? () => true : null,
-                isDisableUpdate: false,
                 icon: isStatusA ? Icon(Icons.close) : null,
               ),
               child: WillPopScope(
