@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-14 04:37:31
+ * Last Modified: 2022-10-14 05:03:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -241,8 +241,10 @@ class OrderManagerPageProvider extends ChangeNotifier {
     temp = [...priceModelList];
     var model =
         BulkOrderDetailSearchMetaPriceModel.fromJson(updateModel.toJson());
+    pr('before $indexx :: ${temp[indexx]!.toJson()}');
     temp.removeAt(indexx);
     temp..insert(indexx, model);
+    pr('aftoer $indexx:: ${temp[indexx]!.toJson()}');
     priceModelList = [...temp];
     if (isNotifier != null && isNotifier) {
       notifyListeners();
@@ -575,6 +577,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     if (result != null && result.statusCode == 200) {
       var temp = BulkOrderDetailSearchMetaPriceResponseModel.fromJson(
           result.body['data']);
+      pr('price result::${temp.toJson()}');
       var isSuccess = temp.esReturn!.mtype == 'S';
       var message = '';
       if (isSuccess) {

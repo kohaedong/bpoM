@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-14 04:49:13
+ * Last Modified: 2022-10-14 05:11:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -696,10 +696,18 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         tuple.item1.isNotEmpty && tuple.item1[index] != 0.0;
                     var isPriceModelNotEmpty = tuple.item2.isNotEmpty &&
                         tuple.item2[index] != null &&
-                        tuple.item2[index]!.zfreeQty != 0.0;
+                        tuple.item2[index]!.kwmeng != 0.0;
+                    var isDifferentValue =
+                        tuple.item2[index]?.kwmeng != tuple.item1[index];
+                    var isAllValidate =
+                        isQuantityNotEmpty && isPriceModelNotEmpty;
+                    var isShowButton = isAllValidate && isDifferentValue;
+                    pr(isQuantityNotEmpty);
+                    pr(isPriceModelNotEmpty);
+                    pr('isShowButton :: $isShowButton');
                     return GestureDetector(
                       onTap: () async {
-                        if (isQuantityNotEmpty) {
+                        if (isShowButton) {
                           final result =
                               await p.checkPrice(index, isNotifier: true);
                           if (result.isSuccessful) {
@@ -720,29 +728,21 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                             .3,
                         height: AppSize.defaultTextFieldHeight,
                         decoration: BoxDecoration(
-                            color: isQuantityNotEmpty && isPriceModelNotEmpty
-                                ? AppColors.unReadyButton
-                                : isQuantityNotEmpty
-                                    ? AppColors.sendButtonColor
-                                    : AppColors.unReadyButton,
+                            color: isShowButton
+                                ? AppColors.sendButtonColor
+                                : AppColors.unReadyButton,
                             borderRadius: BorderRadius.all(
                                 Radius.circular(AppSize.radius5)),
                             border: Border.all(
                                 width: .5,
-                                color:
-                                    isQuantityNotEmpty && isPriceModelNotEmpty
-                                        ? AppColors.textFieldUnfoucsColor
-                                        : isQuantityNotEmpty
-                                            ? AppColors.primary
-                                            : AppColors.textFieldUnfoucsColor)),
+                                color: isShowButton
+                                    ? AppColors.primary
+                                    : AppColors.textFieldUnfoucsColor)),
                         child: AppText.text(tr('search'),
                             style: AppTextStyle.h4.copyWith(
-                                color:
-                                    isQuantityNotEmpty && isPriceModelNotEmpty
-                                        ? AppColors.hintText
-                                        : isQuantityNotEmpty
-                                            ? AppColors.primary
-                                            : AppColors.hintText)),
+                                color: isShowButton
+                                    ? AppColors.primary
+                                    : AppColors.hintText)),
                       ),
                     );
                   },
