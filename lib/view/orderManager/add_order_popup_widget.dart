@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-10-12 14:02:34
+ * Last Modified: 2022-10-14 05:31:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -124,7 +124,9 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
             children: [
               BaseInputWidget(
                 context: context,
-                iconType: tuple.item1 != null ? InputIconType.DELETE : null,
+                iconType: tuple.item1 != null && tuple.item1!.isNotEmpty
+                    ? InputIconType.DELETE
+                    : null,
                 onChangeCallBack: (t) => p.setQuantity(t),
                 defaultIconCallback: () {
                   p.setQuantity(null);
@@ -133,15 +135,18 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                 textEditingController: _productQuantityInputController,
                 keybordType: TextInputType.number,
                 iconColor: AppColors.textFieldUnfoucsColor,
-                hintText: tuple.item1 ?? tr('plz_enter'),
+                hintText: tuple.item1 != null && tuple.item1!.isNotEmpty
+                    ? tuple.item1
+                    : tr('plz_enter'),
                 // 팀장 일때 만 팀원선택후 삭제가능.
                 width: (AppSize.defaultContentsWidth -
                         AppSize.padding * 2 -
                         AppSize.defaultListItemSpacing) *
                     .7,
-                hintTextStyleCallBack: () => tuple.item1 != null
-                    ? AppTextStyle.default_16
-                    : AppTextStyle.hint_16,
+                hintTextStyleCallBack: () =>
+                    tuple.item1 != null && tuple.item1!.isNotEmpty
+                        ? AppTextStyle.default_16
+                        : AppTextStyle.hint_16,
                 enable: true,
               ),
               Padding(

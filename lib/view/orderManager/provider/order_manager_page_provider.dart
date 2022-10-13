@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-14 05:03:22
+ * Last Modified: 2022-10-14 05:25:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -78,13 +78,19 @@ class OrderManagerPageProvider extends ChangeNotifier {
       selectedSalseChannel != null &&
       items != null &&
       items!.isNotEmpty &&
-      items!.where((item) => item.kwmeng != 0.0).toList().length ==
-          items!.length &&
-      priceModelList
-              .where((price) => price != null && price.netwr != 0.0)
-              .toList()
-              .length ==
-          priceModelList.length;
+      isValidateItems;
+  bool get isValidateItems {
+    assert(selectedQuantityList.length == priceModelList.length);
+    var isValidate = false;
+    selectedQuantityList.asMap().entries.forEach((map) {
+      var quantity = map.value;
+      var priceModel = priceModelList[map.key];
+      var isQuantityNotEmpty = quantity != 0;
+      var isSameValue = priceModel!.kwmeng == quantity;
+      isValidate = isQuantityNotEmpty && isSameValue;
+    });
+    return isValidate;
+  }
 
   Map<String, dynamic>? get commonBodyMap => {
         "IV_VKORG": CheckSuperAccount.isMultiAccount()
