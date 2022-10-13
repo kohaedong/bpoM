@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-13 06:54:33
+ * Last Modified: 2022-10-14 04:37:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -390,8 +390,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
       if (selectedCustomerModel != null) {
         await searchSupplierAndEndCustomer(true);
         await searchSupplierAndEndCustomer(false);
-        pr('${selectedEndCustomerModel?.toJson()}');
-        pr('${selectedSupplierModel?.toJson()}');
         endCustList.forEach((element) {
           pr('end ${element.toJson()}');
         });
@@ -523,7 +521,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
   Future<List<String>> getsupplierList() async {
     var temp = <String>[];
     supplierList.forEach((supplier) {
-      temp.add('${supplier.kunnrNm!}/${supplier.kunnr!}');
+      pr(supplier.kunnrNm!);
+      temp.add('${supplier.kunnrNm!.trim()}/${supplier.kunnr!}');
     });
     return temp;
   }
@@ -531,7 +530,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
   Future<List<String>> getEndCustList() async {
     var temp = <String>[];
     endCustList.forEach((end) {
-      temp.add('${end.kunnrNm!}/${end.kunnr!}');
+      pr(end.kunnrNm!);
+      temp.add('${end.kunnrNm!.trim()}}/${end.kunnr!}');
     });
     return temp;
   }
@@ -635,7 +635,9 @@ class OrderManagerPageProvider extends ChangeNotifier {
         "IV_KUNWE": selectedSupplierModel != null
             ? selectedSupplierModel!.kunnr
             : selectedCustomerModel!.kunnr,
-        "IV_ZZKUNNR_END": selectedEndCustomerModel!.kunnr,
+        "IV_ZZKUNNR_END": selectedEndCustomerModel != null
+            ? selectedEndCustomerModel!.kunnr
+            : '',
         "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
         "T_HEAD": tHeadBase64,
         "T_ITEM": tItemBase64,

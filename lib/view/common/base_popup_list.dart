@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_list.dart
  * Created Date: 2021-09-10 09:48:38
- * Last Modified: 2022-10-13 04:23:25
+ * Last Modified: 2022-10-14 04:41:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -154,20 +154,23 @@ class BasePopupList {
               itemCount: snapshot.data!.length,
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
-                  onTap: () {
-                    if (snapshot.data![index] == '${tr('enter_in_order')}') {
-                      return;
-                    } else {
-                      Navigator.pop(ctx, snapshot.data![index]);
-                    }
-                  },
-                  child: Container(
-                    height: AppSize.defaultTextFieldHeight,
-                    alignment: Alignment.centerLeft,
-                    child: AppText.text(snapshot.data![index],
-                        style: AppTextStyle.default_16),
-                  ),
-                );
+                    onTap: () {
+                      if (snapshot.data![index] == '${tr('enter_in_order')}') {
+                        return;
+                      } else {
+                        Navigator.pop(ctx, snapshot.data![index]);
+                      }
+                    },
+                    child: Tooltip(
+                      message: snapshot.data![index],
+                      child: Container(
+                        height: AppSize.defaultTextFieldHeight,
+                        alignment: Alignment.centerLeft,
+                        child: AppText.text(snapshot.data![index],
+                            style: AppTextStyle.default_16,
+                            textAlign: TextAlign.start),
+                      ),
+                    ));
               },
             );
           }
