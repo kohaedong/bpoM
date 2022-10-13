@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-10-14 05:31:53
+ * Last Modified: 2022-10-14 06:10:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:medsalesportal/model/rfc/recent_order_t_item_model.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
+import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -299,6 +300,22 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
     );
   }
 
+  Widget _buildLoadingWidget(BuildContext context, double height) {
+    return Positioned(
+        left: 0,
+        bottom: 0,
+        child: SizedBox(
+          height: height,
+          width: AppSize.defaultContentsWidth,
+          child: Selector<AddOrderPopupProvider, bool>(
+            selector: (context, provider) => provider.isLoadData,
+            builder: (context, isLoadData, _) {
+              return BaseLoadingViewOnStackWidget.build(context, isLoadData);
+            },
+          ),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -326,68 +343,75 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                 return Selector<AddOrderPopupProvider, double>(
                   selector: (context, provider) => provider.height,
                   builder: (context, height, _) {
-                    return buildDialogContents(
-                        context,
-                        GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                            hideKeyboard(context);
-                          },
-                          child: Container(
-                              alignment: Alignment.center,
-                              height: height - AppSize.buttonHeight * 2,
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    defaultSpacing(),
-                                    _buildMatSelector(context),
-                                    _buildQuantityInput(context),
-                                    _buildSurChargeInput(context),
-                                    _buildOrderInfo(context)
-                                  ],
-                                ),
-                              )),
-                        ),
-                        false,
-                        height,
-                        iswithTitle: true,
-                        titleText: tr('add_order'),
-                        rightButtonText: widget.type == OrderItemType.NEW
-                            ? tr('add')
-                            : tr('save'), dataCallback: () async {
-                      hideKeyboard(context);
-                      if (p.selectedMateria == null || p.quantity == null) {
-                        AppToast()
-                            .show(context, tr('plz_check_essential_option'));
-                        return null;
-                      } else {
-                        if (!p.isLoadData && p.priceModel != null) {
-                          var orderItemModel = await p.createOrderItemModel();
-                          var priceModel = p.priceModel;
-                          return {
-                            'orderItemModel': orderItemModel,
-                            'priceModel': priceModel
-                          };
-                        }
-                      }
-                    }, canPopCallBackk: () async {
-                      if (p.selectedMateria == null || p.quantity == null) {
-                        AppToast()
-                            .show(context, tr('plz_check_essential_option'));
-                        return false;
-                      }
-                      if (p.selectedMateria != null &&
-                          p.quantity != null &&
-                          !p.isLoadData &&
-                          p.priceModel != null) {
-                        return true;
-                      }
-                      if (p.priceModel == null) {
-                        AppToast().show(context, tr('plz_check_price'));
-                      }
-                      return false;
-                    });
+                    return Stack(
+                      children: [
+                        buildDialogContents(
+                            context,
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                hideKeyboard(context);
+                              },
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  height: height - AppSize.buttonHeight * 2,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        defaultSpacing(),
+                                        _buildMatSelector(context),
+                                        _buildQuantityInput(context),
+                                        _buildSurChargeInput(context),
+                                        _buildOrderInfo(context)
+                                      ],
+                                    ),
+                                  )),
+                            ),
+                            false,
+                            height,
+                            iswithTitle: true,
+                            titleText: tr('add_order'),
+                            rightButtonText: widget.type == OrderItemType.NEW
+                                ? tr('add')
+                                : tr('save'), dataCallback: () async {
+                          hideKeyboard(context);
+                          if (p.selectedMateria == null || p.quantity == null) {
+                            AppToast().show(
+                                context, tr('plz_check_essential_option'));
+                            return null;
+                          } else {
+                            if (!p.isLoadData && p.priceModel != null) {
+                              var orderItemModel =
+                                  await p.createOrderItemModel();
+                              var priceModel = p.priceModel;
+                              return {
+                                'orderItemModel': orderItemModel,
+                                'priceModel': priceModel
+                              };
+                            }
+                          }
+                        }, canPopCallBackk: () async {
+                          if (p.selectedMateria == null || p.quantity == null) {
+                            AppToast().show(
+                                context, tr('plz_check_essential_option'));
+                            return false;
+                          }
+                          if (p.selectedMateria != null &&
+                              p.quantity != null &&
+                              !p.isLoadData &&
+                              p.priceModel != null) {
+                            return true;
+                          }
+                          if (p.priceModel == null) {
+                            AppToast().show(context, tr('plz_check_price'));
+                          }
+                          return false;
+                        }),
+                        _buildLoadingWidget(context, height)
+                      ],
+                    );
                   },
                 );
               }

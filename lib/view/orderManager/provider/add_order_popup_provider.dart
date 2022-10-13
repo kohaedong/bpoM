@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/add_order_popup_provider.dart
  * Created Date: 2022-09-04 17:56:07
- * Last Modified: 2022-10-14 05:28:49
+ * Last Modified: 2022-10-14 05:58:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -90,7 +90,7 @@ class AddOrderPopupProvider extends ChangeNotifier {
   void setQuantity(String? str, {bool? isNotNotifier}) {
     quantity = str;
     priceModel = null;
-    if (str == null || str.isEmpty) {
+    if (str == null || str.isEmpty || priceModel == null) {
       setHeight(AppSize.realHeight * .5, isNotNotifier: true);
     }
     if (isNotNotifier == null) {

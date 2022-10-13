@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-14 05:15:16
+ * Last Modified: 2022-10-14 05:55:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -811,7 +811,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       priceList[index] != null &&
                       priceList[index]!.netpr != 0.0 &&
                       priceList[index]!.mwsbp != 0.0 &&
-                      model.kwmeng != 0.0
+                      priceList[index]!.kwmeng == model.kwmeng
                   ? Container(
                       child: AppText.text(
                           '${FormatUtil.addComma('${priceList[index]!.netwr ?? 0.0}')} / ${FormatUtil.addComma('${priceList[index]!.mwsbp ?? 0.0}')} ',
