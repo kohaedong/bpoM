@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-10-14 16:23:47
+ * Last Modified: 2022-10-14 17:19:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -283,7 +283,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                         ? () {
                                             AppToast().show(
                                                 context,
-                                                tr('plz_select_something_1',
+                                                tr('plz_select_something_first_1',
                                                     args: [
                                                       tr('product_family'),
                                                       ''
@@ -347,7 +347,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                             ? () {
                                                 AppToast().show(
                                                     context,
-                                                    tr('plz_select_something_2',
+                                                    tr('plz_select_something_first_2',
                                                         args: [
                                                           tr('sales_office'),
                                                           ''

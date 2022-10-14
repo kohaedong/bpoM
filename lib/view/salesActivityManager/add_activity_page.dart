@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-14 17:03:37
+ * Last Modified: 2022-10-14 18:22:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -745,9 +745,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                             : false,
                 deleteIconCallback: () => p.setAnotherSaler(null),
                 width: AppSize.defaultContentsWidth,
-                hintTextStyleCallBack: () => tuple.item1 != null
-                    ? AppTextStyle.default_16
-                    : AppTextStyle.hint_16,
+                hintTextStyleCallBack: () =>
+                    AppTextStyle.h4.copyWith(color: AppColors.hintText),
                 popupSearchType: p.isDoNothing || p.isNotToday
                     ? PopupSearchType.DO_NOTHING
                     : tuple.item2 != null && tuple.item2!
@@ -938,7 +937,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
               } else {
                 AppToast().show(
                     context,
-                    tr('plz_select_something_1',
+                    tr('plz_select_something_first_1',
                         args: [tr('activity_type_2'), '']));
               }
             }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-10-13 15:32:25
+ * Last Modified: 2022-10-14 17:29:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -285,7 +285,7 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                           ? () {
                                               AppToast().show(
                                                   context,
-                                                  tr('plz_select_something_1',
+                                                  tr('plz_select_something_first_1',
                                                       args: [
                                                         tr('product_family'),
                                                         ''
@@ -336,8 +336,8 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                   }
                                 });
                               } else {
-                                AppToast().show(context,
-                                    '${tr('essential_option')}${tr('selecte_first')}');
+                                AppToast().show(
+                                    context, tr('plz_check_essential_option'));
                               }
                             })
                           ])))
