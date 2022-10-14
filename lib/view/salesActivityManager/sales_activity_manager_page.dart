@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-13 19:00:24
+ * Last Modified: 2022-10-14 06:52:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -135,7 +135,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     return SizedBox(
       height: AppSize.weekDayHeight * .5,
       width: AppSize.calendarWidth / 7,
-      child: AppText.text(weekdayName, style: AppTextStyle.sub_16),
+      child: AppText.listViewText(weekdayName, style: AppTextStyle.sub_14),
     );
   }
 
@@ -177,18 +177,18 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                           height: AppSize.weekDayNumberBoxHeight,
                           child: CircleAvatar(
                             backgroundColor: AppColors.primary,
-                            child: AppText.text(
+                            child: AppText.listViewText(
                                 '${DateUtil.getDate(model.dateStr!).day}',
-                                style: AppTextStyle.default_16
+                                style: AppTextStyle.default_14
                                     .copyWith(color: AppColors.whiteText)),
                           ),
                         )
                       : Container(
                           alignment: Alignment.center,
                           height: AppSize.weekDayNumberBoxHeight,
-                          child: AppText.text(
+                          child: AppText.listViewText(
                               '${DateUtil.getDate(model.dateStr!).day}',
-                              style: AppTextStyle.default_16.copyWith(
+                              style: AppTextStyle.default_14.copyWith(
                                   color: DateUtil.getDate(model.dateStr!)
                                                   .weekday ==
                                               7 ||
@@ -202,7 +202,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                                           : AppColors.defaultText)),
                         ),
                   defaultSpacing(),
-                  AppText.text(
+                  AppText.listViewText(
                       model.column4 == 'C'
                           ? '확정'
                           : model.dateStr != null &&
@@ -212,16 +212,16 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                                       .isBefore(DateTime.now())
                               ? '미확정'
                               : '',
-                      style: AppTextStyle.default_16.copyWith(
+                      style: AppTextStyle.default_14.copyWith(
                           color: model.column4 == 'C'
                               ? AppColors.primary
                               : AppColors.dangerColor,
                           fontWeight: FontWeight.bold)),
-                  AppText.text(
+                  AppText.listViewText(
                       isDataNotEmpty
                           ? '${int.parse(model.column3!.isEmpty ? '0' : model.column3!)}/${int.parse(model.column2!.isEmpty ? '0' : model.column2!) + int.parse(model.column3!.isEmpty ? '0' : model.column3!)}'
                           : '',
-                      style: AppTextStyle.sub_14)
+                      style: AppTextStyle.sub_12)
                 ],
               )
             : Container(),
@@ -433,7 +433,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         final p = context.read<SalseActivityManagerPageProvider>();
         var isFinish = p.dayResponseModel!.table250!.isNotEmpty &&
             p.dayResponseModel!.table250!.single.stat == 'C';
-        if (isFinish) {
+        if (isFinish || p.activityStatus == ActivityStatus.NONE) {
           await Navigator.pushNamed(context, SalseActivityFinishPage.routeName,
               arguments: {
                 't260': model,

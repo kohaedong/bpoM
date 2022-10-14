@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-10-13 15:39:36
+ * Last Modified: 2022-10-14 17:04:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -486,8 +486,8 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                           snapshot.connectionState == ConnectionState.done) {
                         return _buildContents(context);
                       }
-                      return DefaultShimmer.buildDefaultPageShimmer(5,
-                          isWithSet: true, setLenght: 5);
+                      return DefaultShimmer.buildDefaultResultShimmer(
+                          isNotPadding: true);
                     }),
               ));
         });

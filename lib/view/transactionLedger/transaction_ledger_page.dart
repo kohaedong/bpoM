@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-10-13 17:54:17
+ * Last Modified: 2022-10-14 16:23:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -360,6 +360,9 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                             : InputIconType.SELECT,
                                         iconColor:
                                             AppColors.textFieldUnfoucsColor,
+                                        isShowDeleteForHintText:
+                                            tuple.item2 != null &&
+                                                tuple.item3.length > 1,
                                         deleteIconCallback: () =>
                                             p.setEndCustomerModel(null),
                                         hintText: tuple.item3.isEmpty ||
@@ -633,7 +636,9 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                   isTotalRow &&
                                   text.contains('계')
                               ? AppTextStyle.blod_16
-                              : null
+                              : isTotalRow != null && isTotalRow
+                                  ? AppTextStyle.default_12
+                                  : null
                           : AppTextStyle.blod_16
                               .copyWith(fontWeight: FontWeight.w600),
                       textAlign: TextAlign.right),
@@ -644,11 +649,12 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           ? AppTextStyle.blod_16
                           : null
                       : AppTextStyle.blod_16
-                          .copyWith(fontWeight: FontWeight.w600)));
+                          .copyWith(fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.left));
     };
 
     text = text.trim();
-    return isWithToptic != null
+    return isWithToptic != null || (isTotalRow != null && isTotalRow)
         ? Tooltip(
             message: text,
             child: tempWidget(),

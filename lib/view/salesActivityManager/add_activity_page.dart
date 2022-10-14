@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-13 15:41:28
+ * Last Modified: 2022-10-14 17:03:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -273,7 +273,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                     if (result.isSuccessful) {
                                       p.setIsInterviewIndex(0);
                                       _interviewTextEditingController.text = '';
-                                      AppToast().show(context, tr('saved'));
+                                      AppToast().show(
+                                          context, tr('register_successful'));
                                     }
                                   });
                                 }()
@@ -504,7 +505,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   //     : true;
                   await p.saveTable().then((result) {
                     if (result.isSuccessful) {
-                      AppToast().show(context, tr('saved'));
+                      AppToast().show(
+                          context,
+                          p.currenSeqNo == null
+                              ? tr('register_successful')
+                              : tr('saved'));
                     }
                   });
                 }
@@ -1191,8 +1196,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
       child: Column(
         children: [
           CustomerinfoWidget.buildSubTitle(context, '${tr('activity_report')}'),
-          DefaultShimmer.buildDefaultPageShimmer(5,
-              isWithSet: true, setLenght: 10)
+          DefaultShimmer.buildDefaultResultShimmer(isNotPadding: true)
         ],
       ),
     );

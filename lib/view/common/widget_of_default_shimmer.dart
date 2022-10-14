@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/default_shimmer.dart
  * Created Date: 2021-10-13 10:00:13
- * Last Modified: 2022-08-03 17:54:19
+ * Last Modified: 2022-10-14 17:06:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -25,97 +25,101 @@ import 'base_info_row_by_key_and_value.dart';
 import 'base_shimmer.dart';
 
 class DefaultShimmer {
-  static Widget buildDefaultPageShimmer(int length,
-      {bool? isNotWithPadding,
-      bool? isWithSet,
-      int? setLenght,
-      bool? isWithBlodDiveder}) {
-    return isWithSet != null
-        ? ListView(
-            shrinkWrap: true,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ...List.generate(
-                    setLenght!,
-                    (index) => Padding(
-                      padding: EdgeInsets.all(isNotWithPadding != null
-                          ? AppSize.zero
-                          : AppSize.padding),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ...List.generate(
-                              length,
-                              (index) => BaseInfoRowByKeyAndValue.build('', '',
-                                  isWithShimmer: true)),
-                          Divider()
-                        ],
-                      ),
-                    ),
-                  ),
-                  isWithBlodDiveder != null ? buildDividingLine() : Container()
-                ],
-              )
-            ],
-          )
-        : ListView(
-            shrinkWrap: true,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(isNotWithPadding != null
-                        ? AppSize.zero
-                        : AppSize.padding),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ...List.generate(
-                            length,
-                            (index) => BaseInfoRowByKeyAndValue.build('', '',
-                                isWithShimmer: true))
-                      ],
-                    ),
-                  ),
-                  buildDividingLine(),
-                ],
-              )
-            ],
-          );
-  }
+  // static Widget buildDefaultPageShimmer(int length,
+  //     {bool? isNotWithPadding,
+  //     bool? isWithSet,
+  //     int? setLenght,
+  //     bool? isWithBlodDiveder}) {
+  //   return isWithSet != null
+  //       ? ListView(
+  //           shrinkWrap: true,
+  //           children: [
+  //             Column(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               children: [
+  //                 ...List.generate(
+  //                   setLenght!,
+  //                   (index) => Padding(
+  //                     padding: EdgeInsets.all(isNotWithPadding != null
+  //                         ? AppSize.zero
+  //                         : AppSize.padding),
+  //                     child: Column(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       children: [
+  //                         ...List.generate(
+  //                             length,
+  //                             (index) => BaseInfoRowByKeyAndValue.build('', '',
+  //                                 isWithShimmer: true)),
+  //                         Divider()
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 isWithBlodDiveder != null ? buildDividingLine() : Container()
+  //               ],
+  //             )
+  //           ],
+  //         )
+  //       : ListView(
+  //           shrinkWrap: true,
+  //           children: [
+  //             Column(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               children: [
+  //                 Padding(
+  //                   padding: EdgeInsets.all(isNotWithPadding != null
+  //                       ? AppSize.zero
+  //                       : AppSize.padding),
+  //                   child: Column(
+  //                     mainAxisAlignment: MainAxisAlignment.center,
+  //                     children: [
+  //                       ...List.generate(
+  //                           length,
+  //                           (index) => BaseInfoRowByKeyAndValue.build('', '',
+  //                               isWithShimmer: true))
+  //                     ],
+  //                   ),
+  //                 ),
+  //                 buildDividingLine(),
+  //               ],
+  //             )
+  //           ],
+  //         );
+  // }
 
   static buildDefaultResultShimmer({bool? isNotPadding}) {
     return BaseShimmer(
       child: ListView.builder(
         shrinkWrap: true,
-        itemCount: 6,
+        itemCount: 15,
         itemBuilder: (BuildContext context, int index) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(padding: EdgeInsets.only(top: AppSize.padding)),
-              BaseShimmer.shimmerBox(AppTextStyle.default_16.fontSize!,
-                  AppSize.defaultContentsWidth * .5),
-              Padding(
-                  padding: EdgeInsets.only(top: AppSize.defaultShimmorSpacing)),
-              Row(
-                children: [
-                  BaseShimmer.shimmerBox(AppTextStyle.sub_14.fontSize!,
-                      AppSize.defaultContentsWidth * .2),
-                  AppStyles.buildPipe(),
-                  BaseShimmer.shimmerBox(
-                      AppTextStyle.sub_14.fontSize!,
-                      isNotPadding != null
-                          ? AppSize.defaultContentsWidth * .6
-                          : AppSize.defaultContentsWidth * .7),
-                ],
-              ),
-              Padding(padding: EdgeInsets.only(bottom: AppSize.padding)),
-              Divider(color: AppColors.textGrey)
-            ],
+          return Padding(
+            padding: AppSize.defaultSidePadding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(padding: EdgeInsets.only(top: AppSize.padding)),
+                BaseShimmer.shimmerBox(AppTextStyle.default_16.fontSize!,
+                    AppSize.defaultContentsWidth * .5),
+                Padding(
+                    padding:
+                        EdgeInsets.only(top: AppSize.defaultShimmorSpacing)),
+                Row(
+                  children: [
+                    BaseShimmer.shimmerBox(AppTextStyle.sub_14.fontSize!,
+                        AppSize.defaultContentsWidth * .2),
+                    AppStyles.buildPipe(),
+                    BaseShimmer.shimmerBox(
+                        AppTextStyle.sub_14.fontSize!,
+                        isNotPadding != null
+                            ? AppSize.defaultContentsWidth * .6
+                            : AppSize.defaultContentsWidth * .7),
+                  ],
+                ),
+                Padding(padding: EdgeInsets.only(bottom: AppSize.padding)),
+                Divider(color: AppColors.textGrey)
+              ],
+            ),
           );
         },
       ),

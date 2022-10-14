@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_list_item.dart
  * Created Date: 2022-01-04 00:52:36
- * Last Modified: 2022-10-13 15:52:37
+ * Last Modified: 2022-10-14 15:07:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -35,7 +35,8 @@ Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
             children: [
               isHomeList
                   ? Container()
-                  : DateUtil.getDate(model.aedat!).day == DateTime.now().day
+                  : DateUtil.equlse(
+                          DateUtil.getDate(model.aedat!), DateTime.now())
                       ? Padding(
                           padding: EdgeInsets.only(
                               right: AppSize.defaultListItemSpacing),

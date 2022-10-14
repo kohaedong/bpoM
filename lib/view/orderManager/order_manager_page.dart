@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-14 05:55:38
+ * Last Modified: 2022-10-14 17:03:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -975,6 +975,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                     (tp.isRunning != null && !tp.isRunning!)) {
                   tp.perdict(p.onSubmmit().then((result) {
                     if (result.isSuccessful) {
+                      AppToast().show(context, tr('success'));
                       Navigator.popAndPushNamed(
                           context, OrderSearchPage.routeName);
                     }
@@ -1075,8 +1076,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       ],
                     );
                   }
-                  return DefaultShimmer.buildDefaultPageShimmer(5,
-                      isWithSet: true, setLenght: 10);
+                  return DefaultShimmer.buildDefaultResultShimmer(
+                      isNotPadding: true);
                 }));
       },
     );
