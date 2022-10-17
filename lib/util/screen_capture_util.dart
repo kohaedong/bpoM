@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/screen_capture_util.dart
  * Created Date: 2021-12-14 00:55:19
- * Last Modified: 2022-09-30 10:27:01
+ * Last Modified: 2022-10-18 03:01:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -16,6 +16,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/rendering.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/key_service.dart';
@@ -25,6 +26,8 @@ import 'package:flutter/services.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
 import 'dart:ui' as ui;
+
+import 'package:provider/provider.dart';
 
 // 캡쳐방지
 typedef ScreenCaptrueCallback = Future<Uint8List?> Function();
@@ -86,10 +89,10 @@ class ScreenCaptrueUtil {
               if (dialogResult != null) {
                 Future.delayed(Duration(seconds: 2), () {
                   sendImageToServer().then((value) {
-                    var signinProvider = SigninProvider();
+                    var signinProvider = KeyService.baseAppKey.currentContext!
+                        .read<LoginProvider>();
                     signinProvider.setIsWaterMarkeUser();
                     lock = false;
-                    signinProvider.dispose();
                   });
                 }).then((_) => CacheService.setIsDisableUpdate(false));
               }

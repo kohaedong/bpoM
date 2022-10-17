@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-10-13 04:08:25
+ * Last Modified: 2022-10-18 04:19:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -147,8 +147,8 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
   TextEditingController? textEditingController;
   @override
   void initState() {
-    textEditingController = TextEditingController();
     super.initState();
+    textEditingController = TextEditingController();
   }
 
   @override

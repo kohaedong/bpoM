@@ -1,3 +1,4 @@
+import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,15 +24,15 @@ class SigninPage extends StatefulWidget {
 }
 
 class _SigninPageState extends State<SigninPage> {
-  TextEditingController? _idController;
-  TextEditingController? _passwordController;
+  late TextEditingController _idController;
+  late TextEditingController _passwordController;
   late ScrollController _scrollController;
   String? id;
   String? pw;
   String? message;
   bool isShowPopup = false;
-  FocusNode? idFocus;
-  FocusNode? pwFocus;
+  late FocusNode? idFocus;
+  late FocusNode? pwFocus;
   @override
   void initState() {
     super.initState();
@@ -46,8 +47,8 @@ class _SigninPageState extends State<SigninPage> {
   void dispose() {
     idFocus?.dispose();
     pwFocus?.dispose();
-    _idController!.dispose();
-    _passwordController!.dispose();
+    _idController.dispose();
+    _passwordController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -73,7 +74,7 @@ class _SigninPageState extends State<SigninPage> {
                 width: AppSize.defaultContentsWidth,
                 defaultIconCallback: () {
                   p.setAccount(null);
-                  _idController!.text = '';
+                  _idController.text = '';
                 },
                 hintTextStyleCallBack:
                     account != null ? null : () => AppTextStyle.hint_16,
@@ -106,7 +107,7 @@ class _SigninPageState extends State<SigninPage> {
                   keybordType: TextInputType.visiblePassword,
                   defaultIconCallback: () {
                     p.setPassword(null);
-                    _passwordController!.text = '';
+                    _passwordController.text = '';
                   },
                   hintTextStyleCallBack: () => AppTextStyle.hint_16,
                   onChangeCallBack: (str) => p.setPassword(str),
@@ -201,7 +202,8 @@ class _SigninPageState extends State<SigninPage> {
             selector: (context, provider) => Tuple3(
                 provider.isCheckedAutoSigninBox,
                 provider.isCheckedSaveIdBox,
-                provider.isValueNotNull),
+                _idController.text.trim().isNotEmpty &&
+                    _passwordController.text.trim().isNotEmpty),
             builder: (context, tuple, _) {
               return AppStyles.buildButton(
                   context,
@@ -211,28 +213,33 @@ class _SigninPageState extends State<SigninPage> {
                   AppTextStyle.color_18(tuple.item3
                       ? AppColors.whiteText
                       : AppColors.unReadyText),
-                  AppSize.radius8,
-                  tuple.item3
-                      ? () async {
-                          p.startErrorMessage('');
-                          hideKeyboard(context);
-                          // p.setIsIdFocused(false);
-                          // p.setIsPwFocused(false);
-                          final result = await p.signIn();
-                          if (result.isSuccessful) {
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, HomePage.routeName, (route) => false);
-                          } else {
-                            if (result.isShowPopup != null &&
-                                result.isShowPopup!) {
-                              AppDialog.showDangermessage(
-                                  context, '${result.message}');
-                            } else {
-                              p.startErrorMessage(result.message);
-                            }
-                          }
-                        }
-                      : () {});
+                  AppSize.radius8, () async {
+                if (tuple.item3) {
+                  p.startLoading();
+                  try {
+                    p.setAccount(_idController.text.trim());
+                    p.setPassword(_passwordController.text.trim());
+                    p.startErrorMessage('');
+                    p.setAutoLogin();
+                    hideKeyboard(context);
+                    // p.setIsIdFocused(false);
+                    // p.setIsPwFocused(false);
+                    final lp = context.read<LoginProvider>();
+                    final result =
+                        await lp.startSignin(p.userAccount!, p.password!);
+                    if (result.isSuccessful) {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, HomePage.routeName, (route) => false);
+                    } else {
+                      AppDialog.showDangermessage(context, '${result.message}');
+                      p.startErrorMessage(result.message ?? '');
+                    }
+                    p.stopLoading();
+                  } catch (e) {
+                    p.stopLoading();
+                  }
+                }
+              });
             }));
   }
 
@@ -314,12 +321,10 @@ class _SigninPageState extends State<SigninPage> {
                     snapshot.connectionState == ConnectionState.done) {
                   return Builder(builder: (context) {
                     if (snapshot.data!['id'] != null) {
-                      p.userAccount = snapshot.data!['id'];
-                      _idController!.text = snapshot.data!['id'];
+                      _idController.text = snapshot.data!['id'];
                     }
                     if (snapshot.data!['pw'] != null) {
-                      p.password = snapshot.data!['pw'];
-                      _passwordController!.text = snapshot.data!['pw'];
+                      _passwordController.text = snapshot.data!['pw'];
                     }
                     return Stack(
                       children: [

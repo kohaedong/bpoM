@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_page.dart
  * Created Date: 2022-07-05 09:55:57
- * Last Modified: 2022-10-14 17:03:46
+ * Last Modified: 2022-10-18 04:20:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -41,8 +41,8 @@ class _DetailBookPageState extends State<DetailBookPage> {
   late TextEditingController _textEditingController;
   @override
   void initState() {
-    _textEditingController = TextEditingController();
     super.initState();
+    _textEditingController = TextEditingController();
   }
 
   @override

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_all_page.dart
  * Created Date: 2022-01-04 00:52:52
- * Last Modified: 2022-10-14 17:02:54
+ * Last Modified: 2022-10-18 04:20:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -38,8 +38,8 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
   var _scrollSwich = ValueNotifier<bool>(false);
   @override
   void initState() {
-    scrollController = ScrollController();
     super.initState();
+    scrollController = ScrollController();
   }
 
   @override

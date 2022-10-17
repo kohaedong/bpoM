@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/oder_item_input_widget.dart
  * Created Date: 2022-07-26 17:04:40
- * Last Modified: 2022-10-12 23:51:00
+ * Last Modified: 2022-10-18 04:19:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -40,9 +40,9 @@ class _OrderItemInputWidgetState extends State<OrderItemInputWidget> {
   late TextEditingController textEditingController;
   @override
   void initState() {
+    super.initState();
     textEditingController = TextEditingController();
     textEditingController.text = widget.defaultValue!;
-    super.initState();
   }
 
   @override

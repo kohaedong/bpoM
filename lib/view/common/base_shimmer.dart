@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_shimmer.dart
  * Created Date: 2021-09-18 18:29:48
- * Last Modified: 2022-07-03 15:00:02
+ * Last Modified: 2022-10-18 04:19:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -36,10 +36,10 @@ class _BaseShimmerState extends State<BaseShimmer> {
   var shimmerSwich = ValueNotifier(true);
   @override
   void initState() {
+    super.initState();
     timer = Timer(Duration(seconds: 5), () {
       shimmerSwich.value = false;
     });
-    super.initState();
   }
 
   @override

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_rotation_animation_components.dart
  * Created Date: 2022-07-14 23:02:16
- * Last Modified: 2022-09-24 14:49:46
+ * Last Modified: 2022-10-18 04:20:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -34,9 +34,9 @@ class _WidgetOfRotationAnimationComponentsState
   bool isStartTrain = false;
   @override
   void initState() {
+    super.initState();
     _animationController =
         AnimationController(duration: Duration(milliseconds: 300), vsync: this);
-    super.initState();
   }
 
   @override

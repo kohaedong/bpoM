@@ -23,16 +23,11 @@ class _CommonLoginPageState extends State<CommonLoginPage> {
   Timer? timer;
   @override
   void initState() {
+    super.initState();
     timer = Timer(Duration(seconds: 60), () {
       loadingSwich.value = false;
     });
     loadingSwich = ValueNotifier(true);
-    Future.delayed(Duration.zero, () {
-      CheckUpdateAndNoticeService.check(
-          context, CheckType.UPDATE_AND_NOTICE, false);
-    });
-
-    super.initState();
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
 import 'package:medsalesportal/enums/notice_type.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/enums/update_type.dart';
+import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/model/notice/notice_model.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/key_service.dart';
@@ -429,40 +430,30 @@ class CheckUpdateAndNoticeService {
     var routeName = ModalRoute.of(context)!.settings.name;
     print(routeName);
     if (routeName == '/' || routeName == CommonLoginPage.routeName) {
-      var signProvider = SigninProvider();
-      final isAutoLogin = await signProvider.isAutoLogin();
+      var signinProvider = context.read<LoginProvider>();
+      final isAutoLogin = await signinProvider.isAutoLogin();
       print('isAutoLogin From updateRoute  ::: $isAutoLogin');
       if (isAutoLogin) {
         print('with autoLogin');
-        var loginResult = await signProvider.signIn(isWithAutoLogin: true);
+        var loginResult = await signinProvider.startSignin('', '');
         if (loginResult.isSuccessful) {
-          signProvider.dispose();
           Navigator.pushNamedAndRemoveUntil(
-              KeyService.baseAppKey.currentContext!,
-              HomePage.routeName,
-              (route) => false);
+              context, HomePage.routeName, (route) => false);
         } else {
-          signProvider.dispose();
           Navigator.pushNamedAndRemoveUntil(
-              KeyService.baseAppKey.currentContext!,
-              SigninPage.routeName,
-              (route) => false,
-              arguments: {
-                'id': loginResult.id,
-                'pw': loginResult.pw,
-                'isShowPopup': loginResult.isShowPopup,
-                'message': loginResult.message
-              });
+              context, SigninPage.routeName, (route) => false, arguments: {
+            'id': '',
+            'pw': '',
+            'isShowPopup': false,
+            'message': loginResult.message
+          });
         }
       } else {
         print('FDSFDSFSDF&&*^&*^(*&^(&^*(');
         print(routeName);
-        signProvider.dispose();
         Future.delayed(Duration(seconds: 1), () {
           Navigator.pushNamedAndRemoveUntil(
-              KeyService.baseAppKey.currentContext!,
-              SigninPage.routeName,
-              (route) => false);
+              context, SigninPage.routeName, (route) => false);
         });
       }
     }

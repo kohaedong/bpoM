@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/splash/commonLogin/provider/common_login_provider.dart
  * Created Date: 2021-10-06 03:26:46
- * Last Modified: 2022-10-05 16:34:17
+ * Last Modified: 2022-10-18 03:31:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,6 +22,7 @@ import 'package:medsalesportal/enums/notice_type.dart';
 import 'package:medsalesportal/enums/permission_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/enums/update_type.dart';
+import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/globalProvider/special_notice_provider.dart';
 import 'package:medsalesportal/model/commonCode/common_code_response_model.dart';
 import 'package:medsalesportal/model/notice/notice_model.dart';
@@ -98,15 +99,13 @@ class UpdateAndNoticeProvider extends ChangeNotifier {
 // --------------------// update // -----------------------------
 // --------------------// update // -----------------------------
   Future<UpdateAndNoticeResult> checkUpdate() async {
-    var signinProvider = SigninProvider();
+    var signinProvider =
+        KeyService.baseAppKey.currentContext!.read<LoginProvider>();
     final isAutoLogin = await signinProvider.isAutoLogin();
-
     var userid = '';
     if (isAutoLogin) {
       userid = await signinProvider.getIdonly().then((id) => id ?? '');
     }
-    signinProvider.dispose();
-
     final packageInfo = await PackageInfoService.getInfo();
     print('currentVersion:: ${packageInfo.version}');
     final updateBody = {

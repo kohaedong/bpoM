@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:medsalesportal/globalProvider/login_provider.dart';
 
 import './home_icon_map.dart';
 import 'package:provider/provider.dart';
@@ -125,8 +125,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   } else {
                     if (map.value.routeName ==
                         SalseActivityManagerPage.routeName) {
-                      final ap = context.read<AppAuthProvider>();
-                      if (!ap.isPermidedSalseGroup) {
+                      final lp = context.read<LoginProvider>();
+                      if (!lp.isPermidedSalseGroup) {
                         AppToast().show(context, '${tr('permission_denied')}');
                       } else {
                         pr('sb');

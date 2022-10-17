@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/detail_book_web_view.dart
  * Created Date: 2022-07-29 15:17:27
- * Last Modified: 2022-09-06 13:27:13
+ * Last Modified: 2022-10-18 04:20:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -30,12 +30,12 @@ class DetailBookWebView extends StatefulWidget {
 class _DetailBookWebViewState extends State<DetailBookWebView> {
   @override
   void initState() {
+    super.initState();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
     ]);
-    super.initState();
   }
 
   @override

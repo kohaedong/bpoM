@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_web_view.dart
  * Created Date: 2021-10-01 16:35:01
- * Last Modified: 2022-08-01 09:48:53
+ * Last Modified: 2022-10-18 04:19:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -32,13 +32,13 @@ class BaseWebView extends StatefulWidget {
 class _BaseWebViewState extends State<BaseWebView> {
   @override
   void initState() {
+    super.initState();
     timer = Timer(const Duration(milliseconds: 800), () {
       swichShowWebView.value = true;
     });
     if (Platform.isAndroid) {
       AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
     }
-    super.initState();
   }
 
   @override

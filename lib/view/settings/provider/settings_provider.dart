@@ -1,13 +1,16 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/rfc/es_login_model.dart';
 import 'package:medsalesportal/model/user/user_settings.dart';
+import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/model/update/check_update_model.dart';
-import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
 import 'package:medsalesportal/view/commonLogin/provider/update_and_notice_provider.dart';
 
 class SettingsProvider extends ChangeNotifier {
@@ -43,25 +46,6 @@ class SettingsProvider extends ChangeNotifier {
     textScale = settings!.textScale;
     return SettingsResult(true, settings: settings);
   }
-
-  // void resetNoticeTimeSettings() {
-  //   getUserEvn().then((setting) {
-  //     var hourNotNull = setting != null &&
-  //         setting.notDisturbStartHour != null &&
-  //         setting.notDisturbStartHour!.isNotEmpty;
-  //     var minuteNotNull = setting != null &&
-  //         setting.notDisturbStartHour != null &&
-  //         setting.notDisturbStartHour!.isNotEmpty;
-  //     if (hourNotNull && minuteNotNull) {
-  //       settings = setting;
-  //     } else {
-  //       notDisturbStartHour = '23';
-  //       notDisturbStartMinute = '00';
-  //       notDisturbEndHour = '07';
-  //       notDisturbEndMinute = '00';
-  //     }
-  //   });
-  // }
 
   void setSettingsScale(String scale) {
     this.settings!.textScale = scale;
@@ -146,22 +130,28 @@ class SettingsProvider extends ChangeNotifier {
 
   Future<bool> saveUserEvn() async {
     final esLogin = CacheService.getEsLogin();
-    var signinProvider = SigninProvider();
+    var loginProvider =
+        KeyService.baseAppKey.currentContext!.read<LoginProvider>();
     print(esLogin!.toJson());
-    var result = await signinProvider.saveUserEven(
-        settings!, esLogin.logid!.toLowerCase());
-    signinProvider.dispose();
-    return result;
+    var result = await loginProvider.saveUserEnvironment(
+        userAccount: esLogin.logid!.toLowerCase(),
+        passingUserSettings: settings!);
+    return result.data != null;
   }
 
   Future<UserSettings?> getUserEvn() async {
     final isLogin = CacheService.getIsLogin();
+    pr(1);
     final isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-    var signinProvider = SigninProvider();
-    var result = await signinProvider
-        .checkUserEnvironment(isLoginModel.logid!.toLowerCase());
-    signinProvider.dispose();
-    return result;
+    var loginProvider =
+        KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+    var result = await loginProvider.checkUserEnvironment(
+        userAccont: isLoginModel.logid!.toLowerCase());
+    pr(2);
+
+    var temp = result.data as UserSettings;
+    pr(temp.toJson());
+    return temp;
   }
 
   Future<bool> sendSuggestion() async {
@@ -188,11 +178,11 @@ class SettingsProvider extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    var signinProvider = SigninProvider();
-    await signinProvider
+    var loginProvider =
+        KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+    await loginProvider
         .setAutoLogin(false)
         .then((value) => print('setAutoLogin to $value'));
-    signinProvider.dispose();
   }
 }
 

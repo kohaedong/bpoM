@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_animation_components.dart
  * Created Date: 2022-07-14 21:54:05
- * Last Modified: 2022-08-04 22:34:13
+ * Last Modified: 2022-10-18 04:20:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -61,12 +61,12 @@ class _WidgetOfOffSetAnimationWidgetState
 
   @override
   void initState() {
+    super.initState();
     animationController = widget.controller ??
         AnimationController(
             vsync: this,
             duration: Duration(milliseconds: 300),
             reverseDuration: Duration(milliseconds: 300));
-    super.initState();
   }
 
   @override

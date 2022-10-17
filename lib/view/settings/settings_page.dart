@@ -139,9 +139,6 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.read<SettingsProvider>();
-    pr(CheckSuperAccount.isMultiAccount());
-    pr(CheckSuperAccount.isMultiAccount());
-    pr(CheckSuperAccount.isMultiAccount());
     return BaseLayout(
         hasForm: true,
         appBar: MainAppBar(context,
