@@ -61,10 +61,11 @@ class _SigninPageState extends State<SigninPage> {
             builder: (context, account, _) {
               return BaseInputWidget(
                 onTap: () {
-                  _scrollController.animateTo(
-                      _scrollController.position.maxScrollExtent,
-                      duration: Duration(seconds: 1),
-                      curve: Curves.bounceOut);
+                  Future.delayed(Duration(milliseconds: 400), () {
+                    _scrollController.animateTo(1500,
+                        duration: Duration(milliseconds: 100),
+                        curve: Curves.slowMiddle);
+                  });
                 },
                 focusNode: idFocus,
                 height: AppSize.buttonHeight,
@@ -98,10 +99,11 @@ class _SigninPageState extends State<SigninPage> {
                 return BaseInputWidget(
                   textEditingController: _passwordController,
                   onTap: () {
-                    _scrollController.animateTo(
-                        _scrollController.position.maxScrollExtent,
-                        duration: Duration(seconds: 1),
-                        curve: Curves.bounceOut);
+                    Future.delayed(Duration(milliseconds: 400), () {
+                      _scrollController.animateTo(1500,
+                          duration: Duration(milliseconds: 100),
+                          curve: Curves.slowMiddle);
+                    });
                   },
                   focusNode: pwFocus,
                   context: context,
@@ -229,8 +231,9 @@ class _SigninPageState extends State<SigninPage> {
                     // p.setIsIdFocused(false);
                     // p.setIsPwFocused(false);
                     final lp = context.read<LoginProvider>();
-                    final result =
-                        await lp.startSignin(p.userAccount!, p.password!);
+                    final result = await lp.startSignin(
+                        p.userAccount!, p.password!,
+                        isAutoLogin: false);
                     if (result.isSuccessful) {
                       p.setAutoLogin();
                       Navigator.pushNamedAndRemoveUntil(

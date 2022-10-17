@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
- * Last Modified: 2022-10-18 04:54:47
+ * Last Modified: 2022-10-18 05:30:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -360,11 +360,11 @@ class LoginProvider extends ChangeNotifier {
     return ResultModel(false, message: 'get device info faild');
   }
 
-  Future<ResultModel> webSignIn(String? id, String? pw) async {
+  Future<ResultModel> webSignIn(String? id, String? pw,
+      {bool? isAutoLogin}) async {
     var signBody = <String, dynamic>{};
     var message = '';
-    var isWithAutoLogin = await isAutoLogin();
-    if (isWithAutoLogin) {
+    if (isAutoLogin != null && isAutoLogin) {
       var ssoResultMap = await getUserIdAndPasswordFromSSO();
       userId = "${ssoResultMap['userAccount']}".trim();
       userPw = "${ssoResultMap['password']}".trim();
@@ -462,10 +462,11 @@ class LoginProvider extends ChangeNotifier {
     return ResultModel(true);
   }
 
-  Future<ResultModel> startSignin(String userId, String userPw) async {
+  Future<ResultModel> startSignin(String userId, String userPw,
+      {bool? isAutoLogin}) async {
     ResultModel? result;
     try {
-      result = await webSignIn(userId, userPw);
+      result = await webSignIn(userId, userPw, isAutoLogin: isAutoLogin);
       if (!result.isSuccessful) return result;
       result = await requestToken();
       if (!result.isSuccessful) return result;
