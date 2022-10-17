@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/model/user/user.dart';
-import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/model/user/user_settings.dart';
 import 'package:medsalesportal/globalProvider/login_provider.dart';
@@ -23,7 +22,6 @@ class SigninPageProvider extends ChangeNotifier {
   double keybordHeight = 0;
   UserSettings? userSettings;
   SapLoginInfoResponseModel? sapLoginInfoResponseModel;
-  var _api = ApiService();
   static const MethodChannel iosPlatform = MethodChannel('kolonbase/keychain');
   static const MethodChannel androidPlatform =
       MethodChannel("mKolon.sso.channel");

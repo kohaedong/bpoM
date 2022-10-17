@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/splash/commonLogin/provider/common_login_provider.dart
  * Created Date: 2021-10-06 03:26:46
- * Last Modified: 2022-10-18 04:31:48
+ * Last Modified: 2022-10-18 05:09:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,33 +13,32 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'dart:async';
 import 'dart:io';
+import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
-import 'package:medsalesportal/enums/notice_type.dart';
-import 'package:medsalesportal/enums/permission_type.dart';
-import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/enums/update_type.dart';
-import 'package:medsalesportal/globalProvider/login_provider.dart';
-import 'package:medsalesportal/globalProvider/special_notice_provider.dart';
-import 'package:medsalesportal/model/commonCode/common_code_response_model.dart';
-import 'package:medsalesportal/model/notice/notice_model.dart';
-import 'package:medsalesportal/model/notice/notice_response_model.dart';
-import 'package:medsalesportal/model/update/check_update_model.dart';
-import 'package:medsalesportal/model/user/user.dart';
-import 'package:medsalesportal/model/user/user_settings.dart';
-import 'package:medsalesportal/service/api_service.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/service/key_service.dart';
-import 'package:medsalesportal/service/local_file_servicer.dart';
-import 'package:medsalesportal/service/package_info_service.dart';
-import 'package:medsalesportal/service/permission_service.dart';
-import 'package:medsalesportal/view/signin/provider/signin_page_provider.dart';
-import 'package:open_file/open_file.dart' as openfile;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:open_file/open_file.dart' as openfile;
+import 'package:medsalesportal/model/user/user.dart';
+import 'package:medsalesportal/enums/notice_type.dart';
+import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/enums/update_type.dart';
+import 'package:medsalesportal/service/key_service.dart';
+import 'package:medsalesportal/service/api_service.dart';
+import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/enums/permission_type.dart';
+import 'package:medsalesportal/model/user/user_settings.dart';
+import 'package:medsalesportal/service/permission_service.dart';
+import 'package:medsalesportal/model/notice/notice_model.dart';
+import 'package:medsalesportal/service/local_file_servicer.dart';
+import 'package:medsalesportal/service/package_info_service.dart';
+import 'package:medsalesportal/globalProvider/login_provider.dart';
+import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
+import 'package:medsalesportal/model/update/check_update_model.dart';
+import 'package:medsalesportal/model/notice/notice_response_model.dart';
+import 'package:medsalesportal/globalProvider/special_notice_provider.dart';
+import 'package:medsalesportal/model/commonCode/common_code_response_model.dart';
 
 class UpdateAndNoticeProvider extends ChangeNotifier {
   bool isdownloadStart = false;

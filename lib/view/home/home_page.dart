@@ -17,7 +17,6 @@ import 'package:medsalesportal/view/home/notice_list_item.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:medsalesportal/view/settings/settings_page.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/globalProvider/app_auth_provider.dart';
 import 'package:medsalesportal/view/home/provider/notice_provider.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/view/settings/send_suggestions_page.dart';

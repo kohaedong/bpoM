@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -10,6 +7,7 @@ import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
+import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
 import 'package:medsalesportal/model/update/check_update_model.dart';
 import 'package:medsalesportal/view/settings/font_setting_page.dart';
 import 'package:medsalesportal/view/settings/notice_setting_page.dart';
