@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:medsalesportal/globalProvider/connectivity_state_provider.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import './home_icon_map.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +14,9 @@ import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/home/notice_all_page.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/home/notice_list_item.dart';
-import 'package:medsalesportal/view/settings/settings_page.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:medsalesportal/view/settings/settings_page.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/globalProvider/app_auth_provider.dart';
 import 'package:medsalesportal/view/home/provider/notice_provider.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
@@ -72,10 +72,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState lifeCycle) async {
     super.didChangeAppLifecycleState(lifeCycle);
-    final cp = context.read<ConnectivityStatusProvider>();
-    if (cp.connectivityResult == ConnectionState.done) {
-      return;
-    }
     var _isForeground = (lifeCycle == AppLifecycleState.resumed);
     var paused = (lifeCycle == AppLifecycleState.paused);
     final arguments = ModalRoute.of(context)!.settings.arguments;
@@ -94,6 +90,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         (isLandSpace == null || !isLandSpace) &&
         arguments == null &&
         !isLocked) {
+      pr('ininin');
       isLocked = true;
       // 다이얼로그 호출시 업데이트 체크 재외 처리.
       final isDisable = CacheService.getIsDisableUpdate();

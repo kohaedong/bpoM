@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/globalProvider/connectivity_state_provider.dart';
-import 'package:medsalesportal/globalProvider/special_notice_provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
-import 'package:medsalesportal/view/commonLogin/update_and_notice_dialog.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
-import 'package:provider/provider.dart';
+import 'package:medsalesportal/globalProvider/special_notice_provider.dart';
+import 'package:medsalesportal/view/commonLogin/update_and_notice_dialog.dart';
 
 class CommonLoginPage extends StatefulWidget {
   const CommonLoginPage({Key? key}) : super(key: key);
@@ -54,8 +53,6 @@ class _CommonLoginPageState extends State<CommonLoginPage> {
       CheckUpdateAndNoticeService.check(
           context, CheckType.UPDATE_AND_NOTICE, false);
     });
-    final cp = context.read<ConnectivityStatusProvider>();
-    cp.init();
     return BaseLayout(
         hasForm: false,
         appBar: null,

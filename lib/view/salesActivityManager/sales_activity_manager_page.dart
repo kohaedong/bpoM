@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-17 16:04:50
+ * Last Modified: 2022-10-17 20:17:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -174,7 +174,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                           DateUtil.getDate(model.dateStr!), DateTime.now())
                       ? Container(
                           alignment: Alignment.center,
-                          height: AppSize.weekDayNumberBoxHeight,
                           child: CircleAvatar(
                             backgroundColor: AppColors.primary,
                             child: AppText.listViewText(
@@ -185,7 +184,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                         )
                       : Container(
                           alignment: Alignment.center,
-                          height: AppSize.weekDayNumberBoxHeight,
                           child: AppText.listViewText(
                               '${DateUtil.getDate(model.dateStr!).day}',
                               style: AppTextStyle.default_14.copyWith(
@@ -221,12 +219,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                       isDataNotEmpty
                           ? '${int.parse(model.column1!.isEmpty ? '0' : model.column1!)}/${int.parse(model.column2!.isEmpty ? '0' : model.column2!) + int.parse(model.column3!.isEmpty ? '0' : model.column3!)}'
                           : '',
-                      style: AppTextStyle.sub_12)
-                  // AppText.listViewText(
-                  //     isDataNotEmpty
-                  //         ? '${int.parse(model.column2!.isEmpty ? '0' : model.column2!)}/${int.parse(model.column3!.isEmpty ? '0' : model.column3!)}'
-                  //         : '',
-                  //     style: AppTextStyle.sub_12)
+                      style: AppTextStyle.sub_12),
+                  defaultSpacing()
                 ],
               )
             : Container(),
@@ -363,15 +357,12 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         return Builder(builder: (context) {
           if (isShowPopup != null && isShowPopup) {
             Future.delayed(Duration.zero, () async {
-              await AppDialog.showSimpleDialog(
-                  context,
-                  null,
+              await AppDialog.showSignglePopup(
+                  KeyService.baseAppKey.currentContext!,
                   tr('have_unconfirmed_activity', args: [
                     '${DateUtil.getDateStrForKR(p.previousWorkingDay!)}'
-                  ]), callBack: (isPressedTrue) {
-                Navigator.of(KeyService.activityPageKey.currentContext!).pop();
-                p.resetIsShowPopup();
-              }, isSingleButton: true);
+                  ]));
+              p.resetIsShowPopup();
             });
           }
           return Container();
