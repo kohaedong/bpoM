@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-14 05:39:39
+ * Last Modified: 2022-10-18 07:01:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -395,6 +395,9 @@ class OrderManagerPageProvider extends ChangeNotifier {
         searchPerson(dptnm: map['dptnm']);
       }
       selectedCustomerModel = map['model'] as EtCustomerModel?;
+      if (map['salse_group'] != null && map['salse_group'] != '') {
+        selectedSalseGroup = map['salse_group'];
+      }
       if (selectedCustomerModel != null) {
         await searchSupplierAndEndCustomer(true);
         await searchSupplierAndEndCustomer(false);

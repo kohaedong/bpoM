@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/popup_search_type.dart
  * Created Date: 2021-09-10 21:38:04
- * Last Modified: 2022-10-02 02:25:07
+ * Last Modified: 2022-10-18 06:55:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/app_size.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 
 import 'popup_list_type.dart';
 
@@ -123,7 +124,7 @@ extension PopupSearchTypeExtension on PopupSearchType {
       case PopupSearchType.SEARCH_CUSTOMER:
         return AppSize.realHeight * .8;
       case PopupSearchType.SEARCH_SALLER:
-        return AppSize.realHeight * .85;
+        return AppSize.realHeight * .9;
       case PopupSearchType.SEARCH_SUGGETION_ITEM:
         return AppSize.realHeight * .8;
       case PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER:
@@ -137,7 +138,7 @@ extension PopupSearchTypeExtension on PopupSearchType {
       case PopupSearchType.SEARCH_KEY_MAN:
         return AppSize.realHeight * .5;
       case PopupSearchType.SEARCH_SALSE_PERSON:
-        return AppSize.realHeight * .5;
+        return AppSize.realHeight * .7;
       default:
         return AppSize.popupHeightWidthOneRowSearchBar;
     }
@@ -156,10 +157,15 @@ extension PopupSearchTypeExtension on PopupSearchType {
             AppSize.buttonHeight +
             AppSize.secondButtonHeight;
       case PopupSearchType.SEARCH_SALLER:
-        return AppSize.defaultTextFieldHeight * 4 +
-            AppSize.defaultListItemSpacing * 6 +
-            AppSize.buttonHeight +
-            AppSize.secondButtonHeight;
+        return CheckSuperAccount.isMultiAccount()
+            ? AppSize.defaultTextFieldHeight * 5 +
+                AppSize.defaultListItemSpacing * 7 +
+                AppSize.buttonHeight +
+                AppSize.secondButtonHeight
+            : AppSize.defaultTextFieldHeight * 4 +
+                AppSize.defaultListItemSpacing * 6 +
+                AppSize.buttonHeight +
+                AppSize.secondButtonHeight;
       case PopupSearchType.SEARCH_MATERIAL:
         return AppSize.defaultTextFieldHeight * 2 +
             AppSize.defaultListItemSpacing * 4 +

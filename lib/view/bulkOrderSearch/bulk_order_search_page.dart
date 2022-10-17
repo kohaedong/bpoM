@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-10-18 04:19:14
+ * Last Modified: 2022-10-18 08:13:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -457,17 +457,29 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
               )
             : provider.isLoadData
                 ? DefaultShimmer.buildDefaultResultShimmer()
-                : ValueListenableBuilder<bool>(
-                    valueListenable: _panelSwich,
-                    builder: (context, isOpen, _) {
-                      return Container(
-                        height: isOpen
-                            ? AppSize.realHeight * .1
-                            : AppSize.realHeight * .5,
-                        alignment: Alignment.center,
-                        child: AppText.listViewText(tr('no_data')),
-                      );
-                    })
+                : RefreshIndicator(
+                    onRefresh: () async {
+                      provider.onSearch(true);
+                    },
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        ValueListenableBuilder<bool>(
+                            valueListenable: _panelSwich,
+                            builder: (context, isOpen, _) {
+                              return Container(
+                                height: isOpen
+                                    ? AppSize.realHeight * .1
+                                    : AppSize.realHeight * .5,
+                                alignment: Alignment.center,
+                                child: provider.isFirstRun
+                                    ? Container()
+                                    : AppText.listViewText(tr('no_data')),
+                              );
+                            })
+                      ],
+                    ),
+                  )
       ],
     );
   }

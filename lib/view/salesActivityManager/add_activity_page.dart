@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-14 18:22:21
+ * Last Modified: 2022-10-18 06:27:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -662,15 +662,22 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   Widget _buildCheckBox(BuildContext context, bool isChecked,
       {bool? isWithSuggetedItem, int? index}) {
+    final p = context.read<AddActivityPageProvider>();
     return SizedBox(
       height: AppSize.defaultCheckBoxHeight,
       width: AppSize.defaultCheckBoxHeight,
       child: Checkbox(
-          activeColor: AppColors.primary,
-          side: BorderSide(color: Colors.grey),
+          activeColor: p.isDoNothing || p.isNotToday
+              ? AppColors.unReadyButton
+              : AppColors.primary,
+          checkColor: p.isDoNothing || p.isNotToday
+              ? AppColors.unReadyText.withOpacity(.2)
+              : null,
+          side: p.isDoNothing || p.isNotToday
+              ? BorderSide(color: AppColors.defaultText)
+              : BorderSide(color: Colors.grey),
           value: isChecked,
           onChanged: (val) {
-            final p = context.read<AddActivityPageProvider>();
             if (p.isDoNothing || p.isNotToday) return;
             if (isWithSuggetedItem != null && isWithSuggetedItem) {
               // p.updateSuggestedList(index!);
@@ -722,11 +729,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
             builder: (context, tuple, _) {
               return BaseInputWidget(
                 context: context,
-                bgColor: ismoutiAccount
-                    ? null
-                    : tuple.item2 != null && tuple.item2!
-                        ? AppColors.unReadyButton
-                        : null,
+                bgColor: (tuple.item2 != null && tuple.item2!) || p.isNotToday
+                    ? AppColors.unReadyButton
+                    : null,
                 iconType: p.isDoNothing
                     ? null
                     : tuple.item2 != null && tuple.item2!

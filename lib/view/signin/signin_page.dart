@@ -61,11 +61,11 @@ class _SigninPageState extends State<SigninPage> {
             builder: (context, account, _) {
               return BaseInputWidget(
                 onTap: () {
-                  Future.delayed(Duration(milliseconds: 400), () {
-                    _scrollController.animateTo(1500,
-                        duration: Duration(milliseconds: 100),
-                        curve: Curves.slowMiddle);
-                  });
+                  // Future.delayed(Duration(milliseconds: 400), () {
+                  //   _scrollController.animateTo(1500,
+                  //       duration: Duration(milliseconds: 100),
+                  //       curve: Curves.slowMiddle);
+                  // });
                 },
                 focusNode: idFocus,
                 height: AppSize.buttonHeight,
@@ -99,11 +99,11 @@ class _SigninPageState extends State<SigninPage> {
                 return BaseInputWidget(
                   textEditingController: _passwordController,
                   onTap: () {
-                    Future.delayed(Duration(milliseconds: 400), () {
-                      _scrollController.animateTo(1500,
-                          duration: Duration(milliseconds: 100),
-                          curve: Curves.slowMiddle);
-                    });
+                    // Future.delayed(Duration(milliseconds: 400), () {
+                    //   _scrollController.animateTo(1500,
+                    //       duration: Duration(milliseconds: 100),
+                    //       curve: Curves.slowMiddle);
+                    // });
                   },
                   focusNode: pwFocus,
                   context: context,

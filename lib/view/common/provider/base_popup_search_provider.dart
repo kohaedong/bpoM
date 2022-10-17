@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-13 07:41:07
+ * Last Modified: 2022-10-18 08:24:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -107,6 +107,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
       selectedProductFamily = bodyMap?['product_family'];
       await getProductFamily();
       await getSalesGroup(isFirstRun: isFirestRun);
+      selectedSalesGroup = bodyMap?['salse_group'];
       searchPerson(true, isFromSearchSaller: true);
     }
   }

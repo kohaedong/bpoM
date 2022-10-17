@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/default_shimmer.dart
  * Created Date: 2021-10-13 10:00:13
- * Last Modified: 2022-10-14 18:24:31
+ * Last Modified: 2022-10-18 07:57:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
