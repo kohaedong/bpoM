@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
- * Last Modified: 2022-10-18 04:16:02
+ * Last Modified: 2022-10-18 04:54:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,7 +14,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medsalesportal/model/rfc/et_orghk_model.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/model/user/user.dart';
 import 'package:medsalesportal/enums/account_type.dart';
@@ -28,6 +27,7 @@ import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/http/token_model.dart';
 import 'package:medsalesportal/model/user/user_settings.dart';
+import 'package:medsalesportal/model/rfc/et_orghk_model.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/service/deviceInfo_service.dart';
 import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
@@ -47,6 +47,7 @@ class LoginProvider extends ChangeNotifier {
   List<EtOrghkModel?> salseGroupList = [];
   UserSettings? userSettings;
   User? user;
+  bool? isShowErrorMessage;
   bool? isLogedin;
   String? userId;
   String? userPw;
@@ -65,6 +66,11 @@ class LoginProvider extends ChangeNotifier {
 
   void setIsLogedin(bool val) {
     isLogedin = val;
+  }
+
+  void setIsShowErrorMessage(bool? val) {
+    isShowErrorMessage = val;
+    notifyListeners();
   }
 
   void setSsalseGroupList(List<EtOrghkModel> list) {
@@ -372,6 +378,7 @@ class LoginProvider extends ChangeNotifier {
     _api.init(RequestType.SIGNIN);
     final signResult = await _api.request(body: signBody);
     if (signResult!.statusCode == 200 && signResult.body['code'] == "NG") {
+      isShowErrorMessage = true;
       var message = signResult.body['message'] as String;
       var isSuccess = false;
       pr(message);

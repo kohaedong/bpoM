@@ -11,7 +11,7 @@ import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
-import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
+import 'package:medsalesportal/view/signin/provider/signin_page_provider.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 
@@ -30,7 +30,6 @@ class _SigninPageState extends State<SigninPage> {
   String? id;
   String? pw;
   String? message;
-  bool isShowPopup = false;
   late FocusNode? idFocus;
   late FocusNode? pwFocus;
   @override
@@ -54,15 +53,18 @@ class _SigninPageState extends State<SigninPage> {
   }
 
   Widget _buildTextFormForId(BuildContext context) {
-    final p = context.read<SigninProvider>();
+    final p = context.read<SigninPageProvider>();
     return Padding(
         padding: AppSize.defaultSidePadding,
-        child: Selector<SigninProvider, String?>(
+        child: Selector<SigninPageProvider, String?>(
             selector: (context, provider) => provider.userAccount,
             builder: (context, account, _) {
               return BaseInputWidget(
                 onTap: () {
-                  // p.setIsIdFocused(true);
+                  _scrollController.animateTo(
+                      _scrollController.position.maxScrollExtent,
+                      duration: Duration(seconds: 1),
+                      curve: Curves.bounceOut);
                 },
                 focusNode: idFocus,
                 height: AppSize.buttonHeight,
@@ -85,18 +87,21 @@ class _SigninPageState extends State<SigninPage> {
   }
 
   Widget _buildTextFormForPassword(BuildContext context) {
-    final p = context.read<SigninProvider>();
+    final p = context.read<SigninPageProvider>();
 
     return Padding(
         padding: AppSize.defaultSidePadding,
-        child: Selector<SigninProvider, String?>(
+        child: Selector<SigninPageProvider, String?>(
             selector: (context, provider) => provider.password,
             builder: (context, password, _) {
               return Builder(builder: (context) {
                 return BaseInputWidget(
                   textEditingController: _passwordController,
                   onTap: () {
-                    // p.setIsPwFocused(true);
+                    _scrollController.animateTo(
+                        _scrollController.position.maxScrollExtent,
+                        duration: Duration(seconds: 1),
+                        curve: Curves.bounceOut);
                   },
                   focusNode: pwFocus,
                   context: context,
@@ -118,7 +123,7 @@ class _SigninPageState extends State<SigninPage> {
   }
 
   Widget _buildIdSaveCheckBox(BuildContext context) {
-    final p = context.read<SigninProvider>();
+    final p = context.read<SigninPageProvider>();
     return InkWell(
       onTap: () {
         p.setIdCheckBox();
@@ -129,7 +134,7 @@ class _SigninPageState extends State<SigninPage> {
           Container(
               width: AppSize.defaultIconWidth,
               height: AppSize.defaultIconWidth,
-              child: Selector<SigninProvider, bool>(
+              child: Selector<SigninPageProvider, bool>(
                 selector: (context, provider) => provider.isCheckedSaveIdBox,
                 builder: (context, isChecked, _) {
                   return Checkbox(
@@ -150,7 +155,7 @@ class _SigninPageState extends State<SigninPage> {
   }
 
   Widget _buildAutoSigninCheckBox(BuildContext context) {
-    final p = context.read<SigninProvider>();
+    final p = context.read<SigninPageProvider>();
     return InkWell(
       onTap: () {
         p.setAutoSigninCheckBox();
@@ -161,7 +166,7 @@ class _SigninPageState extends State<SigninPage> {
           Container(
               width: AppSize.defaultIconWidth,
               height: AppSize.defaultIconWidth,
-              child: Selector<SigninProvider, bool>(
+              child: Selector<SigninPageProvider, bool>(
                 selector: (context, provider) =>
                     provider.isCheckedAutoSigninBox,
                 builder: (context, isChecked, _) {
@@ -195,10 +200,10 @@ class _SigninPageState extends State<SigninPage> {
   }
 
   Widget _buildSubmmitButton(BuildContext context) {
-    final p = context.read<SigninProvider>();
+    final p = context.read<SigninPageProvider>();
     return Padding(
         padding: AppSize.defaultSidePadding,
-        child: Selector<SigninProvider, Tuple3<bool, bool, bool>>(
+        child: Selector<SigninPageProvider, Tuple3<bool, bool, bool>>(
             selector: (context, provider) => Tuple3(
                 provider.isCheckedAutoSigninBox,
                 provider.isCheckedSaveIdBox,
@@ -220,7 +225,6 @@ class _SigninPageState extends State<SigninPage> {
                     p.setAccount(_idController.text.trim());
                     p.setPassword(_passwordController.text.trim());
                     p.startErrorMessage('');
-                    p.setAutoLogin();
                     hideKeyboard(context);
                     // p.setIsIdFocused(false);
                     // p.setIsPwFocused(false);
@@ -228,11 +232,18 @@ class _SigninPageState extends State<SigninPage> {
                     final result =
                         await lp.startSignin(p.userAccount!, p.password!);
                     if (result.isSuccessful) {
+                      p.setAutoLogin();
                       Navigator.pushNamedAndRemoveUntil(
                           context, HomePage.routeName, (route) => false);
                     } else {
-                      AppDialog.showDangermessage(context, '${result.message}');
-                      p.startErrorMessage(result.message ?? '');
+                      lp.setIsShowErrorMessage(null);
+                      if (lp.isShowErrorMessage != null &&
+                          lp.isShowErrorMessage!) {
+                        p.startErrorMessage(result.message ?? '');
+                      } else {
+                        AppDialog.showDangermessage(
+                            context, '${result.message}');
+                      }
                     }
                     p.stopLoading();
                   } catch (e) {
@@ -246,7 +257,7 @@ class _SigninPageState extends State<SigninPage> {
   Widget _buildErrorMessage(BuildContext context) {
     return Padding(
         padding: AppSize.defaultSidePadding,
-        child: Selector<SigninProvider, String>(
+        child: Selector<SigninPageProvider, String>(
           selector: (context, provider) => provider.errorMessage,
           builder: (context, errorMessage, _) {
             return Column(
@@ -280,7 +291,7 @@ class _SigninPageState extends State<SigninPage> {
   }
 
   _buildLoadingWidget(BuildContext context) {
-    return Selector<SigninProvider, bool>(
+    return Selector<SigninPageProvider, bool>(
       selector: (context, provider) => provider.isLoadData,
       builder: (context, isLoadData, _) {
         return isLoadData
@@ -294,20 +305,20 @@ class _SigninPageState extends State<SigninPage> {
   Widget build(BuildContext context) {
     return BaseLayout(
       hasForm: true,
-      isResizeToAvoidBottomInset: false,
+      isResizeToAvoidBottomInset: true,
       appBar: null,
       child: ChangeNotifierProvider(
-        create: (context) => SigninProvider(),
+        create: (context) => SigninPageProvider(),
         builder: (context, _) {
-          final p = context.read<SigninProvider>();
+          final p = context.read<SigninPageProvider>();
           final arguments = ModalRoute.of(context)!.settings.arguments;
           if (arguments != null) {
             arguments as Map<String, dynamic>;
             id = arguments['id'];
             pw = arguments['pw'];
             message = arguments['message'];
-            isShowPopup = arguments['isShowPopup'] ?? false;
           }
+
           return GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
@@ -326,21 +337,29 @@ class _SigninPageState extends State<SigninPage> {
                     if (snapshot.data!['pw'] != null) {
                       _passwordController.text = snapshot.data!['pw'];
                     }
+                    if (message != null) {
+                      Future.delayed(Duration.zero, () {
+                        AppDialog.showDangermessage(context, message!);
+                      });
+                    }
                     return Stack(
                       children: [
-                        Column(
-                          children: [
-                            _buildLogo(),
-                            _buildTextFormForId(context),
-                            defaultSpacing(),
-                            _buildTextFormForPassword(context),
-                            _buildErrorMessage(context),
-                            _buildCheckBoxRow(context),
-                            defaultSpacing(times: 4),
-                            _buildSubmmitButton(context),
-                            Spacer()
-                          ],
-                        ),
+                        SizedBox(
+                            height: AppSize.realHeight,
+                            child: ListView(
+                              shrinkWrap: true,
+                              controller: _scrollController,
+                              children: [
+                                _buildLogo(),
+                                _buildTextFormForId(context),
+                                defaultSpacing(),
+                                _buildTextFormForPassword(context),
+                                _buildErrorMessage(context),
+                                _buildCheckBoxRow(context),
+                                defaultSpacing(times: 4),
+                                _buildSubmmitButton(context),
+                              ],
+                            )),
                         _buildLoadingWidget(context)
                       ],
                     );

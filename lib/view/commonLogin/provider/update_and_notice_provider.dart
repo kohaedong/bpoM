@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/splash/commonLogin/provider/common_login_provider.dart
  * Created Date: 2021-10-06 03:26:46
- * Last Modified: 2022-10-18 03:31:08
+ * Last Modified: 2022-10-18 04:31:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -36,7 +36,7 @@ import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/service/local_file_servicer.dart';
 import 'package:medsalesportal/service/package_info_service.dart';
 import 'package:medsalesportal/service/permission_service.dart';
-import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
+import 'package:medsalesportal/view/signin/provider/signin_page_provider.dart';
 import 'package:open_file/open_file.dart' as openfile;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';

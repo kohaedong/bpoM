@@ -11,7 +11,7 @@ import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
 import 'package:medsalesportal/model/user/access_permission_model.dart';
 import 'package:medsalesportal/model/rfc/sap_login_info_response_model.dart';
 
-class SigninProvider extends ChangeNotifier {
+class SigninPageProvider extends ChangeNotifier {
   String errorMessage = '';
   String? userAccount;
   String? password;
@@ -87,7 +87,8 @@ class SigninProvider extends ChangeNotifier {
 
   void setAccount(String? str) {
     this.userAccount = (str == '' ? null : str);
-    // if (str == null || str.length == 1 || str == '') {}
+    final lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+    startErrorMessage(lp.isShowErrorMessage == null ? '' : errorMessage);
     notifyListeners();
   }
 
@@ -104,6 +105,8 @@ class SigninProvider extends ChangeNotifier {
   void setPassword(String? password) {
     this.password = (password == '' ? null : password);
     // if (password == null || password.length == 1 || password == '') {}
+    final lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+    startErrorMessage(lp.isShowErrorMessage == null ? '' : errorMessage);
     notifyListeners();
   }
 }

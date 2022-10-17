@@ -20,7 +20,7 @@ import 'package:medsalesportal/view/commonLogin/common_login_page.dart';
 import 'package:medsalesportal/view/commonLogin/provider/notice_index_provider.dart';
 import 'package:medsalesportal/view/commonLogin/provider/update_and_notice_provider.dart';
 import 'package:medsalesportal/view/home/home_page.dart';
-import 'package:medsalesportal/view/signin/provider/signin_provider.dart';
+import 'package:medsalesportal/view/signin/provider/signin_page_provider.dart';
 import 'package:medsalesportal/view/signin/signin_page.dart';
 import 'package:provider/provider.dart';
 
@@ -430,21 +430,20 @@ class CheckUpdateAndNoticeService {
     var routeName = ModalRoute.of(context)!.settings.name;
     print(routeName);
     if (routeName == '/' || routeName == CommonLoginPage.routeName) {
-      var signinProvider = context.read<LoginProvider>();
-      final isAutoLogin = await signinProvider.isAutoLogin();
+      var lp = context.read<LoginProvider>();
+      final isAutoLogin = await lp.isAutoLogin();
       print('isAutoLogin From updateRoute  ::: $isAutoLogin');
       if (isAutoLogin) {
         print('with autoLogin');
-        var loginResult = await signinProvider.startSignin('', '');
+        var loginResult = await lp.startSignin('', '');
         if (loginResult.isSuccessful) {
           Navigator.pushNamedAndRemoveUntil(
               context, HomePage.routeName, (route) => false);
         } else {
           Navigator.pushNamedAndRemoveUntil(
               context, SigninPage.routeName, (route) => false, arguments: {
-            'id': '',
-            'pw': '',
-            'isShowPopup': false,
+            'id': lp.userId,
+            'pw': lp.userPw,
             'message': loginResult.message
           });
         }
