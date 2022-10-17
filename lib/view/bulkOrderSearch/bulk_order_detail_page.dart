@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-10-14 17:04:00
+ * Last Modified: 2022-10-17 15:31:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,8 @@
  */
 import 'dart:math' as math;
 import 'package:medsalesportal/enums/input_icon_type.dart';
+import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -165,30 +167,34 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
           //! 여신잔액 확인 안하고 바로 저장!.
           var overThan = p.amountAvailable.isNotEmpty &&
               double.parse(p.amountAvailable) > p.orderTotal;
-
-          await p.checkIsItemInStock().then((isInStockAll) async {
-            if (isInStockAll) {
-              if (overThan) {
-                await p.orderCancelOrSave(false).then((result) {
-                  AppToast().show(
-                      context,
-                      result.isSuccessful
-                          ? result.message!
-                          : result.errorMassage!);
-                });
+          hideKeyboard(context);
+          var popupResult = await AppDialog.showPopup(context,
+              buildTowButtonTextContents(context, tr('is_really_save')));
+          if (popupResult != null && popupResult) {
+            await p.checkIsItemInStock().then((isInStockAll) async {
+              if (isInStockAll) {
+                if (overThan) {
+                  p.orderCancelOrSave(false).then((result) {
+                    AppToast().show(
+                        context,
+                        result.isSuccessful
+                            ? tr('saved')
+                            : result.errorMassage!);
+                  });
+                } else {
+                  AppDialog.showSignglePopup(
+                      context, tr('amount_available_for_order_entry_is_fail'));
+                }
               } else {
-                AppToast().show(
-                    context, tr('amount_available_for_order_entry_is_fail'));
+                // var message = p.editItemList
+                //     .where((item) => item.zmsg != '정상')
+                //     .toList()
+                //     .first
+                //     .zmsg;
+                AppDialog.showSignglePopup(context, tr('plz_check_message'));
               }
-            } else {
-              var message = p.editItemList
-                  .where((item) => item.zmsg != '정상')
-                  .toList()
-                  .first
-                  .zmsg;
-              AppToast().show(context, message!);
-            }
-          });
+            });
+          }
         })
       ],
     );
@@ -310,6 +316,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                       model.tItem!.isNotEmpty &&
                       model.tHead != null
                   ? ListView(
+                      padding: EdgeInsets.only(bottom: AppSize.appBarHeight),
                       children: [
                         _buildOrderInfo(model),
                         ...model.tItem!

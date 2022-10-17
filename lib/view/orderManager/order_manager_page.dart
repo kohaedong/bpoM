@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-14 17:27:25
+ * Last Modified: 2022-10-17 16:21:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,8 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:medsalesportal/view/common/dialog_contents.dart';
+import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -59,13 +61,15 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
   late TextEditingController _orderDescriptionInputController;
   late TextEditingController _productQuantityInputController;
   late TextEditingController _surchargeQuantityInputController;
+  late FocusNode _focusNode;
   @override
   void initState() {
+    super.initState();
     _deliveryConditionInputController = TextEditingController();
     _orderDescriptionInputController = TextEditingController();
     _productQuantityInputController = TextEditingController();
     _surchargeQuantityInputController = TextEditingController();
-    super.initState();
+    _focusNode = FocusNode();
   }
 
   @override
@@ -74,6 +78,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
     _orderDescriptionInputController.dispose();
     _productQuantityInputController.dispose();
     _surchargeQuantityInputController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -650,6 +655,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                             }
                           },
                           textEditingController: controller,
+                          focusNode: _focusNode,
                           hintText: isNotEmpty
                               ? '${quantityList[index].toInt()}'
                               : tr('plz_enter'),
@@ -662,9 +668,12 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                           // },
                           defaultIconCallback: () {
                             controller.text = '';
+                            hideKeyboard(context);
                             p.updateQuantityList(index, 0);
                             p.setTableQuantity(index, 0, isResetTotal: true);
-                            p.checkPrice(index, isNotifier: true);
+                            p
+                                .checkPrice(index, isNotifier: true)
+                                .whenComplete(() => _focusNode.requestFocus());
                           },
                           iconType: isNotEmpty ? InputIconType.DELETE : null,
                           width: ((AppSize.defaultContentsWidth * .7) -
@@ -708,6 +717,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                     return GestureDetector(
                       onTap: () async {
                         if (isShowButton) {
+                          hideKeyboard(context);
                           final result =
                               await p.checkPrice(index, isNotifier: true);
                           if (result.isSuccessful) {
@@ -969,19 +979,25 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 isValidate ? AppColors.primary : AppColors.unReadyButton,
                 AppTextStyle.menu_18(
                     isValidate ? AppColors.whiteText : AppColors.hintText),
-                0, () {
+                0, () async {
               if (isValidate) {
                 final p = context.read<OrderManagerPageProvider>();
                 final tp = context.read<TimerProvider>();
                 if (tp.getTimer == null ||
                     (tp.isRunning != null && !tp.isRunning!)) {
-                  tp.perdict(p.onSubmmit().then((result) {
-                    if (result.isSuccessful) {
-                      AppToast().show(context, tr('success'));
-                      Navigator.popAndPushNamed(
-                          context, OrderSearchPage.routeName);
-                    }
-                  }));
+                  var popupResult = await AppDialog.showPopup(
+                      context,
+                      buildTowButtonTextContents(
+                          context, tr('is_really_registor')));
+                  if (popupResult != null && popupResult) {
+                    tp.perdict(p.onSubmmit().then((result) {
+                      if (result.isSuccessful) {
+                        AppToast().show(context, tr('success'));
+                        Navigator.popAndPushNamed(
+                            context, OrderSearchPage.routeName);
+                      }
+                    }));
+                  }
                 }
               }
             }, isBottomButton: true));

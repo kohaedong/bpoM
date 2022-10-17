@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-14 06:52:29
+ * Last Modified: 2022-10-17 16:04:50
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -165,7 +165,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       },
       child: Container(
         color: AppColors.whiteText,
-        height: AppSize.weekDayHeight,
+        // height: AppSize.weekDayHeight,
         width: AppSize.calendarWidth / 7,
         child: model.dateStr != null
             ? Column(
@@ -219,9 +219,14 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                           fontWeight: FontWeight.bold)),
                   AppText.listViewText(
                       isDataNotEmpty
-                          ? '${int.parse(model.column3!.isEmpty ? '0' : model.column3!)}/${int.parse(model.column2!.isEmpty ? '0' : model.column2!) + int.parse(model.column3!.isEmpty ? '0' : model.column3!)}'
+                          ? '${int.parse(model.column1!.isEmpty ? '0' : model.column1!)}/${int.parse(model.column2!.isEmpty ? '0' : model.column2!) + int.parse(model.column3!.isEmpty ? '0' : model.column3!)}'
                           : '',
                       style: AppTextStyle.sub_12)
+                  // AppText.listViewText(
+                  //     isDataNotEmpty
+                  //         ? '${int.parse(model.column2!.isEmpty ? '0' : model.column2!)}/${int.parse(model.column3!.isEmpty ? '0' : model.column3!)}'
+                  //         : '',
+                  //     style: AppTextStyle.sub_12)
                 ],
               )
             : Container(),
