@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-10-17 14:29:30
+ * Last Modified: 2022-10-18 06:08:50
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -234,6 +234,19 @@ class SelectLocationProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
+  double totoalDistans(double t250Dist) {
+    var total = 0.0;
+    if (editDayModel!.table260!.isNotEmpty) {
+      var visitList = editDayModel!.table260!
+          .where((model) => model.xvisit == 'Y')
+          .toList();
+      visitList.forEach((visitModel) {
+        total += visitModel.dist!;
+      });
+    }
+    return total + t250Dist;
+  }
+
   // Future<double> _getDistanceForFinishCourse() async {}
   Future<ResultModel> startOrStopActivity(int indexx) async {
     isLoadData = true;
@@ -257,6 +270,8 @@ class SelectLocationProvider extends ChangeNotifier {
     var esLogin = CacheService.getEsLogin();
     var t250Base64 = '';
     var t260Base64 = '';
+    var t280Base64 = '';
+    var t361Base64 = '';
     var temp = <Map<String, dynamic>>[];
     var t250 = SalesActivityDayTable250();
 
@@ -273,6 +288,7 @@ class SelectLocationProvider extends ChangeNotifier {
               ? double.parse(distanceModel!.distance!.trim())
               : 0
           : 0;
+      t250.totDist = totoalDistans(t250.rtnDist!);
       pr('t250.rtnDist::: ${t250.rtnDist}');
       t250.faddcat = indexx != 2 ? locationType : 'C';
       t250.fxLatitude = double.parse(lat!.trim());
@@ -305,6 +321,16 @@ class SelectLocationProvider extends ChangeNotifier {
       temp.addAll([...editDayModel!.table260!.map((e) => e.toJson())]);
       t260Base64 = await EncodingUtils.base64ConvertForListMap(temp);
     }
+    if (editDayModel!.table280!.isNotEmpty) {
+      temp.clear();
+      temp.addAll([...editDayModel!.table280!.map((e) => e.toJson())]);
+      t280Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    }
+    if (editDayModel!.table361!.isNotEmpty) {
+      temp.clear();
+      temp.addAll([...editDayModel!.table361!.map((e) => e.toJson())]);
+      t361Base64 = await EncodingUtils.base64ConvertForListMap(temp);
+    }
 
     var ap =
         KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
@@ -314,6 +340,8 @@ class SelectLocationProvider extends ChangeNotifier {
         "IV_PTYPE": "U",
         "T_ZLTSP0250S": t250Base64,
         "T_ZLTSP0260S": t260Base64,
+        "T_ZLTSP0280S": t280Base64,
+        "T_ZLTSP0361S": t361Base64,
         "IV_ADATE": FormatUtil.removeDash(DateUtil.getDateStr('',
             dt: activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
                     activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED
@@ -334,6 +362,7 @@ class SelectLocationProvider extends ChangeNotifier {
       pr(result.body);
       editDayModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
+      pr(editDayModel?.toJson());
       isLoadData = false;
       notifyListeners();
       return ResultModel(true);

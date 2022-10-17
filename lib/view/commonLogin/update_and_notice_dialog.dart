@@ -433,7 +433,7 @@ class CheckUpdateAndNoticeService {
       print('isAutoLogin From updateRoute  ::: $isAutoLogin');
       if (isAutoLogin) {
         print('with autoLogin');
-        var loginResult = await lp.startSignin('', '');
+        var loginResult = await lp.startSignin('', '', isAutoLogin: true);
         if (loginResult.isSuccessful) {
           Navigator.pushNamedAndRemoveUntil(
               context, HomePage.routeName, (route) => false);

@@ -234,8 +234,8 @@ class _SigninPageState extends State<SigninPage> {
                     final result = await lp.startSignin(
                         p.userAccount!, p.password!,
                         isAutoLogin: false);
+
                     if (result.isSuccessful) {
-                      p.setAutoLogin();
                       Navigator.pushNamedAndRemoveUntil(
                           context, HomePage.routeName, (route) => false);
                     } else {
@@ -248,6 +248,7 @@ class _SigninPageState extends State<SigninPage> {
                             context, '${result.message}');
                       }
                     }
+                    p.setAutoLogin();
                     p.stopLoading();
                   } catch (e) {
                     p.stopLoading();
