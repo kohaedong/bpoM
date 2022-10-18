@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-18 08:23:59
+ * Last Modified: 2022-10-18 14:48:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -249,15 +249,33 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
             defaultSpacing(isHalf: true),
             BaseInputWidget(
               context: context,
-              onTap: tuple.item1 == null
-                  ? () {
-                      AppToast().show(
-                          context,
-                          tr('plz_select_something_first_1',
-                              args: [tr('product_family'), '']));
-                      return 'continue';
-                    }
-                  : null,
+              onTap: () {
+                if (CheckSuperAccount.isMultiAccount() &&
+                    p.selectedSalseGroup == null) {
+                  AppToast().show(
+                      context,
+                      tr('plz_select_something_first_1',
+                          args: [tr('salse_group'), '']));
+                } else if (tuple.item4 == null) {
+                  AppToast().show(
+                      context,
+                      tr('plz_select_something_first_1',
+                          args: [tr('circulaton_channel'), '']));
+                  return;
+                } else if (tuple.item3 == null) {
+                  AppToast().show(
+                      context,
+                      tr('plz_select_something_first_1',
+                          args: [tr('sales_person'), '']));
+                  return;
+                } else if (tuple.item1 == null) {
+                  AppToast().show(
+                      context,
+                      tr('plz_select_something_first_1',
+                          args: [tr('product_family'), '']));
+                  return;
+                }
+              },
               iconType: InputIconType.SEARCH,
               iconColor: AppColors.textFieldUnfoucsColor,
               deleteIconCallback: () => p.setCustomerModel(null),
@@ -269,7 +287,11 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               hintTextStyleCallBack: () => tuple.item2 != null
                   ? AppTextStyle.default_16
                   : AppTextStyle.hint_16,
-              popupSearchType: PopupSearchType.SEARCH_SALLER,
+              popupSearchType: tuple.item1 != null &&
+                      tuple.item4 != null &&
+                      tuple.item3 != null
+                  ? PopupSearchType.SEARCH_SALLER
+                  : PopupSearchType.DO_NOTHING,
               isSelectedStrCallBack: (customer) {
                 return p.setCustomerModel(customer);
               },

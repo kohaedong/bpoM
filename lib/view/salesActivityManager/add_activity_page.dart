@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-18 06:27:25
+ * Last Modified: 2022-10-18 14:26:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,7 +11,6 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,6 +37,7 @@ import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/enums/add_activity_page_input_type.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
+import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
@@ -663,19 +663,21 @@ class _AddActivityPageState extends State<AddActivityPage> {
   Widget _buildCheckBox(BuildContext context, bool isChecked,
       {bool? isWithSuggetedItem, int? index}) {
     final p = context.read<AddActivityPageProvider>();
-    return SizedBox(
-      height: AppSize.defaultCheckBoxHeight,
-      width: AppSize.defaultCheckBoxHeight,
+    return Container(
+      height: AppSize.defaultCheckBoxHeight - 5,
+      width: AppSize.defaultCheckBoxHeight - 5,
+      decoration: BoxDecoration(
+        color: AppColors.unReadyButton,
+        borderRadius: BorderRadius.circular(4),
+      ),
       child: Checkbox(
           activeColor: p.isDoNothing || p.isNotToday
               ? AppColors.unReadyButton
               : AppColors.primary,
-          checkColor: p.isDoNothing || p.isNotToday
+          checkColor: (p.isDoNothing || p.isNotToday)
               ? AppColors.unReadyText.withOpacity(.2)
               : null,
-          side: p.isDoNothing || p.isNotToday
-              ? BorderSide(color: AppColors.defaultText)
-              : BorderSide(color: Colors.grey),
+          side: BorderSide(color: Colors.grey),
           value: isChecked,
           onChanged: (val) {
             if (p.isDoNothing || p.isNotToday) return;
@@ -750,8 +752,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
                             : false,
                 deleteIconCallback: () => p.setAnotherSaler(null),
                 width: AppSize.defaultContentsWidth,
-                hintTextStyleCallBack: () =>
-                    AppTextStyle.h4.copyWith(color: AppColors.hintText),
+                hintTextStyleCallBack: () => AppTextStyle.h4.copyWith(
+                    color: tuple.item1 != null && tuple.item2 == null
+                        ? AppColors.defaultText
+                        : AppColors.hintText),
                 popupSearchType: p.isDoNothing || p.isNotToday
                     ? PopupSearchType.DO_NOTHING
                     : tuple.item2 != null && tuple.item2!

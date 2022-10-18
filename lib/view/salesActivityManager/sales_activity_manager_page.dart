@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-17 20:17:09
+ * Last Modified: 2022-10-18 15:25:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,20 +12,17 @@
  */
 
 import 'dart:io';
-import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/service/key_service.dart';
-import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
-import 'package:medsalesportal/view/salesActivityManager/activity_finish_page.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/enums/menu_type.dart';
 import 'package:medsalesportal/enums/image_type.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/enums/activity_status.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
@@ -40,7 +37,9 @@ import 'package:medsalesportal/view/common/base_popup_list.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_tag_button.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
+import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_weeks_model.dart';
+import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/base_date_picker_for_month.dart';
@@ -48,6 +47,7 @@ import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_single_date_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/view/salesActivityManager/add_activity_page.dart';
+import 'package:medsalesportal/view/salesActivityManager/activity_finish_page.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_response_model.dart';
 import 'package:medsalesportal/view/salesActivityManager/select_location_widget.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/activity_menu_provider.dart';
@@ -173,6 +173,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   DateUtil.equlse(
                           DateUtil.getDate(model.dateStr!), DateTime.now())
                       ? Container(
+                          height: AppTextStyle.default_14.fontSize! * 2.4,
                           alignment: Alignment.center,
                           child: CircleAvatar(
                             backgroundColor: AppColors.primary,
@@ -183,6 +184,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                           ),
                         )
                       : Container(
+                          height: AppTextStyle.default_14.fontSize! * 2.4,
                           alignment: Alignment.center,
                           child: AppText.listViewText(
                               '${DateUtil.getDate(model.dateStr!).day}',
@@ -217,7 +219,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                           fontWeight: FontWeight.bold)),
                   AppText.listViewText(
                       isDataNotEmpty
-                          ? '${int.parse(model.column1!.isEmpty ? '0' : model.column1!)}/${int.parse(model.column2!.isEmpty ? '0' : model.column2!) + int.parse(model.column3!.isEmpty ? '0' : model.column3!)}'
+                          ? '${int.parse(model.column1!.isEmpty ? '0' : model.column1!)}/${int.parse(model.column2!.isEmpty ? '0' : model.column2!)}'
                           : '',
                       style: AppTextStyle.sub_12),
                   defaultSpacing()

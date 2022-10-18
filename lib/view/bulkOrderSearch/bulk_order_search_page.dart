@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-10-18 08:13:52
+ * Last Modified: 2022-10-18 15:15:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -441,25 +441,30 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
         provider.bulkOrderResponseModel != null &&
                 provider.bulkOrderResponseModel!.tList != null &&
                 provider.bulkOrderResponseModel!.tList!.isNotEmpty
-            ? ListView.builder(
-                shrinkWrap: true,
-                controller: _scrollController,
-                itemCount: provider.bulkOrderResponseModel!.tList!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _buildListViewItem(
-                      context,
-                      provider.bulkOrderResponseModel!.tList![index],
-                      !provider.hasMore &&
-                          index ==
-                              provider.bulkOrderResponseModel!.tList!.length -
-                                  1);
+            ? RefreshIndicator(
+                onRefresh: () async {
+                  provider.refresh();
                 },
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  controller: _scrollController,
+                  itemCount: provider.bulkOrderResponseModel!.tList!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildListViewItem(
+                        context,
+                        provider.bulkOrderResponseModel!.tList![index],
+                        !provider.hasMore &&
+                            index ==
+                                provider.bulkOrderResponseModel!.tList!.length -
+                                    1);
+                  },
+                ),
               )
             : provider.isLoadData
                 ? DefaultShimmer.buildDefaultResultShimmer()
                 : RefreshIndicator(
                     onRefresh: () async {
-                      provider.onSearch(true);
+                      provider.refresh();
                     },
                     child: ListView(
                       shrinkWrap: true,

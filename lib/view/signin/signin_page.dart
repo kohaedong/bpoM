@@ -72,7 +72,8 @@ class _SigninPageState extends State<SigninPage> {
                 textEditingController: _idController,
                 keybordType: TextInputType.multiline,
                 context: context,
-                iconType: account != null ? InputIconType.DELETE : null,
+                iconType:
+                    _idController.text.isNotEmpty ? InputIconType.DELETE : null,
                 hintText: account != null ? null : '${tr('id')}',
                 width: AppSize.defaultContentsWidth,
                 defaultIconCallback: () {

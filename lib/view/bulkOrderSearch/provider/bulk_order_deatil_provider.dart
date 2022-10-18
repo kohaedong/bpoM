@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart
  * Created Date: 2022-07-21 14:21:16
- * Last Modified: 2022-10-13 00:11:56
+ * Last Modified: 2022-10-18 15:21:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -205,6 +205,7 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     temp.zfreeQtyIn = editItemList[index].zfreeQtyIn;
     var itemBase64 = await EncodingUtils.base64Convert(temp.toJson());
     var vkorg = bulkOrderDetailResponseModel!.tHead!.single.vkorg;
+    var vtweg = bulkOrderDetailResponseModel!.tHead!.single.vtweg;
     Map<String, dynamic> _body = {
       "methodName": RequestType.CHECK_META_PRICE_AND_STOCK.serverMethod,
       "methodParamMap": {
@@ -215,8 +216,8 @@ class BulkOrderDetailProvider extends ChangeNotifier {
             bulkOrderDetailResponseModel!.tHead!.single.zzkunnrEnd,
         "IV_VKORG": vkorg != null && vkorg.isNotEmpty
             ? vkorg
-            : CacheService.getEsLogin()!.vkorg,
-        "IV_VTWEG": bulkOrderDetailResponseModel!.tHead!.single.vtweg,
+            : CacheService.getEsLogin()!.vkorg ?? '',
+        "IV_VTWEG": vtweg,
         "IV_SPART": bulkOrderDetailResponseModel!.tHead!.single.spart,
         "IV_KUNNR": bulkOrderDetailResponseModel!.tHead!.single.kunnr,
         "IV_PRSDT": FormatUtil.removeDash(DateTime.now().toIso8601String()),
@@ -254,10 +255,13 @@ class BulkOrderDetailProvider extends ChangeNotifier {
   Future<ResultModel> getAmountAvailableForOrderEntry() async {
     assert(bulkOrderDetailResponseModel != null);
     _api.init(RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY);
+    var vkorg = bulkOrderDetailResponseModel!.tHead!.single.vkorg;
     Map<String, dynamic> _body = {
       "methodName": RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY.serverMethod,
       "methodParamMap": {
-        "IV_VKORG": bulkOrderDetailResponseModel!.tHead!.single.vkorg,
+        "IV_VKORG": vkorg != null && vkorg.isNotEmpty
+            ? vkorg
+            : CacheService.getEsLogin()!.vkorg ?? '',
         "IV_VTWEG": bulkOrderDetailResponseModel!.tHead!.single.vtweg,
         "IV_SPART": bulkOrderDetailResponseModel!.tHead!.single.spart,
         "IV_KUNNR": bulkOrderDetailResponseModel!.tHead!.single.kunnr,
