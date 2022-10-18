@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-18 14:48:20
+ * Last Modified: 2022-10-18 19:32:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -101,7 +101,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                             : () => AppTextStyle
                                 .hint_16, // hintTextStyleCallBack: () => AppTextStyle.hint_16,
                         iconType: InputIconType.SELECT,
-                        isNotInsertAll: true,
+                        isNotInsertAll:
+                            CheckSuperAccount.isMultiAccount() ? null : true,
                         // iconType: null,
                         iconColor: AppColors.textFieldUnfoucsColor,
                         commononeCellDataCallback: p.getSalesGroup,
@@ -132,12 +133,22 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                   builder: (context, tuple, _) {
                     return BaseInputWidget(
                       context: context,
+                      onTap: () {
+                        if (CheckSuperAccount.isMultiAccount() &&
+                            tuple.item2 == null) {
+                          AppToast().show(
+                              context,
+                              tr('plz_select_something_first_1',
+                                  args: [tr('salse_group'), '']));
+                        }
+                      },
                       width: AppSize.defaultContentsWidth,
                       iconType: InputIconType.SEARCH,
                       iconColor: AppColors.textFieldUnfoucsColor,
-                      hintText: tuple.item1 != null
-                          ? tuple.item1!.sname!
-                          : tr('plz_select'),
+                      hintText:
+                          tuple.item1 != null && tuple.item1!.sname != null
+                              ? tuple.item1!.sname!
+                              : tr('plz_select'),
                       // 팀장 일때 만 팀원선택후 삭제가능.
                       isShowDeleteForHintText:
                           tuple.item1 != null ? true : false,
@@ -145,12 +156,19 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       hintTextStyleCallBack: () => tuple.item1 != null
                           ? AppTextStyle.default_16
                           : AppTextStyle.hint_16,
-                      popupSearchType: PopupSearchType.SEARCH_SALSE_PERSON,
+                      popupSearchType: CheckSuperAccount.isMultiAccount() &&
+                              tuple.item2 == null
+                          ? PopupSearchType.DO_NOTHING
+                          : PopupSearchType.SEARCH_SALSE_PERSON,
                       isSelectedStrCallBack: (person) {
                         return p.setSalsePerson(person);
                       },
                       bodyMap: CheckSuperAccount.isMultiAccount()
-                          ? {'dptnm': tuple.item2 ?? ''}
+                          ? {
+                              'dptnm': tuple.item2 == tr('all')
+                                  ? ''
+                                  : tuple.item2 ?? ''
+                            }
                           : {'dptnm': CacheService.getEsLogin()!.dptnm},
                       enable: false,
                     );
@@ -199,9 +217,13 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
   Widget _buildProductFamilySelector(BuildContext context) {
     final p = context.read<OrderManagerPageProvider>();
 
-    return Selector<OrderManagerPageProvider, Tuple2<String?, String?>>(
-      selector: (context, provider) =>
-          Tuple2(provider.selectedProductFamily, provider.selectedSalseChannel),
+    return Selector<OrderManagerPageProvider,
+        Tuple4<String?, String?, bool, bool>>(
+      selector: (context, provider) => Tuple4(
+          provider.selectedProductFamily,
+          provider.selectedSalseChannel,
+          provider.selectedSalsePerson == null,
+          provider.selectedSalseGroup == null),
       builder: (context, tuple, _) {
         return Column(
           children: [
@@ -209,6 +231,20 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
             defaultSpacing(isHalf: true),
             BaseInputWidget(
               context: context,
+              onTap: () {
+                if (CheckSuperAccount.isMultiAccount() && tuple.item4) {
+                  AppToast().show(
+                      context,
+                      tr('plz_select_something_first_1',
+                          args: [tr('salse_group'), '']));
+                } else if (CheckSuperAccount.isMultiAccountOrLeaderAccount() &&
+                    tuple.item3) {
+                  AppToast().show(
+                      context,
+                      tr('plz_select_something_first_1',
+                          args: [tr('sales_person'), '']));
+                }
+              },
               isNotInsertAll: CheckSuperAccount.isMultiAccountOrLeaderAccount()
                   ? true
                   : false,
@@ -220,7 +256,11 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                   ? () => AppTextStyle.default_16
                   : () => AppTextStyle.hint_16,
               commononeCellDataCallback: () async => p.getProductFamilyFromDB(),
-              oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,
+              oneCellType: CheckSuperAccount.isMultiAccount() && tuple.item4 ||
+                      CheckSuperAccount.isMultiAccountOrLeaderAccount() &&
+                          tuple.item3
+                  ? OneCellType.DO_NOTHING
+                  : OneCellType.SEARCH_PRODUCT_FAMILY,
               isSelectedStrCallBack: (family) {
                 p.setProductFamily(family);
               },
@@ -236,12 +276,13 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
   Widget _buildSalseOfficeSelector(BuildContext context) {
     final p = context.read<OrderManagerPageProvider>();
     return Selector<OrderManagerPageProvider,
-        Tuple4<String?, EtCustomerModel?, EtStaffListModel?, String?>>(
-      selector: (context, provider) => Tuple4(
+        Tuple5<String?, EtCustomerModel?, EtStaffListModel?, String?, bool>>(
+      selector: (context, provider) => Tuple5(
           provider.selectedProductFamily,
           provider.selectedCustomerModel,
           provider.selectedSalsePerson,
-          provider.selectedSalseChannel),
+          provider.selectedSalseChannel,
+          provider.selectedSalseGroup == null),
       builder: (context, tuple, _) {
         return Column(
           children: [
@@ -250,23 +291,24 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
             BaseInputWidget(
               context: context,
               onTap: () {
-                if (CheckSuperAccount.isMultiAccount() &&
-                    p.selectedSalseGroup == null) {
+                if (CheckSuperAccount.isMultiAccount() && tuple.item5) {
                   AppToast().show(
                       context,
                       tr('plz_select_something_first_1',
                           args: [tr('salse_group'), '']));
-                } else if (tuple.item4 == null) {
-                  AppToast().show(
-                      context,
-                      tr('plz_select_something_first_1',
-                          args: [tr('circulaton_channel'), '']));
-                  return;
-                } else if (tuple.item3 == null) {
+                } else if (CheckSuperAccount.isMultiAccountOrLeaderAccount() &&
+                    tuple.item3 == null) {
                   AppToast().show(
                       context,
                       tr('plz_select_something_first_1',
                           args: [tr('sales_person'), '']));
+                  return;
+                } else if (tuple.item4 == null) {
+                  pr(tuple.item3);
+                  AppToast().show(
+                      context,
+                      tr('plz_select_something_first_1',
+                          args: [tr('circulaton_channel'), '']));
                   return;
                 } else if (tuple.item1 == null) {
                   AppToast().show(
@@ -287,11 +329,15 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               hintTextStyleCallBack: () => tuple.item2 != null
                   ? AppTextStyle.default_16
                   : AppTextStyle.hint_16,
-              popupSearchType: tuple.item1 != null &&
-                      tuple.item4 != null &&
-                      tuple.item3 != null
-                  ? PopupSearchType.SEARCH_SALLER
-                  : PopupSearchType.DO_NOTHING,
+              popupSearchType:
+                  (CheckSuperAccount.isMultiAccount() ? !tuple.item5 : true) &&
+                          tuple.item1 != null &&
+                          tuple.item4 != null &&
+                          (CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                              ? tuple.item3 != null
+                              : true)
+                      ? PopupSearchType.SEARCH_SALLER
+                      : PopupSearchType.DO_NOTHING,
               isSelectedStrCallBack: (customer) {
                 return p.setCustomerModel(customer);
               },
@@ -308,7 +354,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         ? tuple.item3!.dptnm
                         : CacheService.getEsLogin()!.dptnm
                     : CacheService.getEsLogin()!.dptnm,
-                'sales_grouop': p.selectedSalseGroup
+                'vkgrp':
+                    p.selectedSalseGroup != null ? p.selectedSalseGroup : ''
               },
               enable: false,
             ),

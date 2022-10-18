@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-18 08:24:58
+ * Last Modified: 2022-10-18 18:58:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -99,6 +99,15 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return null;
   }
 
+  String getCode(List<String> list, String val) {
+    if (val != tr('all') && val.isNotEmpty) {
+      var data = list.where((item) => item.contains(val)).single;
+      pr('${data.substring(data.indexOf('-') + 1)}');
+      return data.substring(data.indexOf('-') + 1);
+    }
+    return '';
+  }
+
   Future<void> initData() async {
     // data(String) 를 map으로 받아와 조건에 맞는 model로 초기화 해준다.
     // 제품군 / 영업사원
@@ -107,7 +116,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
       selectedProductFamily = bodyMap?['product_family'];
       await getProductFamily();
       await getSalesGroup(isFirstRun: isFirestRun);
-      selectedSalesGroup = bodyMap?['salse_group'];
+      if (bodyMap?['vkgrp'] != null) {
+        selectedSalesGroup = bodyMap!['vkgrp'];
+      }
       searchPerson(true, isFromSearchSaller: true);
     }
   }
@@ -192,7 +203,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   void setSalesGroup(String? value) {
     selectedSalesGroup = value;
-
+    selectedSalesPerson = null;
+    staffName = null;
     notifyListeners();
   }
 
@@ -254,6 +266,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
     productBusinessDataList!.forEach((data) {
       dataStr.add(data.substring(0, data.indexOf('-')));
     });
+    pr(dataStr);
+    pr(dataStr);
     return dataStr;
   }
 
@@ -655,9 +669,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     var spart = productFamilyDataList
         ?.where((str) => str.contains(selectedProductFamily!))
         .toList();
-    var vkgrp = productBusinessDataList
-        ?.where((str) => str.contains(selectedSalesGroup!))
-        .toList();
+    var vkgrp = getCode(productBusinessDataList!, selectedSalesGroup ?? '');
 
     _body = {
       "methodName": isBulkOrder != null && isBulkOrder
@@ -669,9 +681,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "IV_SPART": spart != null && spart.isNotEmpty
             ? spart.first.substring(spart.first.indexOf('-') + 1)
             : '',
-        "IV_VKGRP": vkgrp != null && vkgrp.isNotEmpty
-            ? vkgrp.first.substring(vkgrp.first.indexOf('-') + 1)
-            : '',
+        "IV_VKGRP": vkgrp,
         "IV_PERNR": staffName == tr('all')
             ? ''
             : selectedSalesPerson != null

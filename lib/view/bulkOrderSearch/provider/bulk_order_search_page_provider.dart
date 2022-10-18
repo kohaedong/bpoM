@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-10-13 07:22:27
+ * Last Modified: 2022-10-18 19:48:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -108,6 +108,8 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
     orderStatusListWithCode = await HiveService.getOrderStatus();
+    selectedProductsFamily = tr('all');
+    selectedOrderStatus = tr('all');
     isFirstRun = false;
     return onSearch(true);
   }

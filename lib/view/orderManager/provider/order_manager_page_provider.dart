@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-18 07:01:43
+ * Last Modified: 2022-10-18 19:38:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -388,25 +388,22 @@ class OrderManagerPageProvider extends ChangeNotifier {
     if (map != null) {
       map as Map<String, dynamic>;
       selectedProductFamily = map['product_family'] as String?;
-      selectedSalsePerson = EtStaffListModel();
-      selectedSalsePerson!.sname = map['staff'] as String?;
+      selectedSalsePerson = null;
+      if (map['staff'] != null && map['staff'] != '') {
+        selectedSalsePerson = EtStaffListModel();
+        selectedSalsePerson!.sname = map['staff'] as String?;
+      }
       if (map['dptnm'] != null) {
         selectedSalsePerson!.dptnm = map['dptnm'];
         searchPerson(dptnm: map['dptnm']);
       }
       selectedCustomerModel = map['model'] as EtCustomerModel?;
-      if (map['salse_group'] != null && map['salse_group'] != '') {
-        selectedSalseGroup = map['salse_group'];
+      if (map['vkgrp'] != null && map['vkgrp'] != '') {
+        selectedSalseGroup = map['vkgrp'];
       }
       if (selectedCustomerModel != null) {
         await searchSupplierAndEndCustomer(true);
         await searchSupplierAndEndCustomer(false);
-        endCustList.forEach((element) {
-          pr('end ${element.toJson()}');
-        });
-        supplierList.forEach((element) {
-          pr('supp ${element.toJson()}');
-        });
       }
       resetOrderItem();
       notifyListeners();

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/popup_search_type.dart
  * Created Date: 2021-09-10 21:38:04
- * Last Modified: 2022-10-18 06:55:00
+ * Last Modified: 2022-10-18 16:55:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -157,15 +157,10 @@ extension PopupSearchTypeExtension on PopupSearchType {
             AppSize.buttonHeight +
             AppSize.secondButtonHeight;
       case PopupSearchType.SEARCH_SALLER:
-        return CheckSuperAccount.isMultiAccount()
-            ? AppSize.defaultTextFieldHeight * 5 +
-                AppSize.defaultListItemSpacing * 7 +
-                AppSize.buttonHeight +
-                AppSize.secondButtonHeight
-            : AppSize.defaultTextFieldHeight * 4 +
-                AppSize.defaultListItemSpacing * 6 +
-                AppSize.buttonHeight +
-                AppSize.secondButtonHeight;
+        return AppSize.defaultTextFieldHeight * 4 +
+            AppSize.defaultListItemSpacing * 6 +
+            AppSize.buttonHeight +
+            AppSize.secondButtonHeight;
       case PopupSearchType.SEARCH_MATERIAL:
         return AppSize.defaultTextFieldHeight * 2 +
             AppSize.defaultListItemSpacing * 4 +

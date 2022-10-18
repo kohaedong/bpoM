@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-10-18 06:56:25
+ * Last Modified: 2022-10-18 19:34:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -403,35 +403,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         child: Column(
       children: [
         defaultSpacing(),
-        CheckSuperAccount.isMultiAccount()
-            ? Selector<BasePopupSearchProvider, String?>(
-                selector: (context, provider) => provider.selectedSalesGroup,
-                builder: (context, salesGroup, _) {
-                  return BaseInputWidget(
-                      context: context,
-                      width: AppSize.defaultContentsWidth,
-                      enable: false,
-                      hintTextStyleCallBack: salesGroup != null
-                          ? () => AppTextStyle.default_16
-                          : () => AppTextStyle
-                              .hint_16, // hintTextStyleCallBack: () => AppTextStyle.hint_16,
-                      iconType: InputIconType.SELECT,
-                      isNotInsertAll: true,
-                      // iconType: null,
-                      iconColor: AppColors.textFieldUnfoucsColor,
-                      commononeCellDataCallback: p.getSalesGroup,
-                      oneCellType: OneCellType.SEARCH_BUSINESS_GROUP,
-                      // oneCellType: OneCellType.DO_NOTHING,
-                      isSelectedStrCallBack: (str) => p.setSalesGroup(str),
-                      hintText: salesGroup != null
-                          ? salesGroup
-                          : '${tr('plz_select_something_1', args: [
-                                  tr('salse_group'),
-                                  ''
-                                ])}');
-                })
-            : Container(),
-        defaultSpacing(),
         Selector<BasePopupSearchProvider, String?>(
             selector: (context, provider) => provider.selectedProductFamily,
             builder: (context, selectedProductFamily, _) {
@@ -510,10 +481,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                             tuple.item1 != tr('all')
                         ? true
                         : false,
-                deleteIconCallback: () =>
-                    CheckSuperAccount.isMultiAccountOrLeaderAccount()
-                        ? p.setStaffName(tr('all'))
-                        : p.setStaffName(null),
+                deleteIconCallback: () => p.setStaffName(null),
                 hintTextStyleCallBack: () => tuple.item1 != null
                     ? AppTextStyle.default_16
                     : AppTextStyle.hint_16,
@@ -1278,10 +1246,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                           context,
                           widget.type == PopupSearchType.SEARCH_SALLER
                               ? {
-                                  'staff': p.staffName,
+                                  'staff': p.staffName ?? '',
                                   'product_family': p.selectedProductFamily ??
                                       p.bodyMap?['product_family'],
-                                  'sales_group': p.selectedSalesGroup ?? ''
+                                  'vkgrp': p.selectedSalesGroup ?? ''
                                 }
                               : null);
                     },
