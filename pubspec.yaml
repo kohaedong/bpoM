@@ -34,6 +34,8 @@ dependencies:
   open_file: ^3.2.1 #### 폐기의심,현재 까지 사용가능.####  .apk 파일 open 용
   logger: ^1.1.0 # 유지보수 양호
   flutter_inappwebview: ^5.4.3+8 # 유지보수 양호
+  firebase_messaging: ^13.1.0
+  firebase_core: ^1.24.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
