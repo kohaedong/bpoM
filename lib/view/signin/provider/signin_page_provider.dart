@@ -56,11 +56,15 @@ class SigninPageProvider extends ChangeNotifier {
       if (id != null && pw != null) {
         map.putIfAbsent('id', () => id);
         map.putIfAbsent('pw', () => pw);
+        userAccount = id;
+        password = pw;
       } else {
         var account = await lp.getIdonly();
         map.putIfAbsent('id', () => account);
+        userAccount = account;
       }
     }
+
     return map;
   }
 

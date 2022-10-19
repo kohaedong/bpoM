@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-10-14 17:25:38
+ * Last Modified: 2022-10-19 14:44:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -229,6 +229,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                       hintText: status ?? tr('plz_select'),
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       width: AppSize.defaultContentsWidth,
+
                                       hintTextStyleCallBack: () =>
                                           status != null
                                               ? AppTextStyle.default_16
@@ -258,7 +259,6 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           AppColors.textFieldUnfoucsColor,
                                       hintText: family ?? tr('plz_select'),
                                       // 팀장 일때 만 팀원선택후 삭제가능.
-                                      isNotInsertAll: true,
                                       isShowDeleteForHintText: false,
                                       width: AppSize.defaultContentsWidth,
                                       hintTextStyleCallBack: () =>

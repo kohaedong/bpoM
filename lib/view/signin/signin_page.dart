@@ -60,20 +60,13 @@ class _SigninPageState extends State<SigninPage> {
             selector: (context, provider) => provider.userAccount,
             builder: (context, account, _) {
               return BaseInputWidget(
-                onTap: () {
-                  // Future.delayed(Duration(milliseconds: 400), () {
-                  //   _scrollController.animateTo(1500,
-                  //       duration: Duration(milliseconds: 100),
-                  //       curve: Curves.slowMiddle);
-                  // });
-                },
+                onTap: () {},
                 focusNode: idFocus,
                 height: AppSize.buttonHeight,
                 textEditingController: _idController,
                 keybordType: TextInputType.multiline,
                 context: context,
-                iconType:
-                    _idController.text.isNotEmpty ? InputIconType.DELETE : null,
+                iconType: account != null ? InputIconType.DELETE : null,
                 hintText: account != null ? null : '${tr('id')}',
                 width: AppSize.defaultContentsWidth,
                 defaultIconCallback: () {
@@ -99,13 +92,7 @@ class _SigninPageState extends State<SigninPage> {
               return Builder(builder: (context) {
                 return BaseInputWidget(
                   textEditingController: _passwordController,
-                  onTap: () {
-                    // Future.delayed(Duration(milliseconds: 400), () {
-                    //   _scrollController.animateTo(1500,
-                    //       duration: Duration(milliseconds: 100),
-                    //       curve: Curves.slowMiddle);
-                    // });
-                  },
+                  onTap: () {},
                   focusNode: pwFocus,
                   context: context,
                   height: AppSize.buttonHeight,

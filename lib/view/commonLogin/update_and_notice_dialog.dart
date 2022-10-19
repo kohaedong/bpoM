@@ -1,5 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_text.dart';
@@ -77,38 +80,43 @@ class CheckUpdateAndNoticeService {
     return Selector<UpdateAndNoticeProvider, bool>(
         selector: (context, provider) => provider.isdownloadStart,
         builder: (context, isStart, _) {
+          var updateDiscription = updateData!.type == UpdateType.LOCAL_CHOOSE ||
+                  updateData.type == UpdateType.WEB_CHOOSE
+              ? '${tr('update_text_choose')}'
+              : '${tr('update_text_enforce')}';
+          var updateContents = updateData.model!.appVerDscr!;
+          var text = updateDiscription + '\n\n\n' + updateContents;
+          var enterLength = FormatUtil.howManyLengthForString(text);
+
+          var height = AppSize.buttonHeight +
+              AppSize.defaultListItemSpacing * 4 +
+              enterLength * AppTextStyle.h3.fontSize!;
           return isStart
               ? downLoadProgressContents(context)
               : Container(
-                  height: AppSize.enForcePopupHeightForUpdate,
+                  height: height,
+                  constraints:
+                      BoxConstraints(maxHeight: AppSize.realHeight * .7),
                   width: AppSize.defaultContentsWidth,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
                           child: SingleChildScrollView(
-                        child: Padding(
-                          padding: AppSize.updatePopupPadding,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AppText.text(
-                                  updateData!.type == UpdateType.LOCAL_CHOOSE ||
-                                          updateData.type ==
-                                              UpdateType.WEB_CHOOSE
-                                      ? '${tr('update_text_choose')}'
-                                      : '${tr('update_text_enforce')}',
-                                  style: AppTextStyle.default_16,
-                                  textAlign: TextAlign.start),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      top: AppSize.defaultListItemSpacing)),
-                              AppText.text('${updateData.model!.appVerDscr}',
-                                  style: AppTextStyle.default_16,
-                                  textAlign: TextAlign.start),
-                            ],
-                          ),
+                        padding: AppSize.defaultSidePadding,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            defaultSpacing(times: 2),
+                            AppText.listViewText(updateDiscription,
+                                textAlign: TextAlign.start),
+                            defaultSpacing(),
+                            AppText.listViewText(updateContents,
+                                textAlign: TextAlign.start, maxLines: 100),
+                            defaultSpacing(times: 2)
+                          ],
                         ),
                       )),
                       Row(

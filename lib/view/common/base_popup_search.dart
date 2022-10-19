@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-10-18 19:34:10
+ * Last Modified: 2022-10-19 14:46:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -415,10 +415,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       : () => AppTextStyle.hint_16,
                   iconType: InputIconType.SELECT,
                   iconColor: AppColors.textFieldUnfoucsColor,
-                  isNotInsertAll:
-                      CheckSuperAccount.isMultiAccountOrLeaderAccount()
-                          ? true
-                          : false,
                   commononeCellDataCallback: p.getProductFamily,
                   oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,
                   isSelectedStrCallBack: (str) => p.setProductsFamily(str),

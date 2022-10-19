@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-10-13 03:59:18
+ * Last Modified: 2022-10-19 15:29:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -110,7 +110,9 @@ Widget buildDialogContents(BuildContext context, Widget widget,
 }
 
 Widget buildTowButtonTextContents(BuildContext context, String text,
-    {String? faildButtonText, String? successButtonText}) {
+    {String? faildButtonText,
+    String? successButtonText,
+    Function? successCallback}) {
   var enterLength = FormatUtil.howManyLengthForString(text) + 1;
   var height =
       AppSize.buttonHeight * 2 + AppSize.padding * 2 + enterLength * 14;

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/popup_search_type.dart
  * Created Date: 2021-09-10 21:38:04
- * Last Modified: 2022-10-18 16:55:19
+ * Last Modified: 2022-10-18 20:46:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,7 +13,6 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
 
 import 'popup_list_type.dart';
 
