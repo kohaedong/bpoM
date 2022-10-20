@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-10-18 19:48:39
+ * Last Modified: 2022-10-20 13:00:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -32,7 +32,7 @@ import 'package:medsalesportal/model/rfc/bulk_order_et_t_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_response_model.dart';
 
 class BulkOrderSearchPageProvider extends ChangeNotifier {
-  bool isLoadData = false;
+  bool isLoadData = true;
   bool isFirstRun = true;
   bool? hasResultData;
   String? staffName;
@@ -90,7 +90,9 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     _api.init(RequestType.SEARCH_STAFF);
     final result = await _api.request(body: body);
     if (result == null || result.statusCode != 200) {
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtStaffListResponseModel.fromJson(result.body['data']);
@@ -274,12 +276,14 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     };
     _api.init(RequestType.SEARCH_BULK_ORDER);
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       var temp = BulkOrderResponseModel.fromJson(result.body['data']);
       pr(temp.toJson());
       if (temp.tList!.length != partial) {

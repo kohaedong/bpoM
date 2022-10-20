@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-18 18:58:20
+ * Last Modified: 2022-10-20 13:04:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_response_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_suggetion_response_model.dart';
 import 'package:medsalesportal/model/rfc/et_cust_list_response_model.dart';
@@ -318,7 +319,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
         : '';
   }
 
-  Future<BasePoupSearchResult> searchPerson(bool isMounted,
+  Future<ResultModel> searchPerson(bool isMounted,
       {bool? isFromSearchSaller}) async {
     if (isFromSearchSaller == null) {
       isLoadData = true;
@@ -373,7 +374,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
         staList = null;
         notifyListeners();
       }
-      return BasePoupSearchResult(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       pr(result.body);
@@ -401,14 +404,14 @@ class BasePopupSearchProvider extends ChangeNotifier {
       }
       isShhowNotResultText = staList != null && staList!.staffList!.isEmpty;
       pr(isShhowNotResultText);
-      return BasePoupSearchResult(true);
+      return ResultModel(true);
     }
     isLoadData = false;
     notifyListeners();
-    return BasePoupSearchResult(false);
+    return ResultModel(false);
   }
 
-  Future<BasePoupSearchResult> searchKeyMan(bool isMounted) async {
+  Future<ResultModel> searchKeyMan(bool isMounted) async {
     isLoadData = true;
     if (isMounted) {
       // notifyListeners();
@@ -439,7 +442,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
     if (result == null || result.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return BasePoupSearchResult(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = AddActivityKeyManResponseModel.fromJson(result.body['data']);
@@ -460,22 +465,22 @@ class BasePopupSearchProvider extends ChangeNotifier {
           keyManResponseModel != null && keyManResponseModel!.etList!.isEmpty;
 
       notifyListeners();
-      return BasePoupSearchResult(true);
+      return ResultModel(true);
     }
     isLoadData = false;
     isShhowNotResultText = true;
     try {
       notifyListeners();
     } catch (e) {}
-    return BasePoupSearchResult(false);
+    return ResultModel(false);
   }
 
-  Future<BasePoupSearchResult> searchMaterial(bool isMounted) async {
+  Future<ResultModel> searchMaterial(bool isMounted) async {
     // assert(seletedMateriaFamily != null);
     pr(1);
     if (isFirestRun) {
       isFirestRun = false;
-      return BasePoupSearchResult(true);
+      return ResultModel(true);
     }
     pr(2);
 
@@ -520,7 +525,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
     if (result == null || result.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return BasePoupSearchResult(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp =
@@ -543,21 +550,21 @@ class BasePopupSearchProvider extends ChangeNotifier {
       isShhowNotResultText = metarialResponseModel != null &&
           metarialResponseModel!.etOutput!.isNotEmpty;
       notifyListeners();
-      return BasePoupSearchResult(true);
+      return ResultModel(true);
     }
     isLoadData = false;
     isShhowNotResultText = true;
     try {
       notifyListeners();
     } catch (e) {}
-    return BasePoupSearchResult(false);
+    return ResultModel(false);
   }
 
-  Future<BasePoupSearchResult> searchCustomer(bool isMounted,
+  Future<ResultModel> searchCustomer(bool isMounted,
       {bool? isAddActivityPage}) async {
     if (isFirestRun || !isMounted) {
       isFirestRun = false;
-      return BasePoupSearchResult(false);
+      return ResultModel(false);
     }
     isLoadData = true;
     if (isMounted) {
@@ -619,7 +626,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
       isLoadData = false;
       staList = null;
       notifyListeners();
-      return BasePoupSearchResult(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtKunnrResponseModel.fromJson(result.body['data']);
@@ -639,23 +648,23 @@ class BasePopupSearchProvider extends ChangeNotifier {
       isShhowNotResultText = etKunnrResponseModel != null &&
           etKunnrResponseModel!.etKunnr!.isEmpty;
       notifyListeners();
-      return BasePoupSearchResult(true);
+      return ResultModel(true);
     }
     isLoadData = false;
     isShhowNotResultText = true;
     try {
       notifyListeners();
     } catch (e) {}
-    return BasePoupSearchResult(false);
+    return ResultModel(false);
   }
 
-  Future<BasePoupSearchResult> searchSallerCustomer(bool isMounted,
+  Future<ResultModel> searchSallerCustomer(bool isMounted,
       {bool? isBulkOrder}) async {
     // 검색 하기 전에 popup body 에는  '조회결관가 없습니다.' 문구만 보여주기 위해.
-    // 첫 진입시 data 초기화 작업만 해주고 BasePoupSearchResult(false) 로 return 한다;
+    // 첫 진입시 data 초기화 작업만 해주고 ResultModel(false) 로 return 한다;
     if (isFirestRun || !isMounted) {
       await initData().whenComplete(() => isFirestRun = false);
-      return BasePoupSearchResult(true);
+      return ResultModel(true);
     }
 
     isLoadData = true;
@@ -706,14 +715,16 @@ class BasePopupSearchProvider extends ChangeNotifier {
         ? RequestType.SEARCH_SALLER_FOR_BULK_ORDER
         : RequestType.SEARCH_SALLER);
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       isLoadData = false;
       staList = null;
       isFirestRun = false;
       notifyListeners();
-      return BasePoupSearchResult(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       var temp = EtCustomerResponseModel.fromJson(result.body['data']);
 
       if (temp.esReturn!.mtype == 'S') {
@@ -736,7 +747,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
             etCustomerResponseModel!.etCustomer!.isEmpty;
         isShhowNotResultText = false;
         notifyListeners();
-        return BasePoupSearchResult(true);
+        return ResultModel(true);
       }
     }
     isLoadData = false;
@@ -745,10 +756,10 @@ class BasePopupSearchProvider extends ChangeNotifier {
     try {
       notifyListeners();
     } catch (e) {}
-    return BasePoupSearchResult(false);
+    return ResultModel(false);
   }
 
-  Future<BasePoupSearchResult> searchEndOrDeliveryCustomer(
+  Future<ResultModel> searchEndOrDeliveryCustomer(
       bool isMounted, bool isSupplier,
       {bool? isDeliveryCustomer}) async {
     isLoadData = true;
@@ -784,7 +795,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
       isLoadData = false;
       etEndCustomerOrSupplierResponseModel = null;
       notifyListeners();
-      return BasePoupSearchResult(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtCustListResponseModel.fromJson(result.body['data']);
@@ -810,7 +823,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
       isShhowNotResultText = etEndCustomerOrSupplierResponseModel != null &&
           etEndCustomerOrSupplierResponseModel!.etCustList!.isEmpty;
       notifyListeners();
-      return BasePoupSearchResult(true);
+      return ResultModel(true);
     }
 
     isLoadData = false;
@@ -818,10 +831,10 @@ class BasePopupSearchProvider extends ChangeNotifier {
     try {
       notifyListeners();
     } catch (e) {}
-    return BasePoupSearchResult(false);
+    return ResultModel(false);
   }
 
-  Future<BasePoupSearchResult> searchSuggetionItem(bool isMounted,
+  Future<ResultModel> searchSuggetionItem(bool isMounted,
       {bool? isDeliveryCustomer}) async {
     isLoadData = true;
     if (isMounted) {
@@ -856,7 +869,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
       isLoadData = false;
       suggetionResponseModel = null;
       notifyListeners();
-      return BasePoupSearchResult(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp =
@@ -879,14 +894,14 @@ class BasePopupSearchProvider extends ChangeNotifier {
           suggetionResponseModel!.etOutput!.isEmpty;
 
       notifyListeners();
-      return BasePoupSearchResult(true);
+      return ResultModel(true);
     }
     isLoadData = false;
     isShhowNotResultText = true;
     try {
       notifyListeners();
     } catch (e) {}
-    return BasePoupSearchResult(false);
+    return ResultModel(false);
   }
 
   void setIsLoginModel() async {
@@ -894,7 +909,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
   }
 
-  Future<BasePoupSearchResult> onSearch(OneCellType type, bool isMounted,
+  Future<ResultModel> onSearch(OneCellType type, bool isMounted,
       {Map<String, dynamic>? bodyMaps}) async {
     if (bodyMaps != null && bodyMaps != bodyMap) {
       this.bodyMap = bodyMaps;
@@ -926,14 +941,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
       case OneCellType.SEARCH_MATERIAL:
         return await searchMaterial(isMounted);
       default:
-        return BasePoupSearchResult(false);
+        return ResultModel(false);
     }
   }
-}
-
-class BasePoupSearchResult {
-  bool isSuccessful;
-  String? message;
-  // SalesorderDefaultPersonResponseModel? defaultPersonResponseModel;
-  BasePoupSearchResult(this.isSuccessful, {this.message});
 }

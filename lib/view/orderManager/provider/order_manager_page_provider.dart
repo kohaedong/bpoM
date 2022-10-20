@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-18 19:38:04
+ * Last Modified: 2022-10-20 13:11:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -503,22 +503,24 @@ class OrderManagerPageProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
+      isLoadData = false;
       if (isNotifier) {
-        isLoadData = false;
         notifyListeners();
       }
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       var temp =
           BulkOrderDetailAmountResponseModel.fromJson(result.body['data']);
       var isSuccess = temp.esReturn!.mtype == 'S';
       amountAvalible = double.tryParse(
           temp.tCreditLimit!.single.amount!.replaceAll(',', ''));
       pr(amountAvalible);
+      isLoadData = false;
       if (isNotifier) {
-        isLoadData = false;
         notifyListeners();
       }
       return ResultModel(isSuccess, message: temp.esReturn!.message);
@@ -573,14 +575,16 @@ class OrderManagerPageProvider extends ChangeNotifier {
     _body['methodParamMap'].addAll(commonBodyMap);
 
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
+      isLoadData = false;
       if (isNotifier) {
-        isLoadData = false;
         notifyListeners();
       }
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       var temp = BulkOrderDetailSearchMetaPriceResponseModel.fromJson(
           result.body['data']);
       pr('price result::${temp.toJson()}');
@@ -603,17 +607,17 @@ class OrderManagerPageProvider extends ChangeNotifier {
       } else {
         message = '${temp.esReturn!.message!.replaceAll('  ', '')}';
       }
+      isLoadData = false;
       if (isNotifier) {
-        isLoadData = false;
         notifyListeners();
       }
       return ResultModel(isSuccess, message: !isSuccess ? message : '');
     }
+    isLoadData = false;
     if (isNotifier) {
-      isLoadData = false;
       notifyListeners();
     }
-    return ResultModel(false, message: result?.errorMessage);
+    return ResultModel(false, message: result.errorMessage);
   }
 
   Future<ResultModel> checkRecentOrders() async {
@@ -657,12 +661,14 @@ class OrderManagerPageProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       recentOrderResponseModel =
           RecentOrderResponseModel.fromJson(result.body['data']);
       pr(recentOrderResponseModel?.toJson());
@@ -737,10 +743,12 @@ class OrderManagerPageProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
-      return ResultModel(false);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       var temp = EtCustListResponseModel.fromJson(result.body['data']);
       temp.etCustList?.forEach((element) {
         pr('isSup: $isSupplier ${element.toJson()} ');
@@ -844,7 +852,9 @@ class OrderManagerPageProvider extends ChangeNotifier {
     _api.init(RequestType.SEARCH_STAFF);
     final result = await _api.request(body: body);
     if (result == null || result.statusCode != 200) {
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       pr(result.body);
@@ -982,12 +992,14 @@ class OrderManagerPageProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       isLoadData = false;
       notifyListeners();
       return ResultModel(true);

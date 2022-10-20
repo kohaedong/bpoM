@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-10-19 14:46:52
+ * Last Modified: 2022-10-20 13:02:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
  */
 
+import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart';
 import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
@@ -701,7 +702,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
 
   Widget _buildListViewContents(BuildContext context) {
     final p = context.read<BasePopupSearchProvider>();
-    return FutureBuilder<BasePoupSearchResult>(
+    return FutureBuilder<ResultModel>(
         future: p.onSearch(widget.type.popupStrListType[0], false,
             bodyMaps: widget.bodyMap),
         builder: (context, snapshot) {

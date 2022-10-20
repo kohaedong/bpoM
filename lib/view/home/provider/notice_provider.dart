@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/provider/alarm_provider.dart
  * Created Date: 2022-01-03 14:00:12
- * Last Modified: 2022-10-14 14:57:08
+ * Last Modified: 2022-10-20 13:09:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
@@ -40,14 +41,14 @@ class NoticeProvider extends ChangeNotifier {
     getNoticeList(true);
   }
 
-  Future<NoticeResult?> nextPage() async {
+  Future<ResultModel?> nextPage() async {
     if (hasMore) {
       return getNoticeList(false);
     }
     return null;
   }
 
-  Future<NoticeResult> getNoticeDetail({required String noticeNumber}) async {
+  Future<ResultModel> getNoticeDetail({required String noticeNumber}) async {
     isLoadData = true;
     _api.init(RequestType.HOME_NOTICE_DETAIL);
     Map<String, dynamic> _body = {
@@ -66,7 +67,9 @@ class NoticeProvider extends ChangeNotifier {
     final result = await _api.request(body: _body);
     if (result == null || result.statusCode != 200) {
       isLoadData = false;
-      return NoticeResult(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       homeNoticeDetailResponseModel =
@@ -83,10 +86,10 @@ class NoticeProvider extends ChangeNotifier {
     }
     isLoadData = false;
     notifyListeners();
-    return NoticeResult(false);
+    return ResultModel(false);
   }
 
-  Future<NoticeResult> getNoticeList(bool isMounted) async {
+  Future<ResultModel> getNoticeList(bool isMounted) async {
     isLoadData = true;
     //* 첫페이지 일때 lastPageList =[]
     //* 첫페이지 아닐때 아니면  전페이지중에 확인처리 된 건 있으면 model 읽음으로 수정. [redck = 'X']
@@ -113,7 +116,9 @@ class NoticeProvider extends ChangeNotifier {
 
     if (result == null || result.statusCode != 200) {
       isLoadData = false;
-      return NoticeResult(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = HomeNoticeResponseModel.fromJson(result.body['data']);
@@ -134,19 +139,12 @@ class NoticeProvider extends ChangeNotifier {
       try {
         notifyListeners();
       } catch (e) {}
-      return NoticeResult(true);
+      return ResultModel(true);
     }
     isLoadData = false;
     hasMore = false;
     notifyListeners();
 
-    return NoticeResult(false);
+    return ResultModel(false);
   }
-}
-
-class NoticeResult {
-  bool isSuccessful;
-  NoticeResult(
-    this.isSuccessful,
-  );
 }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/api_service.dart
  * Created Date: 2021-08-22 21:53:15
- * Last Modified: 2022-10-13 05:44:29
+ * Last Modified: 2022-10-20 12:48:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,8 +12,14 @@
  */
 import 'dart:io';
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
+import 'package:medsalesportal/service/connect_status_service.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/util/log_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
@@ -21,6 +27,9 @@ import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/local_file_servicer.dart';
 import 'package:medsalesportal/service/deviceInfo_service.dart';
 import 'package:medsalesportal/model/http/request_result.dart';
+import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 
 // * 서버 에러 statusCode -1 으로 리턴.
 // * 넷트워크 에러 statusCode  99 으로  리턴.
@@ -240,48 +249,59 @@ class ApiService {
       {Map<String, dynamic>? body,
       Map<String, dynamic>? params,
       String? passingUrl}) async {
-    final CancelToken? cancelToken;
-    final tag = requestType!.tag;
-    cancelToken = _cancelTokens[tag] ?? CancelToken();
-    _cancelTokens[tag] = cancelToken;
-    //* 사용자 휴대폰 넷트워크 에러시 ErrorDialog 호출.
-    final isAlive = CacheService.getNetworkState();
-    if (!isAlive) {
-      return RequestResult(0, {}, '', errorMessage: 'networkError');
-    }
-    if (requestType!.httpMethod == 'POST' || requestType!.httpMethod == 'GET') {
-      try {
-        final Response<Map<String, dynamic>> response = await _client!.request(
-            passingUrl ?? requestType!.url(),
-            data: requestType!.httpMethod == 'POST' ? jsonEncode(body) : null,
-            queryParameters: requestType!.httpMethod == 'GET' ? params : null,
-            options: Options(
-              method: requestType!.httpMethod,
-            ),
-            cancelToken: cancelToken);
+    var connectResult = await ConnectStatusService.check();
+    pr(connectResult.name);
+    var notConnect = !(connectResult == ConnectivityResult.wifi ||
+        connectResult == ConnectivityResult.mobile);
+    if (notConnect) {
+      return RequestResult(-2, null, 'networkError',
+          errorMessage: 'networkError');
+    } else {
+      final CancelToken? cancelToken;
+      final tag = requestType!.tag;
+      cancelToken = _cancelTokens[tag] ?? CancelToken();
+      _cancelTokens[tag] = cancelToken;
+      //* 사용자 휴대폰 넷트워크 에러시 ErrorDialog 호출.
+      if (requestType!.httpMethod == 'POST' ||
+          requestType!.httpMethod == 'GET') {
+        try {
+          final Response<Map<String, dynamic>> response = await _client!
+              .request(passingUrl ?? requestType!.url(),
+                  data: requestType!.httpMethod == 'POST'
+                      ? jsonEncode(body)
+                      : null,
+                  queryParameters:
+                      requestType!.httpMethod == 'GET' ? params : null,
+                  options: Options(
+                    method: requestType!.httpMethod,
+                  ),
+                  cancelToken: cancelToken);
 //------------ cookies setting ----------
-        // responseCookies = await cookieJar!
-        //     .loadForRequest(Uri.parse('${RequestType.REQEUST_TOKEN.url()}'));
-        // responseCookies!.forEach((cookie) {});
-        // await cookieJar!.saveFromResponse(
-        //     Uri.parse(RequestType.SIGNIN.url()), responseCookies!);
-        // final signincookies = await cookieJar!
-        //     .loadForRequest(Uri.parse(RequestType.SIGNIN.url()));
-        // signincookies.forEach((cookie) {});
+          // responseCookies = await cookieJar!
+          //     .loadForRequest(Uri.parse('${RequestType.REQEUST_TOKEN.url()}'));
+          // responseCookies!.forEach((cookie) {});
+          // await cookieJar!.saveFromResponse(
+          //     Uri.parse(RequestType.SIGNIN.url()), responseCookies!);
+          // final signincookies = await cookieJar!
+          //     .loadForRequest(Uri.parse(RequestType.SIGNIN.url()));
+          // signincookies.forEach((cookie) {});
 //------------ cookies setting ----------
 
-        return RequestResult(
-            response.statusCode!, response.data, response.statusMessage!);
-      } on DioError catch (e, s) {
-        //*  요청 켄슬.
-        cancel(tag);
-        print(s);
-        print(e.response);
-        // * 서버 통신 장애시 statusCode -1로 리턴.
-        return RequestResult(-1, {}, '', errorMessage: 'serverError');
+          return RequestResult(
+              response.statusCode!, response.data, response.statusMessage!);
+        } on DioError catch (e, s) {
+          //*  요청 켄슬.
+          cancel(tag);
+          print(s);
+          print(e.response);
+          // * 서버 통신 장애시 statusCode -1로 리턴.
+          return RequestResult(-1, null, 'serverError',
+              errorMessage: 'serverError');
+        }
       }
+      //*  알수없는 에러시 statusCode 0 으로 리턴.
+      return RequestResult(0, null, 'anothor error',
+          errorMessage: 'anothor error');
     }
-    //*  알수없는 에러시 statusCode 0 으로 리턴.
-    return RequestResult(0, {}, 'anothor error');
   }
 }

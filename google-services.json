@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "1013306379146",
+    "firebase_url": "https://medsalesportal.firebaseio.com",
+    "project_id": "medsalesportal",
+    "storage_bucket": "medsalesportal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013306379146:android:8dd20aad5e4f646b",
+        "android_client_info": {
+          "package_name": "com.kolon.medsalesportal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013306379146-kvv7sv25kv281530i07a6ll5r7hjtrcl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnrGBmoyFwfYBXkTF9T-nlzkXWY2_KCk0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1013306379146-kvv7sv25kv281530i07a6ll5r7hjtrcl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1013306379146-14hmg485d94l83kirhp50582i7vgpnhd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kolon.medsalesportaldev",
+                "app_store_id": "101010202020"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013306379146:android:d2bb5fb291cacad5",
+        "android_client_info": {
+          "package_name": "com.kolon.medsalesportaldev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013306379146-kvv7sv25kv281530i07a6ll5r7hjtrcl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnrGBmoyFwfYBXkTF9T-nlzkXWY2_KCk0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1013306379146-kvv7sv25kv281530i07a6ll5r7hjtrcl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1013306379146-14hmg485d94l83kirhp50582i7vgpnhd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kolon.medsalesportaldev",
+                "app_store_id": "101010202020"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

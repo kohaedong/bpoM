@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-10-19 14:45:26
+ * Last Modified: 2022-10-20 13:12:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -100,7 +100,9 @@ class OrderSearchPageProvider extends ChangeNotifier {
     _api.init(RequestType.SEARCH_STAFF);
     final result = await _api.request(body: body);
     if (result == null || result.statusCode != 200) {
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtStaffListResponseModel.fromJson(result.body['data']);
@@ -285,12 +287,14 @@ class OrderSearchPageProvider extends ChangeNotifier {
     pr(_body);
     _api.init(RequestType.SEARCH_ORDER);
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       var temp = SearchOrderResponseModel.fromJson(result.body['data']);
       pr(temp.toJson());
       if (temp.tList!.length != partial) {

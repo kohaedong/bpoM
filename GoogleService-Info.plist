@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1013306379146-q3mthqstu5fggas3re6ca3hjrerbn3cg.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1013306379146-q3mthqstu5fggas3re6ca3hjrerbn3cg</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBUPO0Uz_A34b0vvgNmlEkeNff89Z615B8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1013306379146</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.kolon.medsalesportal</string>
+	<key>PROJECT_ID</key>
+	<string>medsalesportal</string>
+	<key>STORAGE_BUCKET</key>
+	<string>medsalesportal.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1013306379146:ios:e1f0465e9bdc0499b65673</string>
+	<key>DATABASE_URL</key>
+	<string>https://medsalesportal.firebaseio.com</string>
+</dict>
+</plist>

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-10-18 06:08:50
+ * Last Modified: 2022-10-20 13:21:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -102,10 +102,12 @@ class SelectLocationProvider extends ChangeNotifier {
     _api.init(RequestType.GET_LAT_AND_LON);
     Map<String, dynamic> _body = {"departure": addr};
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
-      return ResultModel(false);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       coordinateResponseModel =
           SalseActivityCoordinateResponseModel.fromJson(result.body['data']);
       var model = coordinateResponseModel?.result;
@@ -191,10 +193,12 @@ class SelectLocationProvider extends ChangeNotifier {
       "destinationY": stopY
     };
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
-      return ResultModel(false);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       distanceModel = AddActivityDistanceModel.fromJson(result.body['data']);
       pr(distanceModel!.toJson());
       return ResultModel(true);
@@ -222,10 +226,12 @@ class SelectLocationProvider extends ChangeNotifier {
       }
     };
     final dayResult = await _api.request(body: _body);
-    if (dayResult != null && dayResult.statusCode != 200) {
-      return ResultModel(false);
+    if (dayResult == null || dayResult.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: dayResult?.statusCode == -2,
+          isServerError: dayResult?.statusCode == -1);
     }
-    if (dayResult != null && dayResult.statusCode == 200) {
+    if (dayResult.statusCode == 200) {
       pr(dayResult.body);
       editDayModel =
           SalesActivityDayResponseModel.fromJson(dayResult.body['data']);
@@ -353,12 +359,14 @@ class SelectLocationProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       pr(result.body);
       editDayModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
@@ -369,7 +377,7 @@ class SelectLocationProvider extends ChangeNotifier {
     }
     isLoadData = false;
     notifyListeners();
-    return ResultModel(false, errorMassage: result?.errorMessage);
+    return ResultModel(false, errorMassage: result.errorMessage);
   }
 
   void setHeight(double val) {

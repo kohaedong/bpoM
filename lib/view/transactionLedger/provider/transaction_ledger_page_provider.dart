@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-10-13 04:30:59
+ * Last Modified: 2022-10-20 13:23:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -130,7 +130,9 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     _api.init(RequestType.SEARCH_STAFF);
     final result = await _api.request(body: body);
     if (result == null || result.statusCode != 200) {
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtStaffListResponseModel.fromJson(result.body['data']);
@@ -282,7 +284,9 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     _api.init(RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER);
     final result = await _api.request(body: _body);
     if (result == null || result.statusCode != 200) {
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtCustListResponseModel.fromJson(result.body['data']);
@@ -359,12 +363,14 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     };
     _api.init(RequestType.SEARCH_TRANSACTION_LEDGER);
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       var temp = TransLedgerResponseModel.fromJson(result.body['data']);
 
       pr(temp.tReport?.length == temp.tList?.length);

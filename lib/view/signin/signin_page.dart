@@ -227,7 +227,6 @@ class _SigninPageState extends State<SigninPage> {
                       Navigator.pushNamedAndRemoveUntil(
                           context, HomePage.routeName, (route) => false);
                     } else {
-                      lp.setIsShowErrorMessage(null);
                       if (lp.isShowErrorMessage != null &&
                           lp.isShowErrorMessage!) {
                         p.startErrorMessage(result.message ?? '');

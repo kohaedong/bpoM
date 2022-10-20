@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart
  * Created Date: 2022-07-21 14:21:16
- * Last Modified: 2022-10-18 15:21:25
+ * Last Modified: 2022-10-20 12:59:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -97,7 +97,9 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     _api.init(RequestType.SEARCH_STAFF);
     final result = await _api.request(body: body);
     if (result == null || result.statusCode != 200) {
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtStaffListResponseModel.fromJson(result.body['data']);
@@ -174,12 +176,14 @@ class BulkOrderDetailProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       isShowLoading = false;
       notifyListeners();
-      return ResultModel(false, errorMassage: result.errorMessage);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       orderCancelAndSaveResponseModel =
           BulkOrderDetailResponseModel.fromJson(result.body['data']);
       pr(orderCancelAndSaveResponseModel?.toJson());
@@ -191,7 +195,7 @@ class BulkOrderDetailProvider extends ChangeNotifier {
       return ResultModel(isSuccessful,
           message: esReturn.message, errorMassage: esReturn.message);
     }
-    return ResultModel(false, errorMassage: result!.errorMessage);
+    return ResultModel(false, errorMassage: result.errorMessage);
   }
 
   Future<ResultModel> checkMetaPriceAndStock(int index) async {
@@ -228,12 +232,14 @@ class BulkOrderDetailProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       editItemList[index].isShowLoading = false;
       notifyListeners();
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       searchMetaPriceResponseModel =
           BulkOrderDetailSearchMetaPriceResponseModel.fromJson(
               result.body['data']);
@@ -272,10 +278,12 @@ class BulkOrderDetailProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
-      return ResultModel(false);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       bulkOrderDetailAmountResponseModel =
           BulkOrderDetailAmountResponseModel.fromJson(result.body['data']);
       pr(bulkOrderDetailAmountResponseModel?.toJson());
@@ -315,10 +323,12 @@ class BulkOrderDetailProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
-      return ResultModel(false);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       bulkOrderDetailResponseModel =
           BulkOrderDetailResponseModel.fromJson(result.body['data']);
       pr(bulkOrderDetailResponseModel?.tHead?.single.pernr);

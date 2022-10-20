@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-10-06 08:03:38
+ * Last Modified: 2022-10-20 13:22:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -154,12 +154,14 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
     };
     _api.init(RequestType.SEARCH_SALSE_ACTIVITY);
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       var temp = SalseActivitySearchResponseModel.fromJson(result.body['data']);
       pr(temp.toJson());
       if (temp.tList!.length != partial) {

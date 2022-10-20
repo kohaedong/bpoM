@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/visit_result_history_page_provider.dart
  * Created Date: 2022-08-17 23:32:54
- * Last Modified: 2022-08-24 17:28:55
+ * Last Modified: 2022-10-20 13:22:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -37,10 +37,12 @@ class VisitResultHistoryPageProvider extends ChangeNotifier {
     };
 
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
-      return ResultModel(false);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       visitResponseModel =
           VisitResultHistoryPageResponseModel.fromJson(result.body['data']);
       pr(visitResponseModel?.toJson());

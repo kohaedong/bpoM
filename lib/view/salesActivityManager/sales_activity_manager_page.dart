@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-18 15:25:07
+ * Last Modified: 2022-10-20 11:35:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -652,7 +652,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 : '$text',
             120,
             AppColors.whiteText,
-            AppTextStyle.default_14.copyWith(color: AppColors.primary),
+            AppTextStyle.default_12.copyWith(color: AppColors.primary),
             AppSize.radius25, () async {
           final p = context.read<ActivityMenuProvider>();
           if (p.isDifreentGoinTime) {
@@ -1118,14 +1118,16 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
     return ChangeNotifierProvider(
         create: (context) => SalseActivityManagerPageProvider(),
         builder: (context, _) {
+          final p = context.read<SalseActivityManagerPageProvider>();
           return BaseLayout(
               key: KeyService.activityPageKey,
               hasForm: true,
+              isWithWillPopScope: true,
+              willpopCallback: () => !p.isLoadMonthData,
               appBar: MainAppBar(context,
                   titleText: AppText.text('${tr('salse_activity_manager')}',
                       style: AppTextStyle.w500_22),
                   callback: () {
-                    final p = context.read<SalseActivityManagerPageProvider>();
                     if (!p.isLoadMonthData) {
                       Navigator.pop(context);
                     }

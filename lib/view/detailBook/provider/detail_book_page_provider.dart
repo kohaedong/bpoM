@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/provider/detail_book_page_provider.dart
  * Created Date: 2022-07-05 09:55:29
- * Last Modified: 2022-10-02 13:19:15
+ * Last Modified: 2022-10-20 13:08:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -66,12 +66,14 @@ class DetailBookPageProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return ResultModel(false, errorMassage: result.errorMessage);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       fileKeyResponseModel =
           DetailBookFileKeyResponseModel.fromJson(result.body['data']);
       final key = fileKeyResponseModel!.attachInfo!.id;
@@ -85,7 +87,7 @@ class DetailBookPageProvider extends ChangeNotifier {
     }
     isLoadData = false;
     notifyListeners();
-    return ResultModel(false, errorMassage: result!.errorMessage);
+    return ResultModel(false, errorMassage: result.errorMessage);
   }
 
   Future<ResultModel> searchDetailBook(bool isFirstRun,
@@ -106,10 +108,12 @@ class DetailBookPageProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
-      return ResultModel(false);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       if (detailBookResponseModel == null && searchKey == null) {
         detailBookResponseModel =
             DetailBookResponseModel.fromJson(result.body['data']);

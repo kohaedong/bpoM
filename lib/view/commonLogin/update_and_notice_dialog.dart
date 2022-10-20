@@ -90,7 +90,7 @@ class CheckUpdateAndNoticeService {
 
           var height = AppSize.buttonHeight +
               AppSize.defaultListItemSpacing * 4 +
-              enterLength * AppTextStyle.h3.fontSize!;
+              enterLength * 16;
           return isStart
               ? downLoadProgressContents(context)
               : Container(

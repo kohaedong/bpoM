@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medsalesportal/kolonApp.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/screen_capture_util.dart';
@@ -17,7 +16,6 @@ void main() async {
   Hive.registerAdapter(TCodeModelAdapter());
   Hive.registerAdapter(TValuesModelAdapter());
   Hive.registerAdapter(TCustomerCustomsModelAdapter());
-  startConnectivityListenner();
   startCaptrueListenner();
   initCacheService();
   setSystemOverlay();
@@ -27,16 +25,6 @@ void main() async {
 void initCacheService() => CacheService.init();
 
 void startCaptrueListenner() => ScreenCaptrueUtil.screenListen();
-
-void startConnectivityListenner() {
-  Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-    if (result == ConnectivityResult.none) {
-      CacheService.saveNetworkState(false);
-    } else {
-      CacheService.saveNetworkState(true);
-    }
-  });
-}
 
 void setSystemOverlay() {
   SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(

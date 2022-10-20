@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_widget.dart
  * Created Date: 2021-08-19 11:37:50
- * Last Modified: 2022-10-06 05:28:07
+ * Last Modified: 2022-10-19 19:04:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -29,6 +29,7 @@ class BaseLayout extends StatelessWidget {
       this.isShowAppBarCallBack,
       this.bgColog,
       required this.child,
+      this.willpopCallback,
       Key? key})
       : super(key: key);
   final Widget child;
@@ -38,6 +39,7 @@ class BaseLayout extends StatelessWidget {
   final bool? isWithBottomSafeArea;
   final bool? isResizeToAvoidBottomInset;
   final Color? bgColog;
+  final OnwillpopCallback? willpopCallback;
   final bool? isWithWillPopScope;
 
   @override
@@ -66,7 +68,9 @@ class BaseLayout extends StatelessWidget {
                       },
                       child: child)),
               onWillPop: () async {
-                return false;
+                return willpopCallback != null
+                    ? willpopCallback!.call()
+                    : false;
               })
           : SafeArea(
               bottom: Platform.isIOS

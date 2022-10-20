@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-10-11 00:43:03
+ * Last Modified: 2022-10-20 13:13:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -105,12 +105,14 @@ class ActivityMenuProvider extends ChangeNotifier {
       }
     };
     final dayResult = await _api.request(body: _body);
-    if (dayResult != null && dayResult.statusCode != 200) {
+    if (dayResult == null || dayResult.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: dayResult?.statusCode == -2,
+          isServerError: dayResult?.statusCode == -1);
     }
-    if (dayResult != null && dayResult.statusCode == 200) {
+    if (dayResult.statusCode == 200) {
       editModel =
           SalesActivityDayResponseModel.fromJson(dayResult.body['data']);
       if (editModel != null && editModel!.table260!.isEmpty) {
@@ -135,19 +137,20 @@ class ActivityMenuProvider extends ChangeNotifier {
         }
       };
       final result = await _api.request(body: _body);
-      if (result != null && result.statusCode != 200) {
+      if (result == null || result.statusCode != 200) {
         isLoadData = false;
         notifyListeners();
-        return ResultModel(false, errorMassage: result.errorMessage);
+        return ResultModel(false,
+            isNetworkError: result?.statusCode == -2,
+            isServerError: result?.statusCode == -1);
       }
-      if (result != null && result.statusCode == 200) {
-        pr(result.body);
+      if (result.statusCode == 200) {
         isLoadData = false;
         notifyListeners();
         return ResultModel(true);
       }
     }
 
-    return ResultModel(false, errorMassage: dayResult!.errorMessage);
+    return ResultModel(false, errorMassage: dayResult.errorMessage);
   }
 }

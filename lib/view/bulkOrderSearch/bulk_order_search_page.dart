@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-10-18 15:15:41
+ * Last Modified: 2022-10-19 19:05:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -520,92 +520,101 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(
-        hasForm: true,
-        appBar: MainAppBar(context,
-            titleText: AppText.text('${tr('buld_order_search')}',
-                style: AppTextStyle.w500_22)),
-        child: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-                create: (context) => BulkOrderSearchPageProvider()),
-            ChangeNotifierProvider(
-                create: (context) => NextPageLoadingProvider()),
-          ],
-          builder: (context, _) {
-            final p = context.read<BulkOrderSearchPageProvider>();
-            if (p.isFirstRun) {
-              _panelSwich.value = false;
-              p.initPageData().then((result) {
-                hideKeyboard(context);
-                if (result.isSuccessful) {
-                  Future.delayed(Duration.zero, () {
-                    if (!result.data) {
-                      _panelSwich.value = true;
-                    }
-                  });
-                }
-              });
-            }
-            return Stack(
-              fit: StackFit.expand,
-              children: [
-                RefreshIndicator(
-                    child: ListView(
-                      controller: _scrollController2
-                        ..addListener(() {
-                          if (_scrollController2.offset >
-                              AppSize.appBarHeight) {
-                            if (downLock == true) {
-                              downLock = false;
-                              upLock = true;
-                              _scrollSwich.value = true;
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+              create: (context) => BulkOrderSearchPageProvider()),
+          ChangeNotifierProvider(
+              create: (context) => NextPageLoadingProvider()),
+        ],
+        builder: (context, _) {
+          final p = context.read<BulkOrderSearchPageProvider>();
+          if (p.isFirstRun) {
+            _panelSwich.value = false;
+            p.initPageData().then((result) {
+              hideKeyboard(context);
+              if (result.isSuccessful) {
+                Future.delayed(Duration.zero, () {
+                  if (!result.data) {
+                    _panelSwich.value = true;
+                  }
+                });
+              }
+            });
+          }
+          return BaseLayout(
+              hasForm: true,
+              isWithWillPopScope: true,
+              willpopCallback: () => !p.isLoadData,
+              appBar: MainAppBar(
+                context,
+                titleText: AppText.text('${tr('buld_order_search')}',
+                    style: AppTextStyle.w500_22),
+                callback: () {
+                  if (!p.isLoadData) {
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  RefreshIndicator(
+                      child: ListView(
+                        controller: _scrollController2
+                          ..addListener(() {
+                            if (_scrollController2.offset >
+                                AppSize.appBarHeight) {
+                              if (downLock == true) {
+                                downLock = false;
+                                upLock = true;
+                                _scrollSwich.value = true;
+                              }
+                            } else {
+                              if (upLock == true) {
+                                upLock = false;
+                                downLock = true;
+                                _scrollSwich.value = false;
+                              }
                             }
-                          } else {
-                            if (upLock == true) {
-                              upLock = false;
-                              downLock = true;
-                              _scrollSwich.value = false;
+                            if (_scrollController2.offset ==
+                                    _scrollController2
+                                        .position.maxScrollExtent &&
+                                !p.isLoadData &&
+                                p.hasMore) {
+                              final nextPageProvider =
+                                  context.read<NextPageLoadingProvider>();
+                              nextPageProvider.show();
+                              p.nextPage().then((_) => nextPageProvider.stop());
                             }
+                          }),
+                        children: [
+                          CustomerinfoWidget.buildDividingLine(),
+                          _buildPanel(context),
+                          CustomerinfoWidget.buildDividingLine(),
+                          _buildResult(context),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: AppSize.appBarHeight / 2),
+                              child: NextPageLoadingWdiget.build(context))
+                        ],
+                      ),
+                      onRefresh: () {
+                        _panelSwich.value = false;
+                        return p.refresh().then((result) {
+                          hideKeyboard(context);
+                          if (result.isSuccessful) {
+                            Future.delayed(Duration.zero, () {
+                              if (!result.data) {
+                                _panelSwich.value = true;
+                              }
+                            });
                           }
-                          if (_scrollController2.offset ==
-                                  _scrollController2.position.maxScrollExtent &&
-                              !p.isLoadData &&
-                              p.hasMore) {
-                            final nextPageProvider =
-                                context.read<NextPageLoadingProvider>();
-                            nextPageProvider.show();
-                            p.nextPage().then((_) => nextPageProvider.stop());
-                          }
-                        }),
-                      children: [
-                        CustomerinfoWidget.buildDividingLine(),
-                        _buildPanel(context),
-                        CustomerinfoWidget.buildDividingLine(),
-                        _buildResult(context),
-                        Padding(
-                            padding: EdgeInsets.only(
-                                bottom: AppSize.appBarHeight / 2),
-                            child: NextPageLoadingWdiget.build(context))
-                      ],
-                    ),
-                    onRefresh: () {
-                      _panelSwich.value = false;
-                      return p.refresh().then((result) {
-                        hideKeyboard(context);
-                        if (result.isSuccessful) {
-                          Future.delayed(Duration.zero, () {
-                            if (!result.data) {
-                              _panelSwich.value = true;
-                            }
-                          });
-                        }
-                      });
-                    }),
-                _buildScrollToTop(context)
-              ],
-            );
-          },
-        ));
+                        });
+                      }),
+                  _buildScrollToTop(context)
+                ],
+              ));
+        });
   }
 }

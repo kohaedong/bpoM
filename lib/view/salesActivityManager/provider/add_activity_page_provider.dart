@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-11 01:21:21
+ * Last Modified: 2022-10-20 13:18:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -422,10 +422,12 @@ class AddActivityPageProvider extends ChangeNotifier {
       }
     };
     final dayResult = await _api.request(body: _body);
-    if (dayResult != null && dayResult.statusCode != 200) {
-      return ResultModel(false);
+    if (dayResult == null || dayResult.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: dayResult?.statusCode == -2,
+          isServerError: dayResult?.statusCode == -1);
     }
-    if (dayResult != null && dayResult.statusCode == 200) {
+    if (dayResult.statusCode == 200) {
       fromParentResponseModel =
           SalesActivityDayResponseModel.fromJson(dayResult.body['data']);
       return ResultModel(true);
@@ -455,10 +457,10 @@ class AddActivityPageProvider extends ChangeNotifier {
     };
     _api.init(RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER);
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       return null;
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       suggetionResponseModel =
           AddActivitySuggetionResponseModel.fromJson(result.body['data']);
       return suggetionResponseModel!.etOutput!.single;
@@ -861,12 +863,14 @@ class AddActivityPageProvider extends ChangeNotifier {
     };
 
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       var temp = SalesActivityDayResponseModel.fromJson(result.body['data']);
 
       isModified = true;
@@ -893,17 +897,19 @@ class AddActivityPageProvider extends ChangeNotifier {
     }
     isLoadData = false;
     notifyListeners();
-    return ResultModel(false, errorMassage: result?.errorMessage);
+    return ResultModel(false, errorMassage: result.errorMessage);
   }
 
   Future<ResultModel> getAddressLatLon(String addr) async {
     _api.init(RequestType.GET_LAT_AND_LON);
     Map<String, dynamic> _body = {"departure": addr};
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
-      return ResultModel(false);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       var coordinateResponseModel =
           SalseActivityCoordinateResponseModel.fromJson(result.body['data']);
       var model = coordinateResponseModel.result;
@@ -1006,12 +1012,14 @@ class AddActivityPageProvider extends ChangeNotifier {
       "destinationY": stopY
     };
     final result = await _api.request(body: _body);
-    if (result != null && result.statusCode != 200) {
+    if (result == null || result.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
-      return ResultModel(false);
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
     }
-    if (result != null && result.statusCode == 200) {
+    if (result.statusCode == 200) {
       distanceModel = AddActivityDistanceModel.fromJson(result.body['data']);
       isVisit = true;
       isLoadData = false;
