@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-20 13:04:29
+ * Last Modified: 2022-10-20 17:41:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -69,7 +69,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
   OneCellType? type;
   Map<String, dynamic>? bodyMap;
 
-  String? staffName;
 //--------------- plant Code----------
   String? selectedOrganizationCode;
   String? seletedCirculationCode;
@@ -113,10 +112,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
     // data(String) 를 map으로 받아와 조건에 맞는 model로 초기화 해준다.
     // 제품군 / 영업사원
     if (isFirestRun && bodyMap != null) {
-      staffName = bodyMap?['staff'];
-      selectedProductFamily = bodyMap?['product_family'];
+      selectedSalesPerson = bodyMap?['staff'];
+      selectedProductFamily = bodyMap?['product_family'] ?? null;
       await getProductFamily();
       await getSalesGroup(isFirstRun: isFirestRun);
+      pr('caonimab');
       if (bodyMap?['vkgrp'] != null) {
         selectedSalesGroup = bodyMap!['vkgrp'];
       }
@@ -181,14 +181,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
   }
 
   void setSalesPerson(dynamic str) {
-    str as EtStaffListModel;
+    str as EtStaffListModel?;
     selectedSalesPerson = str;
-    staffName = selectedSalesPerson!.sname;
-    notifyListeners();
-  }
-
-  void setStaffName(String? str) {
-    staffName = str;
     notifyListeners();
   }
 
@@ -205,7 +199,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
   void setSalesGroup(String? value) {
     selectedSalesGroup = value;
     selectedSalesPerson = null;
-    staffName = null;
     notifyListeners();
   }
 
@@ -251,13 +244,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
               : str.contains(esLogin!.dptnm!))
           .toList();
       if (temp != null && temp.isNotEmpty) {
-        pr(temp.first);
-        selectedSalesGroup = staffName != tr('all')
+        selectedSalesGroup = selectedSalesPerson != null
             ? temp.first.substring(0, temp.first.indexOf('-'))
             : tr('all');
         notifyListeners();
       } else {
-        pr('all');
         selectedSalesGroup = tr('all');
         notifyListeners();
       }
@@ -267,7 +258,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
     productBusinessDataList!.forEach((data) {
       dataStr.add(data.substring(0, data.indexOf('-')));
     });
-    pr(dataStr);
     pr(dataStr);
     return dataStr;
   }
@@ -398,8 +388,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
         notifyListeners();
       } else {
         var temp = EtStaffListResponseModel.fromJson(result.body['data']);
-        var staffList =
-            temp.staffList!.where((model) => model.sname == staffName).toList();
+        var staffList = temp.staffList!
+            .where((model) => model.sname == selectedSalesPerson!.sname)
+            .toList();
         selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
       }
       isShhowNotResultText = staList != null && staList!.staffList!.isEmpty;
@@ -663,7 +654,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
     // 검색 하기 전에 popup body 에는  '조회결관가 없습니다.' 문구만 보여주기 위해.
     // 첫 진입시 data 초기화 작업만 해주고 ResultModel(false) 로 return 한다;
     if (isFirestRun || !isMounted) {
-      await initData().whenComplete(() => isFirestRun = false);
+      pr('iinininin');
+      await initData();
+      isFirestRun = false;
       return ResultModel(true);
     }
 
@@ -678,6 +671,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     var spart = productFamilyDataList
         ?.where((str) => str.contains(selectedProductFamily!))
         .toList();
+    pr('productBusinessDataList ${productBusinessDataList}');
     var vkgrp = getCode(productBusinessDataList!, selectedSalesGroup ?? '');
 
     _body = {
@@ -691,11 +685,8 @@ class BasePopupSearchProvider extends ChangeNotifier {
             ? spart.first.substring(spart.first.indexOf('-') + 1)
             : '',
         "IV_VKGRP": vkgrp,
-        "IV_PERNR": staffName == tr('all')
-            ? ''
-            : selectedSalesPerson != null
-                ? selectedSalesPerson!.pernr
-                : '',
+        "IV_PERNR":
+            selectedSalesPerson != null ? selectedSalesPerson!.pernr : '',
         "pos": pos,
         "partial": partial,
         "IV_KUNNR": "",

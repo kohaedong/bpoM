@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-10-14 06:10:53
+ * Last Modified: 2022-10-20 14:36:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,19 +12,20 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/model/rfc/recent_order_t_item_model.dart';
-import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/view/common/base_app_toast.dart';
-import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/enums/order_item_type.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/enums/popup_search_type.dart';
+import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
+import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
+import 'package:medsalesportal/model/rfc/recent_order_t_item_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/model/rfc/order_manager_material_model.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
@@ -220,7 +221,8 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
   Widget _buildSurChargeInput(BuildContext context) {
     var isMatch = widget.productFamily.contains('비처방의약품') ||
         widget.productFamily.contains('건강식품') ||
-        widget.productFamily.contains('처방의약품');
+        widget.productFamily.contains('처방의약품') ||
+        widget.productFamily.contains(tr('all'));
     final p = context.read<AddOrderPopupProvider>();
     return !isMatch
         ? Container()

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-10-19 15:29:06
+ * Last Modified: 2022-10-20 14:17:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -126,8 +126,7 @@ Widget buildTowButtonTextContents(BuildContext context, String text,
             padding: AppSize.defaultSidePadding,
             width: AppSize.defaultContentsWidth,
             height: height - AppSize.buttonHeight,
-            child: AppText.listViewText(text,
-                textAlign: TextAlign.left, maxLines: 20),
+            child: AppText.text(text, textAlign: TextAlign.left, maxLines: 20),
           ),
           Positioned(
               left: 0,

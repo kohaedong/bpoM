@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-20 13:11:46
+ * Last Modified: 2022-10-20 15:59:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
@@ -103,7 +104,9 @@ class OrderManagerPageProvider extends ChangeNotifier {
             : '10', // default 10
         "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
         "IV_KUNNR": selectedCustomerModel!.kunnr,
-        "IV_ZZKUNNR_END": selectedCustomerModel!.kunnr,
+        "IV_ZZKUNNR_END": selectedEndCustomerModel != null
+            ? selectedEndCustomerModel?.kunnr
+            : '',
       };
 
   String getCode(List<String> list, String val) {
@@ -133,6 +136,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
         selectedSalsePerson = null;
         selectedSalseChannel = null;
         selectedCustomerModel = null;
+        selectedSupplierModel = null;
         selectedEndCustomerModel = null;
         selectedProductFamily = null;
         resetOrderItem();
@@ -140,11 +144,13 @@ class OrderManagerPageProvider extends ChangeNotifier {
       case 1:
         selectedCustomerModel = null;
         selectedEndCustomerModel = null;
+        selectedSupplierModel = null;
         selectedProductFamily = null;
         resetOrderItem();
         break;
       case 2:
         selectedCustomerModel = null;
+        selectedSupplierModel = null;
         selectedEndCustomerModel = null;
         resetOrderItem();
         break;
@@ -472,7 +478,9 @@ class OrderManagerPageProvider extends ChangeNotifier {
   }
 
   void setSalsePerson(saler) {
+    resetData(level: 0);
     saler as EtStaffListModel?;
+    pr(saler?.toJson());
     selectedSalsePerson = saler;
     // selectedStaffName = selectedSalsePerson!.sname;
     notifyListeners();
@@ -490,8 +498,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
       "methodParamMap": {
         "IV_VKORG": CheckSuperAccount.isMultiAccountOrLeaderAccount()
             ? selectedSalsePerson != null
-                ? selectedSalsePerson!.orghk
-                : ''
+                ? selectedSalsePerson!.vkorg ?? CacheService.getEsLogin()!.vkorg
+                : CacheService.getEsLogin()!.vkorg
             : CacheService.getEsLogin()!.vkorg,
         "IV_VTWEG": getCode(channelList!, selectedSalseChannel!),
         "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
@@ -722,7 +730,23 @@ class OrderManagerPageProvider extends ChangeNotifier {
   Future<ResultModel> searchSupplierAndEndCustomer(bool isSupplier) async {
     _api.init(RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER);
     final isLogin = CacheService.getIsLogin();
-    final isloginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
+    IsLoginModel? isloginModel;
+    if (selectedSalsePerson == null) {
+      isloginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
+    } else {
+      var temp = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
+
+      temp.logid = selectedSalsePerson!.logid;
+      temp.ename = selectedSalsePerson!.sname;
+      temp.orghk = selectedSalsePerson!.orghk;
+      temp.vkorg = selectedSalsePerson!.vkorg;
+      temp.vkgrp = selectedSalsePerson!.vkgrp;
+      temp.dptcd = selectedSalsePerson!.dptcd;
+      temp.dptnm = selectedSalsePerson!.dptnm;
+      pr(temp.toJson());
+      isloginModel = temp;
+    }
+    pr('isLogin:: ${isloginModel.toJson()}');
     isloginModel.kunag = selectedCustomerModel!.kunnr;
     var newIslogin = await EncodingUtils.base64Convert(isloginModel.toJson());
     Map<String, dynamic> _body = {
@@ -750,6 +774,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     }
     if (result.statusCode == 200) {
       var temp = EtCustListResponseModel.fromJson(result.body['data']);
+      pr(temp.toJson());
       temp.etCustList?.forEach((element) {
         pr('isSup: $isSupplier ${element.toJson()} ');
       });

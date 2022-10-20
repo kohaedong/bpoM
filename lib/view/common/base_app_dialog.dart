@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-10-13 17:00:38
+ * Last Modified: 2022-10-20 14:16:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -99,26 +99,25 @@ class AppDialog {
     // str = str + "fdsaffsafdsafdsafklasfjdskal;jf\n\nd\n,\n,\n" * 15;
     var enterLength = FormatUtil.howManyLengthForString(str) + 1;
     var height =
-        AppSize.buttonHeight * 3 + AppSize.padding * 2 + enterLength * 14;
+        AppSize.buttonHeight * 4 + AppSize.padding * 2 + enterLength * 16;
     pr('enterLength $enterLength');
     return showPopup(
         context,
         buildDialogContents(
             context,
-            Container(
+            SingleChildScrollView(
               padding: EdgeInsets.symmetric(vertical: AppSize.padding),
-              alignment: Alignment.center,
-              height: height > AppSize.realHeight * .6
-                  ? AppSize.realHeight * .6 - AppSize.buttonHeight
-                  : height - AppSize.buttonHeight,
-              child: SingleChildScrollView(
+              child: Container(
+                constraints: BoxConstraints(maxHeight: AppSize.realHeight * .7),
+                alignment: Alignment.center,
+                height: height,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     AppImage.getImage(ImageType.INFO),
                     defaultSpacing(),
-                    SingleChildScrollView(
+                    Expanded(
                       child: AppText.text('$str',
                           style: context
                               .read<AppThemeProvider>()
@@ -192,13 +191,7 @@ class AppDialog {
               alignment: Alignment.centerLeft,
               height: height - AppSize.buttonHeight,
               child: AppText.text('$contents',
-                  style: context
-                      .read<AppThemeProvider>()
-                      .themeData
-                      .textTheme
-                      .headline3!,
-                  textAlign: TextAlign.start,
-                  maxLines: 3),
+                  textAlign: TextAlign.start, maxLines: 3),
             ),
             true,
             height,

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-10-20 13:02:33
+ * Last Modified: 2022-10-20 17:49:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -415,6 +415,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? () => AppTextStyle.default_16
                       : () => AppTextStyle.hint_16,
                   iconType: InputIconType.SELECT,
+                  isNotInsertAll:
+                      CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                          ? true
+                          : null,
                   iconColor: AppColors.textFieldUnfoucsColor,
                   commononeCellDataCallback: p.getProductFamily,
                   oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,
@@ -459,9 +463,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       : CacheService.getEsLogin()!.dptnm);
             }),
         defaultSpacing(),
-        Selector<BasePopupSearchProvider, Tuple2<String?, String?>>(
-            selector: (context, provider) =>
-                Tuple2(provider.staffName, provider.selectedSalesGroup),
+        Selector<BasePopupSearchProvider, Tuple2<EtStaffListModel?, String?>>(
+            selector: (context, provider) => Tuple2(
+                provider.selectedSalesPerson, provider.selectedSalesGroup),
             builder: (context, tuple, _) {
               return BaseInputWidget(
                 context: context,
@@ -470,7 +474,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     ? InputIconType.SEARCH
                     : null,
                 iconColor: AppColors.textFieldUnfoucsColor,
-                hintText: tuple.item1 ?? tr('plz_select'),
+                hintText:
+                    tuple.item1 != null ? tuple.item1!.sname : tr('plz_select'),
                 // 팀장 일때 만 팀원선택후 삭제가능.
                 isShowDeleteForHintText:
                     CheckSuperAccount.isMultiAccountOrLeaderAccount() &&
@@ -478,7 +483,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                             tuple.item1 != tr('all')
                         ? true
                         : false,
-                deleteIconCallback: () => p.setStaffName(null),
+                deleteIconCallback: () => p.setSalesPerson(null),
                 hintTextStyleCallBack: () => tuple.item1 != null
                     ? AppTextStyle.default_16
                     : AppTextStyle.hint_16,
@@ -978,7 +983,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   widget.type == PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER
               ? {
                   'model': model,
-                  'staff': p.staffName,
+                  'staff': p.selectedSalesPerson,
                   'product_family': p.selectedProductFamily ?? '',
                   'sales_group': p.selectedSalesGroup
                 }
@@ -1241,9 +1246,12 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       final p = context.read<BasePopupSearchProvider>();
                       Navigator.pop(
                           context,
-                          widget.type == PopupSearchType.SEARCH_SALLER
+                          widget.type == PopupSearchType.SEARCH_SALLER ||
+                                  widget.type ==
+                                      PopupSearchType
+                                          .SEARCH_SALLER_FOR_BULK_ORDER
                               ? {
-                                  'staff': p.staffName ?? '',
+                                  'staff': p.selectedSalesPerson,
                                   'product_family': p.selectedProductFamily ??
                                       p.bodyMap?['product_family'],
                                   'vkgrp': p.selectedSalesGroup ?? ''

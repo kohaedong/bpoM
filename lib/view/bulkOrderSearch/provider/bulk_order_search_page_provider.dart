@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-10-20 13:00:42
+ * Last Modified: 2022-10-20 17:53:05
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,7 +14,6 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/enums/account_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/service/api_service.dart';
@@ -35,7 +34,6 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = true;
   bool isFirstRun = true;
   bool? hasResultData;
-  String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
   String? selectedOrderStatus;
@@ -61,8 +59,7 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     return onSearch(true);
   }
 
-  bool get isValidate =>
-      staffName != null && selectedStartDate != null && selectedEndDate != null;
+  bool get isValidate => selectedSalesPerson != null;
   Future<ResultModel?> nextPage() async {
     if (hasMore) {
       pos = partial + pos;
@@ -71,7 +68,7 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     return null;
   }
 
-  Future<ResultModel> searchPerson() async {
+  Future<ResultModel> searchPersons() async {
     var _api = ApiService();
     final isLogin = CacheService.getIsLogin();
     final esLogin = CacheService.getEsLogin();
@@ -96,17 +93,19 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtStaffListResponseModel.fromJson(result.body['data']);
-      var staffList =
-          temp.staffList!.where((model) => model.sname == staffName).toList();
+      pr(temp.toJson());
+      var staffList = temp.staffList!
+          .where((model) => model.sname == esLogin.ename)
+          .toList();
       selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
-      // return ResultModel(true);
+      pr(selectedSalesPerson?.toJson());
+      return ResultModel(true);
     }
     return ResultModel(false);
   }
 
   Future<ResultModel> initPageData() async {
-    setIsLoginModel();
-    await searchPerson();
+    await searchPersons();
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
     orderStatusListWithCode = await HiveService.getOrderStatus();
@@ -114,18 +113,6 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     selectedOrderStatus = tr('all');
     isFirstRun = false;
     return onSearch(true);
-  }
-
-  void setIsLoginModel() async {
-    var isLogin = CacheService.getIsLogin();
-    isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-
-    if (CacheService.getAccountType() == AccountType.MULTI ||
-        CacheService.getAccountType() == AccountType.LEADER) {
-      staffName = tr('all');
-    } else {
-      staffName = isLoginModel!.ename;
-    }
   }
 
   void setStartDate(BuildContext context, String? str) {
@@ -146,27 +133,20 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setStaffName(String? str) {
-    pr(str);
-    staffName = str;
-    notifyListeners();
-  }
-
-  void setSalesPerson(dynamic str) {
-    str as EtStaffListModel;
-    selectedSalesPerson = str;
-    staffName = selectedSalesPerson!.sname;
-    pr(staffName);
+  void setSalesPerson(dynamic person) {
+    person as EtStaffListModel?;
+    selectedSalesPerson = person;
+    selectedCustomerModel = null;
     notifyListeners();
   }
 
   void setCustomerModel(dynamic map) {
     map as Map<String, dynamic>;
+    pr(map);
     var productsFamily = map['product_family'] as String?;
-    var staff = map['staff'] as String?;
+    var staff = map['staff'] as EtStaffListModel?;
+    selectedSalesPerson = staff;
     selectedProductsFamily = productsFamily;
-    staffName = staff;
-    searchPerson();
     var model = map['model'] as EtCustomerModel?;
     selectedCustomerModel = model;
     customerName = selectedCustomerModel?.kunnrNm;
@@ -255,11 +235,8 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
         "IV_VKGRP": vkgrp,
         "IV_VTWEG": vtweg,
         "IS_LOGIN": isLogin,
-        "IV_PERNR": staffName == tr('all')
-            ? ''
-            : selectedSalesPerson != null
-                ? selectedSalesPerson!.pernr
-                : '',
+        "IV_PERNR":
+            selectedSalesPerson != null ? selectedSalesPerson!.pernr : '',
         "IV_SPART": spart.isNotEmpty
             ? spart.first.substring(spart.first.indexOf('-') + 1)
             : '',

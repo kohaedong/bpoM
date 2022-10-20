@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
- * Last Modified: 2022-10-18 05:30:22
+ * Last Modified: 2022-10-20 13:54:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -89,15 +89,16 @@ class LoginProvider extends ChangeNotifier {
     };
 
     _api.init(RequestType.REQEUST_TOKEN);
-    final tokenResult = await _api.request(
-      body: tokenBody,
-    );
+    final tokenResult = await _api.request(body: tokenBody);
     if (tokenResult != null && tokenResult.statusCode == 200) {
       var temp = TokenModel.fromJson(tokenResult.body);
       user!.tokenInfo = temp;
       return ResultModel(true);
     }
-    return ResultModel(false, message: tokenResult?.errorMessage);
+    return ResultModel(false,
+        message: tokenResult?.errorMessage,
+        isNetworkError: tokenResult?.statusCode == -2,
+        isServerError: tokenResult?.statusCode == -1);
   }
 
   Future<Map<String, dynamic>> getIosSSOLibUserData() async {
@@ -351,8 +352,11 @@ class LoginProvider extends ChangeNotifier {
 
     _api.init(RequestType.SAVE_DEVICE_INFO);
     final deviceInfoResult = await _api.request(body: deviceInfoBody);
-    if (deviceInfoResult == null && deviceInfoResult!.statusCode != 200) {
-      return ResultModel(false, message: 'get device info faild');
+    if (deviceInfoResult == null || deviceInfoResult.statusCode != 200) {
+      return ResultModel(false,
+          message: 'get device info faild',
+          isNetworkError: deviceInfoResult?.statusCode == -2,
+          isServerError: deviceInfoResult?.statusCode == -1);
     }
     if (deviceInfoResult.statusCode == 200) {
       return ResultModel(true);
@@ -411,7 +415,10 @@ class LoginProvider extends ChangeNotifier {
       }
       return ResultModel(isSuccess, message: message);
     }
-    return ResultModel(false, message: message);
+    return ResultModel(false,
+        message: message,
+        isNetworkError: signResult.statusCode == -2,
+        isServerError: signResult.statusCode == -1);
   }
 
   Future<ResultModel> sapSignIn() async {
@@ -426,16 +433,19 @@ class LoginProvider extends ChangeNotifier {
     };
     _api.init(RequestType.SAP_SIGNIN_INFO);
     final sapResult = await _api.request(body: sapBody);
-    if (sapResult != null && sapResult.statusCode != 200) {
-      return ResultModel(false, message: sapResult.message);
+    if (sapResult == null || sapResult.statusCode != 200) {
+      return ResultModel(false,
+          message: sapResult?.message,
+          isNetworkError: sapResult?.statusCode == -2,
+          isServerError: sapResult?.statusCode == -1);
     }
-    if (sapResult != null && sapResult.statusCode == 200) {
+    if (sapResult.statusCode == 200) {
       sapResponseModel = SapLoginInfoResponseModel.fromJson(sapResult.body);
       var isSuccessfull = sapResponseModel!.data!.esReturn!.mtype == 'S';
       var message = tr('permission_denied');
       return ResultModel(isSuccessfull, message: message);
     }
-    return ResultModel(false, message: sapResult?.errorMessage ?? '');
+    return ResultModel(false, message: sapResult.errorMessage ?? '');
   }
 
   Future<ResultModel> saveLoginInfo() async {
@@ -465,26 +475,22 @@ class LoginProvider extends ChangeNotifier {
   Future<ResultModel> startSignin(String userId, String userPw,
       {bool? isAutoLogin}) async {
     ResultModel? result;
-    try {
-      result = await webSignIn(userId, userPw, isAutoLogin: isAutoLogin);
-      if (!result.isSuccessful) return result;
-      result = await requestToken();
-      if (!result.isSuccessful) return result;
-      result = await saveUserIdAndPasswordToSSO();
-      if (!result.isSuccessful) return result;
-      result = await sapSignIn();
-      if (!result.isSuccessful) return result;
-      result = await saveLoginInfo();
-      if (!result.isSuccessful) return result;
-      result = await getDeviceInfo();
-      if (!result.isSuccessful) return result;
-      result = await checkUserEnvironment();
-      if (!result.isSuccessful) return result;
-      result = await saveUserEnvironment();
-      if (result.isSuccessful) isLogedin = true;
-    } catch (e) {
-      return ResultModel(false, message: tr('server_error'));
-    }
+    result = await webSignIn(userId, userPw, isAutoLogin: isAutoLogin);
+    if (!result.isSuccessful) return result;
+    result = await requestToken();
+    if (!result.isSuccessful) return result;
+    result = await saveUserIdAndPasswordToSSO();
+    if (!result.isSuccessful) return result;
+    result = await sapSignIn();
+    if (!result.isSuccessful) return result;
+    result = await saveLoginInfo();
+    if (!result.isSuccessful) return result;
+    result = await getDeviceInfo();
+    if (!result.isSuccessful) return result;
+    result = await checkUserEnvironment();
+    if (!result.isSuccessful) return result;
+    result = await saveUserEnvironment();
+    if (result.isSuccessful) isLogedin = true;
     return result;
   }
 }

@@ -227,7 +227,13 @@ class _SigninPageState extends State<SigninPage> {
                       Navigator.pushNamedAndRemoveUntil(
                           context, HomePage.routeName, (route) => false);
                     } else {
-                      if (lp.isShowErrorMessage != null &&
+                      if (result.isNetworkError ?? false) {
+                        AppDialog.showDangermessage(
+                            context, tr('check_network'));
+                      } else if (result.isServerError ?? false) {
+                        AppDialog.showDangermessage(
+                            context, tr('server_error'));
+                      } else if (lp.isShowErrorMessage != null &&
                           lp.isShowErrorMessage!) {
                         p.startErrorMessage(result.message ?? '');
                       } else {

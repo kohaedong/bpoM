@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-10-19 19:05:23
+ * Last Modified: 2022-10-20 17:39:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,8 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/rfc/et_customer_model.dart';
+import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/image_type.dart';
@@ -165,10 +167,11 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                 ),
                               );
                             }),
-                            Selector<BulkOrderSearchPageProvider, String?>(
+                            Selector<BulkOrderSearchPageProvider,
+                                EtStaffListModel?>(
                               selector: (context, provider) =>
-                                  provider.staffName,
-                              builder: (context, staffName, _) {
+                                  provider.selectedSalesPerson,
+                              builder: (context, person, _) {
                                 var isSuperAccount =
                                     CacheService.getAccountType() ==
                                             AccountType.MULTI ||
@@ -179,25 +182,25 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                     BaseInputWidget(
                                       context: context,
                                       iconType: isSuperAccount
-                                          ? staffName != null
+                                          ? person != null
                                               ? InputIconType.SEARCH
                                               : null
                                           : null,
                                       iconColor:
                                           AppColors.textFieldUnfoucsColor,
-                                      hintText: staffName ?? tr('plz_select'),
+                                      hintText: person != null
+                                          ? person.sname
+                                          : tr('plz_select'),
                                       // 팀장 일때 만 팀원선택후 삭제가능.
-                                      isShowDeleteForHintText: isSuperAccount &&
-                                              staffName != null &&
-                                              staffName != tr('all')
-                                          ? true
-                                          : false,
-                                      deleteIconCallback: () => isSuperAccount
-                                          ? p.setStaffName(tr('all'))
-                                          : p.setStaffName(null),
+                                      isShowDeleteForHintText:
+                                          isSuperAccount && person != null
+                                              ? true
+                                              : false,
+                                      deleteIconCallback: () =>
+                                          p.setSalesPerson(null),
                                       width: AppSize.defaultContentsWidth,
                                       hintTextStyleCallBack: () =>
-                                          staffName != null
+                                          person != null
                                               ? AppTextStyle.default_16
                                               : AppTextStyle.hint_16,
                                       popupSearchType: isSuperAccount
@@ -271,34 +274,45 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                     isNotShowStar: true);
                               },
                             ),
-                            Selector<BulkOrderSearchPageProvider,
-                                Tuple2<String?, String?>>(
-                              selector: (context, provider) => Tuple2(
-                                  provider.customerName,
-                                  provider.selectedProductsFamily),
+                            Selector<
+                                BulkOrderSearchPageProvider,
+                                Tuple3<EtCustomerModel?, String?,
+                                    EtStaffListModel?>>(
+                              selector: (context, provider) => Tuple3(
+                                  provider.selectedCustomerModel,
+                                  provider.selectedProductsFamily,
+                                  provider.selectedSalesPerson),
                               builder: (context, tuple, _) {
                                 return BaseColumWithTitleAndTextFiled.build(
                                     '${tr('sales_office')}',
                                     BaseInputWidget(
                                       context: context,
-                                      onTap: p.selectedProductsFamily == null
-                                          ? () {
-                                              AppToast().show(
-                                                  context,
-                                                  tr('plz_select_something_first_1',
-                                                      args: [
-                                                        tr('product_family'),
-                                                        ''
-                                                      ]));
-                                              return 'continue';
-                                            }
-                                          : null,
+                                      onTap: () {
+                                        if (tuple.item3 == null) {
+                                          AppToast().show(
+                                              context,
+                                              tr('plz_select_something_first_2',
+                                                  args: [tr('manager'), '']));
+                                        }
+                                        if (tuple.item2 == null) {
+                                          AppToast().show(
+                                              context,
+                                              tr('plz_select_something_first_1',
+                                                  args: [
+                                                    tr('product_family'),
+                                                    ''
+                                                  ]));
+                                          return;
+                                        }
+                                      },
                                       iconType: InputIconType.SEARCH,
                                       iconColor:
                                           AppColors.textFieldUnfoucsColor,
                                       deleteIconCallback: () =>
                                           p.setCustomerName(null),
-                                      hintText: tuple.item1 ?? tr('plz_select'),
+                                      hintText: tuple.item1 != null
+                                          ? tuple.item1!.kunnrNm!
+                                          : tr('plz_select'),
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       isShowDeleteForHintText:
                                           tuple.item1 != null ? true : false,
@@ -307,14 +321,17 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                           tuple.item1 != null
                                               ? AppTextStyle.default_16
                                               : AppTextStyle.hint_16,
-                                      popupSearchType: PopupSearchType
-                                          .SEARCH_SALLER_FOR_BULK_ORDER,
+                                      popupSearchType: tuple.item2 == null ||
+                                              tuple.item3 == null
+                                          ? PopupSearchType.DO_NOTHING
+                                          : PopupSearchType
+                                              .SEARCH_SALLER_FOR_BULK_ORDER,
                                       isSelectedStrCallBack: (customer) {
                                         return p.setCustomerModel(customer);
                                       },
                                       bodyMap: {
                                         'product_family': tuple.item2,
-                                        'staff': p.staffName,
+                                        'staff': tuple.item3,
                                       },
                                       enable: false,
                                     ),
