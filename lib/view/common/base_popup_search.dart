@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-10-22 18:42:03
+ * Last Modified: 2022-10-22 22:48:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -127,10 +127,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   context: context,
                   width: AppSize.defaultContentsWidth - AppSize.padding * 2,
                   enable: true,
-                  hintTextStyleCallBack: personInputText != null
+                  hintTextStyleCallBack: _personInputController.text.isNotEmpty
                       ? null
                       : () => AppTextStyle.hint_16,
-                  iconType: personInputText != null
+                  iconType: _personInputController.text.isNotEmpty
                       ? InputIconType.DELETE_AND_SEARCH
                       : InputIconType.SEARCH,
                   onChangeCallBack: (e) => p.setPersonInputText(e),
@@ -144,8 +144,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     p.setPersonInputText(null);
                     _personInputController.text = '';
                   },
-                  hintText: personInputText != null
-                      ? null
+                  hintText: _personInputController.text.isNotEmpty
+                      ? _personInputController.text
                       : '${tr('plz_enter_search_key_for_something_1', args: [
                               '${tr('name')}',
                               ''
@@ -170,7 +170,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   width: AppSize.defaultContentsWidth - AppSize.padding * 2,
                   enable: true,
                   hintTextStyleCallBack:
-                      group != null ? null : () => AppTextStyle.hint_16,
+                      _suggetionGroupInputController.text.isNotEmpty
+                          ? null
+                          : () => AppTextStyle.hint_16,
                   iconType: group != null
                       ? InputIconType.DELETE_AND_SEARCH
                       : InputIconType.SEARCH,
@@ -185,8 +187,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     p.setSuggetionItemGroupInputText(null);
                     _suggetionGroupInputController.text = '';
                   },
-                  hintText: group != null
-                      ? null
+                  hintText: _suggetionGroupInputController.text.isNotEmpty
+                      ? _suggetionGroupInputController.text
                       : '${tr('plz_enter_search_key_for_something_1', args: [
                               '${tr('materials_group')}',
                               ''
@@ -222,7 +224,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       : '${tr('plz_enter_search_key_for_something_1', args: [
                               '${tr('materials_name')}',
                               ''
-                            ])}');
+                            ])}(*)');
             }),
         defaultSpacing(),
         AppStyles.buildSearchButton(context, tr('search'), () {
@@ -600,7 +602,9 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                 context: context,
                 textEditingController: _materialQuantityInputController,
                 width: (AppSize.defaultContentsWidth - AppSize.padding * 2),
-                iconType: key != null ? InputIconType.DELETE : null,
+                iconType: _materialQuantityInputController.text.isNotEmpty
+                    ? InputIconType.DELETE
+                    : null,
                 defaultIconCallback: () {
                   p.setMeatrialSearchKeyInputText(null);
                   _materialQuantityInputController.text = '';
@@ -611,9 +615,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                             '${tr('search_by_keywords')}',
                             ''
                           ])}',
-                hintTextStyleCallBack: key != null
-                    ? () => AppTextStyle.default_16
-                    : () => AppTextStyle.hint_16,
+                hintTextStyleCallBack:
+                    _materialQuantityInputController.text.isNotEmpty
+                        ? () => AppTextStyle.default_16
+                        : () => AppTextStyle.hint_16,
                 onChangeCallBack: (t) => p.setMeatrialSearchKeyInputText(t),
                 enable: true,
               );
@@ -626,7 +631,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
             if (p.seletedMaterialSearchKey!.isEmpty) {
               AppToast().show(context, tr('keyword_must_not_null'));
             } else {
-              p.refresh().then((value) => hideKeyboard(context));
+              p.refresh();
             }
           } else {
             AppToast().show(context, tr('plz_check_essential_option'));

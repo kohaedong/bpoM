@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/api_service.dart
  * Created Date: 2021-08-22 21:53:15
- * Last Modified: 2022-10-20 12:48:46
+ * Last Modified: 2022-10-22 22:06:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,24 +12,17 @@
  */
 import 'dart:io';
 import 'dart:convert';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
-import 'package:medsalesportal/service/connect_status_service.dart';
-import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/util/log_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/service/local_file_servicer.dart';
-import 'package:medsalesportal/service/deviceInfo_service.dart';
 import 'package:medsalesportal/model/http/request_result.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/service/deviceInfo_service.dart';
+import 'package:medsalesportal/service/local_file_servicer.dart';
+import 'package:medsalesportal/service/connect_status_service.dart';
 
 // * 서버 에러 statusCode -1 으로 리턴.
 // * 넷트워크 에러 statusCode  99 으로  리턴.
@@ -128,8 +121,6 @@ class ApiService {
         });
       }
     }
-
-    print(options.data);
     return handler.next(options);
   }
 
@@ -250,7 +241,6 @@ class ApiService {
       Map<String, dynamic>? params,
       String? passingUrl}) async {
     var connectResult = await ConnectStatusService.check();
-    pr(connectResult.name);
     var notConnect = !(connectResult == ConnectivityResult.wifi ||
         connectResult == ConnectivityResult.mobile);
     if (notConnect) {
@@ -293,7 +283,6 @@ class ApiService {
           //*  요청 켄슬.
           cancel(tag);
           print(s);
-          print(e.response);
           // * 서버 통신 장애시 statusCode -1로 리턴.
           return RequestResult(-1, null, 'serverError',
               errorMessage: 'serverError');

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-22 21:24:39
+ * Last Modified: 2022-10-22 21:42:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -991,8 +991,10 @@ class OrderManagerPageProvider extends ChangeNotifier {
 
     head.erdat = DateUtil.getDateStr(DateTime.now().toIso8601String());
     head.erzet = DateUtil.getTimeNow(isNotWithColon: true);
-    head.ernam = esLogin.ename;
-    head.erwid = esLogin.logid;
+    head.ernam = selectedSalesPerson!.sname;
+    head.erwid = selectedSalesPerson!.logid;
+    // head.ernam = esLogin.ename;
+    // head.erwid = esLogin.logid;
     head.sanum = selectedSalesPerson!.sname;
     head.slnum = selectedSalesPerson!.sname;
     temp.addAll([head.toJson()]);

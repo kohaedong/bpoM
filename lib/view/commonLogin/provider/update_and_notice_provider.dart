@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/splash/commonLogin/provider/common_login_provider.dart
  * Created Date: 2021-10-06 03:26:46
- * Last Modified: 2022-10-19 15:54:20
+ * Last Modified: 2022-10-22 22:19:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -17,6 +17,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:open_file/open_file.dart' as openfile;
@@ -241,7 +242,8 @@ class UpdateAndNoticeProvider extends ChangeNotifier {
     if (noticeResult == null || noticeResult.statusCode != 200)
       return UpdateAndNoticeResult(false);
     // -------------- http request -------------
-    if (noticeResult.statusCode == 200) {
+    if (noticeResult.statusCode == 200 && noticeResult.body['code'] != 'NG') {
+      pr(noticeResult.body);
       // result.
       final result = NoticeResponseModel.fromJson(noticeResult.body['data']);
       print(result.toJson());
