@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-22 19:40:12
+ * Last Modified: 2022-10-22 23:49:51
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -167,9 +167,11 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                           ? {
                               'dptnm': tuple.item2 == tr('all')
                                   ? ''
-                                  : tuple.item2 ?? ''
+                                  : tuple.item2 ?? '',
                             }
-                          : {'dptnm': CacheService.getEsLogin()!.dptnm},
+                          : {
+                              'dptnm': CacheService.getEsLogin()!.dptnm,
+                            },
                       enable: false,
                     );
                   }),
@@ -351,7 +353,9 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         : CacheService.getEsLogin()!.dptnm
                     : CacheService.getEsLogin()!.dptnm,
                 'vkgrp':
-                    p.selectedSalseGroup != null ? p.selectedSalseGroup : ''
+                    p.selectedSalseGroup != null ? p.selectedSalseGroup : '',
+                // 제품군팝업에 전체 노출여부
+                'isSalseGroupNotUseAll': true
               },
               enable: false,
             ),

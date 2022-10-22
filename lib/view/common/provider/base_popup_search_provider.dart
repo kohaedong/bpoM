@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-22 22:54:09
+ * Last Modified: 2022-10-23 00:53:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -109,11 +109,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   void setPersonInputText(String? value) {
     personInputText = value;
-    if (value == null || (value.length == 1) || value == '') {
+    if (value == null || value.length == 1 || value == '') {
       if (value == '*') {
         personInputText = ' ';
       }
-      if (value == null) {
+      if (value == '') {
         personInputText = null;
       }
       notifyListeners();
@@ -122,11 +122,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   void setSuggetionItemNameInputText(String? value) {
     suggetionItemNameInputText = value;
-    if (value == null || (value.length == 1) || value == '') {
+    if (value == null || value.length == 1 || value == '') {
       if (value == '*') {
         suggetionItemNameInputText = ' ';
       }
-      if (value == null) {
+      if (value == '') {
         suggetionItemNameInputText = null;
       }
       notifyListeners();
@@ -135,7 +135,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   void setMeatrialSearchKeyInputText(String? value) {
     seletedMaterialSearchKey = value;
-    if (value == null || (value.length == 1) || value == '') {
+    if (value == null || value.length == 1 || value == '') {
       if (value == '*') {
         seletedMaterialSearchKey = ' ';
       }
@@ -148,7 +148,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   void setSuggetionItemGroupInputText(String? value) {
     suggetionItemGroupInputText = value;
-    if (value == null || (value.length == 1) || value == '') {
+    if (value == null || value.length == 1 || value == '') {
       if (value == '*') {
         suggetionItemGroupInputText = ' ';
       }
@@ -161,46 +161,62 @@ class BasePopupSearchProvider extends ChangeNotifier {
 
   void setKeymanInputText(String? value) {
     keymanInputText = value;
-    if (value == null || (value.length == 1)) {
+    if (value == null || value.length == 1 || value == '') {
       if (value == '*') {
         keymanInputText = ' ';
       }
+      if (value == '') {
+        keymanInputText = null;
+      }
+      notifyListeners();
     }
   }
 
   void setSalesPerson(dynamic str) {
     str as EtStaffListModel?;
     selectedSalesPerson = str;
+    notifyListeners();
   }
 
   void setProductsCategory(String? value) {
     selectedProductCategory = value;
+    notifyListeners();
   }
 
   void setProductsFamily(String? value) {
     selectedProductFamily = value;
+    notifyListeners();
   }
 
   void setSalesGroup(String? value) {
     selectedSalesGroup = value;
     selectedSalesPerson = null;
+    notifyListeners();
   }
 
   void setCustomerInputText(String? value) {
     customerInputText = value;
-    if (value == null || (value.length == 1)) {
+    if (value == null || value.length == 1 || value == '') {
       if (value == '*') {
         customerInputText = ' ';
       }
+      if (value == '') {
+        customerInputText = null;
+      }
+      notifyListeners();
     }
   }
 
   void setEndCustomerInputText(String? value) {
     endCustomerInputText = value;
-    if (value == null || (value.length == 1)) {
+    if (value == null || value.length == 1 || value == '') {
       if (value == '*') {
         endCustomerInputText = ' ';
       }
+      if (value == '') {
+        endCustomerInputText = null;
+      }
+      notifyListeners();
     }
   }
 

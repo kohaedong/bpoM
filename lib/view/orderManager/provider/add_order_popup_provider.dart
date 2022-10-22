@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/add_order_popup_provider.dart
  * Created Date: 2022-09-04 17:56:07
- * Last Modified: 2022-10-22 20:59:18
+ * Last Modified: 2022-10-22 23:24:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -167,11 +167,11 @@ class AddOrderPopupProvider extends ChangeNotifier {
     var newIsLogin = '';
     var isLoginModel =
         EncodingUtils.decodeBase64ForIsLogin(CacheService.getIsLogin()!);
-    // isLoginModel.vtweg = bodyMap['IV_VTWEG'];
-    // isLoginModel.vkorg = bodyMap['IV_VKORG'];
-    // isLoginModel.spart = bodyMap['IV_SPART'];
-    // isLoginModel.vkgrp = bodyMap['IV_VKGRP'];
-    // isLoginModel.kunag = bodyMap['IV_KUNNR'];
+    isLoginModel.vtweg = bodyMap['IV_VTWEG'];
+    isLoginModel.vkorg = bodyMap['IV_VKORG'];
+    isLoginModel.spart = bodyMap['IV_SPART'];
+    isLoginModel.vkgrp = bodyMap['IV_VKGRP'];
+    isLoginModel.kunag = bodyMap['IV_KUNNR'];
 
     newIsLogin = await EncodingUtils.getSimpleIsLogin(isLoginModel);
     pr(isLoginModel.toJson());

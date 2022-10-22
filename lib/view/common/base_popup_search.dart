@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-10-22 22:48:19
+ * Last Modified: 2022-10-23 00:58:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -173,7 +173,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       _suggetionGroupInputController.text.isNotEmpty
                           ? null
                           : () => AppTextStyle.hint_16,
-                  iconType: group != null
+                  iconType: _suggetionGroupInputController.text.isNotEmpty
                       ? InputIconType.DELETE_AND_SEARCH
                       : InputIconType.SEARCH,
                   onChangeCallBack: (e) => p.setSuggetionItemGroupInputText(e),
@@ -204,8 +204,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   width: AppSize.defaultContentsWidth - AppSize.padding * 2,
                   enable: true,
                   hintTextStyleCallBack:
-                      name != null ? null : () => AppTextStyle.hint_16,
-                  iconType: name != null
+                      _suggetionNameInputController.text.isNotEmpty
+                          ? null
+                          : () => AppTextStyle.hint_16,
+                  iconType: _suggetionNameInputController.text.isNotEmpty
                       ? InputIconType.DELETE_AND_SEARCH
                       : InputIconType.SEARCH,
                   onChangeCallBack: (e) => p.setSuggetionItemNameInputText(e),
@@ -219,8 +221,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     p.setSuggetionItemNameInputText(null);
                     _suggetionNameInputController.text = '';
                   },
-                  hintText: name != null
-                      ? null
+                  hintText: _suggetionNameInputController.text.isNotEmpty
+                      ? _suggetionNameInputController.text
                       : '${tr('plz_enter_search_key_for_something_1', args: [
                               '${tr('materials_name')}',
                               ''
@@ -255,10 +257,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   context: context,
                   width: AppSize.defaultContentsWidth - AppSize.padding * 2,
                   enable: true,
-                  hintTextStyleCallBack: keymanInputText != null
+                  hintTextStyleCallBack: _personInputController.text.isNotEmpty
                       ? null
                       : () => AppTextStyle.hint_16,
-                  iconType: keymanInputText != null
+                  iconType: _personInputController.text.isNotEmpty
                       ? InputIconType.DELETE_AND_SEARCH
                       : InputIconType.SEARCH,
                   onChangeCallBack: (e) => p.setKeymanInputText(e),
@@ -272,8 +274,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     p.setKeymanInputText(null);
                     _personInputController.text = '';
                   },
-                  hintText: keymanInputText != null
-                      ? null
+                  hintText: _personInputController.text.isNotEmpty
+                      ? _personInputController.text
                       : '${tr('plz_enter_search_key_for_something_1', args: [
                               '${tr('name')}',
                               ''
@@ -365,10 +367,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       width:
                           (AppSize.defaultContentsWidth - AppSize.padding * 2),
                       enable: true,
-                      hintTextStyleCallBack: customerInputText != null
-                          ? null
-                          : () => AppTextStyle.hint_16,
-                      iconType: customerInputText != null
+                      hintTextStyleCallBack:
+                          _customerInputController.text.isNotEmpty
+                              ? null
+                              : () => AppTextStyle.hint_16,
+                      iconType: _customerInputController.text.isNotEmpty
                           ? InputIconType.DELETE
                           : null,
                       onChangeCallBack: (e) => p.setCustomerInputText(e),
@@ -378,8 +381,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                         _customerInputController.text = '';
                       },
                       textEditingController: _customerInputController,
-                      hintText: customerInputText != null
-                          ? null
+                      hintText: _customerInputController.text.isNotEmpty
+                          ? _customerInputController.text
                           : '${tr('plz_enter_search_key_for_something_1', args: [
                                   '${tr('customer_name')}',
                                   '(*)'
@@ -402,6 +405,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
 
   Widget _buildSallerSearchBar(BuildContext context) {
     final p = context.read<BasePopupSearchProvider>();
+    var isNotUseAll = p.bodyMap?['isSalseGroupNotUseAll'] != null &&
+        p.bodyMap!['isSalseGroupNotUseAll'];
     return Expanded(
         child: Column(
       children: [
@@ -417,10 +422,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? () => AppTextStyle.default_16
                       : () => AppTextStyle.hint_16,
                   iconType: InputIconType.SELECT,
-                  isNotInsertAll:
-                      CheckSuperAccount.isMultiAccountOrLeaderAccount()
-                          ? null
-                          : true,
+                  isNotInsertAll: isNotUseAll ? true : null,
                   iconColor: AppColors.textFieldUnfoucsColor,
                   commononeCellDataCallback: p.getProductFamily,
                   oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,
@@ -530,11 +532,13 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   context: context,
                   width: (AppSize.defaultContentsWidth - AppSize.padding * 2),
                   enable: true,
-                  hintTextStyleCallBack: customerInputText != null
-                      ? null
-                      : () => AppTextStyle.hint_16,
-                  iconType:
-                      customerInputText != null ? InputIconType.DELETE : null,
+                  hintTextStyleCallBack:
+                      _customerInputController.text.isNotEmpty
+                          ? null
+                          : () => AppTextStyle.hint_16,
+                  iconType: _customerInputController.text.isNotEmpty
+                      ? InputIconType.DELETE
+                      : null,
                   onChangeCallBack: (e) => p.setCustomerInputText(e),
                   iconColor: AppColors.textFieldUnfoucsColor,
                   defaultIconCallback: () {
@@ -542,8 +546,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     _customerInputController.text = '';
                   },
                   textEditingController: _customerInputController,
-                  hintText: customerInputText != null
-                      ? null
+                  hintText: _customerInputController.text.isNotEmpty
+                      ? _customerInputController.text
                       : '${tr('plz_enter_search_key_for_something_1', args: [
                               '${tr('customer_name')}',
                               '(*)'
@@ -609,15 +613,15 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   p.setMeatrialSearchKeyInputText(null);
                   _materialQuantityInputController.text = '';
                 },
-                hintText: key != null
-                    ? ''
+                hintText: _materialQuantityInputController.text.isNotEmpty
+                    ? _materialQuantityInputController.text
                     : '${tr('plz_enter_search_key_for_something_2', args: [
                             '${tr('search_by_keywords')}',
                             ''
                           ])}',
                 hintTextStyleCallBack:
                     _materialQuantityInputController.text.isNotEmpty
-                        ? () => AppTextStyle.default_16
+                        ? null
                         : () => AppTextStyle.hint_16,
                 onChangeCallBack: (t) => p.setMeatrialSearchKeyInputText(t),
                 enable: true,
@@ -654,9 +658,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   context: context,
                   width: AppSize.defaultContentsWidth - AppSize.padding * 2,
                   enable: true,
-                  hintTextStyleCallBack:
-                      endCustomer != null ? null : () => AppTextStyle.hint_16,
-                  iconType: endCustomer != null
+                  hintTextStyleCallBack: _personInputController.text.isNotEmpty
+                      ? null
+                      : () => AppTextStyle.hint_16,
+                  iconType: _personInputController.text.isNotEmpty
                       ? InputIconType.DELETE_AND_SEARCH
                       : InputIconType.SEARCH,
                   onChangeCallBack: (e) => p.setEndCustomerInputText(e),
@@ -670,8 +675,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                     p.setEndCustomerInputText(null);
                     _personInputController.text = '';
                   },
-                  hintText: endCustomer != null
-                      ? null
+                  hintText: _personInputController.text.isNotEmpty
+                      ? _personInputController.text
                       : '${tr('plz_enter_search_key_for_something_1', args: [
                               isSupplier
                                   ? '${tr('end_customer')}'

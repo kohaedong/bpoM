@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-22 21:42:24
+ * Last Modified: 2022-10-23 00:36:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -133,7 +133,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
     var temp = channelList!.where((str) => str.contains('내수')).single;
     selectedSalseChannel = temp.substring(0, temp.indexOf('-'));
     channelCode = temp.substring(temp.indexOf('-') + 1);
-    selectedSalseGroup = tr('all');
     return ResultModel(true);
   }
 
@@ -440,8 +439,9 @@ class OrderManagerPageProvider extends ChangeNotifier {
     pr(map);
     if (map != null) {
       map as Map<String, dynamic>;
-      selectedProductFamily = map['product_family'] as String?;
+
       if (map['model'] != null) {
+        selectedProductFamily = map['product_family'] as String?;
         selectedCustomerModel = map['model'] as EtCustomerModel?;
         selectedSalesPerson = map['staff'] as EtStaffListModel?;
         pr(groupDataList);
@@ -933,23 +933,25 @@ class OrderManagerPageProvider extends ChangeNotifier {
     var headBase64 = '';
     var itemBase64 = '';
     var textBase64 = '';
-    var newIsLogin = '';
-    if (CacheService.getEsLogin()!.logid != selectedSalesPerson!.logid) {
-      var isLoginModel =
-          EncodingUtils.decodeBase64ForIsLogin(CacheService.getIsLogin()!);
-      isLoginModel.logid = selectedSalesPerson!.logid;
-      isLoginModel.dptnm = selectedSalesPerson!.dptnm;
-      isLoginModel.orghk = selectedSalesPerson!.orghk;
-      isLoginModel.salem = selectedSalesPerson!.salem;
-      isLoginModel.ename = selectedSalesPerson!.sname;
-      isLoginModel.vkgrp = selectedSalesPerson!.vkgrp;
-      isLoginModel.vkorg = selectedSalesPerson!.vkorg;
-      isLoginModel.vtweg = getCode(channelList!, selectedSalseChannel!);
+    // var newIsLogin = '';
+    // if (CacheService.getEsLogin()!.logid != selectedSalesPerson!.logid) {
+    //   var isLoginModel =
+    //       EncodingUtils.decodeBase64ForIsLogin(CacheService.getIsLogin()!);
+    //   isLoginModel.logid = selectedSalesPerson!.logid;
+    //   isLoginModel.dptnm = selectedSalesPerson!.dptnm;
+    //   isLoginModel.orghk = selectedSalesPerson!.orghk;
+    //   isLoginModel.salem = selectedSalesPerson!.salem;
+    //   isLoginModel.ename = selectedSalesPerson!.sname;
+    //   isLoginModel.vkgrp = selectedSalesPerson!.vkgrp;
+    //   isLoginModel.vkorg = selectedSalesPerson!.vkorg;
+    //   isLoginModel.vtweg = getCode(channelList!, selectedSalseChannel!);
+    //   isLoginModel.kunag = selectedCustomerModel!.kunnr;
+    //   pr(newIsLogin);
 
-      newIsLogin = await EncodingUtils.getSimpleIsLogin(isLoginModel);
-    } else {
-      newIsLogin = CacheService.getIsLogin()!;
-    }
+    //   newIsLogin = await EncodingUtils.getSimpleIsLogin(isLoginModel);
+    // } else {
+    //   newIsLogin = CacheService.getIsLogin()!;
+    // }
     var head = RecentOrderHeadModel();
     var esLogin = CacheService.getEsLogin();
     if (!CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
@@ -982,8 +984,12 @@ class OrderManagerPageProvider extends ChangeNotifier {
     head.kunnrNm = selectedCustomerModel!.kunnrNm;
     head.kunwe = selectedSupplierModel!.kunnr;
     head.kunweNm = selectedSupplierModel!.kunnrNm;
-    head.zzkunnrEnd = selectedEndCustomerModel!.kunnr;
-    head.zzkunnrEndNm = selectedEndCustomerModel!.kunnrNm;
+    head.zzkunnrEnd = selectedEndCustomerModel != null
+        ? selectedEndCustomerModel!.kunnr
+        : selectedSupplierModel!.kunnr;
+    head.zzkunnrEndNm = selectedEndCustomerModel != null
+        ? selectedEndCustomerModel!.kunnrNm
+        : selectedSupplierModel!.kunnrNm;
 
     head.xconf = 'X';
     head.umode = 'I';
@@ -991,10 +997,10 @@ class OrderManagerPageProvider extends ChangeNotifier {
 
     head.erdat = DateUtil.getDateStr(DateTime.now().toIso8601String());
     head.erzet = DateUtil.getTimeNow(isNotWithColon: true);
-    head.ernam = selectedSalesPerson!.sname;
-    head.erwid = selectedSalesPerson!.logid;
-    // head.ernam = esLogin.ename;
-    // head.erwid = esLogin.logid;
+    // head.ernam = selectedSalesPerson!.sname;
+    // head.erwid = selectedSalesPerson!.logid;
+    head.ernam = esLogin.ename;
+    head.erwid = esLogin.logid;
     head.sanum = selectedSalesPerson!.sname;
     head.slnum = selectedSalesPerson!.sname;
     temp.addAll([head.toJson()]);
@@ -1022,7 +1028,6 @@ class OrderManagerPageProvider extends ChangeNotifier {
       temp.add(model.toJson());
     });
     itemBase64 = await EncodingUtils.base64ConvertForListMap(temp);
-
     temp.clear();
     if (deliveryConditionInputText != null &&
         deliveryConditionInputText!.isNotEmpty) {
@@ -1052,7 +1057,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
       "methodName": RequestType.CREATE_ORDER.serverMethod,
       "methodParamMap": {
         "IV_PTYPE": "C",
-        "IS_LOGIN": newIsLogin,
+        // "IS_LOGIN": newIsLogin,
+        "IS_LOGIN": CacheService.getIsLogin(),
         "resultTables": RequestType.CREATE_ORDER.resultTable,
         "T_HEAD": headBase64,
         "T_ITEM": itemBase64,
