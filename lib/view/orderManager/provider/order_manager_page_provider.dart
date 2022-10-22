@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-22 19:33:48
+ * Last Modified: 2022-10-22 21:24:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -102,11 +102,14 @@ class OrderManagerPageProvider extends ChangeNotifier {
         "IV_VTWEG": selectedSalseChannel != tr('all')
             ? getCode(channelList!, selectedSalseChannel!)
             : '10', // default 10
+        "IV_VKGRP": selectedProductFamily != tr('all')
+            ? getCode(productFamilyDataList!, selectedProductFamily!)
+            : '', // default 10
         "IV_SPART": getCode(productFamilyDataList!, selectedProductFamily!),
         "IV_KUNNR": selectedCustomerModel!.kunnr,
         "IV_ZZKUNNR_END": selectedEndCustomerModel != null
             ? selectedEndCustomerModel?.kunnr
-            : '',
+            : selectedSupplierModel!.kunnr,
       };
 
   String getCode(List<String> list, String val) {
@@ -981,14 +984,15 @@ class OrderManagerPageProvider extends ChangeNotifier {
     head.kunweNm = selectedSupplierModel!.kunnrNm;
     head.zzkunnrEnd = selectedEndCustomerModel!.kunnr;
     head.zzkunnrEndNm = selectedEndCustomerModel!.kunnrNm;
+
     head.xconf = 'X';
     head.umode = 'I';
     head.bukrs = esLogin!.bukrs;
 
     head.erdat = DateUtil.getDateStr(DateTime.now().toIso8601String());
     head.erzet = DateUtil.getTimeNow(isNotWithColon: true);
-    head.ernam = selectedSalesPerson!.sname;
-    head.erwid = selectedSalesPerson!.logid;
+    head.ernam = esLogin.ename;
+    head.erwid = esLogin.logid;
     head.sanum = selectedSalesPerson!.sname;
     head.slnum = selectedSalesPerson!.sname;
     temp.addAll([head.toJson()]);
@@ -1000,8 +1004,10 @@ class OrderManagerPageProvider extends ChangeNotifier {
       item.zfreeQty = selectedSurchargeList[indexx];
       item.erdat = DateUtil.getDateStr(DateTime.now().toIso8601String());
       item.erzet = DateUtil.getTimeNow(isNotWithColon: true);
-      item.ernam = selectedSalesPerson!.sname;
-      item.erwid = selectedSalesPerson!.logid;
+
+      ///  관리자인경우 오더 담당자 지정할수 있지만 오더 생성시에는 본인 이름/id 입력.
+      item.ernam = esLogin.ename;
+      item.erwid = esLogin.logid;
       item.zmsg = '';
       item.umode = 'I';
       return item;

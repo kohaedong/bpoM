@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/add_order_popup_provider.dart
  * Created Date: 2022-09-04 17:56:07
- * Last Modified: 2022-10-22 18:27:21
+ * Last Modified: 2022-10-22 20:59:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -162,7 +162,19 @@ class AddOrderPopupProvider extends ChangeNotifier {
     temp.kwmeng =
         quantity == null || quantity!.isEmpty ? 0 : double.parse(quantity!);
     temp.zfreeQtyIn = double.parse(surcharge ?? '0');
+    temp.ean11 = selectedMateria!.ean11;
     var tListBase64 = await EncodingUtils.base64Convert(temp.toJson());
+    var newIsLogin = '';
+    var isLoginModel =
+        EncodingUtils.decodeBase64ForIsLogin(CacheService.getIsLogin()!);
+    // isLoginModel.vtweg = bodyMap['IV_VTWEG'];
+    // isLoginModel.vkorg = bodyMap['IV_VKORG'];
+    // isLoginModel.spart = bodyMap['IV_SPART'];
+    // isLoginModel.vkgrp = bodyMap['IV_VKGRP'];
+    // isLoginModel.kunag = bodyMap['IV_KUNNR'];
+
+    newIsLogin = await EncodingUtils.getSimpleIsLogin(isLoginModel);
+    pr(isLoginModel.toJson());
     Map<String, dynamic> _body = {
       "methodName": RequestType.CHECK_META_PRICE_AND_STOCK.serverMethod,
       "methodParamMap": {
@@ -170,7 +182,7 @@ class AddOrderPopupProvider extends ChangeNotifier {
         "IV_MATNR": selectedMateria!.matnr,
         "IV_PRSDT": '',
         "T_LIST": tListBase64,
-        "IS_LOGIN": CacheService.getIsLogin(),
+        "IS_LOGIN": newIsLogin,
         "functionName": RequestType.CHECK_META_PRICE_AND_STOCK.serverMethod,
         "resultTables": RequestType.CHECK_META_PRICE_AND_STOCK.resultTable,
       }
