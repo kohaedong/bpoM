@@ -593,6 +593,7 @@
     "save":"저장",
     "insufficient_balance":"고정여신점검: 한도 총액을 초과 했습니다.",
     "confirm_successful":"확정 되었습니다.",
+    "select_manager":"담당자를 선택해주세요.",
     "plz_check_item":"{} 을 먼저 선택해 주세요.",
     "plz_check_item2":"{} 를 먼저 선택해 주세요.",
     "sys_notice":"시스템점검",

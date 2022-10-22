@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-10-20 17:53:05
+ * Last Modified: 2022-10-22 09:30:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -38,7 +38,6 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
   String? selectedEndDate;
   String? selectedOrderStatus;
   String? selectedProductsFamily;
-  String? customerName;
   EtStaffListModel? selectedSalesPerson;
   EtCustomerModel? selectedCustomerModel;
   BulkOrderResponseModel? bulkOrderResponseModel;
@@ -124,15 +123,6 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     });
   }
 
-  void setCustomerName(String? str) {
-    customerName = str;
-    if (str == null) {
-      selectedCustomerModel = null;
-      pr(selectedCustomerModel);
-    }
-    notifyListeners();
-  }
-
   void setSalesPerson(dynamic person) {
     person as EtStaffListModel?;
     selectedSalesPerson = person;
@@ -142,14 +132,19 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
 
   void setCustomerModel(dynamic map) {
     map as Map<String, dynamic>;
-    pr(map);
-    var productsFamily = map['product_family'] as String?;
     var staff = map['staff'] as EtStaffListModel?;
-    selectedSalesPerson = staff;
-    selectedProductsFamily = productsFamily;
-    var model = map['model'] as EtCustomerModel?;
-    selectedCustomerModel = model;
-    customerName = selectedCustomerModel?.kunnrNm;
+    if (staff?.logid == selectedSalesPerson?.logid) {
+      selectedSalesPerson = staff;
+    } else {
+      setSalesPerson(staff);
+      return;
+    }
+    if (map['model'] != null) {
+      pr('in');
+      selectedCustomerModel = map['model'];
+      var productsFamily = map['product_family'] as String?;
+      selectedProductsFamily = productsFamily;
+    }
 
     notifyListeners();
   }

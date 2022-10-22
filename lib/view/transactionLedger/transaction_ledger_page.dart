@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-10-14 17:19:52
+ * Last Modified: 2022-10-22 13:46:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -311,19 +311,14 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                     },
                                     bodyMap: {
                                       'product_family': tuple.item2,
-                                      'staff': CheckSuperAccount
-                                              .isMultiAccountOrLeaderAccount()
+                                      'staff': tuple.item3,
+                                      'dptnm': CheckSuperAccount
+                                              .isMultiAccount()
                                           ? tuple.item3 != null
-                                              ? tuple.item3!.sname
-                                              : tr('all')
-                                          : CacheService.getEsLogin()!.ename,
-                                      'dptnm':
-                                          CheckSuperAccount.isMultiAccount()
-                                              ? tuple.item3 != null
-                                                  ? tuple.item3!.dptnm
-                                                  : CacheService.getEsLogin()!
-                                                      .dptnm
+                                              ? tuple.item3!.dptnm
                                               : CacheService.getEsLogin()!.dptnm
+                                          : CacheService.getEsLogin()!.dptnm,
+                                      'vkgrp': CacheService.getEsLogin()!.vkgrp
                                     },
                                     enable: false,
                                   ),

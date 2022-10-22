@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-20 15:59:56
+ * Last Modified: 2022-10-22 19:33:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -51,7 +51,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
   String? channelCode;
   String? deliveryConditionInputText;
   String? orderDescriptionDetailInputText;
-  EtStaffListModel? selectedSalsePerson;
+  EtStaffListModel? selectedSalesPerson;
   EtCustomerModel? selectedCustomerModel;
   EtCustListModel? selectedSupplierModel;
   EtCustListModel? selectedEndCustomerModel;
@@ -95,8 +95,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
 
   Map<String, dynamic>? get commonBodyMap => {
         "IV_VKORG": CheckSuperAccount.isMultiAccount()
-            ? selectedSalsePerson != null
-                ? selectedSalsePerson!.orghk
+            ? selectedSalesPerson != null
+                ? selectedSalesPerson!.orghk
                 : CacheService.getEsLogin()!.vkorg
             : CacheService.getEsLogin()!.vkorg,
         "IV_VTWEG": selectedSalseChannel != tr('all')
@@ -119,39 +119,83 @@ class OrderManagerPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> initData() async {
+    if (!CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
+      await searchPerson();
+    }
     groupDataList = await HiveService.getSalesGroup();
+
     productFamilyDataList = await HiveService.getProductFamily();
     channelList = await HiveService.getChannel();
     pr(channelList);
     var temp = channelList!.where((str) => str.contains('내수')).single;
     selectedSalseChannel = temp.substring(0, temp.indexOf('-'));
     channelCode = temp.substring(temp.indexOf('-') + 1);
-
+    selectedSalseGroup = tr('all');
     return ResultModel(true);
+  }
+
+  Future<ResultModel> searchPersons() async {
+    var _api = ApiService();
+    final isLogin = CacheService.getIsLogin();
+    final esLogin = CacheService.getEsLogin();
+    Map<String, dynamic>? body;
+    body = {
+      "methodName": RequestType.SEARCH_STAFF.serverMethod,
+      "methodParamMap": {
+        "IV_SALESM": "",
+        "IV_SNAME": '',
+        "IV_DPTNM": esLogin!.dptnm,
+        "IS_LOGIN": isLogin,
+        "resultTables": RequestType.SEARCH_STAFF.resultTable,
+        "functionName": RequestType.SEARCH_STAFF.serverMethod,
+      }
+    };
+    _api.init(RequestType.SEARCH_STAFF);
+    final result = await _api.request(body: body);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
+    }
+    if (result.statusCode == 200 && result.body['data'] != null) {
+      var temp = EtStaffListResponseModel.fromJson(result.body['data']);
+      pr(temp.toJson());
+      var staffList = temp.staffList!
+          .where((model) => model.sname == esLogin.ename)
+          .toList();
+      selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
+      return ResultModel(true);
+    }
+    return ResultModel(false);
   }
 
   void resetData({required int? level}) {
     switch (level) {
       case 0:
-        selectedSalsePerson = null;
-        selectedSalseChannel = null;
+        selectedSalesPerson = null;
         selectedCustomerModel = null;
         selectedSupplierModel = null;
         selectedEndCustomerModel = null;
         selectedProductFamily = null;
+        supplierList = [];
+        endCustList = [];
         resetOrderItem();
         break;
       case 1:
+        selectedProductFamily = null;
         selectedCustomerModel = null;
         selectedEndCustomerModel = null;
         selectedSupplierModel = null;
-        selectedProductFamily = null;
+        supplierList = [];
+        endCustList = [];
         resetOrderItem();
         break;
       case 2:
         selectedCustomerModel = null;
         selectedSupplierModel = null;
         selectedEndCustomerModel = null;
+        supplierList = [];
+        endCustList = [];
         resetOrderItem();
         break;
       default:
@@ -394,25 +438,21 @@ class OrderManagerPageProvider extends ChangeNotifier {
     if (map != null) {
       map as Map<String, dynamic>;
       selectedProductFamily = map['product_family'] as String?;
-      selectedSalsePerson = null;
-      if (map['staff'] != null && map['staff'] != '') {
-        selectedSalsePerson = EtStaffListModel();
-        selectedSalsePerson!.sname = map['staff'] as String?;
-      }
-      if (map['dptnm'] != null) {
-        selectedSalsePerson!.dptnm = map['dptnm'];
-        searchPerson(dptnm: map['dptnm']);
-      }
-      selectedCustomerModel = map['model'] as EtCustomerModel?;
-      if (map['vkgrp'] != null && map['vkgrp'] != '') {
-        selectedSalseGroup = map['vkgrp'];
-      }
-      if (selectedCustomerModel != null) {
+      if (map['model'] != null) {
+        selectedCustomerModel = map['model'] as EtCustomerModel?;
+        selectedSalesPerson = map['staff'] as EtStaffListModel?;
+        pr(groupDataList);
+        if (groupDataList!
+            .where((group) => group.contains(selectedSalesPerson!.dptnm!))
+            .isNotEmpty) {
+          selectedSalseGroup = selectedSalesPerson!.dptnm;
+        } else {
+          selectedSalseGroup = tr('all');
+        }
         await searchSupplierAndEndCustomer(true);
         await searchSupplierAndEndCustomer(false);
+        resetOrderItem();
       }
-      resetOrderItem();
-      notifyListeners();
     } else {
       resetSupplierAndEndCustData();
       resetData(level: 2);
@@ -481,8 +521,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
     resetData(level: 0);
     saler as EtStaffListModel?;
     pr(saler?.toJson());
-    selectedSalsePerson = saler;
-    // selectedStaffName = selectedSalsePerson!.sname;
+    selectedSalesPerson = saler;
+    // selectedStaffName = selectedSalesPerson!.sname;
     notifyListeners();
   }
 
@@ -497,8 +537,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
       "methodName": RequestType.AMOUNT_AVAILABLE_FOR_ORDER_ENTRY.serverMethod,
       "methodParamMap": {
         "IV_VKORG": CheckSuperAccount.isMultiAccountOrLeaderAccount()
-            ? selectedSalsePerson != null
-                ? selectedSalsePerson!.vkorg ?? CacheService.getEsLogin()!.vkorg
+            ? selectedSalesPerson != null
+                ? selectedSalesPerson!.vkorg ?? CacheService.getEsLogin()!.vkorg
                 : CacheService.getEsLogin()!.vkorg
             : CacheService.getEsLogin()!.vkorg,
         "IV_VTWEG": getCode(channelList!, selectedSalseChannel!),
@@ -731,18 +771,18 @@ class OrderManagerPageProvider extends ChangeNotifier {
     _api.init(RequestType.SEARCH_END_OR_DELIVERY_CUSTOMER);
     final isLogin = CacheService.getIsLogin();
     IsLoginModel? isloginModel;
-    if (selectedSalsePerson == null) {
+    if (selectedSalesPerson == null) {
       isloginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
     } else {
       var temp = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
 
-      temp.logid = selectedSalsePerson!.logid;
-      temp.ename = selectedSalsePerson!.sname;
-      temp.orghk = selectedSalsePerson!.orghk;
-      temp.vkorg = selectedSalsePerson!.vkorg;
-      temp.vkgrp = selectedSalsePerson!.vkgrp;
-      temp.dptcd = selectedSalsePerson!.dptcd;
-      temp.dptnm = selectedSalsePerson!.dptnm;
+      temp.logid = selectedSalesPerson!.logid;
+      temp.ename = selectedSalesPerson!.sname;
+      temp.orghk = selectedSalesPerson!.orghk;
+      temp.vkorg = selectedSalesPerson!.vkorg;
+      temp.vkgrp = selectedSalesPerson!.vkgrp;
+      temp.dptcd = selectedSalesPerson!.dptcd;
+      temp.dptnm = selectedSalesPerson!.dptnm;
       pr(temp.toJson());
       isloginModel = temp;
     }
@@ -808,13 +848,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
                     .single;
                 supplierList.add(model);
               });
-              if (supplierList.length == 1) {
-                selectedSupplierModel = supplierList.single;
-              } else {
-                selectedSupplierModel = null;
-              }
               pr('aiai$supplierList');
-              return ResultModel(true);
             }
           } else {
             endCustList = [];
@@ -842,16 +876,10 @@ class OrderManagerPageProvider extends ChangeNotifier {
                     .single;
                 endCustList.add(model);
               });
-              if (endCustList.length == 1) {
-                selectedEndCustomerModel = endCustList.single;
-              } else {
-                selectedEndCustomerModel = null;
-              }
-              return ResultModel(true);
             }
           }
+          return ResultModel(true);
         } else {
-          pr('reset??');
           resetSupplierAndEndCustData();
         }
       }
@@ -885,19 +913,11 @@ class OrderManagerPageProvider extends ChangeNotifier {
       pr(result.body);
       var temp = EtStaffListResponseModel.fromJson(result.body['data']);
       var staffList = <EtStaffListModel>[];
-      if (CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
-        staffList = temp.staffList!
-            .where((model) =>
-                model.sname == selectedSalsePerson!.sname &&
-                model.logid == selectedSalsePerson!.logid)
-            .toList();
-      } else {
-        staffList = temp.staffList!
-            .where((model) =>
-                model.sname == esLogin!.ename && model.logid == esLogin.logid)
-            .toList();
-      }
-      selectedSalsePerson = staffList.isNotEmpty ? staffList.first : null;
+      staffList = temp.staffList!
+          .where((model) =>
+              model.sname == esLogin!.ename && model.logid == esLogin.logid)
+          .toList();
+      selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
       return ResultModel(true);
     }
     return ResultModel(false);
@@ -910,6 +930,23 @@ class OrderManagerPageProvider extends ChangeNotifier {
     var headBase64 = '';
     var itemBase64 = '';
     var textBase64 = '';
+    var newIsLogin = '';
+    if (CacheService.getEsLogin()!.logid != selectedSalesPerson!.logid) {
+      var isLoginModel =
+          EncodingUtils.decodeBase64ForIsLogin(CacheService.getIsLogin()!);
+      isLoginModel.logid = selectedSalesPerson!.logid;
+      isLoginModel.dptnm = selectedSalesPerson!.dptnm;
+      isLoginModel.orghk = selectedSalesPerson!.orghk;
+      isLoginModel.salem = selectedSalesPerson!.salem;
+      isLoginModel.ename = selectedSalesPerson!.sname;
+      isLoginModel.vkgrp = selectedSalesPerson!.vkgrp;
+      isLoginModel.vkorg = selectedSalesPerson!.vkorg;
+      isLoginModel.vtweg = getCode(channelList!, selectedSalseChannel!);
+
+      newIsLogin = await EncodingUtils.getSimpleIsLogin(isLoginModel);
+    } else {
+      newIsLogin = CacheService.getIsLogin()!;
+    }
     var head = RecentOrderHeadModel();
     var esLogin = CacheService.getEsLogin();
     if (!CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
@@ -917,20 +954,20 @@ class OrderManagerPageProvider extends ChangeNotifier {
     }
     var getGroupName = () {
       var data = groupDataList!
-          .where((group) => selectedSalsePerson != null
-              ? group.contains(selectedSalsePerson!.vkgrp!)
+          .where((group) => selectedSalesPerson != null
+              ? group.contains(selectedSalesPerson!.vkgrp!)
               : group.contains(esLogin!.vkgrp!))
           .single;
       return data.substring(0, data.indexOf('-'));
     };
-    if (selectedSalsePerson != null) {
-      pr(selectedSalsePerson!.toJson());
-      head.dptcd = selectedSalsePerson!.dptcd;
-      head.orghk = selectedSalsePerson!.orghk;
-      head.vkorg = selectedSalsePerson!.vkorg;
-      head.vkgrp = selectedSalsePerson!.vkgrp;
-      head.empno = selectedSalsePerson!.empno;
-      head.pernr = selectedSalsePerson!.pernr;
+    if (selectedSalesPerson != null) {
+      pr(selectedSalesPerson!.toJson());
+      head.dptcd = selectedSalesPerson!.dptcd;
+      head.orghk = selectedSalesPerson!.orghk;
+      head.vkorg = selectedSalesPerson!.vkorg;
+      head.vkgrp = selectedSalesPerson!.vkgrp;
+      head.empno = selectedSalesPerson!.empno;
+      head.pernr = selectedSalesPerson!.pernr;
       head.vkgrpNm = getGroupName();
     }
 
@@ -950,10 +987,10 @@ class OrderManagerPageProvider extends ChangeNotifier {
 
     head.erdat = DateUtil.getDateStr(DateTime.now().toIso8601String());
     head.erzet = DateUtil.getTimeNow(isNotWithColon: true);
-    head.ernam = selectedSalsePerson!.sname;
-    head.erwid = selectedSalsePerson!.logid;
-    head.sanum = selectedSalsePerson!.sname;
-    head.slnum = selectedSalsePerson!.sname;
+    head.ernam = selectedSalesPerson!.sname;
+    head.erwid = selectedSalesPerson!.logid;
+    head.sanum = selectedSalesPerson!.sname;
+    head.slnum = selectedSalesPerson!.sname;
     temp.addAll([head.toJson()]);
     headBase64 = await EncodingUtils.base64ConvertForListMap(temp);
 
@@ -963,8 +1000,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
       item.zfreeQty = selectedSurchargeList[indexx];
       item.erdat = DateUtil.getDateStr(DateTime.now().toIso8601String());
       item.erzet = DateUtil.getTimeNow(isNotWithColon: true);
-      item.ernam = selectedSalsePerson!.sname;
-      item.erwid = selectedSalsePerson!.logid;
+      item.ernam = selectedSalesPerson!.sname;
+      item.erwid = selectedSalesPerson!.logid;
       item.zmsg = '';
       item.umode = 'I';
       return item;
@@ -1007,7 +1044,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
       "methodName": RequestType.CREATE_ORDER.serverMethod,
       "methodParamMap": {
         "IV_PTYPE": "C",
-        "IS_LOGIN": CacheService.getIsLogin(),
+        "IS_LOGIN": newIsLogin,
         "resultTables": RequestType.CREATE_ORDER.resultTable,
         "T_HEAD": headBase64,
         "T_ITEM": itemBase64,
@@ -1017,14 +1054,15 @@ class OrderManagerPageProvider extends ChangeNotifier {
       }
     };
     final result = await _api.request(body: _body);
-    if (result == null || result.statusCode != 200) {
+    if (result != null && result.statusCode != 200) {
       isLoadData = false;
       notifyListeners();
       return ResultModel(false,
-          isNetworkError: result?.statusCode == -2,
-          isServerError: result?.statusCode == -1);
+          isNetworkError: result.statusCode == -2,
+          isServerError: result.statusCode == -1);
     }
-    if (result.statusCode == 200) {
+    if (result != null && result.statusCode == 200) {
+      pr(result.body);
       isLoadData = false;
       notifyListeners();
       return ResultModel(true);
@@ -1036,8 +1074,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  Future<List<String>?> getSalesGroup({bool? isFirstRun}) async {
-    // isSuperAccount.
+  Future<List<String>?> getSalesGroup() async {
     var dataStr = <String>[];
     groupDataList!.forEach((data) {
       dataStr.add(data.substring(0, data.indexOf('-')));

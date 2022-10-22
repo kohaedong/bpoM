@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-10-20 13:23:08
+ * Last Modified: 2022-10-22 13:41:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -24,7 +24,6 @@ import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
@@ -42,7 +41,6 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   bool isShowShadow = true;
   bool isShowAppBar = true;
   bool hasData = false;
-  String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
   String? selectedProductsFamily;
@@ -70,7 +68,6 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
 
   String get dptnm => CacheService.getEsLogin()!.dptnm!;
   bool get isValidate =>
-      staffName != null &&
       selectedStartDate != null &&
       selectedEndDate != null &&
       selectedCustomerModel != null &&
@@ -136,8 +133,9 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtStaffListResponseModel.fromJson(result.body['data']);
-      var staffList =
-          temp.staffList!.where((model) => model.sname == staffName).toList();
+      var staffList = temp.staffList!
+          .where((model) => model.sname == esLogin!.ename)
+          .toList();
       selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
       return ResultModel(true);
     }
@@ -147,24 +145,12 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   Future<void> initPageData() async {
     // isLoadData = true;
     if (isFirstRun) {
-      setIsLoginModel();
-      searchPerson();
+      await searchPerson();
       selectedStartDate = DateUtil.prevWeek();
       selectedEndDate = DateUtil.now();
       selectedProductsFamily = tr('all');
       isAnimationNotReady = false;
       isFirstRun = false;
-    }
-  }
-
-  void setIsLoginModel() async {
-    var isLogin = CacheService.getIsLogin();
-    isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-
-    if (CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
-      staffName = tr('all');
-    } else {
-      staffName = isLoginModel!.ename;
     }
   }
 
@@ -199,38 +185,30 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setStaffName(String? str) {
-    pr(str);
-    staffName = str;
-    notifyListeners();
-  }
-
   void setSalesPerson(dynamic str) {
-    str as EtStaffListModel;
+    str as EtStaffListModel?;
     selectedSalesPerson = str;
-    staffName = selectedSalesPerson!.sname;
-    pr(staffName);
     notifyListeners();
   }
 
   Future<void> setCustomerModel(dynamic map) async {
     map as Map<String, dynamic>;
-    var productsFamily = map['product_family'] as String?;
-    var staff = map['staff'] as String?;
-    var dptnm = '';
-    if (map['dptnm'] != null) {
-      dptnm = map['dptnm'];
+    selectedProductsFamily = map['product_family'] as String?;
+    var staff = map['staff'] as EtStaffListModel?;
+    if (staff?.logid == selectedSalesPerson?.logid) {
+      selectedSalesPerson = staff;
+    } else {
+      setSalesPerson(staff);
+      return;
     }
-    selectedProductsFamily = productsFamily;
-    staffName = staff;
-    searchPerson(dptnm: dptnm);
-    var model = map['model'] as EtCustomerModel?;
-    selectedCustomerModel = model;
-    customerName = selectedCustomerModel?.kunnrNm;
-    selectedEndCustomerModel = null;
-    endCustomerList = [];
-    if (selectedCustomerModel != null) {
-      await searchEndCustomer();
+    if (map['model'] != null) {
+      selectedCustomerModel = map['model'] as EtCustomerModel?;
+      customerName = selectedCustomerModel?.kunnrNm;
+      selectedEndCustomerModel = null;
+      endCustomerList = [];
+      if (selectedCustomerModel != null) {
+        await searchEndCustomer();
+      }
     }
 
     notifyListeners();
@@ -350,7 +328,8 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
             selectedCustomerModel != null ? selectedCustomerModel!.kunnr : '',
         "IV_VKGRP": "",
         "IV_VTWEG": vtweg,
-        "IV_PERNR": staffName == tr('all') ? '' : selectedSalesPerson!.pernr,
+        "IV_PERNR":
+            selectedSalesPerson != null ? selectedSalesPerson!.pernr : '',
         "IV_SPART": spart.isNotEmpty
             ? spart.first.substring(spart.first.indexOf('-') + 1)
             : '',

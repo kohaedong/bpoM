@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-10-20 13:12:27
+ * Last Modified: 2022-10-22 19:42:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,12 +15,10 @@ import 'package:flutter/material.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
@@ -34,12 +32,10 @@ class OrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirstRun = true;
   bool? hasResultData;
-  String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
   String? selectedProcessingStatus;
   String? selectedProductsFamily;
-  String? customerName;
   EtStaffListModel? selectedSalesPerson;
   EtCustomerModel? selectedCustomerModel;
   SearchOrderResponseModel? searchOrderResponseModel;
@@ -61,7 +57,9 @@ class OrderSearchPageProvider extends ChangeNotifier {
   }
 
   bool get isValidate =>
-      staffName != null && selectedStartDate != null && selectedEndDate != null;
+      selectedSalesPerson != null &&
+      selectedStartDate != null &&
+      selectedEndDate != null;
   Future<ResultModel?> nextPage() async {
     if (hasMore) {
       pos = partial + pos;
@@ -106,10 +104,9 @@ class OrderSearchPageProvider extends ChangeNotifier {
     }
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp = EtStaffListResponseModel.fromJson(result.body['data']);
-
-      pr('staffName ${staffName}');
-      var staffList =
-          temp.staffList!.where((model) => model.sname == staffName).toList();
+      var staffList = temp.staffList!
+          .where((model) => model.sname == esLogin!.ename)
+          .toList();
       pr(staffList);
       selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
       // return ResultModel(true);
@@ -117,28 +114,21 @@ class OrderSearchPageProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  Future<ResultModel> initPageData() async {
+  Future<ResultModel> initPageData({EtStaffListModel? person}) async {
     isLoadData = true;
-    setIsLoginModel();
-    await searchPerson(
-        dptnm: CheckSuperAccount.isMultiAccountOrLeaderAccount() ? '' : null);
+    if (person == null) {
+      await searchPerson();
+    } else {
+      selectedSalesPerson = person;
+    }
+    await getProcessingStatus();
+    await getProductsFamily();
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
     selectedProcessingStatus = tr('all');
     selectedProductsFamily = tr('all');
     // selectedProductsFamily = selectedProcessingStatus = tr('all');
     return onSearch(false);
-  }
-
-  void setIsLoginModel() async {
-    var isLogin = CacheService.getIsLogin();
-    isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-    if (CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
-      staffName = tr('all');
-      pr('!');
-    } else {
-      staffName = isLoginModel!.ename;
-    }
   }
 
   void setStartDate(BuildContext context, String? str) {
@@ -150,43 +140,26 @@ class OrderSearchPageProvider extends ChangeNotifier {
     });
   }
 
-  void setCustomerName(String? str) {
-    customerName = str;
-    if (str == null) {
-      selectedCustomerModel = null;
-      pr(selectedCustomerModel);
-    }
-    notifyListeners();
-  }
-
-  void setStaffName(String? str) {
-    pr(str);
-    staffName = str;
-    notifyListeners();
-  }
-
   void setSalesPerson(dynamic str) {
-    str as EtStaffListModel;
+    str as EtStaffListModel?;
     selectedSalesPerson = str;
-    staffName = selectedSalesPerson!.sname;
-    pr(staffName);
+    selectedCustomerModel = null;
     notifyListeners();
   }
 
   void setCustomerModel(dynamic map) {
     map as Map<String, dynamic>;
-    var productsFamily = map['product_family'] as String?;
-    var staff = map['staff'] as String?;
-    var dptnm = '';
-    if (map['dptnm'] != null) {
-      dptnm = map['dptnm'];
+
+    selectedProductsFamily = map['product_family'] as String?;
+    var staff = map['staff'] as EtStaffListModel?;
+    if (staff?.logid == selectedSalesPerson?.logid) {
+      selectedSalesPerson = staff;
+    } else {
+      setSalesPerson(staff);
+      return;
     }
-    selectedProductsFamily = productsFamily;
-    staffName = staff;
-    searchPerson(dptnm: dptnm);
     var model = map['model'] as EtCustomerModel?;
     selectedCustomerModel = model;
-    customerName = selectedCustomerModel?.kunnrNm;
 
     notifyListeners();
   }
@@ -239,7 +212,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
     var spart =
         productsFamilyListWithCode != null && selectedProductsFamily != null
             ? productsFamilyListWithCode!
-                .where((str) => str.contains(selectedProductsFamily ?? ''))
+                .where((str) => str.contains(selectedProductsFamily!))
                 .toList()
             : <String>[];
     var status =
@@ -250,6 +223,9 @@ class OrderSearchPageProvider extends ChangeNotifier {
             : <String>[];
     var ptype = 'R';
     var vtweg = '10';
+    var vkorg = selectedSalesPerson != null
+        ? selectedSalesPerson!.vkorg
+        : CacheService.getEsLogin()!.vkorg;
     Map<String, dynamic> _body = {
       "methodName": RequestType.SEARCH_ORDER.serverMethod,
       "methodParamMap": {
@@ -260,16 +236,13 @@ class OrderSearchPageProvider extends ChangeNotifier {
         "IV_MATNR": "",
         "IV_ZREQNO": "",
         "IV_ORGHK": "",
-        "IV_VKORG": "",
+        "IV_VKORG": vkorg,
         "IV_PTYPE": ptype,
         "IV_VTWEG": vtweg,
         "pos": pos,
         "partial": partial,
-        "IV_PERNR": staffName == tr('all')
-            ? ''
-            : selectedSalesPerson != null
-                ? selectedSalesPerson!.pernr
-                : '',
+        "IV_PERNR":
+            selectedSalesPerson != null ? selectedSalesPerson!.pernr : '',
         "IV_SPART": spart.isNotEmpty
             ? spart.first.substring(spart.first.indexOf('-') + 1)
             : '',

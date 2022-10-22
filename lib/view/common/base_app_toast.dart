@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_toast.dart
  * Created Date: 2021-10-01 14:02:55
- * Last Modified: 2022-10-14 16:12:04
+ * Last Modified: 2022-10-22 16:26:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -30,11 +30,7 @@ class AppToast {
   }
 
   show(BuildContext context, String str, {bool? show}) {
-    try {
-      fToast!.init(context);
-    } catch (e) {
-      pr(e);
-    }
+    fToast!.init(context);
     Widget toast = Container(
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(horizontal: AppSize.padding),
@@ -62,14 +58,14 @@ class AppToast {
       return fToast!.showToast(
         child: toast,
         gravity: ToastGravity.TOP,
-        toastDuration: const Duration(seconds: 4),
+        toastDuration: const Duration(seconds: 3),
       );
     } else if (!tp.isToastRunnint) {
       return tp.toastprocess(() {
         fToast!.showToast(
           child: toast,
           gravity: ToastGravity.TOP,
-          toastDuration: const Duration(seconds: 4),
+          toastDuration: const Duration(seconds: 3),
         );
       });
     }

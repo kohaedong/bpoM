@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-10-20 17:49:02
+ * Last Modified: 2022-10-22 18:42:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -417,8 +417,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   iconType: InputIconType.SELECT,
                   isNotInsertAll:
                       CheckSuperAccount.isMultiAccountOrLeaderAccount()
-                          ? true
-                          : null,
+                          ? null
+                          : true,
                   iconColor: AppColors.textFieldUnfoucsColor,
                   commononeCellDataCallback: p.getProductFamily,
                   oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,
@@ -438,8 +438,13 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   context: context,
                   width: (AppSize.defaultContentsWidth - AppSize.padding * 2),
                   enable: false,
+                  bgColor: CheckSuperAccount.isMultiAccount()
+                      ? null
+                      : AppColors.unReadySigninBg,
                   hintTextStyleCallBack: salesGroup != null
-                      ? () => AppTextStyle.default_16
+                      ? () => CheckSuperAccount.isMultiAccount()
+                          ? AppTextStyle.default_16
+                          : AppTextStyle.hint_16
                       : () => AppTextStyle.hint_16,
                   // hintTextStyleCallBack: () => AppTextStyle.hint_16,
                   iconType: CheckSuperAccount.isMultiAccount()
@@ -469,13 +474,20 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
             builder: (context, tuple, _) {
               return BaseInputWidget(
                 context: context,
+                bgColor: CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                    ? null
+                    : AppColors.unReadySigninBg,
                 width: (AppSize.defaultContentsWidth - AppSize.padding * 2),
                 iconType: CheckSuperAccount.isMultiAccountOrLeaderAccount()
                     ? InputIconType.SEARCH
                     : null,
                 iconColor: AppColors.textFieldUnfoucsColor,
-                hintText:
-                    tuple.item1 != null ? tuple.item1!.sname : tr('plz_select'),
+                hintText: tuple.item1 != null
+                    ? tuple.item1!.sname
+                    : '${tr('plz_select_something_2', args: [
+                            tr('manager'),
+                            ''
+                          ])}(*)',
                 // 팀장 일때 만 팀원선택후 삭제가능.
                 isShowDeleteForHintText:
                     CheckSuperAccount.isMultiAccountOrLeaderAccount() &&
@@ -484,9 +496,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                         ? true
                         : false,
                 deleteIconCallback: () => p.setSalesPerson(null),
-                hintTextStyleCallBack: () => tuple.item1 != null
-                    ? AppTextStyle.default_16
-                    : AppTextStyle.hint_16,
+                hintTextStyleCallBack: tuple.item1 != null
+                    ? () => CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                        ? AppTextStyle.default_16
+                        : AppTextStyle.hint_16
+                    : () => AppTextStyle.hint_16,
                 popupSearchType:
                     CheckSuperAccount.isMultiAccountOrLeaderAccount()
                         ? PopupSearchType.SEARCH_SALSE_PERSON
@@ -494,13 +508,15 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                 isSelectedStrCallBack: (persion) {
                   return p.setSalesPerson(persion);
                 },
-                bodyMap: CheckSuperAccount.isMultiAccount()
-                    ? {
-                        'dptnm': tuple.item2 != null && tuple.item2 != tr('all')
-                            ? tuple.item2
-                            : ''
-                      }
-                    : {'dptnm': CacheService.getEsLogin()!.dptnm},
+                bodyMap: {
+                  'dptnm': tuple.item1 != null
+                      ? tuple.item1!.dptnm
+                      : CheckSuperAccount.isMultiAccount()
+                          ? tuple.item2 == tr('all')
+                              ? ''
+                              : tuple.item2
+                          : CacheService.getEsLogin()!.dptnm
+                },
                 enable: false,
               );
             }),
@@ -533,8 +549,12 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
             }),
         defaultSpacing(),
         AppStyles.buildSearchButton(context, tr('search'), () {
+          hideKeyboard(context);
           final p = context.read<BasePopupSearchProvider>();
-          if (p.customerInputText == null || p.customerInputText!.isEmpty) {
+          if (p.selectedSalesPerson == null) {
+            AppToast().show(context, tr('select_manager'));
+          } else if (p.customerInputText == null ||
+              p.customerInputText!.isEmpty) {
             AppToast().show(context, tr('keyword_must_not_null'));
           } else {
             p.refresh().then((value) => hideKeyboard(context));
@@ -551,7 +571,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
       children: [
         defaultSpacing(),
         Selector<BasePopupSearchProvider, String?>(
-            selector: (context, provider) => provider.seletedMateriaFamily,
+            selector: (context, provider) => provider.selectedProductFamily,
             builder: (context, itemType, _) {
               return BaseInputWidget(
                   context: context,
@@ -564,7 +584,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   commononeCellDataCallback: p.getMateralItemType,
                   // oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,
                   oneCellType: OneCellType.DO_NOTHING,
-                  isSelectedStrCallBack: (str) => p.setMeatrialItemType(str),
+                  isSelectedStrCallBack: (str) => p.setProductsFamily(str),
                   hintText: itemType != null
                       ? itemType
                       : '${tr('plz_select_something_1', args: [
@@ -601,7 +621,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         defaultSpacing(),
         AppStyles.buildSearchButton(context, tr('search'), () {
           final p = context.read<BasePopupSearchProvider>();
-          if (p.seletedMateriaFamily != null &&
+          if (p.selectedProductFamily != null &&
               p.seletedMaterialSearchKey != null) {
             if (p.seletedMaterialSearchKey!.isEmpty) {
               AppToast().show(context, tr('keyword_must_not_null'));
@@ -976,18 +996,15 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
       int index, bool isShowLastPageText) {
     final p = context.read<BasePopupSearchProvider>();
     return InkWell(
-      onTap: () {
+      onTap: () async {
         Navigator.pop(
           context,
-          widget.type == PopupSearchType.SEARCH_SALLER ||
-                  widget.type == PopupSearchType.SEARCH_SALLER_FOR_BULK_ORDER
-              ? {
-                  'model': model,
-                  'staff': p.selectedSalesPerson,
-                  'product_family': p.selectedProductFamily ?? '',
-                  'sales_group': p.selectedSalesGroup
-                }
-              : null,
+          {
+            'model': model,
+            'staff': p.selectedSalesPerson,
+            'product_family': p.selectedProductFamily ?? '',
+            'sales_group': p.selectedSalesGroup
+          },
         );
       },
       child: Padding(
@@ -1254,7 +1271,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                                   'staff': p.selectedSalesPerson,
                                   'product_family': p.selectedProductFamily ??
                                       p.bodyMap?['product_family'],
-                                  'vkgrp': p.selectedSalesGroup ?? ''
                                 }
                               : null);
                     },

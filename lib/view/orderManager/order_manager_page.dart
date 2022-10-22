@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-19 19:10:13
+ * Last Modified: 2022-10-22 19:40:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -128,7 +128,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               Selector<OrderManagerPageProvider,
                       Tuple2<EtStaffListModel?, String?>>(
                   selector: (context, provider) => Tuple2(
-                      provider.selectedSalsePerson,
+                      provider.selectedSalesPerson,
                       provider.selectedSalseGroup),
                   builder: (context, tuple, _) {
                     return BaseInputWidget(
@@ -222,7 +222,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
       selector: (context, provider) => Tuple4(
           provider.selectedProductFamily,
           provider.selectedSalseChannel,
-          provider.selectedSalsePerson == null,
+          provider.selectedSalesPerson == null,
           provider.selectedSalseGroup == null),
       builder: (context, tuple, _) {
         return Column(
@@ -280,7 +280,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
       selector: (context, provider) => Tuple5(
           provider.selectedProductFamily,
           provider.selectedCustomerModel,
-          provider.selectedSalsePerson,
+          provider.selectedSalesPerson,
           provider.selectedSalseChannel,
           provider.selectedSalseGroup == null),
       builder: (context, tuple, _) {
@@ -300,8 +300,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                     tuple.item3 == null) {
                   AppToast().show(
                       context,
-                      tr('plz_select_something_first_1',
-                          args: [tr('sales_person'), '']));
+                      tr('plz_select_something_first_2',
+                          args: [tr('manager'), '']));
                   return;
                 } else if (tuple.item4 == null) {
                   pr(tuple.item3);
@@ -344,11 +344,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               bodyMap: {
                 'vtweg': p.channelCode,
                 'product_family': tuple.item1,
-                'staff': CheckSuperAccount.isMultiAccountOrLeaderAccount()
-                    ? tuple.item3 != null
-                        ? tuple.item3!.sname
-                        : tr('all')
-                    : CacheService.getEsLogin()!.ename,
+                'staff': tuple.item3,
                 'dptnm': CheckSuperAccount.isMultiAccountOrLeaderAccount()
                     ? tuple.item3 != null
                         ? tuple.item3!.dptnm
@@ -468,6 +464,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
     return InkWell(
       onTap: () async {
         final p = context.read<OrderManagerPageProvider>();
+        pr(p.selectedProductFamily);
         if (p.selectedCustomerModel != null) {
           final result = await AppDialog.showPopup(
               context,
@@ -1064,7 +1061,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       if (result.isSuccessful) {
                         AppToast().show(context, tr('success'));
                         Navigator.popAndPushNamed(
-                            context, OrderSearchPage.routeName);
+                            context, OrderSearchPage.routeName,
+                            arguments: p.selectedSalesPerson);
                       }
                     }));
                   }

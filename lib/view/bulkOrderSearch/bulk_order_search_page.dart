@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-10-20 17:39:00
+ * Last Modified: 2022-10-22 08:56:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -309,7 +309,7 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                       iconColor:
                                           AppColors.textFieldUnfoucsColor,
                                       deleteIconCallback: () =>
-                                          p.setCustomerName(null),
+                                          p.setCustomerModel(null),
                                       hintText: tuple.item1 != null
                                           ? tuple.item1!.kunnrNm!
                                           : tr('plz_select'),

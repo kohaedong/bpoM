@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-20 17:41:25
+ * Last Modified: 2022-10-22 18:53:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -25,7 +25,6 @@ import 'package:medsalesportal/service/hive_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/util/regular.dart';
@@ -51,7 +50,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
   String? selectedProductFamily;
   String? selectedSalesGroup;
   String? seletedMaterialSearchKey;
-  String? seletedMateriaFamily;
+  // String? seletedMateriaFamily;
 
   List<String>? productCategoryDataList;
   List<String>? productBusinessDataList;
@@ -108,22 +107,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
     return '';
   }
 
-  Future<void> initData() async {
-    // data(String) 를 map으로 받아와 조건에 맞는 model로 초기화 해준다.
-    // 제품군 / 영업사원
-    if (isFirestRun && bodyMap != null) {
-      selectedSalesPerson = bodyMap?['staff'];
-      selectedProductFamily = bodyMap?['product_family'] ?? null;
-      await getProductFamily();
-      await getSalesGroup(isFirstRun: isFirestRun);
-      pr('caonimab');
-      if (bodyMap?['vkgrp'] != null) {
-        selectedSalesGroup = bodyMap!['vkgrp'];
-      }
-      searchPerson(true, isFromSearchSaller: true);
-    }
-  }
-
   void setPersonInputText(String? value) {
     personInputText = value;
     if (value == null || (value.length == 1) || value == '') {
@@ -153,11 +136,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
       pr(value);
       notifyListeners();
     }
-  }
-
-  void setMeatrialItemType(String? value) {
-    seletedMateriaFamily = value;
-    notifyListeners();
   }
 
   void setSuggetionItemGroupInputText(String? value) {
@@ -234,26 +212,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
   Future<List<String>?> getSalesGroup({bool? isFirstRun}) async {
     // isSuperAccount.
     productBusinessDataList = await HiveService.getSalesGroup();
-    if (isFirestRun) {
-      var dptnm = bodyMap?['dptnm'];
-      //------ default data ------
-      final esLogin = CacheService.getEsLogin();
-      var temp = productBusinessDataList
-          ?.where((str) => dptnm != null
-              ? str.contains(dptnm)
-              : str.contains(esLogin!.dptnm!))
-          .toList();
-      if (temp != null && temp.isNotEmpty) {
-        selectedSalesGroup = selectedSalesPerson != null
-            ? temp.first.substring(0, temp.first.indexOf('-'))
-            : tr('all');
-        notifyListeners();
-      } else {
-        selectedSalesGroup = tr('all');
-        notifyListeners();
-      }
-      //------ default data ------
-    }
     var dataStr = <String>[];
     productBusinessDataList!.forEach((data) {
       dataStr.add(data.substring(0, data.indexOf('-')));
@@ -323,8 +281,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     final esLogin = CacheService.getEsLogin();
     Map<String, dynamic>? body;
     var dptnm = bodyMap?['dptnm'];
-    var isNotDptnm = bodyMap?['not_dptnm'] != null;
-    pr('person dptnm:::$dptnm');
+    var isNotDptnm = bodyMap?['not_dptnm'];
     body = {
       "methodName": RequestType.SEARCH_STAFF.serverMethod,
       "methodParamMap": {
@@ -332,15 +289,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "IV_SNAME": personInputText != null
             ? RegExpUtil.removeSpace(personInputText!)
             : '',
-        "IV_DPTNM": isNotDptnm
-            ? ''
-            : CheckSuperAccount.isLeaderAccount()
-                ? esLogin!.dptnm
-                : CheckSuperAccount.isMultiAccountOrLeaderAccount()
-                    ? dptnm != null
-                        ? dptnm
-                        : ''
-                    : esLogin!.dptnm,
+        "IV_DPTNM": isNotDptnm ?? dptnm ?? esLogin!.dptnm,
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SEARCH_STAFF.resultTable,
         "functionName": RequestType.SEARCH_STAFF.serverMethod,
@@ -467,13 +416,10 @@ class BasePopupSearchProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> searchMaterial(bool isMounted) async {
-    // assert(seletedMateriaFamily != null);
-    pr(1);
     if (isFirestRun) {
       isFirestRun = false;
       return ResultModel(true);
     }
-    pr(2);
 
     isLoadData = true;
     if (isMounted) {
@@ -485,9 +431,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
     final isLogin = CacheService.getIsLogin();
     var spart = '';
     await getMateralItemType();
-    if (seletedMateriaFamily != tr('all')) {
+    if (selectedProductFamily != tr('all')) {
       var temp = materalItemDataList!
-          .where((data) => data.contains(seletedMateriaFamily!))
+          .where((data) => data.contains(selectedProductFamily!))
           .toList();
       if (temp.isNotEmpty) {
         spart = temp.first.substring(temp.first.indexOf('-') + 1);
@@ -523,6 +469,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     if (result.statusCode == 200 && result.body['data'] != null) {
       var temp =
           OrderManagerMetarialResponseModel.fromJson(result.body['data']);
+      pr(temp.toJson());
       if (temp.etOutput!.length != partial) {
         hasMore = false;
       }
@@ -535,7 +482,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
           metarialResponseModel!.etOutput!.isEmpty) {
         metarialResponseModel = null;
       }
-      pr(temp.toJson());
       isLoadData = false;
       isFirestRun = false;
       isShhowNotResultText = metarialResponseModel != null &&
@@ -654,8 +600,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
     // 검색 하기 전에 popup body 에는  '조회결관가 없습니다.' 문구만 보여주기 위해.
     // 첫 진입시 data 초기화 작업만 해주고 ResultModel(false) 로 return 한다;
     if (isFirestRun || !isMounted) {
-      pr('iinininin');
-      await initData();
       isFirestRun = false;
       return ResultModel(true);
     }
@@ -673,7 +617,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
         .toList();
     pr('productBusinessDataList ${productBusinessDataList}');
     var vkgrp = getCode(productBusinessDataList!, selectedSalesGroup ?? '');
-
     _body = {
       "methodName": isBulkOrder != null && isBulkOrder
           ? RequestType.SEARCH_SALLER_FOR_BULK_ORDER.serverMethod
@@ -900,15 +843,19 @@ class BasePopupSearchProvider extends ChangeNotifier {
     isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
   }
 
-  Future<ResultModel> onSearch(OneCellType type, bool isMounted,
+  Future<ResultModel> onSearch(OneCellType typee, bool isMounted,
       {Map<String, dynamic>? bodyMaps}) async {
-    if (bodyMaps != null && bodyMaps != bodyMap) {
+    type = typee;
+    if (bodyMaps != null && bodyMaps != bodyMap && isFirestRun) {
       this.bodyMap = bodyMaps;
-      if (bodyMaps['productFamily'] != null) {
-        seletedMateriaFamily = bodyMaps['productFamily'];
-      }
+      selectedSalesPerson = bodyMap?['staff'];
+      selectedProductFamily = bodyMap?['product_family'];
+      selectedSalesGroup =
+          bodyMap!['vkgrp'] ?? CacheService.getEsLogin()!.vkgrp;
+      await getProductFamily();
+      await getSalesGroup();
     }
-    this.type = type;
+
     setIsLoginModel();
     switch (type) {
       case OneCellType.SEARCH_SALSE_PERSON:
