@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-10-23 17:34:57
+ * Last Modified: 2022-10-23 21:43:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -632,6 +632,7 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                 children: [
                   RefreshIndicator(
                       child: ListView(
+                        shrinkWrap: true,
                         controller: _scrollController2
                           ..addListener(() {
                             if (_scrollController2.offset >

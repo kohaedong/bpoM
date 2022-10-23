@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
-import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/service/api_service.dart';
@@ -14,7 +12,6 @@ import 'package:medsalesportal/model/update/check_update_model.dart';
 import 'package:medsalesportal/view/commonLogin/provider/update_and_notice_provider.dart';
 
 class SettingsProvider extends ChangeNotifier {
-  UserSettings? settings;
   CheckUpdateModel? updateInfo;
   bool? notdisturbSwichValue;
   bool? noticeSwichValue;
@@ -26,29 +23,32 @@ class SettingsProvider extends ChangeNotifier {
   String? suggetionText;
   final List<String> _timePickerHourList = [];
   final List<String> _timePickerminuteList = [];
-
-  Future<SettingsResult> init() async {
+  bool get isSuggestionTextNotEmpty =>
+      suggetionText != null && suggetionText!.isNotEmpty && suggetionText != '';
+  Future<SettingsResult> init(
+      {bool? isFromSettingsPage,
+      bool? isFromFontSettinsPage,
+      bool? isFromNoticeSettingsPage}) async {
     final esLogin = CacheService.getEsLogin();
-    await initData();
-    await checkUpdate();
+    var settings = await initData();
+    if (isFromFontSettinsPage ?? false) {
+      await checkUpdate();
+    }
     return SettingsResult(true,
         updateInfo: updateInfo, settings: settings, esLogin: esLogin);
   }
 
-  Future<SettingsResult> initData() async {
-    settings = await getUserEvn();
-    noticeSwichValue = settings!.isShowNotice;
-    notdisturbSwichValue = settings!.isSetNotDisturb;
-    notDisturbStartHour = settings!.notDisturbStartHour;
-    notDisturbStartMinute = settings!.notDisturbStartMine;
-    notDisturbEndHour = settings!.notDisturbStopHour;
-    notDisturbEndMinute = settings!.notDisturbStopMine;
-    textScale = settings!.textScale;
-    return SettingsResult(true, settings: settings);
-  }
-
-  void setSettingsScale(String scale) {
-    this.settings!.textScale = scale;
+  Future<UserSettings> initData() async {
+    var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+    var settings = lp.userSettings!;
+    noticeSwichValue = settings.isShowNotice;
+    notdisturbSwichValue = settings.isSetNotDisturb;
+    notDisturbStartHour = settings.notDisturbStartHour;
+    notDisturbStartMinute = settings.notDisturbStartMine;
+    notDisturbEndHour = settings.notDisturbStopHour;
+    notDisturbEndMinute = settings.notDisturbStopMine;
+    textScale = settings.textScale;
+    return settings;
   }
 
   Future<void> checkUpdate() async {
@@ -85,38 +85,56 @@ class SettingsProvider extends ChangeNotifier {
   }
 
   setNotdisturbSwichValue(bool value) {
+    var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+    var settings = lp.userSettings!;
     this.notdisturbSwichValue = value;
-    settings!.isSetNotDisturb = value;
+    settings.isSetNotDisturb = value;
+    lp.setUserSettings(settings);
     notifyListeners();
   }
 
   setNoticeSwichValue(bool value) {
+    var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+    var settings = UserSettings.fromJson(lp.userSettings!.toJson());
     this.noticeSwichValue = value;
-    settings!.isShowNotice = value;
+    settings.isShowNotice = value;
+    lp.setUserSettings(settings);
     notifyListeners();
   }
 
   setNotDisturbStartHourValue(String hour) {
+    var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+    var settings = UserSettings.fromJson(lp.userSettings!.toJson());
     this.notDisturbStartHour = hour;
-    settings!.notDisturbStartHour = hour;
+    settings.notDisturbStartHour = hour;
+    lp.setUserSettings(settings);
     notifyListeners();
   }
 
   setNotDisturbStartMinuteValue(String minute) {
+    var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+    var settings = UserSettings.fromJson(lp.userSettings!.toJson());
     this.notDisturbStartMinute = minute;
-    settings!.notDisturbStartMine = minute;
+    settings.notDisturbStartMine = minute;
+    lp.setUserSettings(settings);
     notifyListeners();
   }
 
   setNotDisturbEndHourValue(String hour) {
+    var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+    var settings = UserSettings.fromJson(lp.userSettings!.toJson());
     this.notDisturbEndHour = hour;
-    settings!.notDisturbStopHour = hour;
+    settings.notDisturbStopHour = hour;
+    lp.setUserSettings(settings);
     notifyListeners();
   }
 
   setNotDisturbEndMinuteValue(String minute) {
+    var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+    var settings = UserSettings.fromJson(lp.userSettings!.toJson());
     this.notDisturbEndMinute = minute;
-    settings!.notDisturbStopMine = minute;
+    settings.notDisturbStopMine = minute;
+    lp.setUserSettings(settings);
     notifyListeners();
   }
 
@@ -125,33 +143,11 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isSuggestionTextNotEmpty =>
-      suggetionText != null && suggetionText!.isNotEmpty && suggetionText != '';
-
   Future<bool> saveUserEvn() async {
-    final esLogin = CacheService.getEsLogin();
     var loginProvider =
         KeyService.baseAppKey.currentContext!.read<LoginProvider>();
-    print(esLogin!.toJson());
-    var result = await loginProvider.saveUserEnvironment(
-        userAccount: esLogin.logid!.toLowerCase(),
-        passingUserSettings: settings!);
+    var result = await loginProvider.saveUserEnvironment();
     return result.data != null;
-  }
-
-  Future<UserSettings?> getUserEvn() async {
-    final isLogin = CacheService.getIsLogin();
-    pr(1);
-    final isLoginModel = EncodingUtils.decodeBase64ForIsLogin(isLogin!);
-    var loginProvider =
-        KeyService.baseAppKey.currentContext!.read<LoginProvider>();
-    var result = await loginProvider.checkUserEnvironment(
-        userAccont: isLoginModel.logid!.toLowerCase());
-    pr(2);
-
-    var temp = result.data as UserSettings;
-    pr(temp.toJson());
-    return temp;
   }
 
   Future<bool> sendSuggestion() async {

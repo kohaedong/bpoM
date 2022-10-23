@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/kolonApp.dart
  * Created Date: 2022-07-02 14:46:59
- * Last Modified: 2022-10-18 05:07:18
+ * Last Modified: 2022-10-23 22:46:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -41,9 +41,6 @@ class KolonAppState extends State<KolonApp> {
       providers: [
         ChangeNotifierProvider<AppThemeProvider>(
           create: (context) => AppThemeProvider(),
-        ),
-        ChangeNotifierProvider<SettingsProvider>(
-          create: (_) => SettingsProvider(),
         ),
         ChangeNotifierProvider<WaterMarkeProvider>(
           create: (_) => WaterMarkeProvider(),

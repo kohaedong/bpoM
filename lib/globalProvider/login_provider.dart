@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
- * Last Modified: 2022-10-23 16:27:59
+ * Last Modified: 2022-10-24 00:02:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -66,6 +66,10 @@ class LoginProvider extends ChangeNotifier {
 
   void setIsLogedin(bool val) {
     isLogedin = val;
+  }
+
+  void setUserSettings(UserSettings settingss) {
+    userSettings = settingss;
   }
 
   void setIsShowErrorMessage(bool? val) {
@@ -311,26 +315,22 @@ class LoginProvider extends ChangeNotifier {
     }
   }
 
-  Future<ResultModel> saveUserEnvironment(
-      {UserSettings? passingUserSettings, String? userAccount}) async {
+  Future<ResultModel> saveUserEnvironment() async {
     var _api = ApiService();
+    pr(userSettings!.toJson());
     Map<String, dynamic> saveEnvBody = {
       "methodName": RequestType.SAVE_ENV.serverMethod,
       "methodParam": {
-        "categoryCode":
-            userAccount != null ? "envKey_$userAccount" : "envKey_$userId",
-        "description": passingUserSettings != null
-            ? passingUserSettings.toJson()
-            : userSettings!.toJson()
+        "categoryCode": "envKey_$userId",
+        "description": userSettings!.toJson()
       }
     };
     _api.init(RequestType.SAVE_ENV);
     final envRequest = await _api.request(body: saveEnvBody);
     if (envRequest!.statusCode == 200) {
-      var type = getThemeType(userSettings!.textScale!);
-      KeyService.baseAppKey.currentContext!
-          .read<AppThemeProvider>()
-          .setThemeType(type);
+      // var type = getThemeType(userSettings!.textScale!);
+      // var sp = KeyService.baseAppKey.currentContext!.read<AppThemeProvider>();
+      // sp.setThemeType(type);
       setIsWaterMarkeUser();
       return ResultModel(true);
     }

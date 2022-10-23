@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/globalProvider/login_provider.dart';
+import 'package:medsalesportal/model/user/user_settings.dart';
+import 'package:medsalesportal/service/key_service.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/enums/app_theme_type.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -55,10 +60,14 @@ class _FontSettingsPageState extends State<FontSettingsPage> {
 
   Widget buildItemRow(BuildContext context, AppThemeProvider provider,
       AppThemeType type, String text1, String text2) {
+    final lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
     return InkWell(
       onTap: () {
         provider.setThemeType(type);
-        context.read<SettingsProvider>().setSettingsScale(type.textScale);
+        var temp = UserSettings.fromJson(lp.userSettings!.toJson());
+        temp.textScale = type.textScale;
+        lp.setUserSettings(temp);
+        pr(lp.userSettings!.toJson());
         themeTypeNotiffier.value = provider.themeType;
       },
       child: Row(
@@ -88,62 +97,87 @@ class _FontSettingsPageState extends State<FontSettingsPage> {
   @override
   Widget build(BuildContext context) {
     final provider = context.read<AppThemeProvider>();
-    final settingsProvider = context.read<SettingsProvider>();
     themeTypeNotiffier.value = provider.themeType;
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.pop(context);
-        await settingsProvider.saveUserEvn();
-        return true;
-      },
-      child: BaseLayout(
-        hasForm: false,
-        appBar: MainAppBar(
-          context,
-          titleText:
-              AppText.text('${tr('font_size')}', style: AppTextStyle.w500_22),
-          callback: () async {
-            Navigator.pop(context);
-            await settingsProvider.saveUserEvn();
-          },
-        ),
-        child: Column(
-          children: [
-            Padding(
-                padding: AppSize.fontSizePageTopWidgetPadding,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: AppText.text('${tr('font_size_description')}',
-                      style: AppTextStyle.sub_14),
-                )),
-            Divider(color: AppColors.textGrey, height: AppSize.dividerHeight),
-            Padding(
-                padding: AppSize.fontSizePagePadding,
-                child: buildItemRow(context, provider, AppThemeType.TEXT_SMALL,
-                    '${tr('small')}', '${tr('hello')}')),
-            Divider(color: AppColors.textGrey, height: AppSize.dividerHeight),
-            Padding(
-                padding: AppSize.fontSizePagePadding,
-                child: buildItemRow(context, provider, AppThemeType.TEXT_MEDIUM,
-                    '${tr('medium')}', '${tr('hello')}')),
-            Divider(color: AppColors.textGrey, height: AppSize.dividerHeight),
-            Padding(
-                padding: AppSize.fontSizePagePadding,
-                child: buildItemRow(context, provider, AppThemeType.TEXT_BIG,
-                    '${tr('big')}', '${tr('hello')}')),
-            Divider(color: AppColors.textGrey, height: AppSize.dividerHeight),
-            Padding(
-                padding: AppSize.fontSizePagePadding,
-                child: buildItemRow(
+    return ChangeNotifierProvider(
+      create: (context) => SettingsProvider(),
+      builder: (context, _) {
+        final p = context.read<SettingsProvider>();
+        return FutureBuilder(
+            future: p.init(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData &&
+                  snapshot.connectionState == ConnectionState.done) {
+                return BaseLayout(
+                  hasForm: false,
+                  appBar: MainAppBar(
                     context,
-                    provider,
-                    AppThemeType.TEXT_BIGGEST,
-                    '${tr('biggest')}',
-                    '${tr('hello')}')),
-            Divider(color: AppColors.textGrey, height: AppSize.dividerHeight),
-          ],
-        ),
-      ),
+                    titleText: AppText.text('${tr('font_size')}',
+                        style: AppTextStyle.w500_22),
+                  ),
+                  child: Column(
+                    children: [
+                      Padding(
+                          padding: AppSize.fontSizePageTopWidgetPadding,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: AppText.text(
+                                '${tr('font_size_description')}',
+                                style: AppTextStyle.sub_14),
+                          )),
+                      Divider(
+                          color: AppColors.textGrey,
+                          height: AppSize.dividerHeight),
+                      Padding(
+                          padding: AppSize.fontSizePagePadding,
+                          child: buildItemRow(
+                              context,
+                              provider,
+                              AppThemeType.TEXT_SMALL,
+                              '${tr('small')}',
+                              '${tr('hello')}')),
+                      Divider(
+                          color: AppColors.textGrey,
+                          height: AppSize.dividerHeight),
+                      Padding(
+                          padding: AppSize.fontSizePagePadding,
+                          child: buildItemRow(
+                              context,
+                              provider,
+                              AppThemeType.TEXT_MEDIUM,
+                              '${tr('medium')}',
+                              '${tr('hello')}')),
+                      Divider(
+                          color: AppColors.textGrey,
+                          height: AppSize.dividerHeight),
+                      Padding(
+                          padding: AppSize.fontSizePagePadding,
+                          child: buildItemRow(
+                              context,
+                              provider,
+                              AppThemeType.TEXT_BIG,
+                              '${tr('big')}',
+                              '${tr('hello')}')),
+                      Divider(
+                          color: AppColors.textGrey,
+                          height: AppSize.dividerHeight),
+                      Padding(
+                          padding: AppSize.fontSizePagePadding,
+                          child: buildItemRow(
+                              context,
+                              provider,
+                              AppThemeType.TEXT_BIGGEST,
+                              '${tr('biggest')}',
+                              '${tr('hello')}')),
+                      Divider(
+                          color: AppColors.textGrey,
+                          height: AppSize.dividerHeight),
+                    ],
+                  ),
+                );
+              }
+              return DefaultShimmer.buildDefaultResultShimmer();
+            });
+      },
     );
   }
 }

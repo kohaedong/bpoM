@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/styles/app_text.dart
  * Created Date: 2022-07-03 14:42:12
- * Last Modified: 2022-10-14 06:53:40
+ * Last Modified: 2022-10-23 22:07:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 

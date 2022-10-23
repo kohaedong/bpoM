@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:medsalesportal/enums/swich_type.dart';
@@ -258,21 +259,19 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final p = context.read<SettingsProvider>();
-    return WillPopScope(
-        child: BaseLayout(
+    return ChangeNotifierProvider(
+      create: (context) => SettingsProvider(),
+      builder: (context, _) {
+        final p = context.read<SettingsProvider>();
+        return BaseLayout(
             hasForm: false,
             appBar: MainAppBar(
               context,
               titleText:
                   AppText.text('${tr('notice')}', style: AppTextStyle.bold_20),
-              callback: () async {
-                Navigator.pop(context);
-                await p.saveUserEvn();
-              },
             ),
             child: FutureBuilder<SettingsResult>(
-                future: p.initData(),
+                future: p.init(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData &&
                       snapshot.connectionState == ConnectionState.done) {
@@ -298,11 +297,8 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
                     );
                   }
                   return Container();
-                })),
-        onWillPop: () async {
-          Navigator.pop(context);
-          await p.saveUserEvn();
-          return true;
-        });
+                }));
+      },
+    );
   }
 }

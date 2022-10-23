@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -33,12 +34,13 @@ class SettingsPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppText.text('${data.esLogin!.ename}',
+                    AppText.listViewText('${data.esLogin!.ename}',
                         style: AppTextStyle.w500_16),
                     Padding(
                         padding: EdgeInsets.only(top: AppSize.listFontSpacing)),
-                    AppText.text('${data.esLogin!.logid!.toLowerCase()}',
-                        style: AppTextStyle.default_16)
+                    AppText.listViewText(
+                      '${data.esLogin!.logid!.toLowerCase()}',
+                    )
                   ],
                 ),
                 Container(
@@ -79,7 +81,10 @@ class SettingsPage extends StatelessWidget {
 
   Widget _buildItemRow(BuildContext context, String text) {
     return Row(
-      children: [AppText.text('$text', style: AppTextStyle.w500_16), Spacer()],
+      children: [
+        AppText.listViewText('$text', style: AppTextStyle.w500_16),
+        Spacer()
+      ],
     );
   }
 
@@ -89,13 +94,13 @@ class SettingsPage extends StatelessWidget {
       children: [
         SizedBox(
           width: AppSize.defaultContentsWidth * .25,
-          child: AppText.text('${tr('version_info')}',
+          child: AppText.listViewText('${tr('version_info')}',
               style: AppTextStyle.w500_16, textAlign: TextAlign.start),
         ),
         Padding(padding: EdgeInsets.only(left: AppSize.versionInfoSpacing1)),
         SizedBox(
             width: AppSize.defaultContentsWidth * .25,
-            child: AppText.text('${versionInfo.currentVersion}',
+            child: AppText.listViewText('${versionInfo.currentVersion}',
                 style: AppTextStyle.hint_16, textAlign: TextAlign.start)),
         Padding(
             padding: EdgeInsets.only(right: AppSize.defaultListItemSpacing)),
@@ -136,64 +141,80 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = context.read<SettingsProvider>();
-    return BaseLayout(
-        hasForm: true,
-        appBar: MainAppBar(context,
-            titleText:
-                AppText.text('${tr('settings')}', style: AppTextStyle.w500_22)),
-        child: FutureBuilder<SettingsResult>(
-            future: p.init(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData &&
-                  snapshot.connectionState == ConnectionState.done &&
-                  snapshot.data!.isSuccessful) {
-                return Column(
-                  children: [
-                    _buildNameRow(context, snapshot.data!),
-                    _buildDividerLine(),
-                    InkWell(
-                        onTap: () => Navigator.pushNamed(
-                            context, NoticeSettingPage.routeName),
-                        child: Padding(
-                            padding: AppSize.listPadding,
-                            child: _buildItemRow(context, '${tr('notice')}'))),
-                    Divider(
-                        color: AppColors.textGrey,
-                        height: AppSize.dividerHeight),
-                    InkWell(
-                        onTap: () => Navigator.pushNamed(
-                            context, FontSettingsPage.routeName),
-                        child: Padding(
-                            padding: AppSize.listPadding,
-                            child:
-                                _buildItemRow(context, '${tr('font_size')}'))),
-                    Divider(
-                        color: AppColors.textGrey,
-                        height: AppSize.dividerHeight),
-                    InkWell(
-                        onTap: () => Navigator.pushNamed(
-                            context, SendSuggestionPage.routeName),
-                        child: Padding(
-                            padding: AppSize.listPadding,
-                            child: _buildItemRow(
-                                context, '${tr('send_suggestion')}'))),
-                    Divider(
-                        color: AppColors.textGrey,
-                        height: AppSize.dividerHeight),
-                    Padding(
-                        padding: snapshot.data!.updateInfo!.result != 'NG'
-                            ? AppSize.versionRowPadding
-                            : AppSize.listPadding,
-                        child: _buildVersionRow(
-                            context, snapshot.data!.updateInfo!)),
-                    Divider(
-                        color: AppColors.textGrey,
-                        height: AppSize.dividerHeight),
-                  ],
-                );
-              }
-              return Container();
-            }));
+    return ChangeNotifierProvider(
+      create: (context) => SettingsProvider(),
+      builder: (context, _) {
+        final p = context.read<SettingsProvider>();
+        return BaseLayout(
+            hasForm: true,
+            isWithWillPopScope: true,
+            willpopCallback: () {
+              Future.wait([p.saveUserEvn()]);
+              return true;
+            },
+            appBar: MainAppBar(
+              context,
+              titleText: AppText.text('${tr('settings')}',
+                  style: AppTextStyle.w500_22),
+              callback: () async {
+                await p.saveUserEvn();
+                Navigator.pop(context);
+              },
+            ),
+            child: FutureBuilder<SettingsResult>(
+                future: p.init(isFromFontSettinsPage: true),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData &&
+                      snapshot.connectionState == ConnectionState.done) {
+                    return Column(
+                      children: [
+                        _buildNameRow(context, snapshot.data!),
+                        _buildDividerLine(),
+                        InkWell(
+                            onTap: () => Navigator.pushNamed(
+                                context, NoticeSettingPage.routeName),
+                            child: Padding(
+                                padding: AppSize.listPadding,
+                                child:
+                                    _buildItemRow(context, '${tr('notice')}'))),
+                        Divider(
+                            color: AppColors.textGrey,
+                            height: AppSize.dividerHeight),
+                        InkWell(
+                            onTap: () => Navigator.pushNamed(
+                                context, FontSettingsPage.routeName),
+                            child: Padding(
+                                padding: AppSize.listPadding,
+                                child: _buildItemRow(
+                                    context, '${tr('font_size')}'))),
+                        Divider(
+                            color: AppColors.textGrey,
+                            height: AppSize.dividerHeight),
+                        InkWell(
+                            onTap: () => Navigator.pushNamed(
+                                context, SendSuggestionPage.routeName),
+                            child: Padding(
+                                padding: AppSize.listPadding,
+                                child: _buildItemRow(
+                                    context, '${tr('send_suggestion')}'))),
+                        Divider(
+                            color: AppColors.textGrey,
+                            height: AppSize.dividerHeight),
+                        Padding(
+                            padding: snapshot.data!.updateInfo!.result != 'NG'
+                                ? AppSize.versionRowPadding
+                                : AppSize.listPadding,
+                            child: _buildVersionRow(
+                                context, snapshot.data!.updateInfo!)),
+                        Divider(
+                            color: AppColors.textGrey,
+                            height: AppSize.dividerHeight),
+                      ],
+                    );
+                  }
+                  return DefaultShimmer.buildDefaultResultShimmer();
+                }));
+      },
+    );
   }
 }

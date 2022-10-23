@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-10-23 18:22:35
+ * Last Modified: 2022-10-23 19:35:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -492,33 +492,47 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
         provider.searchOrderResponseModel != null &&
                 provider.searchOrderResponseModel!.tList != null &&
                 provider.searchOrderResponseModel!.tList!.isNotEmpty
-            ? ListView.builder(
-                shrinkWrap: true,
-                controller: _scrollController..addListener(() {}),
-                itemCount: provider.searchOrderResponseModel!.tList!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _buildListViewItem(
-                      context,
-                      provider.searchOrderResponseModel!.tList![index],
-                      !provider.hasMore &&
-                          index ==
-                              provider.searchOrderResponseModel!.tList!.length -
-                                  1);
+            ? RefreshIndicator(
+                onRefresh: () async {
+                  provider.refresh();
                 },
-              )
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  controller: _scrollController,
+                  itemCount: provider.searchOrderResponseModel!.tList!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildListViewItem(
+                        context,
+                        provider.searchOrderResponseModel!.tList![index],
+                        !provider.hasMore &&
+                            index ==
+                                provider.searchOrderResponseModel!.tList!
+                                        .length -
+                                    1);
+                  },
+                ))
             : provider.isLoadData
                 ? DefaultShimmer.buildDefaultResultShimmer()
-                : ValueListenableBuilder<bool>(
-                    valueListenable: _panelSwich,
-                    builder: (context, isOpen, _) {
-                      return Container(
-                        height: isOpen
-                            ? AppSize.realHeight * .1
-                            : AppSize.realHeight * .5,
-                        alignment: Alignment.center,
-                        child: AppText.listViewText(tr('no_data')),
-                      );
-                    })
+                : RefreshIndicator(
+                    onRefresh: () async {
+                      provider.refresh();
+                    },
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        ValueListenableBuilder<bool>(
+                            valueListenable: _panelSwich,
+                            builder: (context, isOpen, _) {
+                              return Container(
+                                height: isOpen
+                                    ? AppSize.realHeight * .1
+                                    : AppSize.realHeight * .5,
+                                alignment: Alignment.center,
+                                child: AppText.listViewText(tr('no_data')),
+                              );
+                            })
+                      ],
+                    ))
       ],
     );
   }
@@ -592,10 +606,11 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                 },
               ),
               child: Stack(
-                fit: StackFit.expand,
+                // fit: StackFit.expand,
                 children: [
                   RefreshIndicator(
                       child: ListView(
+                        shrinkWrap: true,
                         controller: _scrollController2
                           ..addListener(() {
                             if (_scrollController2.offset >

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
+import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:medsalesportal/view/settings/provider/settings_provider.dart';
 
@@ -67,7 +67,7 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
     );
   }
 
-  Widget buildTextFieldBox() {
+  Widget buildTextFieldBox(BuildContext context) {
     return Container(
         height: AppSize.suggestionsBoxHeight,
         width: AppSize.boxWidth,
@@ -134,57 +134,63 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseLayout(
-        hasForm: true,
-        isWithWillPopScope: true,
-        isResizeToAvoidBottomInset: true,
-        appBar: MainAppBar(
-          context,
-          titleText: AppText.text('${tr('send_suggestion')}',
-              style: AppTextStyle.w500_22),
-          icon: Icon(Icons.close_rounded),
-          cachePageTypeCallBack: () =>
-              _textEditingController.text.trim().isNotEmpty,
-        ),
-        child: WillPopScope(
-          onWillPop: () async {
-            if (_textEditingController.text.trim().isNotEmpty) {
-              var popupResult = await AppDialog.showPopup(
-                  context,
-                  buildTowButtonTextContents(
-                    context,
-                    '${tr('is_exit_current_page')}',
-                  ));
-              if (popupResult != null) {
-                popupResult as bool;
-                if (popupResult) {
-                  Navigator.pop(context, true);
+    return ChangeNotifierProvider(
+      create: (context) => SettingsProvider(),
+      builder: (context, _) {
+        return BaseLayout(
+            hasForm: true,
+            isWithWillPopScope: true,
+            isResizeToAvoidBottomInset: true,
+            appBar: MainAppBar(
+              context,
+              titleText: AppText.text('${tr('send_suggestion')}',
+                  style: AppTextStyle.w500_22),
+              icon: Icon(Icons.close_rounded),
+              cachePageTypeCallBack: () =>
+                  _textEditingController.text.trim().isNotEmpty,
+            ),
+            child: WillPopScope(
+              onWillPop: () async {
+                if (_textEditingController.text.trim().isNotEmpty) {
+                  var popupResult = await AppDialog.showPopup(
+                      context,
+                      buildTowButtonTextContents(
+                        context,
+                        '${tr('is_exit_current_page')}',
+                      ));
+                  if (popupResult != null) {
+                    popupResult as bool;
+                    if (popupResult) {
+                      Navigator.pop(context, true);
+                    }
+                  }
                 }
-              }
-            }
-            return false;
-          },
-          child: LayoutBuilder(
-            builder: (context, constraint) {
-              return SingleChildScrollView(
-                controller: _pageScrollController,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraint.maxHeight),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      children: <Widget>[
-                        buildDiscription(),
-                        buildSuggetionCenterPadding(),
-                        buildTextFieldBox(),
-                        Spacer(),
-                        buildSubmmitButton()
-                      ],
+                return false;
+              },
+              child: LayoutBuilder(
+                builder: (context, constraint) {
+                  return SingleChildScrollView(
+                    controller: _pageScrollController,
+                    child: ConstrainedBox(
+                      constraints:
+                          BoxConstraints(minHeight: constraint.maxHeight),
+                      child: IntrinsicHeight(
+                        child: Column(
+                          children: <Widget>[
+                            buildDiscription(),
+                            buildSuggetionCenterPadding(),
+                            buildTextFieldBox(context),
+                            Spacer(),
+                            buildSubmmitButton()
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ));
+                  );
+                },
+              ),
+            ));
+      },
+    );
   }
 }
