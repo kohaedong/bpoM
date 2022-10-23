@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-10-23 19:35:10
+ * Last Modified: 2022-10-24 02:25:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -498,7 +498,11 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                 },
                 child: ListView.builder(
                   shrinkWrap: true,
-                  controller: _scrollController,
+                  physics: NeverScrollableScrollPhysics(),
+                  controller: _scrollController
+                    ..addListener(() {
+                      pr(_scrollController.position);
+                    }),
                   itemCount: provider.searchOrderResponseModel!.tList!.length,
                   itemBuilder: (BuildContext context, int index) {
                     return _buildListViewItem(
@@ -606,48 +610,52 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                 },
               ),
               child: Stack(
-                // fit: StackFit.expand,
+                fit: StackFit.expand,
                 children: [
                   RefreshIndicator(
-                      child: ListView(
-                        shrinkWrap: true,
-                        controller: _scrollController2
-                          ..addListener(() {
-                            if (_scrollController2.offset >
-                                AppSize.appBarHeight) {
-                              if (downLock == true) {
-                                downLock = false;
-                                upLock = true;
-                                _scrollSwich.value = true;
+                      child: Container(
+                        height: AppSize.realHeight,
+                        child: ListView(
+                          controller: _scrollController2
+                            ..addListener(() {
+                              if (_scrollController2.offset >
+                                  AppSize.appBarHeight) {
+                                if (downLock == true) {
+                                  downLock = false;
+                                  upLock = true;
+                                  _scrollSwich.value = true;
+                                }
+                              } else {
+                                if (upLock == true) {
+                                  upLock = false;
+                                  downLock = true;
+                                  _scrollSwich.value = false;
+                                }
                               }
-                            } else {
-                              if (upLock == true) {
-                                upLock = false;
-                                downLock = true;
-                                _scrollSwich.value = false;
+                              if (_scrollController2.offset ==
+                                      _scrollController2
+                                          .position.maxScrollExtent &&
+                                  !p.isLoadData &&
+                                  p.hasMore) {
+                                final nextPageProvider =
+                                    context.read<NextPageLoadingProvider>();
+                                nextPageProvider.show();
+                                p
+                                    .nextPage()
+                                    .then((_) => nextPageProvider.stop());
                               }
-                            }
-                            if (_scrollController2.offset ==
-                                    _scrollController2
-                                        .position.maxScrollExtent &&
-                                !p.isLoadData &&
-                                p.hasMore) {
-                              final nextPageProvider =
-                                  context.read<NextPageLoadingProvider>();
-                              nextPageProvider.show();
-                              p.nextPage().then((_) => nextPageProvider.stop());
-                            }
-                          }),
-                        children: [
-                          CustomerinfoWidget.buildDividingLine(),
-                          _buildPanel(context),
-                          CustomerinfoWidget.buildDividingLine(),
-                          _buildResult(context),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: AppSize.appBarHeight / 2),
-                              child: NextPageLoadingWdiget.build(context))
-                        ],
+                            }),
+                          children: [
+                            CustomerinfoWidget.buildDividingLine(),
+                            _buildPanel(context),
+                            CustomerinfoWidget.buildDividingLine(),
+                            _buildResult(context),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: AppSize.appBarHeight / 2),
+                                child: NextPageLoadingWdiget.build(context))
+                          ],
+                        ),
                       ),
                       onRefresh: () {
                         _panelSwich.value = false;

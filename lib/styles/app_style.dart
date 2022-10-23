@@ -103,7 +103,8 @@ class AppStyles {
           left: AppSize.defaultListItemSpacing,
           right: AppSize.defaultListItemSpacing),
       child: Container(
-          height: height ?? AppTextStyle.h4.fontSize! - 2,
+          height: height ??
+              (AppTextStyle.h4.fontSize ?? AppTextStyle.hint_16.fontSize!) - 2,
           decoration: BoxDecoration(
               border: Border(right: BorderSide(color: AppColors.textGrey)))),
     );

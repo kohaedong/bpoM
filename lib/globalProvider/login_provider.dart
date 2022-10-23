@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
- * Last Modified: 2022-10-24 00:02:52
+ * Last Modified: 2022-10-24 00:37:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -315,9 +315,9 @@ class LoginProvider extends ChangeNotifier {
     }
   }
 
-  Future<ResultModel> saveUserEnvironment() async {
+  Future<ResultModel> saveUserEnvironment({bool? isFirstSave}) async {
     var _api = ApiService();
-    pr(userSettings!.toJson());
+    pr('save!!! ${userSettings!.toJson()}');
     Map<String, dynamic> saveEnvBody = {
       "methodName": RequestType.SAVE_ENV.serverMethod,
       "methodParam": {
@@ -328,10 +328,12 @@ class LoginProvider extends ChangeNotifier {
     _api.init(RequestType.SAVE_ENV);
     final envRequest = await _api.request(body: saveEnvBody);
     if (envRequest!.statusCode == 200) {
-      // var type = getThemeType(userSettings!.textScale!);
-      // var sp = KeyService.baseAppKey.currentContext!.read<AppThemeProvider>();
-      // sp.setThemeType(type);
-      setIsWaterMarkeUser();
+      if (isFirstSave ?? false) {
+        var type = getThemeType(userSettings!.textScale!);
+        var sp = KeyService.baseAppKey.currentContext!.read<AppThemeProvider>();
+        sp.setThemeType(type);
+        setIsWaterMarkeUser();
+      }
       return ResultModel(true);
     }
     return ResultModel(false, message: 'save Environment faild');
@@ -490,7 +492,7 @@ class LoginProvider extends ChangeNotifier {
     if (!result.isSuccessful) return result;
     result = await checkUserEnvironment();
     if (!result.isSuccessful) return result;
-    result = await saveUserEnvironment();
+    result = await saveUserEnvironment(isFirstSave: true);
     if (result.isSuccessful) isLogedin = true;
     return result;
   }

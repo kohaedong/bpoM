@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-10-23 15:50:42
+ * Last Modified: 2022-10-24 01:49:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -263,12 +263,20 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
       pr(temp.toJson());
       endCustomerList = [];
       if (temp.etCustList != null && temp.etCustList!.isNotEmpty) {
-        endCustomerList.addAll(temp.etCustList!);
+        final newSet = Set<EtCustListModel?>();
+        temp.etCustList!.forEach((model) => newSet.add(
+            newSet.where((smodel) => smodel?.kunnr == model.kunnr).length > 0
+                ? null
+                : model));
+        newSet.removeWhere((element) => element == null);
+        newSet.forEach((model) {
+          endCustomerList.add(model!);
+        });
+        if (endCustomerList.length == 1) {
+          selectedEndCustomerModel = endCustomerList.single;
+        }
       }
-      if (endCustomerList.length == 1) {
-        selectedEndCustomerModel = endCustomerList.single;
-        notifyListeners();
-      }
+      notifyListeners();
       return ResultModel(true);
     }
     return ResultModel(false);

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-23 18:09:03
+ * Last Modified: 2022-10-24 01:45:54
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -199,6 +199,9 @@ class OrderManagerPageProvider extends ChangeNotifier {
         selectedEndCustomerModel = null;
         supplierList = [];
         endCustList = [];
+        resetOrderItem();
+        break;
+      case 3:
         resetOrderItem();
         break;
       default:
@@ -482,6 +485,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     } else {
       selectedSupplierModel = null;
     }
+    resetData(level: 3);
     notifyListeners();
   }
 
@@ -501,6 +505,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     } else {
       selectedSupplierModel = null;
     }
+    resetData(level: 3);
     notifyListeners();
   }
 
@@ -595,7 +600,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     var temp = <String>[];
     endCustList.forEach((end) {
       pr(end.kunnrNm!);
-      temp.add('${end.kunnrNm!.trim()}}/${end.kunnr!}');
+      temp.add('${end.kunnrNm!.trim()}/${end.kunnr!}');
     });
     return temp;
   }
@@ -823,9 +828,8 @@ class OrderManagerPageProvider extends ChangeNotifier {
     }
     if (result.statusCode == 200) {
       var temp = EtCustListResponseModel.fromJson(result.body['data']);
-      pr(temp.toJson());
       temp.etCustList?.forEach((element) {
-        pr('isSup: $isSupplier ${element.toJson()} ');
+        pr('isSup: $isSupplier ${element.toJson()}');
       });
       if (temp.esReturn!.mtype == 'S') {
         if (temp.etCustList!.isNotEmpty) {
@@ -837,27 +841,21 @@ class OrderManagerPageProvider extends ChangeNotifier {
               selectedSupplierModel = list.single;
               supplierList.add(list.single);
             } else {
-              var moreEntityKunnrList = <String>[];
-
-              list.asMap().entries.forEach((map) {
-                var isMoreEntity = list
-                        .where((element) => element.kunnr == map.value.kunnr)
-                        .length >
-                    1;
-                if (isMoreEntity) {
-                  moreEntityKunnrList.add(map.value.kunnr!);
-                } else {
-                  supplierList.add(map.value);
-                }
+              final newSet = Set<EtCustListModel?>();
+              list.forEach((model) => newSet.add(newSet
+                          .where((smodel) => smodel?.kunnr == model.kunnr)
+                          .length >
+                      0
+                  ? null
+                  : model));
+              newSet.removeWhere((element) => element == null);
+              newSet.forEach((model) {
+                supplierList.add(model!);
               });
-              moreEntityKunnrList.toSet().forEach((kunnr) {
-                var model = list
-                    .where((model) =>
-                        model.kunnr == kunnr && model.defpa!.isNotEmpty)
-                    .single;
-                supplierList.add(model);
-              });
-              pr('aiai$supplierList');
+              if (supplierList.length == 1) {
+                selectedSupplierModel = supplierList.single;
+              }
+              pr('sup $supplierList');
             }
           } else {
             endCustList = [];
@@ -866,25 +864,21 @@ class OrderManagerPageProvider extends ChangeNotifier {
               selectedEndCustomerModel = list.single;
               endCustList.add(list.single);
             } else {
-              var moreEntityKunnrList = <String>[];
-              list.asMap().entries.forEach((map) {
-                var isMoreEntity = list
-                        .where((element) => element.kunnr == map.value.kunnr)
-                        .length >
-                    1;
-                if (isMoreEntity) {
-                  moreEntityKunnrList.add(map.value.kunnr!);
-                } else {
-                  endCustList.add(map.value);
-                }
+              final newSet = Set<EtCustListModel?>();
+              list.forEach((model) => newSet.add(newSet
+                          .where((smodel) => smodel?.kunnr == model.kunnr)
+                          .length >
+                      0
+                  ? null
+                  : model));
+              newSet.removeWhere((element) => element == null);
+              newSet.forEach((model) {
+                endCustList.add(model!);
               });
-              moreEntityKunnrList.toSet().forEach((kunnr) {
-                var model = list
-                    .where((model) =>
-                        model.kunnr == kunnr && model.defpa!.isNotEmpty)
-                    .single;
-                endCustList.add(model);
-              });
+              if (endCustList.length == 1) {
+                selectedEndCustomerModel = endCustList.single;
+              }
+              pr('end $endCustList');
             }
           }
           return ResultModel(true);
