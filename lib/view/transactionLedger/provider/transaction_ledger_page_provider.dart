@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-10-22 13:41:32
+ * Last Modified: 2022-10-23 15:50:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -44,13 +44,12 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   String? selectedStartDate;
   String? selectedEndDate;
   String? selectedProductsFamily;
-  String? customerName;
   List<EtCustListModel> endCustomerList = [];
   EtStaffListModel? selectedSalesPerson;
+  EtStaffListModel? defaultPerson;
   EtCustListModel? selectedEndCustomerModel;
   EtCustomerModel? selectedCustomerModel;
   TransLedgerResponseModel? transLedgerResponseModel;
-
   List<String>? processingStatusListWithCode;
   List<String>? productsFamilyListWithCode;
   IsLoginModel? isLoginModel;
@@ -66,12 +65,13 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     return onSearch(true);
   }
 
+  EtStaffListModel get getPerson => defaultPerson!;
+
   String get dptnm => CacheService.getEsLogin()!.dptnm!;
   bool get isValidate =>
       selectedStartDate != null &&
       selectedEndDate != null &&
-      selectedCustomerModel != null &&
-      customerName != null;
+      selectedCustomerModel != null;
   Future<ResultModel?> nextPage() async {
     if (hasMore) {
       pos = partial + pos;
@@ -137,6 +137,9 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
           .where((model) => model.sname == esLogin!.ename)
           .toList();
       selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
+      if (defaultPerson == null) {
+        defaultPerson = selectedSalesPerson;
+      }
       return ResultModel(true);
     }
     return ResultModel(false);
@@ -163,15 +166,6 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     });
   }
 
-  void setCustomerName(String? str) {
-    customerName = str;
-    if (str == null) {
-      selectedCustomerModel = null;
-    }
-    selectedEndCustomerModel = null;
-    notifyListeners();
-  }
-
   void setEndCustomerModel(dynamic data) {
     data as String?;
     if (data != null) {
@@ -192,25 +186,23 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
   }
 
   Future<void> setCustomerModel(dynamic map) async {
-    map as Map<String, dynamic>;
-    selectedProductsFamily = map['product_family'] as String?;
-    var staff = map['staff'] as EtStaffListModel?;
-    if (staff?.logid == selectedSalesPerson?.logid) {
-      selectedSalesPerson = staff;
-    } else {
-      setSalesPerson(staff);
-      return;
-    }
-    if (map['model'] != null) {
-      selectedCustomerModel = map['model'] as EtCustomerModel?;
-      customerName = selectedCustomerModel?.kunnrNm;
+    if (map == null) {
+      selectedCustomerModel = null;
       selectedEndCustomerModel = null;
       endCustomerList = [];
-      if (selectedCustomerModel != null) {
+      notifyListeners();
+      return;
+    } else {
+      if (map['model'] != null) {
+        selectedCustomerModel = map['model'] as EtCustomerModel?;
+        selectedProductsFamily = map['product_family'] as String?;
+        selectedEndCustomerModel = null;
+        endCustomerList = [];
         await searchEndCustomer();
+        var staff = map['staff'] as EtStaffListModel?;
+        if (staff?.logid != selectedSalesPerson?.logid) setSalesPerson(staff);
       }
     }
-
     notifyListeners();
   }
 

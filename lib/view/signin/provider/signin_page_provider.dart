@@ -7,7 +7,6 @@ import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/model/user/user_settings.dart';
 import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
-import 'package:medsalesportal/model/user/access_permission_model.dart';
 import 'package:medsalesportal/model/rfc/sap_login_info_response_model.dart';
 
 class SigninPageProvider extends ChangeNotifier {
@@ -111,15 +110,4 @@ class SigninPageProvider extends ChangeNotifier {
     startErrorMessage(lp.isShowErrorMessage == null ? '' : errorMessage);
     notifyListeners();
   }
-}
-
-class SigninResult {
-  bool isSuccessful;
-  String message;
-  String? id;
-  String? pw;
-  bool? isShowPopup;
-  AccessPermissionModel? accessPermissionModel;
-  SigninResult(this.isSuccessful, this.message,
-      {this.id, this.pw, this.isShowPopup, this.accessPermissionModel});
 }

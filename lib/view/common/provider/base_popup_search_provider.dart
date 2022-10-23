@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-23 00:53:56
+ * Last Modified: 2022-10-23 15:53:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -666,6 +666,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
               : RequestType.SEARCH_SALLER.resultTable
         }
       };
+      pr(_body);
       _api.init(isBulkOrder != null && isBulkOrder
           ? RequestType.SEARCH_SALLER_FOR_BULK_ORDER
           : RequestType.SEARCH_SALLER);
@@ -681,7 +682,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
       }
       if (result.statusCode == 200) {
         var temp = EtCustomerResponseModel.fromJson(result.body['data']);
-
+        pr(temp.toJson());
         if (temp.esReturn!.mtype == 'S') {
           pr(result.body);
           if (temp.etCustomer!.length != partial) {

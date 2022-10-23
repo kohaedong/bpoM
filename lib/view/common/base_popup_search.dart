@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-10-23 00:58:44
+ * Last Modified: 2022-10-23 15:14:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -405,8 +405,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
 
   Widget _buildSallerSearchBar(BuildContext context) {
     final p = context.read<BasePopupSearchProvider>();
-    var isNotUseAll = p.bodyMap?['isSalseGroupNotUseAll'] != null &&
-        p.bodyMap!['isSalseGroupNotUseAll'];
+
     return Expanded(
         child: Column(
       children: [
@@ -422,7 +421,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? () => AppTextStyle.default_16
                       : () => AppTextStyle.hint_16,
                   iconType: InputIconType.SELECT,
-                  isNotInsertAll: isNotUseAll ? true : null,
+                  isNotInsertAll: p.bodyMap?['isSalseGroupNotUseAll'] != null &&
+                          p.bodyMap!['isSalseGroupNotUseAll']
+                      ? true
+                      : null,
                   iconColor: AppColors.textFieldUnfoucsColor,
                   commononeCellDataCallback: p.getProductFamily,
                   oneCellType: OneCellType.SEARCH_PRODUCT_FAMILY,

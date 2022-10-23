@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-22 23:49:51
+ * Last Modified: 2022-10-23 15:12:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -344,7 +344,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 return p.setCustomerModel(customer);
               },
               bodyMap: {
-                'vtweg': p.channelCode,
+                'vtweg': p.getCode(p.channelList!, tuple.item4!),
                 'product_family': tuple.item1,
                 'staff': tuple.item3,
                 'dptnm': CheckSuperAccount.isMultiAccountOrLeaderAccount()

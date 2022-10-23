@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
- * Last Modified: 2022-10-20 13:54:59
+ * Last Modified: 2022-10-23 14:49:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -382,23 +382,24 @@ class LoginProvider extends ChangeNotifier {
     _api.init(RequestType.SIGNIN);
     final signResult = await _api.request(body: signBody);
     if (signResult!.statusCode == 200 && signResult.body['code'] == "NG") {
-      isShowErrorMessage = true;
       var message = signResult.body['message'] as String;
-      var isSuccess = false;
-      pr(message);
       var isMessageStartWithNumber =
           int.tryParse(message.trim().substring(0, 1)) != null;
       if (isMessageStartWithNumber) {
-        pr(message.trim().substring(0, 1));
-        var number = int.parse(message.trim().substring(0, 1));
-        if (number < 5) {
-          message = tr('password_wrong');
-        }
+        isShowErrorMessage = true;
+        var number = int.tryParse(message.trim().substring(0, 1));
+        if (number != null)
+          message = number < 10
+              ? tr('password_wrong')
+              : tr('password_wrong_five_time');
       }
-      if (!isMessageStartWithNumber && signResult.body['data'] == null) {
-        message = tr('permission_denied');
-      }
-      return ResultModel(isSuccess, message: message);
+      pr(signResult.body);
+      var isShowPopup =
+          !isMessageStartWithNumber && signResult.body['data'] == null;
+      if (isShowPopup) message = tr('permission_denied');
+
+      return ResultModel(false,
+          message: message, isShowErrorText: !isShowPopup);
     }
     if (signResult.statusCode == 200 &&
         signResult.body['code'] != "NG" &&

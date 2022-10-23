@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-23 00:36:35
+ * Last Modified: 2022-10-23 15:11:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -133,6 +133,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     var temp = channelList!.where((str) => str.contains('내수')).single;
     selectedSalseChannel = temp.substring(0, temp.indexOf('-'));
     channelCode = temp.substring(temp.indexOf('-') + 1);
+    pr(channelCode);
     return ResultModel(true);
   }
 
@@ -611,6 +612,9 @@ class OrderManagerPageProvider extends ChangeNotifier {
         selectedQuantityList.isNotEmpty ? selectedQuantityList[indexx] : 0;
     temp.zfreeQtyIn = items![indexx].zfreeQty;
     var tListBase64 = await EncodingUtils.base64Convert(temp.toJson());
+    var isLoginModel =
+        EncodingUtils.decodeBase64ForIsLogin(CacheService.getIsLogin()!);
+    pr(isLoginModel.toJson());
     Map<String, dynamic> _body = {
       "methodName": RequestType.CHECK_META_PRICE_AND_STOCK.serverMethod,
       "methodParamMap": {

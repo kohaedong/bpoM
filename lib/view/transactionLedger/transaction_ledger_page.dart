@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-10-22 13:46:39
+ * Last Modified: 2022-10-23 16:10:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -268,40 +268,32 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                             //         isNotShowStar: true);
                             //   },
                             // ),
-                            Selector<TransactionLedgerPageProvider,
-                                Tuple3<String?, String?, EtStaffListModel?>>(
+                            Selector<
+                                TransactionLedgerPageProvider,
+                                Tuple3<String?, EtStaffListModel?,
+                                    EtCustomerModel?>>(
                               selector: (context, provider) => Tuple3(
-                                  provider.customerName,
                                   provider.selectedProductsFamily,
-                                  provider.selectedSalesPerson),
+                                  provider.selectedSalesPerson,
+                                  provider.selectedCustomerModel),
                               builder: (context, tuple, _) {
                                 return BaseColumWithTitleAndTextFiled.build(
                                   '${tr('sales_office')}',
                                   BaseInputWidget(
                                     context: context,
-                                    onTap: p.selectedProductsFamily == null
-                                        ? () {
-                                            AppToast().show(
-                                                context,
-                                                tr('plz_select_something_first_1',
-                                                    args: [
-                                                      tr('product_family'),
-                                                      ''
-                                                    ]));
-                                            return 'continue';
-                                          }
-                                        : null,
                                     iconType: InputIconType.SEARCH,
                                     iconColor: AppColors.textFieldUnfoucsColor,
                                     deleteIconCallback: () =>
-                                        p.setCustomerName(null),
-                                    hintText: tuple.item1 ?? tr('plz_select'),
+                                        p.setCustomerModel(null),
+                                    hintText: tuple.item3 != null
+                                        ? tuple.item3!.kunnrNm
+                                        : tr('plz_select'),
                                     // 팀장 일때 만 팀원선택후 삭제가능.
                                     isShowDeleteForHintText:
-                                        tuple.item1 != null ? true : false,
+                                        tuple.item3 != null ? true : false,
                                     width: AppSize.defaultContentsWidth,
                                     hintTextStyleCallBack: () =>
-                                        tuple.item1 != null
+                                        tuple.item3 != null
                                             ? AppTextStyle.default_16
                                             : AppTextStyle.hint_16,
                                     popupSearchType:
@@ -310,15 +302,10 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                       return p.setCustomerModel(customer);
                                     },
                                     bodyMap: {
-                                      'product_family': tuple.item2,
-                                      'staff': tuple.item3,
-                                      'dptnm': CheckSuperAccount
-                                              .isMultiAccount()
-                                          ? tuple.item3 != null
-                                              ? tuple.item3!.dptnm
-                                              : CacheService.getEsLogin()!.dptnm
-                                          : CacheService.getEsLogin()!.dptnm,
-                                      'vkgrp': CacheService.getEsLogin()!.vkgrp
+                                      'product_family': tr('all'),
+                                      'staff': p.defaultPerson,
+                                      'dptnm': p.defaultPerson!.dptnm,
+                                      'vkgrp': tr('all')
                                     },
                                     enable: false,
                                   ),
@@ -338,18 +325,18 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                       '${tr('end_customer')}',
                                       BaseInputWidget(
                                         context: context,
-                                        onTap: tuple.item1 == null
-                                            ? () {
-                                                AppToast().show(
-                                                    context,
-                                                    tr('plz_select_something_first_2',
-                                                        args: [
-                                                          tr('sales_office'),
-                                                          ''
-                                                        ]));
-                                                return 'continue';
-                                              }
-                                            : null,
+                                        onTap: () {
+                                          if (tuple.item1 == null) {
+                                            AppToast().show(
+                                                context,
+                                                tr('plz_select_something_first_2',
+                                                    args: [
+                                                      tr('sales_office'),
+                                                      ''
+                                                    ]));
+                                            return;
+                                          }
+                                        },
                                         iconType: tuple.item3.length == 1
                                             ? null
                                             : InputIconType.SELECT,
@@ -448,6 +435,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   isBody: true,
                   alignmentt: Alignment.centerRight,
                   isTotalRow: isTotalRow,
+                  rightPadding: AppSize.defaultListItemSpacing * 1.5,
                   isWithRightPadding: true),
             ]),
           ],
@@ -489,7 +477,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
               _buildTableBox(model.otherC!, 3,
                   alignmentt: Alignment.centerRight,
                   isBody: true,
-                  isTotalRow: isTotalRow),
+                  isTotalRow: isTotalRow,
+                  rightPadding: AppSize.defaultListItemSpacing * 1.5),
             ])
           ],
         ),
@@ -594,24 +583,28 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
       bool? isTotalRow,
       bool? isWithRightPadding,
       bool? isLandSpace,
+      double? leftPadding,
+      double? rightPadding,
       bool? isWithToptic}) {
     var tempWidget = () {
       return Container(
           padding: EdgeInsets.only(
-              left: index == 0
-                  ? isLandSpace != null && isLandSpace
-                      ? AppSize.padding / 2
-                      : AppSize.padding
-                  : isLandSpace != null && isLandSpace
+              left: leftPadding ??
+                  (index == 0
+                      ? isLandSpace != null && isLandSpace
+                          ? AppSize.padding / 2
+                          : AppSize.padding
+                      : isLandSpace != null && isLandSpace
+                          ? AppSize.defaultListItemSpacing / 2
+                          : AppSize.defaultListItemSpacing),
+              right: rightPadding ??
+                  (isWithRightPadding != null && isWithRightPadding
                       ? AppSize.defaultListItemSpacing / 2
-                      : AppSize.defaultListItemSpacing,
-              right: isWithRightPadding != null && isWithRightPadding
-                  ? AppSize.defaultListItemSpacing / 2
-                  : isBody != null && isBody && alignmentt != null
-                      ? 0
-                      : alignmentt != null
-                          ? AppSize.padding
-                          : AppSize.zero),
+                      : isBody != null && isBody && alignmentt != null
+                          ? 0
+                          : alignmentt != null
+                              ? AppSize.padding
+                              : AppSize.zero)),
           height: isLandSpace != null && isLandSpace
               ? AppSize.defaultTextFieldHeight * .4
               : AppSize.defaultTextFieldHeight * .6,
