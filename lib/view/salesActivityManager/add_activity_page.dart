@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-18 14:26:20
+ * Last Modified: 2022-10-23 16:45:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -114,24 +114,25 @@ class _AddActivityPageState extends State<AddActivityPage> {
         return BaseColumWithTitleAndTextFiled.build(
           tr('customer_name'),
           BaseInputWidget(
-              context: context,
-              hintTextStyleCallBack: () => tuple.item1 != null
-                  ? AppTextStyle.default_16
-                  : AppTextStyle.hint_16,
-              popupSearchType: p.isDoNothing || tuple.item2
-                  ? PopupSearchType.DO_NOTHING
-                  : PopupSearchType.SEARCH_CUSTOMER,
-              isSelectedStrCallBack: (costomerModel) {
-                return p.setCustomerModel(costomerModel);
-              },
-              iconType:
-                  p.isDoNothing || tuple.item2 ? null : InputIconType.SEARCH,
-              iconColor: AppColors.textFieldUnfoucsColor,
-              defaultIconCallback: () => p.setCustomerModel(null),
-              hintText:
-                  tuple.item1 != null ? tuple.item1!.name : tr('plz_select'),
-              width: AppSize.defaultContentsWidth,
-              enable: false),
+            context: context,
+            hintTextStyleCallBack: () => tuple.item1 != null
+                ? AppTextStyle.default_16
+                : AppTextStyle.hint_16,
+            popupSearchType: p.isDoNothing || tuple.item2
+                ? PopupSearchType.DO_NOTHING
+                : PopupSearchType.SEARCH_CUSTOMER,
+            isSelectedStrCallBack: (costomerModel) {
+              return p.setCustomerModel(costomerModel);
+            },
+            iconType:
+                p.isDoNothing || tuple.item2 ? null : InputIconType.SEARCH,
+            iconColor: AppColors.textFieldUnfoucsColor,
+            defaultIconCallback: () => p.setCustomerModel(null),
+            hintText:
+                tuple.item1 != null ? tuple.item1!.name : tr('plz_select'),
+            width: AppSize.defaultContentsWidth,
+            enable: false,
+          ),
         );
       },
     );
@@ -667,20 +668,18 @@ class _AddActivityPageState extends State<AddActivityPage> {
       height: AppSize.defaultCheckBoxHeight - 5,
       width: AppSize.defaultCheckBoxHeight - 5,
       decoration: BoxDecoration(
-        color: AppColors.unReadyButton,
+        color: p.isDoNothing ? AppColors.unReadyButton : null,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Checkbox(
-          activeColor: p.isDoNothing || p.isNotToday
-              ? AppColors.unReadyButton
-              : AppColors.primary,
-          checkColor: (p.isDoNothing || p.isNotToday)
-              ? AppColors.unReadyText.withOpacity(.2)
-              : null,
-          side: BorderSide(color: Colors.grey),
+          activeColor:
+              p.isDoNothing ? AppColors.unReadyButton : AppColors.primary,
+          checkColor:
+              (p.isDoNothing) ? AppColors.unReadyText.withOpacity(.2) : null,
+          side: p.isDoNothing ? null : BorderSide(color: Colors.grey),
           value: isChecked,
           onChanged: (val) {
-            if (p.isDoNothing || p.isNotToday) return;
+            if (p.isDoNothing) return;
             if (isWithSuggetedItem != null && isWithSuggetedItem) {
               // p.updateSuggestedList(index!);
               if (p.suggestedItemList![index!].matnr != null) {

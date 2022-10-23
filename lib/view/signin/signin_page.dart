@@ -1,4 +1,5 @@
 import 'package:medsalesportal/globalProvider/login_provider.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -233,8 +234,7 @@ class _SigninPageState extends State<SigninPage> {
                       } else if (result.isServerError ?? false) {
                         AppDialog.showDangermessage(
                             context, tr('server_error'));
-                      } else if (lp.isShowErrorMessage != null &&
-                          lp.isShowErrorMessage!) {
+                      } else if (result.isShowErrorText ?? false) {
                         p.startErrorMessage(result.message ?? '');
                       } else {
                         AppDialog.showDangermessage(
@@ -313,7 +313,16 @@ class _SigninPageState extends State<SigninPage> {
             arguments as Map<String, dynamic>;
             id = arguments['id'];
             pw = arguments['pw'];
-            message = arguments['message'];
+            var loginResult = arguments['loginResult'] as ResultModel;
+            if (loginResult.isNetworkError ?? false) {
+              AppDialog.showDangermessage(context, tr('check_network'));
+            } else if (loginResult.isServerError ?? false) {
+              AppDialog.showDangermessage(context, tr('server_error'));
+            } else if (loginResult.isShowErrorText ?? false) {
+              p.startErrorMessage(loginResult.message ?? '');
+            } else {
+              AppDialog.showDangermessage(context, '${loginResult.message}');
+            }
           }
 
           return GestureDetector(

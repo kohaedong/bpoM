@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-23 15:53:17
+ * Last Modified: 2022-10-23 18:30:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -504,7 +504,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
         isFirestRun = false;
         isShhowNotResultText = metarialResponseModel != null &&
             metarialResponseModel!.etOutput!.isNotEmpty;
-        notifyListeners();
+        try {
+          notifyListeners();
+        } catch (e) {}
         return ResultModel(true);
       }
       isLoadData = false;

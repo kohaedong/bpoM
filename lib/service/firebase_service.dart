@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/firebase_service.dart
  * Created Date: 2022-10-18 15:55:12
- * Last Modified: 2022-10-18 21:02:17
+ * Last Modified: 2022-10-23 16:33:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -39,6 +39,7 @@ class FirebaseService {
   static Stream<String>? fcmRefreshTokenStream;
   static Stream<RemoteMessage>? messageStream;
   static Stream<RemoteMessage>? openMessageStream;
+
   //초기화  --> 앱이 첫실행시 한번만 호출
   static Future<void> init() async {
     // Firebase.apps.clear();
@@ -117,7 +118,6 @@ class FirebaseService {
         // send data to globle message provider
       }
     });
-
     openMessageStream!.listen((message) {
       // on open push notice Event added!
       // route to contents page.

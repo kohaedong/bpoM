@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_all_page.dart
  * Created Date: 2022-01-04 00:52:52
- * Last Modified: 2022-10-18 07:54:31
+ * Last Modified: 2022-10-23 18:47:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -54,7 +54,7 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
         builder: (context, isCanScroll, _) {
           return isCanScroll
               ? Positioned(
-                  right: 0,
+                  right: AppSize.padding,
                   bottom: AppSize.padding,
                   child: FloatingActionButton(
                     backgroundColor: AppColors.whiteText,
@@ -74,54 +74,59 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
     return Consumer<NoticeProvider>(builder: (context, provider, _) {
       return provider.homeNoticeResponseModel != null &&
               provider.homeNoticeResponseModel!.tZltsp0710!.isNotEmpty
-          ? RefreshIndicator(
-              onRefresh: () => provider.refresh(),
-              child: SingleChildScrollView(
-                controller: scrollController!
-                  ..addListener(() {
-                    if (scrollController!.offset > AppSize.appBarHeight) {
-                      if (downLock == true) {
-                        downLock = false;
-                        upLock = true;
-                        _scrollSwich.value = true;
-                      }
-                    } else {
-                      if (upLock == true) {
-                        upLock = false;
-                        downLock = true;
-                        _scrollSwich.value = false;
-                      }
-                    }
-                    if (scrollController!.offset ==
-                            scrollController!.position.maxScrollExtent &&
-                        !provider.isLoadData &&
-                        provider.hasMore) {
-                      final nextPageProvider =
-                          context.read<NextPageLoadingProvider>();
-                      nextPageProvider.show();
-                      provider.nextPage().then((_) => nextPageProvider.stop());
-                    }
-                  }),
-                child: Column(
-                    children: provider.homeNoticeResponseModel!.tZltsp0710!
-                        .asMap()
-                        .entries
-                        .map((map) => homeNoticeListItem(
-                            context,
-                            provider
-                                .homeNoticeResponseModel!.tZltsp0710![map.key],
-                            map.key,
-                            false,
-                            !provider.hasMore &&
-                                map.key ==
-                                    provider.homeNoticeResponseModel!
-                                            .tZltsp0710!.length -
-                                        1,
-                            provider.homeNoticeResponseModel!.tZltsp0710!
-                                    .length ==
-                                1))
-                        .toList()),
-              ))
+          ? Padding(
+              padding: AppSize.defaultSidePadding,
+              child: RefreshIndicator(
+                  onRefresh: () => provider.refresh(),
+                  child: SingleChildScrollView(
+                    controller: scrollController!
+                      ..addListener(() {
+                        if (scrollController!.offset > AppSize.appBarHeight) {
+                          if (downLock == true) {
+                            downLock = false;
+                            upLock = true;
+                            _scrollSwich.value = true;
+                          }
+                        } else {
+                          if (upLock == true) {
+                            upLock = false;
+                            downLock = true;
+                            _scrollSwich.value = false;
+                          }
+                        }
+                        if (scrollController!.offset ==
+                                scrollController!.position.maxScrollExtent &&
+                            !provider.isLoadData &&
+                            provider.hasMore) {
+                          final nextPageProvider =
+                              context.read<NextPageLoadingProvider>();
+                          nextPageProvider.show();
+                          provider
+                              .nextPage()
+                              .then((_) => nextPageProvider.stop());
+                        }
+                      }),
+                    child: Column(
+                        children: provider.homeNoticeResponseModel!.tZltsp0710!
+                            .asMap()
+                            .entries
+                            .map((map) => homeNoticeListItem(
+                                context,
+                                provider.homeNoticeResponseModel!
+                                    .tZltsp0710![map.key],
+                                map.key,
+                                false,
+                                !provider.hasMore &&
+                                    map.key ==
+                                        provider.homeNoticeResponseModel!
+                                                .tZltsp0710!.length -
+                                            1,
+                                provider.homeNoticeResponseModel!.tZltsp0710!
+                                        .length ==
+                                    1))
+                            .toList()),
+                  )),
+            )
           : provider.isLoadData
               ? DefaultShimmer.buildDefaultResultShimmer(isNotPadding: true)
               : provider.homeNoticeResponseModel != null &&
@@ -177,16 +182,14 @@ class _NoticeAllPageState extends State<NoticeAllPage> {
                   Navigator.pop(context);
                 },
               ),
-              child: Padding(
-                  padding: AppSize.defaultSidePadding,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      _buildListView(context),
-                      _buildScrollToTop(context),
-                      _buildNextPageLoading(context)
-                    ],
-                  )));
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  _buildListView(context),
+                  _buildScrollToTop(context),
+                  _buildNextPageLoading(context)
+                ],
+              ));
         });
   }
 }

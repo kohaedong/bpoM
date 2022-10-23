@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/view/common/dialog_contents.dart';
-import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_text.dart';
@@ -22,6 +20,7 @@ import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/view/commonLogin/common_login_page.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/commonLogin/provider/notice_index_provider.dart';
 import 'package:medsalesportal/view/commonLogin/provider/update_and_notice_provider.dart';
 
@@ -90,7 +89,7 @@ class CheckUpdateAndNoticeService {
 
           var height = AppSize.buttonHeight +
               AppSize.defaultListItemSpacing * 4 +
-              enterLength * 16;
+              enterLength * 14;
           return isStart
               ? downLoadProgressContents(context)
               : Container(
@@ -450,7 +449,7 @@ class CheckUpdateAndNoticeService {
               context, SigninPage.routeName, (route) => false, arguments: {
             'id': lp.userId,
             'pw': lp.userPw,
-            'message': loginResult.message
+            'loginResult': loginResult
           });
         }
       } else {

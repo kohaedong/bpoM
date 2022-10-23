@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-10-22 19:42:48
+ * Last Modified: 2022-10-23 18:25:04
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,6 +22,7 @@ import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
 import 'package:medsalesportal/model/rfc/t_list_search_order_model.dart';
@@ -32,6 +33,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirstRun = true;
   bool? hasResultData;
+  String? selectedSalseGroup;
   String? selectedStartDate;
   String? selectedEndDate;
   String? selectedProcessingStatus;
@@ -41,6 +43,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
   SearchOrderResponseModel? searchOrderResponseModel;
   List<String>? processingStatusListWithCode;
   List<String>? productsFamilyListWithCode;
+  List<String>? groupDataList;
   IsLoginModel? isLoginModel;
   Map<String, List<TlistSearchOrderModel>> orderSetRef = {};
 
@@ -116,13 +119,15 @@ class OrderSearchPageProvider extends ChangeNotifier {
 
   Future<ResultModel> initPageData({EtStaffListModel? person}) async {
     isLoadData = true;
+
     if (person == null) {
-      await searchPerson();
+      if (!CheckSuperAccount.isMultiAccount()) await searchPerson();
     } else {
       selectedSalesPerson = person;
     }
-    await getProcessingStatus();
+    await await getProcessingStatus();
     await getProductsFamily();
+    groupDataList = await HiveService.getSalesGroup();
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
     selectedProcessingStatus = tr('all');
@@ -140,6 +145,11 @@ class OrderSearchPageProvider extends ChangeNotifier {
     });
   }
 
+  void setSalseGroup(String? str) {
+    selectedSalseGroup = str;
+    notifyListeners();
+  }
+
   void setSalesPerson(dynamic str) {
     str as EtStaffListModel?;
     selectedSalesPerson = str;
@@ -148,19 +158,25 @@ class OrderSearchPageProvider extends ChangeNotifier {
   }
 
   void setCustomerModel(dynamic map) {
-    map as Map<String, dynamic>;
-
-    selectedProductsFamily = map['product_family'] as String?;
-    var staff = map['staff'] as EtStaffListModel?;
-    if (staff?.logid == selectedSalesPerson?.logid) {
-      selectedSalesPerson = staff;
+    if (map == null) {
+      selectedCustomerModel = null;
     } else {
-      setSalesPerson(staff);
-      return;
+      if (map['model'] != null) {
+        selectedCustomerModel = map['model'] as EtCustomerModel?;
+        selectedProductsFamily = map['product_family'] as String?;
+        var staff = map['staff'] as EtStaffListModel?;
+        selectedSalesPerson = staff;
+        if (CheckSuperAccount.isMultiAccount()) {
+          if (groupDataList!
+              .where((group) => group.contains(selectedSalesPerson!.dptnm!))
+              .isNotEmpty) {
+            selectedSalseGroup = selectedSalesPerson!.dptnm;
+          } else {
+            selectedSalseGroup = tr('all');
+          }
+        }
+      }
     }
-    var model = map['model'] as EtCustomerModel?;
-    selectedCustomerModel = model;
-
     notifyListeners();
   }
 
@@ -340,5 +356,13 @@ class OrderSearchPageProvider extends ChangeNotifier {
       tempList.insert(tempList.length - 1, newModel!);
     });
     return tempList;
+  }
+
+  Future<List<String>?> getSalesGroup() async {
+    var dataStr = <String>[];
+    groupDataList!.forEach((data) {
+      dataStr.add(data.substring(0, data.indexOf('-')));
+    });
+    return dataStr;
   }
 }

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-10-20 14:16:17
+ * Last Modified: 2022-10-23 18:39:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -99,7 +99,7 @@ class AppDialog {
     // str = str + "fdsaffsafdsafdsafklasfjdskal;jf\n\nd\n,\n,\n" * 15;
     var enterLength = FormatUtil.howManyLengthForString(str) + 1;
     var height =
-        AppSize.buttonHeight * 4 + AppSize.padding * 2 + enterLength * 16;
+        AppSize.buttonHeight * 3 + AppSize.padding * 2 + enterLength * 14;
     pr('enterLength $enterLength');
     return showPopup(
         context,

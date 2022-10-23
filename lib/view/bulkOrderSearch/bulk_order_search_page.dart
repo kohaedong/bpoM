@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-10-22 08:56:23
+ * Last Modified: 2022-10-23 17:34:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/image_type.dart';
@@ -70,6 +71,104 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
     _scrollController.dispose();
     _scrollController2.dispose();
     super.dispose();
+  }
+
+  Widget _buildStaffSelector(BuildContext context) {
+    final p = context.read<BulkOrderSearchPageProvider>();
+    return CheckSuperAccount.isMultiAccountOrLeaderAccount()
+        ? Column(
+            children: [
+              AppStyles.buildTitleRow(tr('manager')),
+              defaultSpacing(isHalf: true),
+              Selector<BulkOrderSearchPageProvider,
+                      Tuple2<EtStaffListModel?, String?>>(
+                  selector: (context, provider) => Tuple2(
+                      provider.selectedSalesPerson,
+                      provider.selectedSalseGroup),
+                  builder: (context, tuple, _) {
+                    return BaseInputWidget(
+                      context: context,
+                      onTap: () {
+                        if (CheckSuperAccount.isMultiAccount() &&
+                            tuple.item2 == null) {
+                          AppToast().show(
+                              context,
+                              tr('plz_select_something_first_1',
+                                  args: [tr('salse_group'), '']));
+                        }
+                      },
+                      width: AppSize.defaultContentsWidth,
+                      iconType: InputIconType.SEARCH,
+                      iconColor: AppColors.textFieldUnfoucsColor,
+                      hintText:
+                          tuple.item1 != null && tuple.item1!.sname != null
+                              ? tuple.item1!.sname!
+                              : tr('plz_select'),
+                      // 팀장 일때 만 팀원선택후 삭제가능.
+                      isShowDeleteForHintText:
+                          tuple.item1 != null ? true : false,
+                      deleteIconCallback: () => p.setSalesPerson(null),
+                      hintTextStyleCallBack: () => tuple.item1 != null
+                          ? AppTextStyle.default_16
+                          : AppTextStyle.hint_16,
+                      popupSearchType: CheckSuperAccount.isMultiAccount() &&
+                              tuple.item2 == null
+                          ? PopupSearchType.DO_NOTHING
+                          : PopupSearchType.SEARCH_SALSE_PERSON,
+                      isSelectedStrCallBack: (person) {
+                        return p.setSalesPerson(person);
+                      },
+                      bodyMap: CheckSuperAccount.isMultiAccount()
+                          ? {
+                              'dptnm': tuple.item2 == tr('all')
+                                  ? ''
+                                  : tuple.item2 ?? '',
+                            }
+                          : {
+                              'dptnm': CacheService.getEsLogin()!.dptnm,
+                            },
+                      enable: false,
+                    );
+                  }),
+              defaultSpacing(),
+            ],
+          )
+        : Container();
+  }
+
+  Widget _buildGroupSelector(BuildContext context) {
+    final p = context.read<BulkOrderSearchPageProvider>();
+    return CheckSuperAccount.isMultiAccount()
+        ? Column(
+            children: [
+              AppStyles.buildTitleRow(tr('salse_group')),
+              defaultSpacing(isHalf: true),
+              Selector<BulkOrderSearchPageProvider, String?>(
+                  selector: (context, provider) => provider.selectedSalseGroup,
+                  builder: (context, salesGroup, _) {
+                    return BaseInputWidget(
+                        context: context,
+                        width: AppSize.defaultContentsWidth,
+                        enable: false,
+                        hintTextStyleCallBack: salesGroup != null
+                            ? () => AppTextStyle.default_16
+                            : () => AppTextStyle
+                                .hint_16, // hintTextStyleCallBack: () => AppTextStyle.hint_16,
+                        iconType: InputIconType.SELECT,
+                        isNotInsertAll: true,
+                        // iconType: null,
+                        iconColor: AppColors.textFieldUnfoucsColor,
+                        commononeCellDataCallback: p.getSalesGroup,
+                        oneCellType: OneCellType.SEARCH_BUSINESS_GROUP,
+                        // oneCellType: OneCellType.DO_NOTHING,
+                        isSelectedStrCallBack: (str) => p.setSalseGroup(str),
+                        hintText:
+                            salesGroup != null ? salesGroup : tr('plz_select'));
+                  }),
+              defaultSpacing()
+            ],
+          )
+        : Container();
   }
 
   Widget _buildPanel(BuildContext context) {
@@ -167,52 +266,13 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                 ),
                               );
                             }),
-                            Selector<BulkOrderSearchPageProvider,
-                                EtStaffListModel?>(
-                              selector: (context, provider) =>
-                                  provider.selectedSalesPerson,
-                              builder: (context, person, _) {
-                                var isSuperAccount =
-                                    CacheService.getAccountType() ==
-                                            AccountType.MULTI ||
-                                        CacheService.getAccountType() ==
-                                            AccountType.LEADER;
-                                return BaseColumWithTitleAndTextFiled.build(
-                                    '${tr('manager')}',
-                                    BaseInputWidget(
-                                      context: context,
-                                      iconType: isSuperAccount
-                                          ? person != null
-                                              ? InputIconType.SEARCH
-                                              : null
-                                          : null,
-                                      iconColor:
-                                          AppColors.textFieldUnfoucsColor,
-                                      hintText: person != null
-                                          ? person.sname
-                                          : tr('plz_select'),
-                                      // 팀장 일때 만 팀원선택후 삭제가능.
-                                      isShowDeleteForHintText:
-                                          isSuperAccount && person != null
-                                              ? true
-                                              : false,
-                                      deleteIconCallback: () =>
-                                          p.setSalesPerson(null),
-                                      width: AppSize.defaultContentsWidth,
-                                      hintTextStyleCallBack: () =>
-                                          person != null
-                                              ? AppTextStyle.default_16
-                                              : AppTextStyle.hint_16,
-                                      popupSearchType: isSuperAccount
-                                          ? PopupSearchType.SEARCH_SALSE_PERSON
-                                          : null,
-                                      isSelectedStrCallBack: (persion) {
-                                        return p.setSalesPerson(persion);
-                                      },
-                                      enable: false,
-                                    ));
-                              },
-                            ),
+                            CheckSuperAccount.isMultiAccount()
+                                ? _buildGroupSelector(context)
+                                : Container(),
+                            CheckSuperAccount.isMultiAccount()
+                                ? defaultSpacing()
+                                : Container(),
+                            _buildStaffSelector(context),
                             Selector<BulkOrderSearchPageProvider, String?>(
                               selector: (context, provider) =>
                                   provider.selectedOrderStatus,
@@ -276,12 +336,13 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                             ),
                             Selector<
                                 BulkOrderSearchPageProvider,
-                                Tuple3<EtCustomerModel?, String?,
-                                    EtStaffListModel?>>(
-                              selector: (context, provider) => Tuple3(
+                                Tuple4<EtCustomerModel?, String?,
+                                    EtStaffListModel?, String?>>(
+                              selector: (context, provider) => Tuple4(
                                   provider.selectedCustomerModel,
                                   provider.selectedProductsFamily,
-                                  provider.selectedSalesPerson),
+                                  provider.selectedSalesPerson,
+                                  provider.selectedSalseGroup),
                               builder: (context, tuple, _) {
                                 return BaseColumWithTitleAndTextFiled.build(
                                     '${tr('sales_office')}',
@@ -294,16 +355,6 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                               tr('plz_select_something_first_2',
                                                   args: [tr('manager'), '']));
                                         }
-                                        if (tuple.item2 == null) {
-                                          AppToast().show(
-                                              context,
-                                              tr('plz_select_something_first_1',
-                                                  args: [
-                                                    tr('product_family'),
-                                                    ''
-                                                  ]));
-                                          return;
-                                        }
                                       },
                                       iconType: InputIconType.SEARCH,
                                       iconColor:
@@ -311,7 +362,7 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                       deleteIconCallback: () =>
                                           p.setCustomerModel(null),
                                       hintText: tuple.item1 != null
-                                          ? tuple.item1!.kunnrNm!
+                                          ? tuple.item1!.kunnrNm
                                           : tr('plz_select'),
                                       // 팀장 일때 만 팀원선택후 삭제가능.
                                       isShowDeleteForHintText:
@@ -332,6 +383,9 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                                       bodyMap: {
                                         'product_family': tuple.item2,
                                         'staff': tuple.item3,
+                                        'dptnm': tuple.item3?.dptnm,
+                                        'vkgrp': tuple.item4,
+                                        'isSalseGroupNotUseAll': true
                                       },
                                       enable: false,
                                     ),

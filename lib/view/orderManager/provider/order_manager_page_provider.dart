@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-23 15:11:07
+ * Last Modified: 2022-10-23 18:09:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -446,12 +446,14 @@ class OrderManagerPageProvider extends ChangeNotifier {
         selectedCustomerModel = map['model'] as EtCustomerModel?;
         selectedSalesPerson = map['staff'] as EtStaffListModel?;
         pr(groupDataList);
-        if (groupDataList!
-            .where((group) => group.contains(selectedSalesPerson!.dptnm!))
-            .isNotEmpty) {
-          selectedSalseGroup = selectedSalesPerson!.dptnm;
-        } else {
-          selectedSalseGroup = tr('all');
+        if (CheckSuperAccount.isMultiAccount()) {
+          if (groupDataList!
+              .where((group) => group.contains(selectedSalesPerson!.dptnm!))
+              .isNotEmpty) {
+            selectedSalseGroup = selectedSalesPerson!.dptnm;
+          } else {
+            selectedSalseGroup = tr('all');
+          }
         }
         await searchSupplierAndEndCustomer(true);
         await searchSupplierAndEndCustomer(false);

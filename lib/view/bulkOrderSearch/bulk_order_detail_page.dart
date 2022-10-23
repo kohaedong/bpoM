@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-10-18 05:08:03
+ * Last Modified: 2022-10-23 17:47:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 import 'dart:math' as math;
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -164,8 +165,14 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
             AppSize.zero, () async {
           final p = context.read<BulkOrderDetailProvider>();
           //! 여신잔액 확인 안하고 바로 저장!.
-          var overThan = p.amountAvailable.isNotEmpty &&
-              double.parse(p.amountAvailable) > p.orderTotal;
+
+          var amount = double.tryParse(p.amountAvailable.replaceAll(',', ''));
+          pr('@@@@${p.amountAvailable}');
+          var overThan = false;
+          if (amount != null) {
+            pr('notEmpty');
+            overThan = p.amountAvailable.isNotEmpty && amount > p.orderTotal;
+          }
           hideKeyboard(context);
           var popupResult = await AppDialog.showPopup(context,
               buildTowButtonTextContents(context, tr('is_really_save')));

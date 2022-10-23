@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-23 15:12:38
+ * Last Modified: 2022-10-23 17:34:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -101,8 +101,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                             : () => AppTextStyle
                                 .hint_16, // hintTextStyleCallBack: () => AppTextStyle.hint_16,
                         iconType: InputIconType.SELECT,
-                        isNotInsertAll:
-                            CheckSuperAccount.isMultiAccount() ? null : true,
+                        isNotInsertAll: true,
                         // iconType: null,
                         iconColor: AppColors.textFieldUnfoucsColor,
                         commononeCellDataCallback: p.getSalesGroup,
@@ -355,7 +354,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 'vkgrp':
                     p.selectedSalseGroup != null ? p.selectedSalseGroup : '',
                 // 제품군팝업에 전체 노출여부
-                'isSalseGroupNotUseAll': true
+                'isFamilyNotUseAll': true,
               },
               enable: false,
             ),

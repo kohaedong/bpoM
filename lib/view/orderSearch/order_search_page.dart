@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-10-22 19:41:46
+ * Last Modified: 2022-10-23 18:22:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -71,6 +71,104 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
     _scrollController.dispose();
     _scrollController2.dispose();
     super.dispose();
+  }
+
+  Widget _buildGroupSelector(BuildContext context) {
+    final p = context.read<OrderSearchPageProvider>();
+    return CheckSuperAccount.isMultiAccount()
+        ? Column(
+            children: [
+              AppStyles.buildTitleRow(tr('salse_group')),
+              defaultSpacing(isHalf: true),
+              Selector<OrderSearchPageProvider, String?>(
+                  selector: (context, provider) => provider.selectedSalseGroup,
+                  builder: (context, salesGroup, _) {
+                    return BaseInputWidget(
+                        context: context,
+                        width: AppSize.defaultContentsWidth,
+                        enable: false,
+                        hintTextStyleCallBack: salesGroup != null
+                            ? () => AppTextStyle.default_16
+                            : () => AppTextStyle
+                                .hint_16, // hintTextStyleCallBack: () => AppTextStyle.hint_16,
+                        iconType: InputIconType.SELECT,
+                        isNotInsertAll: true,
+                        // iconType: null,
+                        iconColor: AppColors.textFieldUnfoucsColor,
+                        commononeCellDataCallback: p.getSalesGroup,
+                        oneCellType: OneCellType.SEARCH_BUSINESS_GROUP,
+                        // oneCellType: OneCellType.DO_NOTHING,
+                        isSelectedStrCallBack: (str) => p.setSalseGroup(str),
+                        hintText:
+                            salesGroup != null ? salesGroup : tr('plz_select'));
+                  }),
+              defaultSpacing()
+            ],
+          )
+        : Container();
+  }
+
+  Widget _buildStaffSelector(BuildContext context) {
+    final p = context.read<OrderSearchPageProvider>();
+    return CheckSuperAccount.isMultiAccountOrLeaderAccount()
+        ? Column(
+            children: [
+              AppStyles.buildTitleRow(tr('manager')),
+              defaultSpacing(isHalf: true),
+              Selector<OrderSearchPageProvider,
+                      Tuple2<EtStaffListModel?, String?>>(
+                  selector: (context, provider) => Tuple2(
+                      provider.selectedSalesPerson,
+                      provider.selectedSalseGroup),
+                  builder: (context, tuple, _) {
+                    return BaseInputWidget(
+                      context: context,
+                      onTap: () {
+                        if (CheckSuperAccount.isMultiAccount() &&
+                            tuple.item2 == null) {
+                          AppToast().show(
+                              context,
+                              tr('plz_select_something_first_1',
+                                  args: [tr('salse_group'), '']));
+                        }
+                      },
+                      width: AppSize.defaultContentsWidth,
+                      iconType: InputIconType.SEARCH,
+                      iconColor: AppColors.textFieldUnfoucsColor,
+                      hintText:
+                          tuple.item1 != null && tuple.item1!.sname != null
+                              ? tuple.item1!.sname!
+                              : tr('plz_select'),
+                      // 팀장 일때 만 팀원선택후 삭제가능.
+                      isShowDeleteForHintText:
+                          tuple.item1 != null ? true : false,
+                      deleteIconCallback: () => p.setSalesPerson(null),
+                      hintTextStyleCallBack: () => tuple.item1 != null
+                          ? AppTextStyle.default_16
+                          : AppTextStyle.hint_16,
+                      popupSearchType: CheckSuperAccount.isMultiAccount() &&
+                              tuple.item2 == null
+                          ? PopupSearchType.DO_NOTHING
+                          : PopupSearchType.SEARCH_SALSE_PERSON,
+                      isSelectedStrCallBack: (person) {
+                        return p.setSalesPerson(person);
+                      },
+                      bodyMap: CheckSuperAccount.isMultiAccount()
+                          ? {
+                              'dptnm': tuple.item2 == tr('all')
+                                  ? ''
+                                  : tuple.item2 ?? '',
+                            }
+                          : {
+                              'dptnm': CacheService.getEsLogin()!.dptnm,
+                            },
+                      enable: false,
+                    );
+                  }),
+              defaultSpacing(),
+            ],
+          )
+        : Container();
   }
 
   Widget _buildPanel(BuildContext context) {
@@ -166,57 +264,13 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                 ),
                               );
                             }),
-                            Selector<OrderSearchPageProvider,
-                                EtStaffListModel?>(
-                              selector: (context, provider) =>
-                                  provider.selectedSalesPerson,
-                              builder: (context, staff, _) {
-                                return BaseColumWithTitleAndTextFiled.build(
-                                    '${tr('manager')}',
-                                    BaseInputWidget(
-                                      context: context,
-                                      iconType: CheckSuperAccount
-                                              .isMultiAccountOrLeaderAccount()
-                                          ? InputIconType.SEARCH
-                                          : null,
-                                      iconColor:
-                                          AppColors.textFieldUnfoucsColor,
-                                      hintText: staff != null
-                                          ? staff.sname
-                                          : tr('plz_select'),
-                                      // 팀장 일때 만 팀원선택후 삭제가능.
-                                      isShowDeleteForHintText: CheckSuperAccount
-                                                  .isMultiAccountOrLeaderAccount() &&
-                                              staff != null
-                                          ? true
-                                          : false,
-                                      deleteIconCallback: () => CheckSuperAccount
-                                              .isMultiAccountOrLeaderAccount()
-                                          ? p.setSalesPerson(null)
-                                          : DoNothingAction(),
-                                      width: AppSize.defaultContentsWidth,
-                                      hintTextStyleCallBack: () => staff != null
-                                          ? AppTextStyle.default_16
-                                          : AppTextStyle.hint_16,
-                                      popupSearchType: CheckSuperAccount
-                                              .isMultiAccountOrLeaderAccount()
-                                          ? PopupSearchType.SEARCH_SALSE_PERSON
-                                          : null,
-                                      isSelectedStrCallBack: (persion) {
-                                        return p.setSalesPerson(persion);
-                                      },
-                                      // 멀티계정 전부 조회.
-                                      // 팀장계정 조속팀 조회.
-                                      bodyMap: CheckSuperAccount
-                                              .isMultiAccount()
-                                          ? {'dptnm': ''}
-                                          : CheckSuperAccount.isLeaderAccount()
-                                              ? {'dptnm': p.dptnm}
-                                              : null,
-                                      enable: false,
-                                    ));
-                              },
-                            ),
+                            CheckSuperAccount.isMultiAccount()
+                                ? _buildGroupSelector(context)
+                                : Container(),
+                            CheckSuperAccount.isMultiAccount()
+                                ? defaultSpacing()
+                                : Container(),
+                            _buildStaffSelector(context),
                             Selector<OrderSearchPageProvider, String?>(
                               selector: (context, provider) =>
                                   provider.selectedProcessingStatus,
@@ -281,12 +335,13 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                             ),
                             Selector<
                                 OrderSearchPageProvider,
-                                Tuple3<EtCustomerModel?, String?,
-                                    EtStaffListModel?>>(
-                              selector: (context, provider) => Tuple3(
+                                Tuple4<EtCustomerModel?, String?,
+                                    EtStaffListModel?, String?>>(
+                              selector: (context, provider) => Tuple4(
                                   provider.selectedCustomerModel,
                                   provider.selectedProductsFamily,
-                                  provider.selectedSalesPerson),
+                                  provider.selectedSalesPerson,
+                                  provider.selectedSalseGroup),
                               builder: (context, tuple, _) {
                                 return BaseColumWithTitleAndTextFiled.build(
                                     '${tr('sales_office')}',
@@ -298,7 +353,6 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                               context,
                                               tr('plz_select_something_first_2',
                                                   args: [tr('manager'), '']));
-                                          return;
                                         }
                                       },
                                       iconType: InputIconType.SEARCH,
@@ -317,23 +371,20 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                                           tuple.item1 != null
                                               ? AppTextStyle.default_16
                                               : AppTextStyle.hint_16,
-                                      popupSearchType: tuple.item3 == null
+                                      popupSearchType: tuple.item2 == null ||
+                                              tuple.item3 == null
                                           ? PopupSearchType.DO_NOTHING
-                                          : PopupSearchType.SEARCH_SALLER,
+                                          : PopupSearchType
+                                              .SEARCH_SALLER_FOR_BULK_ORDER,
                                       isSelectedStrCallBack: (customer) {
                                         return p.setCustomerModel(customer);
                                       },
                                       bodyMap: {
                                         'product_family': tuple.item2,
                                         'staff': tuple.item3,
-                                        'dptnm':
-                                            CheckSuperAccount.isMultiAccount()
-                                                ? tuple.item3 != null
-                                                    ? tuple.item3!.dptnm
-                                                    : CacheService.getEsLogin()!
-                                                        .dptnm
-                                                : CacheService.getEsLogin()!
-                                                    .dptnm
+                                        'dptnm': tuple.item3?.dptnm,
+                                        'vkgrp': tuple.item4,
+                                        'isSalseGroupNotUseAll': true
                                       },
                                       enable: false,
                                     ),

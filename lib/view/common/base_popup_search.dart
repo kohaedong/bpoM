@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-10-23 15:14:35
+ * Last Modified: 2022-10-23 17:35:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -421,8 +421,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       ? () => AppTextStyle.default_16
                       : () => AppTextStyle.hint_16,
                   iconType: InputIconType.SELECT,
-                  isNotInsertAll: p.bodyMap?['isSalseGroupNotUseAll'] != null &&
-                          p.bodyMap!['isSalseGroupNotUseAll']
+                  isNotInsertAll: p.bodyMap?['isFamilyNotUseAll'] != null &&
+                          p.bodyMap!['isFamilyNotUseAll']
                       ? true
                       : null,
                   iconColor: AppColors.textFieldUnfoucsColor,
@@ -458,6 +458,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       : null,
                   // iconType: null,
                   iconColor: AppColors.textFieldUnfoucsColor,
+                  isNotInsertAll: p.bodyMap?['isSalseGroupNotUseAll'] != null &&
+                          p.bodyMap!['isSalseGroupNotUseAll']
+                      ? true
+                      : null,
                   commononeCellDataCallback: p.getSalesGroup,
                   oneCellType: CheckSuperAccount.isMultiAccount()
                       ? OneCellType.SEARCH_BUSINESS_GROUP
