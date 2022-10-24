@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medsalesportal/kolonApp.dart';
@@ -22,9 +21,9 @@ void main() async {
   Hive.registerAdapter(TCustomerCustomsModelAdapter());
   startCaptrueListenner();
   initCacheService();
+  await EasyLocalization.ensureInitialized();
   setSystemOverlay();
   start();
-  await EasyLocalization.ensureInitialized();
 }
 
 void initCacheService() => CacheService.init();

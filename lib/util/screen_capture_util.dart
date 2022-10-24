@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/screen_capture_util.dart
  * Created Date: 2021-12-14 00:55:19
- * Last Modified: 2022-10-24 04:02:04
+ * Last Modified: 2022-10-25 03:20:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,7 +14,6 @@
 import 'dart:ui' as ui;
 import 'dart:io';
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';

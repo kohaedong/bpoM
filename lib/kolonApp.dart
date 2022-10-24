@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/kolonApp.dart
  * Created Date: 2022-07-02 14:46:59
- * Last Modified: 2022-10-24 00:10:49
+ * Last Modified: 2022-10-25 04:08:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -60,26 +60,25 @@ class KolonAppState extends State<KolonApp> {
           create: (_) => LoginProvider(),
         ),
       ],
-      child: MediaQuery(
-          data: MediaQueryData.fromWindow(WidgetsBinding.instance.window),
-          child: ScreenUtilInit(
-              designSize: const Size(360, 690),
-              minTextAdapt: true,
-              builder: (context, _) => RepaintBoundary(
-                    key: KeyService.screenKey,
-                    child: MaterialApp(
-                        //FirebaseAnalytics 연동.
-                        // navigatorObservers: [FirebaseService.observer!],
-                        navigatorKey: KeyService.baseAppKey,
-                        localizationsDelegates: context.localizationDelegates,
-                        supportedLocales: context.supportedLocales,
-                        locale: context.locale,
-                        debugShowCheckedModeBanner: false,
-                        theme: context.read<AppThemeProvider>().themeData,
-                        home: CommonLoginPage(),
-                        // home: OrderManagerPage(),
-                        routes: routes),
-                  ))),
+      child: ScreenUtilInit(
+        designSize: const Size(360, 690),
+        minTextAdapt: true,
+        builder: (context, child) => RepaintBoundary(
+          key: KeyService.screenKey,
+          child: MaterialApp(
+              //FirebaseAnalytics 연동.
+              // navigatorObservers: [FirebaseService.observer!],
+              navigatorKey: KeyService.baseAppKey,
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
+              debugShowCheckedModeBanner: false,
+              theme: context.read<AppThemeProvider>().themeData,
+              home: child,
+              routes: routes),
+        ),
+        child: CommonLoginPage(),
+      ),
     );
   }
 }

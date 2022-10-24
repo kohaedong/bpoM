@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/background_task_service.dart
  * Created Date: 2022-10-24 03:38:32
- * Last Modified: 2022-10-25 00:17:49
+ * Last Modified: 2022-10-25 02:56:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 

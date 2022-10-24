@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/firebase_service.dart
  * Created Date: 2022-10-18 15:55:12
- * Last Modified: 2022-10-25 02:29:51
+ * Last Modified: 2022-10-25 03:39:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -49,7 +49,7 @@ class FirebaseService {
       messageStream = FirebaseMessaging.onMessage;
       fcmRefreshTokenStream = messaging.onTokenRefresh;
       openMessageStream = FirebaseMessaging.onMessageOpenedApp;
-      await requstFcmPermission();
+      // await requstFcmPermission();
     });
     return true;
   }

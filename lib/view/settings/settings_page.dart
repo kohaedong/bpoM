@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/service/background_task_service.dart';
 import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:provider/provider.dart';
