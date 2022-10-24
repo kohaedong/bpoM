@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-23 16:45:45
+ * Last Modified: 2022-10-25 00:36:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -664,23 +664,29 @@ class _AddActivityPageState extends State<AddActivityPage> {
   Widget _buildCheckBox(BuildContext context, bool isChecked,
       {bool? isWithSuggetedItem, int? index}) {
     final p = context.read<AddActivityPageProvider>();
+    var isNotSuggetedItem = isWithSuggetedItem == null;
+    var isNotToday = p.isNotToday;
     return Container(
       height: AppSize.defaultCheckBoxHeight - 5,
       width: AppSize.defaultCheckBoxHeight - 5,
       decoration: BoxDecoration(
-        color: p.isDoNothing ? AppColors.unReadyButton : null,
+        color:
+            isNotSuggetedItem && p.isDoNothing ? AppColors.unReadyButton : null,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Checkbox(
-          activeColor:
-              p.isDoNothing ? AppColors.unReadyButton : AppColors.primary,
-          checkColor:
-              (p.isDoNothing) ? AppColors.unReadyText.withOpacity(.2) : null,
-          side: p.isDoNothing ? null : BorderSide(color: Colors.grey),
+          activeColor: !isNotToday || !isNotSuggetedItem
+              ? AppColors.primary
+              : AppColors.unReadyButton,
+          checkColor: !isNotToday || !isNotSuggetedItem
+              ? null
+              : AppColors.unReadyText.withOpacity(.2),
+          side: !isNotToday || !isNotSuggetedItem
+              ? BorderSide(color: Colors.grey)
+              : null,
           value: isChecked,
           onChanged: (val) {
-            if (p.isDoNothing) return;
-            if (isWithSuggetedItem != null && isWithSuggetedItem) {
+            if (isWithSuggetedItem ?? false) {
               // p.updateSuggestedList(index!);
               if (p.suggestedItemList![index!].matnr != null) {
                 p.updateSuggestedList(index);
@@ -694,7 +700,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
                             args: ['${tr('suggested_item')}${index + 1}']));
               }
             } else {
-              p.setIsWithTeamLeader(val);
+              if (isNotToday)
+                return;
+              else
+                p.setIsWithTeamLeader(val);
             }
           }),
     );

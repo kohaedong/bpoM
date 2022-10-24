@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medsalesportal/kolonApp.dart';
@@ -5,6 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/service/background_task_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/service/firebase_service.dart';
 import 'package:medsalesportal/util/screen_capture_util.dart';
 import 'package:medsalesportal/model/commonCode/t_code_model.dart';
 import 'package:medsalesportal/model/commonCode/t_values_model.dart';
@@ -12,7 +14,7 @@ import 'package:medsalesportal/model/commonCode/et_dd07v_customer_category_model
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
+  await FirebaseService.init();
   await Hive.initFlutter();
   await BackgroundTaskService.startBackgroundTask();
   Hive.registerAdapter(TCodeModelAdapter());
@@ -22,6 +24,7 @@ void main() async {
   initCacheService();
   setSystemOverlay();
   start();
+  await EasyLocalization.ensureInitialized();
 }
 
 void initCacheService() => CacheService.init();

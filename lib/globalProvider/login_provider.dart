@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
- * Last Modified: 2022-10-24 00:37:53
+ * Last Modified: 2022-10-24 20:34:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:medsalesportal/service/firebase_service.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/model/user/user.dart';
 import 'package:medsalesportal/enums/account_type.dart';
@@ -315,6 +316,32 @@ class LoginProvider extends ChangeNotifier {
     }
   }
 
+  Future<ResultModel> sendFcmToken() async {
+    _api.init(RequestType.SEND_FCM_TOKEN);
+    var token = await FirebaseService.getToken();
+    pr('token $token');
+    var deviceInfo = await DeviceInfoService.getDeviceInfo();
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.SEND_FCM_TOKEN.serverMethod,
+      "methodParam": {
+        "fcmToken": token,
+        "devId": deviceInfo.deviceId,
+        "userId": CacheService.getEsLogin()!.logid
+      }
+    };
+    final result = await _api.request(body: _body);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
+    }
+    if (result.statusCode == 200) {
+      pr(result.body);
+      return ResultModel(true);
+    }
+    return ResultModel(false, message: result.errorMessage);
+  }
+
   Future<ResultModel> saveUserEnvironment({bool? isFirstSave}) async {
     var _api = ApiService();
     pr('save!!! ${userSettings!.toJson()}');
@@ -493,6 +520,8 @@ class LoginProvider extends ChangeNotifier {
     result = await checkUserEnvironment();
     if (!result.isSuccessful) return result;
     result = await saveUserEnvironment(isFirstSave: true);
+    if (!result.isSuccessful) return result;
+    result = await sendFcmToken();
     if (result.isSuccessful) isLogedin = true;
     return result;
   }

@@ -1,8 +1,5 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
-import 'package:medsalesportal/service/background_task_service.dart';
-
 import './home_icon_map.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +16,7 @@ import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:medsalesportal/view/settings/settings_page.dart';
 import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/service/background_task_service.dart';
 import 'package:medsalesportal/view/home/provider/notice_provider.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
@@ -43,10 +41,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-
     if (Platform.isAndroid) {
       disableCapture();
     }
+
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -73,18 +71,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState lifeCycle) async {
     super.didChangeAppLifecycleState(lifeCycle);
-    var _isForeground = (lifeCycle == AppLifecycleState.resumed);
     var _paused = (lifeCycle == AppLifecycleState.paused);
+    var _detached = (lifeCycle == AppLifecycleState.detached);
     var _inactive = (lifeCycle == AppLifecycleState.inactive);
-    if (_paused) return;
+    var _isForeground = (lifeCycle == AppLifecycleState.resumed);
+    if (_paused || _detached) return;
     if (_inactive) {
       pr('addTask !!!!!!!!!!!!!');
-      BackgroundTaskService.addTask();
+      await BackgroundTaskService.addTask();
       return;
     }
     if (_isForeground) {
       pr('cancel task!!!!!!!!!!');
-      BackgroundTaskService.cancellByTag('task');
+      await BackgroundTaskService.cancelAllTask();
     }
     final arguments = ModalRoute.of(context)!.settings.arguments;
     // update or notice 확인 완료 여부.

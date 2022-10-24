@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-10-13 15:47:26
+ * Last Modified: 2022-10-24 20:02:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -40,6 +40,7 @@ enum RequestType {
   SEARCH_MATERIAL,
   SEARCH_SUGGETION_ITEM,
   GET_VISIT_HISTORY,
+  SEND_FCM_TOKEN,
   // --------------
   SEARCH_STAFF,
   SEARCH_CUSTOMER,
@@ -197,6 +198,8 @@ extension RequestTypeExtension on RequestType {
         return '$medical/getdistancenew';
       case RequestType.CHECK_NOTICE:
         return '$v2URL/rest';
+      case RequestType.SEND_FCM_TOKEN:
+        return '$v2URL/rest';
       case RequestType.NOTICE_DONT_SHOW_AGAIN:
         return '$v2URL/rest';
       case RequestType.SEND_IMAGE_TO_SERVER:
@@ -320,6 +323,8 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.CHECK_NOTICE:
         return "noticeAll";
+      case RequestType.SEND_FCM_TOKEN:
+        return "saveOfFCMDeviceTokenByAnonymous";
       case RequestType.SEARCH_MATERIAL:
         return "Z_LTSP_IF0320";
       case RequestType.CREATE_ORDER:

@@ -31,6 +31,7 @@ if (project.hasProperty('dart-defines')) {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.google.gms.google-services' 
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
@@ -79,6 +80,7 @@ android {
                 keyPassword RELEASE_KEY_PASSWORD
             }
         }
+   
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
@@ -94,6 +96,8 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation platform('com.google.firebase:firebase-bom:31.0.0')
+    implementation 'com.google.firebase:firebase-analytics'
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation  project(':KolonSSOLib')
