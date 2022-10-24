@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:medsalesportal/globalProvider/login_provider.dart';
+import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 
 import './home_icon_map.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +16,7 @@ import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/home/notice_list_item.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:medsalesportal/view/settings/settings_page.dart';
+import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/home/provider/notice_provider.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
@@ -73,6 +74,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(lifeCycle);
     var _isForeground = (lifeCycle == AppLifecycleState.resumed);
     var paused = (lifeCycle == AppLifecycleState.paused);
+    var detached = (lifeCycle == AppLifecycleState.detached);
     final arguments = ModalRoute.of(context)!.settings.arguments;
     // update or notice 확인 완료 여부.
     final isCheckDone = CacheService.isUpdateAndNoticeCheckDone();
@@ -81,15 +83,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (paused) {
       _isForeground = false;
     }
-    print('checkDone???$isCheckDone');
-    pr('_isForeground ${_isForeground}');
-    pr('arguments == null  ${arguments == null}');
-    pr('isNotLocked ${!isLocked}');
+
     if (_isForeground &&
         (isLandSpace == null || !isLandSpace) &&
         arguments == null &&
-        !isLocked) {
-      pr('ininin');
+        !isLocked &&
+        isCheckDone) {
       isLocked = true;
       // 다이얼로그 호출시 업데이트 체크 재외 처리.
       final isDisable = CacheService.getIsDisableUpdate();
@@ -107,6 +106,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         // 엡데이트 체크 리셋.
         CacheService.setIsDisableUpdate(false);
       }
+    }
+    if (detached) {
+      KeyService.baseAppKey.currentContext!
+          .read<AppThemeProvider>()
+          .removeListener(() {});
+      KeyService.baseAppKey.currentContext!
+          .read<AppThemeProvider>()
+          .addListener(() {});
     }
   }
 

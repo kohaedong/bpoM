@@ -1,7 +1,7 @@
 import UIKit
 import Flutter
 import Kolonbase
-
+import workmanager
 enum ChannelName {
   static let channelName = "kolonbase/keychain" 
   static let eventName = "kolonbase/keychain/event"
@@ -32,12 +32,16 @@ enum KolonbaseErrorCode {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-//      KB.Detect.showWaterMark()
-//      KB.Detect.setScreenshotDetector()
-    GeneratedPluginRegistrant.register(with: self)
 
- 
-      
+    GeneratedPluginRegistrant.register(with: self)
+    // background prossess
+    WorkmanagerPlugin.setPluginRegistrantCallback { registry in
+            GeneratedPluginRegistrant.register(with: registry)
+        }
+        WorkmanagerPlugin.registerTask(withIdentifier: "com.kolon.medsalesportaldev.taskId")
+       
+//      KB.Detect.showWaterMark()
+//      KB.Detect.setScreenshotDetector()  
 // SSO ------- start -------------
     guard let controller = window?.rootViewController as? FlutterViewController else {
       fatalError("rootViewController is not type FlutterViewController")

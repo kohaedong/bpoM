@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/service/background_task_service.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
@@ -141,6 +142,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BackgroundTaskService.addOneOffTask();
     return ChangeNotifierProvider(
       create: (context) => SettingsProvider(),
       builder: (context, _) {

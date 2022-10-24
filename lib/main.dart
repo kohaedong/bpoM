@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:medsalesportal/kolonApp.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/service/background_task_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/screen_capture_util.dart';
 import 'package:medsalesportal/model/commonCode/t_code_model.dart';
@@ -13,6 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Hive.initFlutter();
+  await BackgroundTaskService.startBackgroundTask();
   Hive.registerAdapter(TCodeModelAdapter());
   Hive.registerAdapter(TValuesModelAdapter());
   Hive.registerAdapter(TCustomerCustomsModelAdapter());

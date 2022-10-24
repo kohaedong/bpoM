@@ -36,6 +36,7 @@ dependencies:
   flutter_inappwebview: ^5.4.3+8 # 유지보수 양호
   firebase_messaging: ^13.1.0
   firebase_core: ^1.24.0
+  workmanager: ^0.5.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
