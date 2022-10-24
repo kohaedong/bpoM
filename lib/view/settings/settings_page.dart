@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/service/background_task_service.dart';
+import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
@@ -142,7 +143,6 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BackgroundTaskService.addOneOffTask();
     return ChangeNotifierProvider(
       create: (context) => SettingsProvider(),
       builder: (context, _) {
@@ -160,7 +160,7 @@ class SettingsPage extends StatelessWidget {
                   style: AppTextStyle.w500_22),
               callback: () async {
                 await p.saveUserEvn();
-                Navigator.pop(context);
+                popToFirst(context);
               },
             ),
             child: FutureBuilder<SettingsResult>(

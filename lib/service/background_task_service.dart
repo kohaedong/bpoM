@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/background_task_service.dart
  * Created Date: 2022-10-24 03:38:32
- * Last Modified: 2022-10-24 13:24:46
+ * Last Modified: 2022-10-24 14:11:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,7 +11,10 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 import 'dart:io';
+import 'package:medsalesportal/globalProvider/login_provider.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
 
 class BackgroundTaskService {
@@ -40,7 +43,9 @@ class BackgroundTaskService {
           pr('$simplePeriodicTask was executed');
           break;
         case simplePeriodic1HourTask:
-          pr("$simplePeriodic1HourTask was executed");
+          final sp =
+              KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+          await sp.saveUserEnvironment();
           break;
         case Workmanager.iOSBackgroundTask:
           pr('IOS task Start! $iosTaskKey');
@@ -56,13 +61,18 @@ class BackgroundTaskService {
     );
   }
 
-  static void addOneOffTask() {
+  static void addTask() {
     if (Platform.isAndroid) {
-      Workmanager().registerPeriodicTask(
-        simplePeriodicTask,
-        simplePeriodic1HourTask,
-        frequency: Duration(seconds: 60),
-      );
+      try {
+        Workmanager().registerPeriodicTask(
+          simplePeriodicTask,
+          simplePeriodic1HourTask,
+          tag: 'task',
+          frequency: Duration(hours: 1),
+        );
+      } catch (e) {
+        pr(e);
+      }
     }
   }
 
@@ -72,5 +82,11 @@ class BackgroundTaskService {
     } catch (e) {
       pr(e);
     }
+  }
+
+  static Future<void> cancellByTag(String tag) async {
+    try {
+      await Workmanager().cancelByTag(tag);
+    } catch (e) {}
   }
 }

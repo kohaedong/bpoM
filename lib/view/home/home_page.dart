@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
+import 'package:medsalesportal/service/background_task_service.dart';
 
 import './home_icon_map.dart';
 import 'package:provider/provider.dart';
@@ -73,16 +74,23 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState lifeCycle) async {
     super.didChangeAppLifecycleState(lifeCycle);
     var _isForeground = (lifeCycle == AppLifecycleState.resumed);
-    var paused = (lifeCycle == AppLifecycleState.paused);
-    var detached = (lifeCycle == AppLifecycleState.detached);
+    var _paused = (lifeCycle == AppLifecycleState.paused);
+    var _inactive = (lifeCycle == AppLifecycleState.inactive);
+    if (_paused) return;
+    if (_inactive) {
+      pr('addTask !!!!!!!!!!!!!');
+      BackgroundTaskService.addTask();
+      return;
+    }
+    if (_isForeground) {
+      pr('cancel task!!!!!!!!!!');
+      BackgroundTaskService.cancellByTag('task');
+    }
     final arguments = ModalRoute.of(context)!.settings.arguments;
     // update or notice 확인 완료 여부.
     final isCheckDone = CacheService.isUpdateAndNoticeCheckDone();
     final isLandSpace = CacheService.getIsLandSpaceMode();
     var isLocked = false;
-    if (paused) {
-      _isForeground = false;
-    }
 
     if (_isForeground &&
         (isLandSpace == null || !isLandSpace) &&
@@ -106,14 +114,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         // 엡데이트 체크 리셋.
         CacheService.setIsDisableUpdate(false);
       }
-    }
-    if (detached) {
-      KeyService.baseAppKey.currentContext!
-          .read<AppThemeProvider>()
-          .removeListener(() {});
-      KeyService.baseAppKey.currentContext!
-          .read<AppThemeProvider>()
-          .addListener(() {});
     }
   }
 
