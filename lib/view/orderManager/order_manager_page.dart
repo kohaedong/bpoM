@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-23 17:34:42
+ * Last Modified: 2022-10-25 05:13:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -696,139 +696,135 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
           ],
         ),
         defaultSpacing(isHalf: true),
-        _buildTextAndInputWidget(
-            tr('quantity'),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                TextControllerFactoryWidget(
-                    giveTextEditControllerWidget: (controller) {
-                  return Selector<OrderManagerPageProvider, List<double>>(
-                    selector: (context, provider) =>
-                        provider.selectedQuantityList,
-                    builder: (context, quantityList, _) {
-                      pr('build quantity');
-                      if (controller.text != '${quantityList[index].toInt()}') {
-                        if (quantityList[index].toInt() != 0) {
-                          controller.text = '${quantityList[index].toInt()}';
-                        }
-                      }
-                      var isNotEmpty =
-                          quantityList.isNotEmpty && quantityList[index] != 0.0;
-                      return BaseInputWidget(
-                          context: context,
-                          onTap: () {
-                            if (isNotEmpty) {
-                              controller.text =
-                                  '${quantityList[index].toInt()}';
-                            }
-                          },
-                          textEditingController: controller,
-                          focusNode: _focusNode,
-                          hintText: isNotEmpty
-                              ? '${quantityList[index].toInt()}'
-                              : tr('plz_enter'),
-                          keybordType: TextInputType.number,
-                          hintTextStyleCallBack: () => isNotEmpty
-                              ? AppTextStyle.default_16
-                              : AppTextStyle.hint_16,
-                          // unfoucsCallback: () async {
-                          //   controller.clear();
-                          // },
-                          defaultIconCallback: () {
-                            controller.text = '';
-                            hideKeyboard(context);
-                            p.updateQuantityList(index, 0);
-                            p.setTableQuantity(index, 0, isResetTotal: true);
-                            p
-                                .checkPrice(index, isNotifier: true)
-                                .whenComplete(() => _focusNode.requestFocus());
-                          },
-                          iconType: isNotEmpty ? InputIconType.DELETE : null,
-                          width: ((AppSize.defaultContentsWidth * .7) -
-                                  AppSize.defaultListItemSpacing) *
-                              .7,
-                          onChangeCallBack: (t) async {
-                            if (double.tryParse(t) != null) {
-                              p.updateQuantityList(index, double.parse(t));
-                              p.setTableQuantity(index, double.parse(t));
-                            } else if (t.isEmpty) {
-                              p.updateQuantityList(index, 0);
-                            }
-                            p.updatePriceList(
-                                index, BulkOrderDetailSearchMetaPriceModel());
-                          },
-                          enable: true);
-                    },
-                  );
-                }),
-                Padding(
-                    padding:
-                        EdgeInsets.only(right: AppSize.defaultListItemSpacing)),
-                Selector<
-                    OrderManagerPageProvider,
-                    Tuple2<List<double>,
-                        List<BulkOrderDetailSearchMetaPriceModel?>>>(
-                  selector: (context, provider) => Tuple2(
-                      provider.selectedQuantityList, provider.priceModelList),
-                  builder: (context, tuple, _) {
-                    var isQuantityNotEmpty =
-                        tuple.item1.isNotEmpty && tuple.item1[index] != 0.0;
-                    var isPriceModelNotEmpty = tuple.item2.isNotEmpty &&
-                        tuple.item2[index] != null &&
-                        tuple.item2[index]!.kwmeng != 0.0;
-                    var isDifferentValue =
-                        tuple.item2[index]?.kwmeng != tuple.item1[index];
-                    var isAllValidate =
-                        isQuantityNotEmpty && isPriceModelNotEmpty;
-                    var isShowButton = isAllValidate && isDifferentValue;
-                    pr('isShowButton :: $isShowButton');
-                    return GestureDetector(
-                      onTap: () async {
-                        if (isShowButton) {
-                          hideKeyboard(context);
-                          final result =
-                              await p.checkPrice(index, isNotifier: true);
-                          if (result.isSuccessful) {
-                            p.setTableQuantity(
-                                index, p.selectedQuantityList[index]);
-                          } else {
-                            AppDialog.showSignglePopup(
-                                context, result.message!);
-                            p.updateQuantityList(index, 0);
-                            p.setTableQuantity(index, 0);
+        Selector<OrderManagerPageProvider, List<double>>(
+          selector: (context, provider) => provider.selectedQuantityList,
+          builder: (context, quantityList, _) {
+            return _buildTextAndInputWidget(
+              tr('quantity'),
+              TextControllerFactoryWidget(
+                  giveTextEditControllerWidget: (controller) {
+                if (controller.text != '${quantityList[index].toInt()}') {
+                  if (quantityList[index].toInt() != 0) {
+                    controller.text = '${quantityList[index].toInt()}';
+                  }
+                }
+                var isNotEmpty =
+                    quantityList.isNotEmpty && quantityList[index] != 0.0;
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    BaseInputWidget(
+                        context: context,
+                        onTap: () {
+                          if (isNotEmpty) {
+                            controller.text = '${quantityList[index].toInt()}';
                           }
-                        }
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
+                        },
+                        textEditingController: controller,
+                        focusNode: _focusNode,
+                        hintText: isNotEmpty
+                            ? '${quantityList[index].toInt()}'
+                            : tr('plz_enter'),
+                        keybordType: TextInputType.number,
+                        hintTextStyleCallBack: () => isNotEmpty
+                            ? AppTextStyle.default_16
+                            : AppTextStyle.hint_16,
+                        // unfoucsCallback: () async {
+                        //   controller.clear();
+                        // },
+                        defaultIconCallback: () {
+                          controller.text = '';
+                          hideKeyboard(context);
+                          p.updateQuantityList(index, 0);
+                          p.setTableQuantity(index, 0, isResetTotal: true);
+                          p
+                              .checkPrice(index, isNotifier: true)
+                              .whenComplete(() => _focusNode.requestFocus());
+                        },
+                        iconType: isNotEmpty ? InputIconType.DELETE : null,
                         width: ((AppSize.defaultContentsWidth * .7) -
                                 AppSize.defaultListItemSpacing) *
-                            .3,
-                        height: AppSize.defaultTextFieldHeight,
-                        decoration: BoxDecoration(
-                            color: isShowButton
-                                ? AppColors.sendButtonColor
-                                : AppColors.unReadyButton,
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(AppSize.radius5)),
-                            border: Border.all(
-                                width: .5,
+                            .7,
+                        onChangeCallBack: (t) async {
+                          if (double.tryParse(t) != null) {
+                            p.updateQuantityList(index, double.parse(t));
+                            p.setTableQuantity(index, double.parse(t));
+                          } else if (t.isEmpty) {
+                            p.updateQuantityList(index, 0);
+                          }
+                          p.updatePriceList(
+                              index, BulkOrderDetailSearchMetaPriceModel());
+                        },
+                        enable: true),
+                    Padding(
+                        padding: EdgeInsets.only(
+                            right: AppSize.defaultListItemSpacing)),
+                    Selector<OrderManagerPageProvider,
+                        List<BulkOrderDetailSearchMetaPriceModel?>>(
+                      selector: (context, provider) => provider.priceModelList,
+                      builder: (context, priceModelList, _) {
+                        var isQuantityNotEmpty = quantityList.isNotEmpty &&
+                            quantityList[index] != 0.0;
+                        var isPriceModelNotEmpty = priceModelList.isNotEmpty &&
+                            priceModelList[index] != null &&
+                            priceModelList[index]!.kwmeng != 0.0;
+                        var isDifferentValue = priceModelList[index]?.kwmeng !=
+                            quantityList[index];
+                        var isAllValidate =
+                            isQuantityNotEmpty && isPriceModelNotEmpty;
+                        var isShowButton = isAllValidate && isDifferentValue;
+                        pr('isShowButton :: $isShowButton');
+                        return GestureDetector(
+                          onTap: () async {
+                            if (isShowButton) {
+                              hideKeyboard(context);
+                              final result =
+                                  await p.checkPrice(index, isNotifier: true);
+                              if (result.isSuccessful) {
+                                p.setTableQuantity(
+                                    index, p.selectedQuantityList[index]);
+                              } else {
+                                AppDialog.showSignglePopup(
+                                    context, result.message!);
+                                p.updateQuantityList(index, 0);
+                                p.setTableQuantity(index, 0);
+                                controller.text = '';
+                              }
+                            }
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: ((AppSize.defaultContentsWidth * .7) -
+                                    AppSize.defaultListItemSpacing) *
+                                .3,
+                            height: AppSize.defaultTextFieldHeight,
+                            decoration: BoxDecoration(
                                 color: isShowButton
-                                    ? AppColors.primary
-                                    : AppColors.textFieldUnfoucsColor)),
-                        child: AppText.text(tr('search'),
-                            style: AppTextStyle.h4.copyWith(
-                                color: isShowButton
-                                    ? AppColors.primary
-                                    : AppColors.hintText)),
-                      ),
-                    );
-                  },
-                )
-              ],
-            )),
+                                    ? AppColors.sendButtonColor
+                                    : AppColors.unReadyButton,
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(AppSize.radius5)),
+                                border: Border.all(
+                                    width: .5,
+                                    color: isShowButton
+                                        ? AppColors.primary
+                                        : AppColors.textFieldUnfoucsColor)),
+                            child: AppText.text(tr('search'),
+                                style: AppTextStyle.h4.copyWith(
+                                    color: isShowButton
+                                        ? AppColors.primary
+                                        : AppColors.hintText)),
+                          ),
+                        );
+                      },
+                    )
+                  ],
+                );
+              }),
+            );
+          },
+        ),
         defaultSpacing(isHalf: true),
         family.contains('비처방의약품') ||
                 family.contains('건강식품') ||

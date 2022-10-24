@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-20 13:18:22
+ * Last Modified: 2022-10-25 06:15:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -471,6 +471,9 @@ class AddActivityPageProvider extends ChangeNotifier {
   Future<List<String>> getActivityType() async {
     if (activityList == null) {
       activityList = await HiveService.getActivityType();
+      //! 추가  하드코딩!!!!!!
+      activityList!.add('약국방문-A14');
+      pr(activityList);
     }
     var temp = <String>[];
     activityList!.forEach((item) {

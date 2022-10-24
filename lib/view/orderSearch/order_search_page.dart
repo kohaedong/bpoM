@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-10-24 02:44:53
+ * Last Modified: 2022-10-25 04:48:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -473,7 +473,7 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                       isSubTitle: true),
                   AppStyles.buildPipe(),
                   AppText.listViewText(
-                      '${tr('total')}:${FormatUtil.addComma('${model.mwsbp! + model.netwr!}')}',
+                      '${tr('total')}:${FormatUtil.addComma('${model.mwsbp! + model.netwr!}', isReturnZero: true)}',
                       isSubTitle: true),
                 ],
               ),

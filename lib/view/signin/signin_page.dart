@@ -97,8 +97,12 @@ class _SigninPageState extends State<SigninPage> {
                   focusNode: pwFocus,
                   context: context,
                   height: AppSize.buttonHeight,
-                  iconType: password != null ? InputIconType.DELETE : null,
-                  hintText: password != null ? null : '${tr('password')}',
+                  iconType: _passwordController.text.isNotEmpty
+                      ? InputIconType.DELETE
+                      : null,
+                  hintText: _passwordController.text.isNotEmpty
+                      ? _passwordController.text
+                      : '${tr('password')}',
                   width: AppSize.defaultContentsWidth,
                   keybordType: TextInputType.visiblePassword,
                   defaultIconCallback: () {

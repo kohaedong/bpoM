@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart
  * Created Date: 2022-07-21 14:21:16
- * Last Modified: 2022-10-20 12:59:25
+ * Last Modified: 2022-10-25 06:03:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -61,15 +61,28 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setQuantity(String? str, int index) {
+    if (str != null && str.isNotEmpty) {
+      editItemList[index].kwmeng = double.parse(str);
+    } else {
+      editItemList[index].kwmeng = 0;
+    }
+    notifyListeners();
+  }
+
+  void setMessage(String? str, int index) {
+    editItemList[index].zmsg = str ?? '';
+    notifyListeners();
+  }
+
   void setQuantityAndCheckPrice(String? str, int index) {
     pr(index);
     if (str != null && str.isNotEmpty) {
       editItemList[index].kwmeng = double.parse(str);
-      checkMetaPriceAndStock(index);
     } else {
       editItemList[index].kwmeng = 0;
-      // checkMetaPriceAndStock(index);
     }
+    checkMetaPriceAndStock(index);
     notifyListeners();
   }
 

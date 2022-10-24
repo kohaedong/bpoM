@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-10-23 17:47:26
+ * Last Modified: 2022-10-25 06:16:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,7 +11,6 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 import 'dart:math' as math;
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +26,8 @@ import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/enums/offset_direction_type.dart';
+import 'package:medsalesportal/view/common/base_input_widget.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_et_t_list_model.dart';
@@ -37,7 +38,7 @@ import 'package:medsalesportal/model/rfc/bulk_order_detail_t_item_model.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_detail_t_header_model.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_detail_response_model.dart';
 import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
-import 'package:medsalesportal/view/bulkOrderSearch/order_item_input_widget.dart';
+import 'package:medsalesportal/view/orderManager/text_controller_factory_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_offset_animation_components.dart';
 import 'package:medsalesportal/view/common/widget_of_rotation_animation_components.dart';
 import 'package:medsalesportal/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart';
@@ -390,18 +391,88 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                           selector: (context, provider) =>
                               provider.editItemList[index].kwmeng,
                           builder: (context, quantity, _) {
-                            return OrderItemInputWidget(
-                              onSubmittedCallBack: (str) =>
-                                  p.setQuantityAndCheckPrice(str, index),
-                              deleteCallback: () {
-                                p.setQuantityAndCheckPrice(null, index);
-                                p.resetMessage(index);
-                              },
-                              icon: quantity == 0 ? null : InputIconType.DELETE,
-                              defaultValue: model.kwmeng!.toInt().toString(),
+                            return Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                TextControllerFactoryWidget(
+                                  giveTextEditControllerWidget: (controller) {
+                                    return BaseInputWidget(
+                                        context: context,
+                                        width:
+                                            AppSize.defaultContentsWidth * .7,
+                                        defaultIconCallback: () async {
+                                          controller.text = '';
+                                          p.setQuantity(null, index);
+                                          p.setMessage(null, index);
+                                        },
+                                        iconType: controller.text.isNotEmpty
+                                            ? InputIconType.DELETE
+                                            : null,
+                                        keybordType: TextInputType.number,
+                                        hintText: controller.text.isNotEmpty
+                                            ? controller.text
+                                            : tr('plz_enter'),
+                                        hintTextStyleCallBack: () =>
+                                            controller.text.isNotEmpty
+                                                ? AppTextStyle.default_16
+                                                : AppTextStyle.hint_16,
+                                        textEditingController: controller,
+                                        onChangeCallBack: (str) =>
+                                            p.setQuantity(str, index),
+                                        onSubmittedCallBack: (str) {
+                                          if (controller.text.isNotEmpty) {
+                                            p.setQuantityAndCheckPrice(
+                                                str, index);
+                                          }
+                                        },
+                                        unfoucsCallback: () async {
+                                          if (controller.text.isNotEmpty) {
+                                            p.setQuantityAndCheckPrice(
+                                                controller.text, index);
+                                          }
+                                        },
+                                        enable: true);
+                                  },
+                                ),
+                                Selector<BulkOrderDetailProvider, bool>(
+                                  selector: (context, provider) =>
+                                      provider
+                                          .editItemList[index].isShowLoading ??
+                                      false,
+                                  builder: (context, isLoadData, _) {
+                                    return isLoadData
+                                        ? Positioned(
+                                            child: SizedBox(
+                                                height: AppSize
+                                                    .iconSmallDefaultWidth,
+                                                width: AppSize
+                                                    .iconSmallDefaultWidth,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        strokeWidth: 1.0)))
+                                        : Container();
+                                  },
+                                )
+                              ],
                             );
                           },
-                        )
+                        ),
+                        // Selector<BulkOrderDetailProvider, double?>(
+                        //   selector: (context, provider) =>
+                        //       provider.editItemList[index].kwmeng,
+                        //   builder: (context, quantity, _) {
+                        //     return OrderItemInputWidget(
+                        //       onSubmittedCallBack: (str) =>
+                        //           p.setQuantityAndCheckPrice(str, index),
+                        //       deleteCallback: () {
+                        //         p.setQuantityAndCheckPrice(null, index);
+                        //         p.resetMessage(index);
+                        //       },
+                        //       icon: quantity == 0 ? null : InputIconType.DELETE,
+                        //       defaultValue: model.kwmeng!.toInt().toString(),
+                        //     );
+                        //   },
+                        // )
                       ],
                     )
                   : BaseInfoRowByKeyAndValue.build(tr('processing_quantity'),
@@ -430,19 +501,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                                       maxLines: 2,
                                       textAlign: TextAlign.left)
                                   : tuple.item2!
-                                      ? Padding(
-                                          padding: EdgeInsets.only(
-                                              left:
-                                                  AppSize.defaultContentsWidth *
-                                                      .2),
-                                          child: SizedBox(
-                                              height:
-                                                  AppSize.iconSmallDefaultWidth,
-                                              width:
-                                                  AppSize.iconSmallDefaultWidth,
-                                              child: CircularProgressIndicator(
-                                                  strokeWidth: 1.0)),
-                                        )
+                                      ? Container()
                                       : AppText.text(tuple.item1!,
                                           style: AppTextStyle.h4,
                                           maxLines: 2,
