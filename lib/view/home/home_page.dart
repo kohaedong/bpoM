@@ -8,6 +8,7 @@ import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/service/connect_service.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/home/notice_all_page.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
@@ -16,7 +17,6 @@ import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:medsalesportal/view/settings/settings_page.dart';
 import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/service/background_task_service.dart';
 import 'package:medsalesportal/view/home/provider/notice_provider.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (Platform.isAndroid) {
       disableCapture();
     }
-
+    ConnectService.startListener();
     WidgetsBinding.instance.addObserver(this);
   }
 

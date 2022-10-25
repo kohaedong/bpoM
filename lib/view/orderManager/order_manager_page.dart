@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-25 12:29:52
+ * Last Modified: 2022-10-26 08:30:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -277,13 +277,13 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
   Widget _buildSalseOfficeSelector(BuildContext context) {
     final p = context.read<OrderManagerPageProvider>();
     return Selector<OrderManagerPageProvider,
-        Tuple5<String?, EtCustomerModel?, EtStaffListModel?, String?, bool>>(
+        Tuple5<String?, EtCustomerModel?, EtStaffListModel?, String?, String?>>(
       selector: (context, provider) => Tuple5(
           provider.selectedProductFamily,
           provider.selectedCustomerModel,
           provider.selectedSalesPerson,
           provider.selectedSalseChannel,
-          provider.selectedSalseGroup == null),
+          provider.selectedSalseGroup),
       builder: (context, tuple, _) {
         return Column(
           children: [
@@ -292,7 +292,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
             BaseInputWidget(
               context: context,
               onTap: () {
-                if (CheckSuperAccount.isMultiAccount() && tuple.item5) {
+                if (CheckSuperAccount.isMultiAccount() && tuple.item5 == null) {
                   AppToast().show(
                       context,
                       tr('plz_select_something_first_1',
@@ -330,15 +330,16 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
               hintTextStyleCallBack: () => tuple.item2 != null
                   ? AppTextStyle.default_16
                   : AppTextStyle.hint_16,
-              popupSearchType:
-                  (CheckSuperAccount.isMultiAccount() ? !tuple.item5 : true) &&
-                          tuple.item1 != null &&
-                          tuple.item4 != null &&
-                          (CheckSuperAccount.isMultiAccountOrLeaderAccount()
-                              ? tuple.item3 != null
-                              : true)
-                      ? PopupSearchType.SEARCH_SALLER
-                      : PopupSearchType.DO_NOTHING,
+              popupSearchType: (CheckSuperAccount.isMultiAccount()
+                          ? tuple.item5 != null
+                          : true) &&
+                      tuple.item1 != null &&
+                      tuple.item4 != null &&
+                      (CheckSuperAccount.isMultiAccountOrLeaderAccount()
+                          ? tuple.item3 != null
+                          : true)
+                  ? PopupSearchType.SEARCH_SALLER
+                  : PopupSearchType.DO_NOTHING,
               isSelectedStrCallBack: (customer) {
                 return p.setCustomerModel(customer);
               },
@@ -351,8 +352,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         ? tuple.item3!.dptnm
                         : CacheService.getEsLogin()!.dptnm
                     : CacheService.getEsLogin()!.dptnm,
-                'vkgrp':
-                    p.selectedSalseGroup != null ? p.selectedSalseGroup : '',
+                'vkgrp': tuple.item5 ??
+                    (CheckSuperAccount.isMultiAccount() ? tr('all') : ''),
                 // 제품군팝업에 전체 노출여부
                 'isFamilyNotUseAll': true,
               },

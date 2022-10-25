@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-10-25 15:10:44
+ * Last Modified: 2022-10-26 08:08:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -101,8 +101,11 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                       isSelectedStrCallBack: (person) {
                         return p.setSalesPerson(person);
                       },
-                      bodyMap: {'dptnm': CacheService.getEsLogin()!.dptnm},
+                      // bodyMap: {'dptnm': CacheService.getEsLogin()!.dptnm},
                       enable: false,
+                      bodyMap: CheckSuperAccount.isMultiAccount()
+                          ? {'dptnm': ''}
+                          : null,
                     );
                   }),
               defaultSpacing(),

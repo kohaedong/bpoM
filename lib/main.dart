@@ -4,7 +4,6 @@ import 'package:medsalesportal/kolonApp.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/service/connect_service.dart';
 import 'package:medsalesportal/service/firebase_service.dart';
 import 'package:medsalesportal/service/screen_capture_service.dart';
 import 'package:medsalesportal/model/commonCode/t_code_model.dart';
@@ -20,7 +19,7 @@ void main() async {
   Hive.registerAdapter(TValuesModelAdapter());
   Hive.registerAdapter(TCustomerCustomsModelAdapter());
   ScreenCaptrueService.startListener();
-  ConnectService.startListener();
+
   CacheService.init();
   setSystemOverlay();
   start();

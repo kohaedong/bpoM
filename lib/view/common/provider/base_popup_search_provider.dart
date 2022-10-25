@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-25 15:12:18
+ * Last Modified: 2022-10-26 08:33:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -27,6 +27,7 @@ import 'package:medsalesportal/enums/popup_list_type.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/util/hive_select_data_util.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/util/is_super_account.dart';
 import 'package:medsalesportal/util/regular.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/commonCode/is_login_model.dart';
@@ -878,7 +879,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
       selectedProductFamily = bodyMap?['product_family'];
       selectedSalesGroup = bodyMap!['vkgrp'] == null || bodyMap!['vkgrp'] == ''
           ? tr('all')
-          : CacheService.getEsLogin()!.vkgrp;
+          : CheckSuperAccount.isMultiAccount()
+              ? bodyMap!['vkgrp']
+              : CacheService.getEsLogin()!.vkgrp;
       await getProductFamily();
       await getSalesGroup();
     }

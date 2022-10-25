@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/activity_state_provder.dart
  * Created Date: 2022-10-06 01:55:53
- * Last Modified: 2022-10-11 00:45:03
+ * Last Modified: 2022-10-26 07:45:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-10-25 15:20:54
+ * Last Modified: 2022-10-26 08:01:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -518,7 +518,13 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                 isSelectedStrCallBack: (persion) {
                   return p.setSalesPerson(persion);
                 },
-                bodyMap: {'dptnm': tuple.item2 == tr('all') ? '' : tuple.item2},
+                bodyMap: {
+                  'dptnm': tuple.item2 == tr('all')
+                      ? ''
+                      : CheckSuperAccount.isMultiAccount()
+                          ? tuple.item2
+                          : CacheService.getEsLogin()!.dptnm
+                },
                 enable: false,
               );
             }),
