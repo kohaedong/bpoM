@@ -40,3 +40,15 @@ flutter run --dart-define=KOLON_BUNDLE_ID=com.kolon.medsalesportal --dart-define
 
 - 개발
 flutter run --dart-define=KOLON_BUNDLE_ID=com.kolon.medsalesportaldev  --dart-define=KOLON_APP_VERSION_NAME=01.05.02  --dart-define=KOLON_APP_BASE_URL=https://appdev.kolon.com --dart-define=KOLON_APP_BUILD_TYPE=dev
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+firebase GoogleService-Info file 추가설명.
+- Android는 수정 할 필요 없이 기본파일 세팅되면 App내에서 Dev&Prod 구분하여 각각의 FirebaseApp 적용.
+- iOS는 현재 dev로 세팅되 있고 나중에 운녕 빌드시 project > environment 폴더에 저장된 GoogleService-Info-Prod.plist를 파일명 수정 후 info.plist 가 위치한 폴더에 저장한다. (Android 처럼 개발/운영 모두 한개의 파일로 묶어도 무방 할것 같습니다.)
+  
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+data model 신규생성 
+flutter pub run build_runner build --delete-conflicting-outputs

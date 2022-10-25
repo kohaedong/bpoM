@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart
  * Created Date: 2022-07-21 14:21:16
- * Last Modified: 2022-10-25 06:03:24
+ * Last Modified: 2022-10-25 13:56:50
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -39,6 +39,7 @@ class BulkOrderDetailProvider extends ChangeNotifier {
   bool isShowLoading = false;
   bool isShowShadow = true;
   bool isOrderSaved = false;
+  bool isFirstRun = true;
   bool isAnimationNotReady = true;
   bool isOpenBottomSheet = true;
   double orderTotal = 0.0;
@@ -51,6 +52,10 @@ class BulkOrderDetailProvider extends ChangeNotifier {
   void setIsReadyForAnimation() {
     isAnimationNotReady = !isAnimationNotReady;
     notifyListeners();
+  }
+
+  void setModelIsFirstRun(int index) {
+    editItemList[index].isFirstRun = false;
   }
 
   void setIsOpenBottomSheet() {
@@ -67,6 +72,7 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     } else {
       editItemList[index].kwmeng = 0;
     }
+    editItemList[index].isFirstRun = false;
     notifyListeners();
   }
 

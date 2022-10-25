@@ -229,6 +229,7 @@ class _SigninPageState extends State<SigninPage> {
                         isAutoLogin: false);
 
                     if (result.isSuccessful) {
+                      p.setAutoLogin();
                       Navigator.pushNamedAndRemoveUntil(
                           context, HomePage.routeName, (route) => false);
                     } else {
@@ -245,7 +246,7 @@ class _SigninPageState extends State<SigninPage> {
                             context, '${result.message}');
                       }
                     }
-                    p.setAutoLogin();
+
                     p.stopLoading();
                   } catch (e) {
                     p.stopLoading();
@@ -313,21 +314,25 @@ class _SigninPageState extends State<SigninPage> {
         builder: (context, _) {
           final p = context.read<SigninPageProvider>();
           final arguments = ModalRoute.of(context)!.settings.arguments;
-          if (arguments != null) {
-            arguments as Map<String, dynamic>;
-            id = arguments['id'];
-            pw = arguments['pw'];
-            var loginResult = arguments['loginResult'] as ResultModel;
-            if (loginResult.isNetworkError ?? false) {
-              AppDialog.showDangermessage(context, tr('check_network'));
-            } else if (loginResult.isServerError ?? false) {
-              AppDialog.showDangermessage(context, tr('server_error'));
-            } else if (loginResult.isShowErrorText ?? false) {
-              p.startErrorMessage(loginResult.message ?? '');
-            } else {
-              AppDialog.showDangermessage(context, '${loginResult.message}');
+          Future.delayed(Duration.zero, () async {
+            if (arguments != null && mounted) {
+              arguments as Map<String, dynamic>;
+              id = arguments['id'];
+              pw = arguments['pw'];
+              var loginResult = arguments['loginResult'] as ResultModel;
+              message = loginResult.message;
+              if (loginResult.isShowErrorText ?? false) {
+                p.startErrorMessage(loginResult.message ?? '');
+              }
+              // if (loginResult.isNetworkError ?? false) {
+              //   await AppDialog.showDangermessage(context, tr('check_network'));
+              // }
+              // if (loginResult.isServerError ?? false) {
+              //   await AppDialog.showDangermessage(context, tr('server_error'));
+              // }
+
             }
-          }
+          });
 
           return GestureDetector(
             behavior: HitTestBehavior.opaque,
@@ -347,11 +352,11 @@ class _SigninPageState extends State<SigninPage> {
                     if (snapshot.data!['pw'] != null) {
                       _passwordController.text = snapshot.data!['pw'];
                     }
-                    if (message != null) {
-                      Future.delayed(Duration.zero, () {
-                        AppDialog.showDangermessage(context, message!);
-                      });
-                    }
+                    Future.delayed(Duration.zero, () {
+                      if (message != null && mounted) {
+                        AppDialog.showDangermessage(context, '${message}');
+                      }
+                    });
                     return Stack(
                       children: [
                         SizedBox(

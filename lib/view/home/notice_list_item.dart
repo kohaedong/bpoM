@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/home_notice_list_item.dart
  * Created Date: 2022-01-04 00:52:36
- * Last Modified: 2022-10-14 15:07:00
+ * Last Modified: 2022-10-25 13:14:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -24,8 +24,10 @@ Widget homeNoticeListItem(BuildContext context, TableNoticeZLTSP0710Model model,
     int index, bool isHomeList, bool isShowLastPageText, bool isLastItem) {
   return InkWell(
       onTap: () async {
-        Navigator.pushNamed(context, NoticeDetailPage.routeName,
-            arguments: model.noticeNo);
+        Navigator.pushNamed(context, NoticeDetailPage.routeName, arguments: {
+          'noticeNumber': model.noticeNo,
+          'noticeTitle': model.nTitle
+        });
       },
       child: Column(
         children: [

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-10-23 18:39:52
+ * Last Modified: 2022-10-25 11:52:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,14 +13,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 
 typedef DiaLogCallBack = Function(bool);
@@ -105,30 +103,19 @@ class AppDialog {
         context,
         buildDialogContents(
             context,
-            SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: AppSize.padding),
-              child: Container(
-                constraints: BoxConstraints(maxHeight: AppSize.realHeight * .7),
-                alignment: Alignment.center,
-                height: height,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    AppImage.getImage(ImageType.INFO),
-                    defaultSpacing(),
-                    Expanded(
-                      child: AppText.text('$str',
-                          style: context
-                              .read<AppThemeProvider>()
-                              .themeData
-                              .textTheme
-                              .headline3!,
-                          maxLines: 50,
-                          textAlign: TextAlign.center),
-                    )
-                  ],
-                ),
+            Container(
+              alignment: Alignment.centerLeft,
+              height: height - AppSize.buttonHeight,
+              width: AppSize.defaultContentsWidth,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(child: AppImage.getImage(ImageType.INFO)),
+                  defaultSpacing(),
+                  AppText.text('$str',
+                      textAlign: TextAlign.center, maxLines: 50)
+                ],
               ),
             ),
             true,

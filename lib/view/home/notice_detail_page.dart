@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/home/notice_detail_page.dart
  * Created Date: 2022-07-05 13:17:36
- * Last Modified: 2022-10-18 08:41:22
+ * Last Modified: 2022-10-25 13:17:01
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/styles/export_common.dart';
@@ -42,16 +43,14 @@ class _NoticeDetailPageState extends State<NoticeDetailPage> {
     super.dispose();
   }
 
-  Widget _buildNoticeTitle(BuildContext context) {
+  Widget _buildNoticeTitle(BuildContext context, String title) {
     return Consumer<NoticeProvider>(builder: (context, provider, _) {
-      final textModel = provider.homeNoticeDetailResponseModel!.tText!.first;
-
       final noticeModel =
           provider.homeNoticeDetailResponseModel!.tZLTSP0700!.single;
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppText.text(textModel.ztext!,
+          AppText.text(title,
               style: AppTextStyle.bold_18,
               maxLines: 4,
               textAlign: TextAlign.start),
@@ -102,7 +101,10 @@ class _NoticeDetailPageState extends State<NoticeDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final noticeNumber = ModalRoute.of(context)!.settings.arguments as String;
+    final arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final noticeNumber = arguments['noticeNumber'];
+    final noticeTitle = arguments['noticeTitle'];
     return ChangeNotifierProvider(
       create: (context) => NoticeProvider(),
       builder: (context, _) {
@@ -134,7 +136,7 @@ class _NoticeDetailPageState extends State<NoticeDetailPage> {
                       padding: AppSize.defaultSidePadding,
                       child: ListView(
                         children: [
-                          _buildNoticeTitle(context),
+                          _buildNoticeTitle(context, noticeTitle),
                           _buildDividerLine(),
                           _buildNoticeBody(context),
                         ],

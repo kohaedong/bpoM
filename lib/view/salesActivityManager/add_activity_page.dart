@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-25 04:51:36
+ * Last Modified: 2022-10-25 14:57:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -669,20 +669,19 @@ class _AddActivityPageState extends State<AddActivityPage> {
       height: AppSize.defaultCheckBoxHeight - 5,
       width: AppSize.defaultCheckBoxHeight - 5,
       decoration: BoxDecoration(
-        color:
-            isNotSuggetedItem && p.isDoNothing ? AppColors.unReadyButton : null,
+        color: isNotToday && isNotSuggetedItem ? AppColors.unReadyButton : null,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Checkbox(
           activeColor: !isNotToday || !isNotSuggetedItem
               ? AppColors.primary
               : AppColors.unReadyButton,
-          checkColor: !isNotToday || !isNotSuggetedItem
-              ? null
-              : AppColors.unReadyText.withOpacity(.2),
+          checkColor: isNotToday && isNotSuggetedItem
+              ? AppColors.unReadyText.withOpacity(.2)
+              : null,
           side: !isNotToday || !isNotSuggetedItem
               ? BorderSide(color: Colors.grey)
-              : null,
+              : BorderSide.none,
           value: isChecked,
           onChanged: (val) {
             if (isWithSuggetedItem ?? false) {
@@ -775,13 +774,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 },
                 // 멀티계정 전부 조회.
                 // 팀장계정 조속팀 조회.
-                bodyMap:
-                    //  CheckSuperAccount.isMultiAccount()
-                    //     ? {'dptnm': ''}
-                    //     : CheckSuperAccount.isLeaderAccount()
-                    //         ? {'dptnm': p.dptnm}
-                    //         : null,
-                    {'not_dptnm': 'Y'},
+                bodyMap: {'dptnm': ''},
                 enable: false,
               );
             })
@@ -1170,6 +1163,40 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   defaultSpacing(),
                   CustomerinfoWidget.buildSubTitle(
                       context, '${tr('activity_type_2')}'),
+                  defaultSpacing(times: 2),
+                  Padding(
+                    padding: AppSize.defaultSidePadding,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Selector<AddActivityPageProvider, bool>(
+                          selector: (context, provider) =>
+                              provider.isVisitPharmacy,
+                          builder: (context, isVisitPharmacy, _) {
+                            return SizedBox(
+                              height: AppSize.defaultCheckBoxHeight - 5,
+                              width: AppSize.defaultCheckBoxHeight - 5,
+                              child: Checkbox(
+                                  activeColor: AppColors.primary,
+                                  side: BorderSide(color: Colors.grey),
+                                  value: isVisitPharmacy,
+                                  onChanged: (val) {
+                                    final p =
+                                        context.read<AddActivityPageProvider>();
+                                    p.setIsVisitPharmacy(val);
+                                  }),
+                            );
+                          },
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                right: AppSize.defaultListItemSpacing)),
+                        AppText.listViewText(tr('visit_pharmacy')),
+                        Spacer()
+                      ],
+                    ),
+                  ),
+                  defaultSpacing(),
                   Padding(
                       padding: AppSize.defaultSidePadding,
                       child: Column(

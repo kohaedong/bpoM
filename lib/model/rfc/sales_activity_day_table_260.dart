@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/sales_activity_day_table_260.dart
  * Created Date: 2022-08-03 10:06:46
- * Last Modified: 2022-09-30 18:08:57
+ * Last Modified: 2022-10-25 14:10:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,6 +18,8 @@ part 'sales_activity_day_table_260.g.dart';
 class SalesActivityDayTable260 {
   @JsonKey(name: 'MANDT')
   String? mandt;
+  @JsonKey(name: 'PVISIT')
+  String? pvisit;
   @JsonKey(name: 'ADATE')
   String? adate;
   @JsonKey(name: 'ZKMTRUST')
@@ -114,6 +116,7 @@ class SalesActivityDayTable260 {
   SalesActivityDayTable260(
       {this.mandt,
       this.actcat,
+      this.pvisit,
       this.actcat1,
       this.actcat2,
       this.actcat3,

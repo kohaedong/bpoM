@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-10-23 18:06:37
+ * Last Modified: 2022-10-25 15:06:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -37,7 +37,7 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
   String? selectedStartDate;
   String? selectedEndDate;
   String? selectedOrderStatus;
-  String? selectedSalseGroup;
+  // String? selectedSalseGroup;
   String? selectedProductsFamily;
   EtStaffListModel? selectedSalesPerson;
   EtCustomerModel? selectedCustomerModel;
@@ -105,7 +105,7 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> initPageData() async {
-    if (!CheckSuperAccount.isMultiAccount()) await searchPersons();
+    await searchPersons();
     groupDataList = await HiveService.getSalesGroup();
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
@@ -125,10 +125,10 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     });
   }
 
-  void setSalseGroup(String? str) {
-    selectedSalseGroup = str;
-    notifyListeners();
-  }
+  // void setSalseGroup(String? str) {
+  //   selectedSalseGroup = str;
+  //   notifyListeners();
+  // }
 
   void setSalesPerson(dynamic person) {
     person as EtStaffListModel?;
@@ -150,9 +150,9 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
           if (groupDataList!
               .where((group) => group.contains(selectedSalesPerson!.dptnm!))
               .isNotEmpty) {
-            selectedSalseGroup = selectedSalesPerson!.dptnm;
+            // selectedSalseGroup = selectedSalesPerson!.dptnm;
           } else {
-            selectedSalseGroup = tr('all');
+            // selectedSalseGroup = tr('all');
           }
         }
       }

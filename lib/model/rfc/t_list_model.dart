@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/salse_activity_result_model.dart
  * Created Date: 2022-07-07 09:29:23
- * Last Modified: 2022-07-07 11:24:57
+ * Last Modified: 2022-10-25 14:47:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,6 +22,8 @@ class TlistModel {
   String? name;
   @JsonKey(name: 'SEQNO')
   String? seqno;
+  @JsonKey(name: 'PVISIT')
+  String? pvisit;
   @JsonKey(name: 'STPNO')
   String? stpno;
   @JsonKey(name: 'ADATE')
@@ -132,6 +134,7 @@ class TlistModel {
       this.bzactno,
       this.cfmFlag,
       this.comnt,
+      this.pvisit,
       this.dist,
       this.faddcat,
       this.faddcatNm,

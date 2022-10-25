@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-25 05:13:23
+ * Last Modified: 2022-10-25 12:29:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -243,7 +243,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                   AppToast().show(
                       context,
                       tr('plz_select_something_first_1',
-                          args: [tr('sales_person'), '']));
+                          args: [tr('manager'), '']));
                 }
               },
               isNotInsertAll: CheckSuperAccount.isMultiAccountOrLeaderAccount()

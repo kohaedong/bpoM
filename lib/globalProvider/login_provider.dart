@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
- * Last Modified: 2022-10-24 20:34:57
+ * Last Modified: 2022-10-25 12:25:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -155,6 +155,7 @@ class LoginProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> saveUserIdAndPasswordToSSO() async {
+    pr('in');
     if (Platform.isIOS) {
       final idResult = await iosPlatform.invokeMethod('setUserId', userId!);
       final passwordResult =
@@ -509,9 +510,9 @@ class LoginProvider extends ChangeNotifier {
     if (!result.isSuccessful) return result;
     result = await requestToken();
     if (!result.isSuccessful) return result;
-    result = await saveUserIdAndPasswordToSSO();
-    if (!result.isSuccessful) return result;
     result = await sapSignIn();
+    if (!result.isSuccessful) return result;
+    result = await saveUserIdAndPasswordToSSO();
     if (!result.isSuccessful) return result;
     result = await saveLoginInfo();
     if (!result.isSuccessful) return result;

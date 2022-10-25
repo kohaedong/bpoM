@@ -11,6 +11,7 @@ SalesActivityDayTable260 _$SalesActivityDayTable260FromJson(
     SalesActivityDayTable260(
       mandt: json['MANDT'] as String?,
       actcat: json['ACTCAT'] as String?,
+      pvisit: json['PVISIT'] as String?,
       actcat1: json['ACTCAT1'] as String?,
       actcat2: json['ACTCAT2'] as String?,
       actcat3: json['ACTCAT3'] as String?,
@@ -62,6 +63,7 @@ Map<String, dynamic> _$SalesActivityDayTable260ToJson(
         SalesActivityDayTable260 instance) =>
     <String, dynamic>{
       'MANDT': instance.mandt,
+      'PVISIT': instance.pvisit,
       'ADATE': instance.adate,
       'ZKMTRUST': instance.zkmtrust,
       'BZACTNO': instance.bzactno,

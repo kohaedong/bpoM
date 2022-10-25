@@ -54,6 +54,7 @@ BulkOrderDetailTItemModel _$BulkOrderDetailTItemModelFromJson(
       json['ZSTATUS'] as String?,
       json['ZSTSTX'] as String?,
       json['isShowLoading'] as bool?,
+      json['isFirstRun'] as bool?,
     );
 
 Map<String, dynamic> _$BulkOrderDetailTItemModelToJson(
@@ -104,4 +105,5 @@ Map<String, dynamic> _$BulkOrderDetailTItemModelToJson(
       'SET_UMREZ': instance.setUmrez,
       'BOX_UMREZ': instance.boxUmrez,
       'isShowLoading': instance.isShowLoading,
+      'isFirstRun': instance.isFirstRun,
     };

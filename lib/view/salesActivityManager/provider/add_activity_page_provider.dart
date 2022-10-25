@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-25 06:15:37
+ * Last Modified: 2022-10-25 14:20:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -71,6 +71,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   bool? isLockOtherSalerSelector;
   bool isLoadData = false;
   bool isModified = false;
+  bool isVisitPharmacy = false;
   bool isVisit = false;
   bool isWithTeamLeader = false;
   bool isUpdate = false;
@@ -112,23 +113,8 @@ class AddActivityPageProvider extends ChangeNotifier {
     distanceModel = AddActivityDistanceModel();
     fromParentResponseModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
-    if (fromParentResponseModel!.table280 != null) {
-      fromParentResponseModel!.table280!.forEach((element) {
-        pr('280   ::: ${element.toJson()}');
-      });
-    } else {
-      pr('null');
-    }
-    if (fromParentResponseModel!.table361 != null) {
-      fromParentResponseModel!.table361!.forEach((element) {
-        pr('table361   ::: ${element.toJson()}');
-      });
-    } else {
-      pr('null');
-    }
     activityStatus = status;
     pr(activityStatus);
-
     if (seqno != null) {
       var temp = fromParentResponseModel!.table260!
           .where((table) => table.seqno == seqno)
@@ -137,6 +123,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       var data = SalesActivityDayTable260.fromJson(temp.toJson());
       currenSeqNo = data.seqno;
       isVisit = data.xvisit != null && data.xvisit == 'Y';
+      isVisitPharmacy = data.pvisit != null && data.pvisit == 'Y';
       review = data.comntM;
       selectedKunnr = EtKunnrModel();
       selectedKunnr!.name = data.zskunnrNm;
@@ -272,6 +259,11 @@ class AddActivityPageProvider extends ChangeNotifier {
     }
     isModified = false;
     return ResultModel(true);
+  }
+
+  void setIsVisitPharmacy(bool? val) {
+    isVisitPharmacy = val ?? false;
+    notifyListeners();
   }
 
   void setAnotherSaler(saler) {
@@ -471,8 +463,6 @@ class AddActivityPageProvider extends ChangeNotifier {
   Future<List<String>> getActivityType() async {
     if (activityList == null) {
       activityList = await HiveService.getActivityType();
-      //! 추가  하드코딩!!!!!!
-      activityList!.add('약국방문-A14');
       pr(activityList);
     }
     var temp = <String>[];
@@ -620,6 +610,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       t260.zskunnrNm = selectedKunnr!.name;
       t260.zaddr = selectedKunnr!.zaddName1;
       t260.xvisit = isVisit ? 'Y' : 'N';
+      t260.pvisit = isVisitPharmacy ? 'Y' : '';
       t260.zstatus = selectedKunnr!.zstatus;
       t260.zkmno = selectedKeyMan!.zkmno;
       t260.zkmnoNm = selectedKeyMan!.zkmnoNm;

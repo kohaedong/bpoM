@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-10-24 02:12:58
+ * Last Modified: 2022-10-25 15:23:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -33,7 +33,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirstRun = true;
   bool? hasResultData;
-  String? selectedSalseGroup;
+  // String? selectedSalseGroup;
   String? selectedStartDate;
   String? selectedEndDate;
   String? selectedProcessingStatus;
@@ -119,9 +119,8 @@ class OrderSearchPageProvider extends ChangeNotifier {
 
   Future<ResultModel> initPageData({EtStaffListModel? person}) async {
     isLoadData = true;
-
     if (person == null) {
-      if (!CheckSuperAccount.isMultiAccount()) await searchPerson();
+      await searchPerson();
     } else {
       selectedSalesPerson = person;
     }
@@ -145,12 +144,12 @@ class OrderSearchPageProvider extends ChangeNotifier {
     });
   }
 
-  void setSalseGroup(String? str) {
-    selectedSalseGroup = str;
-    selectedSalesPerson = null;
-    selectedCustomerModel = null;
-    notifyListeners();
-  }
+  // void setSalseGroup(String? str) {
+  //   selectedSalseGroup = str;
+  //   selectedSalesPerson = null;
+  //   selectedCustomerModel = null;
+  //   notifyListeners();
+  // }
 
   void setSalesPerson(dynamic str) {
     str as EtStaffListModel?;
@@ -172,9 +171,9 @@ class OrderSearchPageProvider extends ChangeNotifier {
           if (groupDataList!
               .where((group) => group.contains(selectedSalesPerson!.dptnm!))
               .isNotEmpty) {
-            selectedSalseGroup = selectedSalesPerson!.dptnm;
+            // selectedSalseGroup = selectedSalesPerson!.dptnm;
           } else {
-            selectedSalseGroup = tr('all');
+            // selectedSalseGroup = tr('all');
           }
         }
       }

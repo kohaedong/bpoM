@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/bulk_order_detail_t_item_model.dart
  * Created Date: 2022-07-21 15:02:24
- * Last Modified: 2022-07-27 10:15:24
+ * Last Modified: 2022-10-25 13:48:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -106,6 +106,7 @@ class BulkOrderDetailTItemModel {
   @JsonKey(name: 'BOX_UMREZ')
   int? boxUmrez;
   bool? isShowLoading;
+  bool? isFirstRun;
 
   BulkOrderDetailTItemModel(
       this.aedat,
@@ -152,7 +153,8 @@ class BulkOrderDetailTItemModel {
       this.zreqpo,
       this.zstatus,
       this.zststx,
-      this.isShowLoading);
+      this.isShowLoading,
+      this.isFirstRun);
   factory BulkOrderDetailTItemModel.fromJson(Object? json) =>
       _$BulkOrderDetailTItemModelFromJson(json as Map<String, dynamic>);
 

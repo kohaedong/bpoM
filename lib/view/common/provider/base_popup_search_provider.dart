@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-23 18:30:44
+ * Last Modified: 2022-10-25 15:12:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -301,7 +301,6 @@ class BasePopupSearchProvider extends ChangeNotifier {
     final esLogin = CacheService.getEsLogin();
     Map<String, dynamic>? body;
     var dptnm = bodyMap?['dptnm'];
-    var isNotDptnm = bodyMap?['not_dptnm'];
     body = {
       "methodName": RequestType.SEARCH_STAFF.serverMethod,
       "methodParamMap": {
@@ -309,7 +308,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
         "IV_SNAME": personInputText != null
             ? RegExpUtil.removeSpace(personInputText!)
             : '',
-        "IV_DPTNM": isNotDptnm ?? dptnm ?? esLogin!.dptnm,
+        "IV_DPTNM": dptnm ?? esLogin!.dptnm,
         "IS_LOGIN": isLogin,
         "resultTables": RequestType.SEARCH_STAFF.resultTable,
         "functionName": RequestType.SEARCH_STAFF.serverMethod,
@@ -877,8 +876,9 @@ class BasePopupSearchProvider extends ChangeNotifier {
       this.bodyMap = bodyMaps;
       selectedSalesPerson = bodyMap?['staff'];
       selectedProductFamily = bodyMap?['product_family'];
-      selectedSalesGroup =
-          bodyMap!['vkgrp'] ?? CacheService.getEsLogin()!.vkgrp;
+      selectedSalesGroup = bodyMap!['vkgrp'] == null || bodyMap!['vkgrp'] == ''
+          ? tr('all')
+          : CacheService.getEsLogin()!.vkgrp;
       await getProductFamily();
       await getSalesGroup();
     }
