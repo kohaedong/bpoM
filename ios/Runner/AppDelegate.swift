@@ -1,7 +1,7 @@
 import UIKit
 import Flutter
 import Kolonbase
-import workmanager
+// import workmanager
 enum ChannelName {
   static let channelName = "kolonbase/keychain" 
   static let eventName = "kolonbase/keychain/event"
@@ -35,10 +35,10 @@ enum KolonbaseErrorCode {
 
     GeneratedPluginRegistrant.register(with: self)
     // background prossess
-    WorkmanagerPlugin.setPluginRegistrantCallback { registry in
-            GeneratedPluginRegistrant.register(with: registry)
-        }
-        WorkmanagerPlugin.registerTask(withIdentifier: "com.kolon.medsalesportaldev.taskId")
+    // WorkmanagerPlugin.setPluginRegistrantCallback { registry in
+    //         GeneratedPluginRegistrant.register(with: registry)
+    //     }
+    //     WorkmanagerPlugin.registerTask(withIdentifier: "com.kolon.medsalesportaldev.taskId")
        
 //      KB.Detect.showWaterMark()
 //      KB.Detect.setScreenshotDetector()  

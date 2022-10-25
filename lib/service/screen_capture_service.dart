@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/screen_capture_util.dart
  * Created Date: 2021-12-14 00:55:19
- * Last Modified: 2022-10-25 11:44:36
+ * Last Modified: 2022-10-26 06:37:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'dart:async';
 import 'dart:ui' as ui;
 import 'dart:io';
 import 'dart:convert';
@@ -29,7 +30,18 @@ import 'package:medsalesportal/view/common/function_of_print.dart';
 // 캡쳐방지
 typedef ScreenCaptrueCallback = Future<Uint8List?> Function();
 
-class ScreenCaptrueUtil {
+class ScreenCaptrueService {
+  factory ScreenCaptrueService() => _sharedInstance();
+  static ScreenCaptrueService? _instance;
+  ScreenCaptrueService._();
+  static ScreenCaptrueService _sharedInstance() {
+    if (_instance == null) {
+      _instance = ScreenCaptrueService._();
+    }
+    return _instance!;
+  }
+
+  static late StreamSubscription<dynamic> captrueSubscription;
   static Future<void> sendImageToServer() async {
     final bytes = await getBitmapFromContext();
     print(bytes);
@@ -69,11 +81,12 @@ class ScreenCaptrueUtil {
     });
   }
 
-  static void screenListen() async {
+  static void startListener() async {
     if (Platform.isIOS) {
       var lock = false;
       EventChannel iosEvent = EventChannel('kolonbase/keychain/event');
-      iosEvent.receiveBroadcastStream("screen").listen((result) async {
+      captrueSubscription =
+          iosEvent.receiveBroadcastStream("screen").listen((result) async {
         CacheService.setIsDisableUpdate(true);
         if (result != null) {
           pr('listen');
@@ -100,5 +113,9 @@ class ScreenCaptrueUtil {
         print(e);
       });
     }
+  }
+
+  static void stopListener() {
+    captrueSubscription.cancel();
   }
 }

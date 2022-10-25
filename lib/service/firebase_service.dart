@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/firebase_service.dart
  * Created Date: 2022-10-18 15:55:12
- * Last Modified: 2022-10-25 03:39:34
+ * Last Modified: 2022-10-26 06:28:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -36,9 +36,12 @@ class FirebaseService {
   static bool isPermissed = false;
   static String fcmTocken = '';
   static late FirebaseMessaging messaging;
-  static late Stream<String> fcmRefreshTokenStream;
+  static late Stream<String> fcmTokenStream;
   static late Stream<RemoteMessage> messageStream;
   static late Stream<RemoteMessage> openMessageStream;
+  static late StreamSubscription<String> tockenSubscription;
+  static late StreamSubscription<RemoteMessage> messageSubscription;
+  static late StreamSubscription<RemoteMessage> openMessageSubscription;
   //초기화  --> 앱이 첫실행시 한번만 호출
   static Future<bool> init() async {
     await Firebase.initializeApp(
@@ -47,10 +50,11 @@ class FirebaseService {
         .then((firebaseApp) async {
       messaging = FirebaseMessaging.instance;
       messageStream = FirebaseMessaging.onMessage;
-      fcmRefreshTokenStream = messaging.onTokenRefresh;
+      fcmTokenStream = messaging.onTokenRefresh;
       openMessageStream = FirebaseMessaging.onMessageOpenedApp;
       // await requstFcmPermission();
     });
+    addListenner();
     return true;
   }
 
@@ -67,9 +71,15 @@ class FirebaseService {
     return true;
   }
 
-  static void addListennr() {
+  static void addListenner() {
     FirebaseMessaging.onBackgroundMessage(backgroundCallback);
     startFirebaseMessageListenner();
+  }
+
+  static void stopListener() {
+    tockenSubscription.cancel();
+    messageSubscription.cancel();
+    openMessageSubscription.cancel();
   }
 
   @pragma('vm:entry-point')
@@ -98,13 +108,13 @@ class FirebaseService {
 
   static Future<void> startFirebaseMessageListenner() async {
     await setIOSNoticeOption();
-    fcmRefreshTokenStream.listen((newToken) async {
+    tockenSubscription = fcmTokenStream.listen((newToken) async {
       pr("fcm 토큰 갱신 ---> $newToken");
       fcmTocken = newToken;
       final lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
       lp.sendFcmToken();
     });
-    messageStream.listen((message) {
+    messageSubscription = messageStream.listen((message) {
       var notification = message.notification;
       pr(notification);
       pr(message.notification!.apple);
@@ -113,49 +123,31 @@ class FirebaseService {
       if (notification != null && android != null && !kIsWeb) {
         pr(message.data);
         pr(message.messageId);
-        // send data to globle message provider
       } else if (notification != null && ios != null && !kIsWeb) {
-        // ios push notice ui show
-        // send data to globle message provider
+        //
       }
     });
-    openMessageStream.listen((message) {
-      // on open push notice Event added!
-      // route to contents page.
+    openMessageSubscription = openMessageStream.listen((message) {
+      // on message tap event
     });
+    await getToken();
   }
 }
 
 class DefaultFirebaseOptions {
   static final isDev = (KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev');
   static FirebaseOptions get currentPlatform {
-    if (kIsWeb) {
-      return web;
-    }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return isDev ? androidDev : android;
       case TargetPlatform.iOS:
         return isDev ? iosDev : ios;
-      case TargetPlatform.macOS:
-        return isDev ? macosDev : macos;
       default:
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
         );
     }
   }
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: '',
-    appId: '',
-    messagingSenderId: '',
-    projectId: '',
-    authDomain: '',
-    databaseURL: '',
-    storageBucket: '',
-    measurementId: '',
-  );
 
   static const FirebaseOptions androidDev = FirebaseOptions(
     appId: '1:1013306379146:android:d2bb5fb291cacad5',
@@ -178,19 +170,6 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.kolon.medsalesportaldev',
   );
 
-  static const FirebaseOptions macosDev = FirebaseOptions(
-    apiKey: 'AIzaSyBUPO0Uz_A34b0vvgNmlEkeNff89Z615B8',
-    appId: '1:1013306379146:ios:e1f0465e9bdc0499b65673',
-    messagingSenderId: '1013306379146',
-    projectId: 'medsalesportal',
-    databaseURL: 'https://medsalesportal.firebaseio.com',
-    storageBucket: 'medsalesportal.appspot.com',
-    androidClientId:
-        '406099696497-tvtvuiqogct1gs1s6lh114jeps7hpjm5.apps.googleusercontent.com',
-    iosClientId:
-        '1013306379146-q3mthqstu5fggas3re6ca3hjrerbn3cg.apps.googleusercontent.com',
-    iosBundleId: 'com.kolon.medsalesportal',
-  );
   static const FirebaseOptions android = FirebaseOptions(
     appId: '1:1013306379146:android:8dd20aad5e4f646b',
     apiKey: 'AIzaSyCnrGBmoyFwfYBXkTF9T-nlzkXWY2_KCk0',
@@ -207,20 +186,6 @@ class DefaultFirebaseOptions {
     storageBucket: 'medsalesportal.appspot.com',
     androidClientId:
         'com.googleusercontent.apps.1013306379146-q3mthqstu5fggas3re6ca3hjrerbn3cg',
-    iosClientId:
-        '1013306379146-q3mthqstu5fggas3re6ca3hjrerbn3cg.apps.googleusercontent.com',
-    iosBundleId: 'com.kolon.medsalesportal',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBUPO0Uz_A34b0vvgNmlEkeNff89Z615B8',
-    appId: '1:1013306379146:ios:e1f0465e9bdc0499b65673',
-    messagingSenderId: '1013306379146',
-    projectId: 'medsalesportal',
-    databaseURL: 'https://medsalesportal.firebaseio.com',
-    storageBucket: 'medsalesportal.appspot.com',
-    androidClientId:
-        '406099696497-tvtvuiqogct1gs1s6lh114jeps7hpjm5.apps.googleusercontent.com',
     iosClientId:
         '1013306379146-q3mthqstu5fggas3re6ca3hjrerbn3cg.apps.googleusercontent.com',
     iosBundleId: 'com.kolon.medsalesportal',

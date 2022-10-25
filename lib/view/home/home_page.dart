@@ -73,18 +73,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(lifeCycle);
     var _paused = (lifeCycle == AppLifecycleState.paused);
     var _detached = (lifeCycle == AppLifecycleState.detached);
-    var _inactive = (lifeCycle == AppLifecycleState.inactive);
+    // var _inactive = (lifeCycle == AppLifecycleState.inactive);
     var _isForeground = (lifeCycle == AppLifecycleState.resumed);
     if (_paused || _detached) return;
-    if (_inactive) {
-      pr('addTask !!!!!!!!!!!!!');
-      await BackgroundTaskService.addTask();
-      return;
-    }
-    if (_isForeground) {
-      pr('cancel task!!!!!!!!!!');
-      await BackgroundTaskService.cancelAllTask();
-    }
+    // if (_inactive) {
+    //   pr('addTask !!!!!!!!!!!!!');
+    //   await BackgroundTaskService.addTask();
+    //   return;
+    // }
+    // if (_isForeground) {
+    //   pr('cancel task!!!!!!!!!!');
+    //   await BackgroundTaskService.cancelAllTask();
+    // }
     final arguments = ModalRoute.of(context)!.settings.arguments;
     // update or notice 확인 완료 여부.
     final isCheckDone = CacheService.isUpdateAndNoticeCheckDone();
@@ -350,8 +350,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    // print('in');
-
     return ChangeNotifierProvider(
       create: (context) => NoticeProvider(),
       builder: (context, _) {
