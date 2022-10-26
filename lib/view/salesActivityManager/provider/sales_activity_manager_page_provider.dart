@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-20 13:20:11
+ * Last Modified: 2022-10-26 10:24:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -380,6 +380,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     };
     final result = await _api.request(body: _body);
     if (result == null || result.statusCode != 200) {
+      isLoadMonthData = false;
+      notifyListeners();
       return ResultModel(false,
           isNetworkError: result?.statusCode == -2,
           isServerError: result?.statusCode == -1);
@@ -389,6 +391,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
           SearchKeyResponseModel.fromJson(result.body['data']);
       return ResultModel(true);
     }
+    isLoadMonthData = false;
+    notifyListeners();
     return ResultModel(false);
   }
 
@@ -426,9 +430,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     final result = await _api.request(body: _body);
     if (result == null || result.statusCode != 200) {
       isLoadMonthData = false;
-      if (isWithLoading != null && isWithLoading) {
-        notifyListeners();
-      }
+      notifyListeners();
       return ResultModel(false,
           isNetworkError: result?.statusCode == -2,
           isServerError: result?.statusCode == -1);
@@ -465,9 +467,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         return ResultModel(true);
       }
     }
-    if (isWithLoading != null && isWithLoading) {
-      isLoadMonthData = false;
-    }
+    isLoadMonthData = false;
     notifyListeners();
     return ResultModel(false);
   }

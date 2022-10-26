@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/api_service.dart
  * Created Date: 2021-08-22 21:53:15
- * Last Modified: 2022-10-26 05:41:03
+ * Last Modified: 2022-10-26 10:14:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,8 +12,12 @@
  */
 import 'dart:io';
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
+import 'package:medsalesportal/globalProvider/connect_status_provider.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/util/log_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
@@ -21,6 +25,9 @@ import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/http/request_result.dart';
 import 'package:medsalesportal/service/deviceInfo_service.dart';
 import 'package:medsalesportal/service/local_file_servicer.dart';
+import 'package:provider/provider.dart';
+
+import '../view/common/base_app_dialog.dart';
 
 // * 서버 에러 statusCode -1 으로 리턴.
 // * 넷트워크 에러 statusCode  99 으로  리턴.
@@ -238,8 +245,16 @@ class ApiService {
       {Map<String, dynamic>? body,
       Map<String, dynamic>? params,
       String? passingUrl}) async {
-    var notConnected = 1 + 1 == 3;
+    final cp =
+        KeyService.baseAppKey.currentContext!.read<ConnectStatusProvider>();
+    var status = await cp.currenStream;
+    var notConnected = status == null
+        ? !(await cp.checkFirstStatus)
+        : status != ConnectivityResult.mobile ||
+            status != ConnectivityResult.wifi;
     if (notConnected) {
+      // AppDialog.showDangermessage(
+      //     KeyService.baseAppKey.currentContext!, tr('check_network'));
       return RequestResult(-2, null, 'networkError',
           errorMessage: 'networkError');
     } else {

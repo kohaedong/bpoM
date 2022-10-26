@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:medsalesportal/view/common/function_of_stop_or_start_listener.dart';
+
 import './home_icon_map.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -73,18 +75,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(lifeCycle);
     var _paused = (lifeCycle == AppLifecycleState.paused);
     var _detached = (lifeCycle == AppLifecycleState.detached);
-    // var _inactive = (lifeCycle == AppLifecycleState.inactive);
+    var _inactive = (lifeCycle == AppLifecycleState.inactive);
     var _isForeground = (lifeCycle == AppLifecycleState.resumed);
     if (_paused || _detached) return;
-    // if (_inactive) {
-    //   pr('addTask !!!!!!!!!!!!!');
-    //   await BackgroundTaskService.addTask();
-    //   return;
-    // }
-    // if (_isForeground) {
-    //   pr('cancel task!!!!!!!!!!');
-    //   await BackgroundTaskService.cancelAllTask();
-    // }
+    if (_inactive) {
+      pr('addTask !!!!!!!!!!!!!');
+      await stopAllListener();
+      return;
+    }
+    if (_isForeground) {
+      pr('cancel task!!!!!!!!!!');
+      startAllListener();
+    }
     final arguments = ModalRoute.of(context)!.settings.arguments;
     // update or notice 확인 완료 여부.
     final isCheckDone = CacheService.isUpdateAndNoticeCheckDone();
@@ -134,7 +136,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       if (!lp.isPermidedSalseGroup) {
                         AppToast().show(context, '${tr('permission_denied')}');
                       } else {
-                        pr('sb');
                         Navigator.pushNamed(context, map.value.routeName);
                       }
                     } else {

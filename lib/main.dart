@@ -19,7 +19,6 @@ void main() async {
   Hive.registerAdapter(TValuesModelAdapter());
   Hive.registerAdapter(TCustomerCustomsModelAdapter());
   ScreenCaptrueService.startListener();
-
   CacheService.init();
   setSystemOverlay();
   start();

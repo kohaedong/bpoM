@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/screen_capture_util.dart
  * Created Date: 2021-12-14 00:55:19
- * Last Modified: 2022-10-26 06:37:27
+ * Last Modified: 2022-10-26 09:05:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -41,7 +41,7 @@ class ScreenCaptrueService {
     return _instance!;
   }
 
-  static late StreamSubscription<dynamic> captrueSubscription;
+  static StreamSubscription<dynamic>? captrueSubscription;
   static Future<void> sendImageToServer() async {
     final bytes = await getBitmapFromContext();
     print(bytes);
@@ -116,6 +116,6 @@ class ScreenCaptrueService {
   }
 
   static void stopListener() {
-    captrueSubscription.cancel();
+    captrueSubscription?.cancel();
   }
 }

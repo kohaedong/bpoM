@@ -52,10 +52,10 @@ class SettingsProvider extends ChangeNotifier {
   }
 
   Future<void> checkUpdate() async {
-    var updateAndNoticeProvider = UpdateAndNoticeProvider();
+    var updateAndNoticeProvider =
+        KeyService.baseAppKey.currentContext!.read<UpdateAndNoticeProvider>();
     final result = await updateAndNoticeProvider.checkUpdate();
     updateInfo = result.updateData!.model;
-    updateAndNoticeProvider.dispose();
   }
 
   List<String> get timePickerHourList {

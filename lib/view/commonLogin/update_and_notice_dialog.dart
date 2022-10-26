@@ -48,28 +48,22 @@ class CheckUpdateAndNoticeService {
           : 'http://20.214.160.118';
       await AppDialog.showPopup(
           context,
-          ChangeNotifierProvider(
-            create: (context) => UpdateAndNoticeProvider(),
-            builder: (context, _) {
-              return SafeArea(
-                  child: Column(
-                children: [
-                  Expanded(
-                      child:
-                          BaseWebView('$specialNoticeUri${data['noticeUri']}')),
-                  AppStyles.buildButton(
-                      context,
-                      tr('close'),
-                      AppSize.realWidth,
-                      AppColors.primary,
-                      AppTextStyle.menu_18(AppColors.whiteText),
-                      0, () {
-                    data['isAppCanUse'] ? Navigator.pop(context) : exit(0);
-                  }, selfHeight: AppSize.buttonHeight)
-                ],
-              ));
-            },
-          ),
+          SafeArea(
+              child: Column(
+            children: [
+              Expanded(
+                  child: BaseWebView('$specialNoticeUri${data['noticeUri']}')),
+              AppStyles.buildButton(
+                  context,
+                  tr('close'),
+                  AppSize.realWidth,
+                  AppColors.primary,
+                  AppTextStyle.menu_18(AppColors.whiteText),
+                  0, () {
+                data['isAppCanUse'] ? Navigator.pop(context) : exit(0);
+              }, selfHeight: AppSize.buttonHeight)
+            ],
+          )),
           isWithShapeBorder: false);
     }
   }
@@ -491,7 +485,7 @@ class CheckUpdateAndNoticeService {
   }
 
   static Future<void> showNotice(BuildContext context, bool isHome) async {
-    var updateAndNoticeProvider = UpdateAndNoticeProvider();
+    var updateAndNoticeProvider = context.read<UpdateAndNoticeProvider>();
     final noticeResult = await updateAndNoticeProvider.checkNotice(isHome);
     if (noticeResult.isSuccessful) {
       print('data length:: ${noticeResult.noticeData!.noticeList!.length}');
@@ -514,16 +508,8 @@ class CheckUpdateAndNoticeService {
                 NoticeType.POP_UP_NOTICE;
             var result = await AppDialog.showPopup(
                 context,
-                ChangeNotifierProvider(
-                  create: (context) => UpdateAndNoticeProvider(),
-                  builder: (context, _) {
-                    return popupContents(
-                        context,
-                        noticeResult.noticeData!.noticeList,
-                        p.categoryIndex,
-                        p.noticeIndex);
-                  },
-                ),
+                popupContents(context, noticeResult.noticeData!.noticeList,
+                    p.categoryIndex, p.noticeIndex),
                 isWithShapeBorder: isShowBorderRadio);
             if (result != null) {
               p.noticeIncrement();
@@ -532,13 +518,11 @@ class CheckUpdateAndNoticeService {
           p.categoryIncrement();
         }
       }).then((_) {
-        updateAndNoticeProvider.dispose();
         context.read<NoticeIndexProvider>().resetAll();
         CacheService.saveIsUpdateAndNoticeCheckDone(true);
         routeTo(context);
       });
     } else {
-      updateAndNoticeProvider.dispose();
       CacheService.saveIsUpdateAndNoticeCheckDone(true);
       routeTo(context);
     }
@@ -547,18 +531,12 @@ class CheckUpdateAndNoticeService {
   static void updateAndNotice(BuildContext context, bool isHome) async {
     /// Andy.KO 2022.03.16 공지, 업데이트 순서 변경
     //await showNotice(context, isHome);
-    final updateResult = await UpdateAndNoticeProvider().checkUpdate();
+    final up = context.read<UpdateAndNoticeProvider>();
+    final updateResult = await up.checkUpdate();
     if (updateResult.isSuccessful &&
         updateResult.updateData!.model!.result != 'NG') {
-      final isPressedTure = await AppDialog.showPopup(
-          context,
-          ChangeNotifierProvider(
-            create: (context) => UpdateAndNoticeProvider(),
-            builder: (context, _) {
-              return updateContents(context,
-                  updateData: updateResult.updateData);
-            },
-          ));
+      final isPressedTure = await AppDialog.showPopup(context,
+          updateContents(context, updateData: updateResult.updateData));
       if (isPressedTure != null) {
         isPressedTure as bool;
         if (!isPressedTure) {
@@ -580,15 +558,8 @@ class CheckUpdateAndNoticeService {
     final updateResult = await UpdateAndNoticeProvider().checkUpdate();
     if (updateResult.isSuccessful &&
         updateResult.updateData!.model!.result != 'NG') {
-      final isPressedTure = await AppDialog.showPopup(
-          context,
-          ChangeNotifierProvider(
-            create: (context) => UpdateAndNoticeProvider(),
-            builder: (context, _) {
-              return updateContents(context,
-                  updateData: updateResult.updateData);
-            },
-          ));
+      final isPressedTure = await AppDialog.showPopup(context,
+          updateContents(context, updateData: updateResult.updateData));
       if (isPressedTure != null) {
         isPressedTure as bool;
         if (!isPressedTure) {
