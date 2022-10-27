@@ -77,24 +77,28 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(lifeCycle);
     var _paused = (lifeCycle == AppLifecycleState.paused);
     var _detached = (lifeCycle == AppLifecycleState.detached);
-    var _inactive = (lifeCycle == AppLifecycleState.inactive);
     var _isForeground = (lifeCycle == AppLifecycleState.resumed);
     if (_paused || _detached) return;
-    if (_inactive) {
-      pr('addTask !!!!!!!!!!!!!');
+    if (_detached) {
+      pr('stop all listener !!!!!!!!!!!!!');
       await stopAllListener();
       return;
     }
     if (_isForeground) {
-      pr('cancel task!!!!!!!!!!');
+      pr('start all listener  !!!!!!!!!!');
       startAllListener();
     }
+
     final arguments = ModalRoute.of(context)!.settings.arguments;
     // update or notice 확인 완료 여부.
     final isCheckDone = CacheService.isUpdateAndNoticeCheckDone();
     final isLandSpace = CacheService.getIsLandSpaceMode();
     var isLocked = false;
-
+    pr(_isForeground);
+    pr((isLandSpace == null || !isLandSpace));
+    pr(arguments == null);
+    pr(!isLocked);
+    pr('isCheckDone $isCheckDone');
     if (_isForeground &&
         (isLandSpace == null || !isLandSpace) &&
         arguments == null &&
@@ -103,16 +107,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       isLocked = true;
       // 다이얼로그 호출시 업데이트 체크 재외 처리.
       final isDisable = CacheService.getIsDisableUpdate();
+      print('is isDisable${isDisable}');
       if (isDisable == false) {
         // chack update and alarm
-        await Future.delayed(
-            Duration.zero,
-            () => CheckUpdateAndNoticeService.check(
-                KeyService.baseAppKey.currentContext!,
-                CheckType.UPDATE_ONLY,
-                true)).then((value) {
-          isLocked = false;
-        });
+        pr('???!!');
+        CheckUpdateAndNoticeService.check(
+            KeyService.baseAppKey.currentContext!, CheckType.UPDATE_ONLY, true);
+        isLocked = false;
       } else {
         // 엡데이트 체크 리셋.
         CacheService.setIsDisableUpdate(false);

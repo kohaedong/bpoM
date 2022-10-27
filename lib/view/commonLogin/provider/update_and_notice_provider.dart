@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/splash/commonLogin/provider/common_login_provider.dart
  * Created Date: 2021-10-06 03:26:46
- * Last Modified: 2022-10-22 22:19:13
+ * Last Modified: 2022-10-27 16:20:26
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -18,6 +18,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:open_file/open_file.dart' as openfile;
@@ -28,7 +29,6 @@ import 'package:medsalesportal/enums/update_type.dart';
 import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/enums/permission_type.dart';
 import 'package:medsalesportal/model/user/user_settings.dart';
 import 'package:medsalesportal/service/permission_service.dart';
 import 'package:medsalesportal/model/notice/notice_model.dart';
@@ -177,7 +177,7 @@ class UpdateAndNoticeProvider extends ChangeNotifier {
   /// [OpenFile]은 네이티브 파일 열어주는 plugin이다.
   Future<void> androidUpdate(
       BuildContext context, UpdateData updateData) async {
-    await PermissionService.request(AppPermissionType.storage);
+    await PermissionService.requestPermission(Permission.storage);
     var _api = ApiService();
     final String dirName = 'download';
     final exists = await LocalFileService().checkDirectoryExits('$dirName');

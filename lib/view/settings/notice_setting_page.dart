@@ -1,4 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/globalProvider/login_provider.dart';
+import 'package:medsalesportal/model/user/user_settings.dart';
+import 'package:medsalesportal/service/cache_service.dart';
+import 'package:medsalesportal/service/firebase_service.dart';
+import 'package:app_settings/app_settings.dart';
+import 'package:medsalesportal/service/key_service.dart';
+import 'package:medsalesportal/service/permission_service.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:medsalesportal/enums/swich_type.dart';
@@ -35,7 +44,7 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
     super.dispose();
   }
 
-  Widget buildSwich(BuildContext context, SwichType type, GlobalKey swichKey) {
+  Widget _buildSwich(BuildContext context, SwichType type, GlobalKey swichKey) {
     final provider = context.read<SettingsProvider>();
     noticeSwichValue.value = provider.noticeSwichValue!;
     notdisturbSwichValue.value = provider.notdisturbSwichValue!;
@@ -56,8 +65,17 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
                   notdisturbSwichValue.value = value;
                 }
                 if (type == SwichType.SWICH_IS_USE_NOTICE) {
-                  await provider.setNoticeSwichValue(value);
                   noticeSwichValue.value = value;
+                  await provider.setNoticeSwichValue(value);
+                  if (value) {
+                    await FirebaseService.requstFcmPermission()
+                        .then((isSuccess) async {
+                      if (!isSuccess) {
+                        CacheService.setIsDisableUpdate(true);
+                        await AppSettings.openNotificationSettings();
+                      }
+                    });
+                  }
                 }
               },
               activeTrackColor: AppColors.primary,
@@ -80,7 +98,7 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AppText.text('$text', style: AppTextStyle.default_18),
-            buildSwich(
+            _buildSwich(
                 context,
                 swichType,
                 swichType == SwichType.SWICH_IS_NOT_DISTURB
@@ -98,7 +116,7 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
     );
   }
 
-  Widget buildTimePickerItem(BuildContext context,
+  Widget _buildTimePickerItem(BuildContext context,
       {required bool isHour,
       required bool isStartTime,
       required GlobalKey pickerKey}) {
@@ -167,7 +185,7 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
         ));
   }
 
-  Widget buildTimePickerContents(BuildContext context,
+  Widget _buildTimePickerContents(BuildContext context,
       {required bool isStartTime}) {
     return WillPopScope(
         child: Padding(
@@ -175,12 +193,12 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
           child: Row(
             children: [
               Expanded(
-                  child: buildTimePickerItem(context,
+                  child: _buildTimePickerItem(context,
                       isHour: true,
                       isStartTime: isStartTime,
                       pickerKey: GlobalKey(debugLabel: 'startTime'))),
               Expanded(
-                  child: buildTimePickerItem(context,
+                  child: _buildTimePickerItem(context,
                       isHour: false,
                       isStartTime: isStartTime,
                       pickerKey: GlobalKey(debugLabel: 'endTime')))
@@ -197,7 +215,7 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
             context,
             buildDialogContents(
                 context,
-                buildTimePickerContents(context, isStartTime: isStartTime),
+                _buildTimePickerContents(context, isStartTime: isStartTime),
                 false,
                 AppSize.timePickerBoxHeight,
                 leftButtonText: '${tr('cancel')}',
@@ -222,7 +240,7 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
     );
   }
 
-  Widget buildWhenSetNotDisturb(BuildContext context) {
+  Widget _buildWhenSetNotDisturb(BuildContext context) {
     final p = context.read<SettingsProvider>();
     noticeSwichValue.value = p.noticeSwichValue ?? false;
     notdisturbSwichValue.value = p.notdisturbSwichValue ?? false;
@@ -288,7 +306,9 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
                           valueListenable: noticeSwichValue,
                           builder: (context, value, child) {
                             return value
-                                ? buildWhenSetNotDisturb(context)
+                                ? Container()
+                                // 방해금지 시간 설정 제외.
+                                // ? _buildWhenSetNotDisturb(context)
                                 : Container();
                           },
                         ),

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/firebase_service.dart
  * Created Date: 2022-10-18 15:55:12
- * Last Modified: 2022-10-27 15:03:53
+ * Last Modified: 2022-10-27 16:24:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -49,27 +49,32 @@ class FirebaseService {
             name: 'medsalesportal',
             options: DefaultFirebaseOptions.currentPlatform)
         .then((firebaseApp) async {
-      messaging = FirebaseMessaging.instance;
-      messageStream = FirebaseMessaging.onMessage;
-      fcmTokenStream = messaging.onTokenRefresh;
-      openMessageStream = FirebaseMessaging.onMessageOpenedApp;
+      await Future.delayed(Duration(milliseconds: 300), () {
+        messaging = FirebaseMessaging.instance;
+        messageStream = FirebaseMessaging.onMessage;
+        fcmTokenStream = messaging.onTokenRefresh;
+        openMessageStream = FirebaseMessaging.onMessageOpenedApp;
+      });
       // await requstFcmPermission();
     });
-    // startListenner();
     return true;
   }
 
   static Future<bool> requstFcmPermission() async {
+    var isSuccessful = true;
     await messaging.requestPermission().then((settings) async {
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
         setNotiSettings(settings);
         pr(settings.toString());
-        getToken().then((token) => pr(token));
+        pr('permission ok');
+      } else {
+        isSuccessful = false;
+        pr('permission failed');
       }
     }).catchError((e) {
       pr(e);
     });
-    return true;
+    return isSuccessful;
   }
 
   @pragma('vm:entry-point')

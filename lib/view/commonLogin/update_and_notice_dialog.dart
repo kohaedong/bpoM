@@ -571,6 +571,8 @@ class CheckUpdateAndNoticeService {
           }
         }
       }
+    } else {
+      CacheService.saveIsUpdateAndNoticeCheckDone(true);
     }
   }
 
