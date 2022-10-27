@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/date_util.dart
  * Created Date: 2021-11-23 07:56:54
- * Last Modified: 2022-10-11 01:16:20
+ * Last Modified: 2022-10-27 23:24:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -59,10 +59,15 @@ class DateUtil {
         : dt1.year == dt2.year && dt1.month == dt2.month && dt1.day == dt2.day;
   }
 
-  static int diffMounth(DateTime start, DateTime end) {
-    int v = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
-    pr(v);
-    return v ~/ (86400000 * 30);
+  // static int diffMounth(DateTime start, DateTime end) {
+  //   int v = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
+  //   pr(v);
+  //   return v ~/ (86400000 * 30);
+  // }
+
+  static bool diffMounth(DateTime start, DateTime end) {
+    return (start.year == end.year && start.month != end.month) ||
+        (start.year != end.year);
   }
 
   static bool isToday(DateTime start, DateTime end) {

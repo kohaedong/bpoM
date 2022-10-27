@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-10-27 12:48:26
+ * Last Modified: 2022-10-28 00:45:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/globalProvider/timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/util/format_util.dart';
@@ -252,16 +253,22 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                                 context, '${tr('search')}', () {
                               if (p.isValidate) {
                                 _panelSwich.value = false;
-                                p.refresh().then((result) {
-                                  hideKeyboard(context);
-                                  if (result.isSuccessful) {
-                                    Future.delayed(Duration.zero, () {
-                                      if (!result.data) {
-                                        _panelSwich.value = true;
-                                      }
-                                    });
-                                  }
-                                });
+
+                                final tp = context.read<TimerProvider>();
+
+                                if (tp.getTimer == null ||
+                                    (tp.isRunning != null && !tp.isRunning!)) {
+                                  tp.perdict(p.refresh().then((result) {
+                                    hideKeyboard(context);
+                                    if (result.isSuccessful) {
+                                      Future.delayed(Duration.zero, () {
+                                        if (!result.data) {
+                                          _panelSwich.value = true;
+                                        }
+                                      });
+                                    }
+                                  }));
+                                }
                               } else {
                                 AppToast().show(
                                     context, tr('plz_check_essential_option'));

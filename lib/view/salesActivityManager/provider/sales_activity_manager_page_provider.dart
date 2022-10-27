@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-26 10:24:28
+ * Last Modified: 2022-10-28 00:28:08
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -460,7 +460,12 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
           });
         }
 
-        await getHolidayListForMonth(selectedMonth ?? DateTime.now());
+        var isDiffMonth = DateUtil.diffMounth(
+            DateTime.now(), selectedMonth ?? DateTime.now());
+        if (isDiffMonth) {
+          pr('diff month!!!!!');
+          await getHolidayListForMonth(selectedDay ?? DateTime.now());
+        }
         await checkIsShowPopup();
         isLoadMonthData = false;
         notifyListeners();
@@ -474,6 +479,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   Future<ResultModel> getDayData(
       {bool? isWithLoading, bool? isUpdateLoading}) async {
+    pr('inin??????');
     isShowConfirm = false;
     // activityStatus = ActivityStatus.NONE;
     notifyListeners();
@@ -492,7 +498,13 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       isLoadUpdateData = true;
       notifyListeners();
     }
-    await getHolidayListForMonth(selectedDay ?? DateTime.now());
+
+    var isDiffMonth =
+        DateUtil.diffMounth(DateTime.now(), selectedDay ?? DateTime.now());
+    if (isDiffMonth) {
+      pr('diff month!!!!!');
+      await getHolidayListForMonth(selectedDay ?? DateTime.now());
+    }
     await getOfficeAddress();
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();
@@ -526,6 +538,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
           isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200) {
+      pr(result.body);
       dayResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
 
@@ -542,23 +555,15 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       }
       isResetDay = null;
       await checkShowConfirm();
-      if (isWithLoading != null && isWithLoading) {
-        isLoadDayData = false;
-      }
-      if (isUpdateLoading != null && isUpdateLoading) {
-        isLoadUpdateData = false;
-      }
+      isLoadDayData = false;
+      isLoadUpdateData = false;
       try {
         notifyListeners();
       } catch (e) {}
       return ResultModel(true);
     }
-    if (isWithLoading != null && isWithLoading) {
-      isLoadDayData = false;
-    }
-    if (isUpdateLoading != null && isUpdateLoading) {
-      isLoadUpdateData = false;
-    }
+    isLoadDayData = false;
+    isLoadUpdateData = false;
     notifyListeners();
     return ResultModel(false);
   }

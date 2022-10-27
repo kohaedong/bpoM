@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-20 11:35:20
+ * Last Modified: 2022-10-28 00:32:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -246,15 +246,25 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   }
 
   Widget _buildLeftAndRightIcons(BuildContext context,
-      {bool? isLeft, bool? isMonth}) {
+      {bool? isLeft,
+      bool? isMonth,
+      required bool isLoadMonthData,
+      required bool isLoadDayData}) {
     return GestureDetector(
         onTap: () {
           final p = context.read<SalseActivityManagerPageProvider>();
-          if (isMonth != null && isMonth) {
+          if (isMonth != null &&
+              isMonth &&
+              !isLoadMonthData &&
+              !isLoadMonthData) {
             isLeft != null && isLeft
                 ? p.getPreviousMonthData()
                 : p.getNextMonthData();
-          } else {
+          }
+          if (isMonth != null &&
+              !isMonth &&
+              !isLoadMonthData &&
+              !isLoadDayData) {
             isLeft != null && isLeft
                 ? p.getPreviousDayData()
                 : p.getNextDayData();
@@ -336,18 +346,30 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
   }
 
   Widget _buildDateSelector(BuildContext context, {bool? isMonthSelector}) {
-    return SizedBox(
-      width: AppSize.calendarWidth,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _buildLeftAndRightIcons(context,
-              isLeft: true, isMonth: isMonthSelector),
-          _buildDateText(context, isMonth: isMonthSelector),
-          _buildLeftAndRightIcons(context,
-              isLeft: false, isMonth: isMonthSelector),
-        ],
-      ),
+    return Selector<SalseActivityManagerPageProvider, Tuple2<bool, bool>>(
+      selector: (context, provider) =>
+          Tuple2(provider.isLoadDayData, provider.isLoadMonthData),
+      builder: (context, tuple, _) {
+        return SizedBox(
+          width: AppSize.calendarWidth,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildLeftAndRightIcons(context,
+                  isLeft: true,
+                  isMonth: isMonthSelector,
+                  isLoadDayData: tuple.item1,
+                  isLoadMonthData: tuple.item2),
+              _buildDateText(context, isMonth: isMonthSelector),
+              _buildLeftAndRightIcons(context,
+                  isLeft: false,
+                  isMonth: isMonthSelector,
+                  isLoadDayData: tuple.item1,
+                  isLoadMonthData: tuple.item2),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -878,6 +900,7 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         Selector<SalseActivityManagerPageProvider, bool>(
           selector: (context, provider) => provider.isLoadDayData,
           builder: (context, isLoadDayData, _) {
+            pr('isLoad Day data $isLoadDayData');
             return BaseLoadingViewOnStackWidget.build(context, isLoadDayData,
                 color: Colors.transparent);
           },
@@ -963,18 +986,12 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                 if (_tabController.index == 0) {
                   // 버튼 없에기.
                   var isLock = false;
-                  if (!isLock && !p.isLoadMonthData) {
+                  if (!isLock && !p.isLoadMonthData && !p.isLoadDayData) {
                     p.setIsShowConfirm(false);
-                    p.setSelectedMonth(DateTime.now());
                     _actionButton.value = Container();
                     p
                         .getMonthData(isWithLoading: true)
                         .then((value) => isLock = true);
-                    // if (!(p.selectedMonth != null &&
-                    //     p.selectedMonth!.year == DateTime.now().year &&
-                    //     p.selectedMonth!.month == DateTime.now().month)) {
-
-                    // }
                   }
                 }
 
@@ -982,18 +999,21 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   _actionButton.value = _pageType.value!.actionWidget;
                   final p = context.read<SalseActivityManagerPageProvider>();
                   var isLock = false;
-                  if ((p.isResetDay == null && !p.isLoadDayData && !isLock)) {
+                  if ((p.isResetDay == null &&
+                      !p.isLoadDayData &&
+                      !isLock &&
+                      !p.isLoadMonthData)) {
                     isLock = true;
                     if (p.dayResponseModel == null) {
                       p.setSelectedDate(DateTime.now());
                     }
                   }
-                  if (!p.isLoadDayData) {
-                    if (p.dayResponseModel == null) {
-                      p
-                          .getDayData(isWithLoading: true)
-                          .whenComplete(() => isLock = false);
-                    }
+                  if (!p.isLoadDayData &&
+                      !p.isLoadMonthData &&
+                      p.dayResponseModel == null) {
+                    p
+                        .getDayData(isWithLoading: true)
+                        .whenComplete(() => isLock = false);
                   }
                 }
               }),
@@ -1145,15 +1165,27 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                   builder: (context, snapshot) {
                     if (snapshot.hasData &&
                         snapshot.connectionState == ConnectionState.done) {
-                      return Column(
+                      return Stack(
                         children: [
-                          _buildTabBar(context),
-                          Divider(color: AppColors.textGrey, height: 0),
-                          snapshot.data!.isSuccessful
-                              ? _buildTapBarView(context)
-                              : _buildErrorPopup(
-                                  context, snapshot.data!.errorMassage!),
-                          _buildUpdateDayDataHook(context)
+                          Column(
+                            children: [
+                              _buildTabBar(context),
+                              Divider(color: AppColors.textGrey, height: 0),
+                              snapshot.data!.isSuccessful
+                                  ? _buildTapBarView(context)
+                                  : _buildErrorPopup(
+                                      context, snapshot.data!.errorMassage!),
+                              _buildUpdateDayDataHook(context)
+                            ],
+                          ),
+                          // Selector<SalseActivityManagerPageProvider, bool>(
+                          //     selector: (context, provider) =>
+                          //         provider.isLoadMonthData,
+                          //     builder: (context, isloadData, _) {
+                          //       return BaseLoadingViewOnStackWidget.build(
+                          //           context, isloadData,
+                          //           color: Colors.transparent);
+                          //     })
                         ],
                       );
                     }

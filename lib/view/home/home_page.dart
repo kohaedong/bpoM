@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:medsalesportal/globalProvider/timer_provider.dart';
 import 'package:medsalesportal/service/firebase_service.dart';
 import 'package:medsalesportal/view/common/function_of_stop_or_start_listener.dart';
 
@@ -237,7 +238,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             final result =
                 await Navigator.pushNamed(context, NoticeAllPage.routeName);
             if (result != null) {
-              p.refresh();
+              final tp = context.read<TimerProvider>();
+              if (tp.getTimer == null ||
+                  (tp.isRunning != null && !tp.isRunning!)) {
+                tp.perdict(p.refresh());
+              }
             }
           },
           child: Align(

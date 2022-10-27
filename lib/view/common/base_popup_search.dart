@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-10-26 08:01:16
+ * Last Modified: 2022-10-28 00:40:28
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
  */
 
+import 'package:medsalesportal/globalProvider/timer_provider.dart';
 import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart';
@@ -137,7 +138,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   iconColor: AppColors.textFieldUnfoucsColor,
                   defaultIconCallback: () {
                     hideKeyboard(context);
-                    p.refresh();
+                    final tp = context.read<TimerProvider>();
+                    if (tp.getTimer == null ||
+                        (tp.isRunning != null && !tp.isRunning!)) {
+                      tp.perdict(p.refresh());
+                    }
                   },
                   textEditingController: _personInputController,
                   otherIconcallback: () {
@@ -214,7 +219,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   iconColor: AppColors.textFieldUnfoucsColor,
                   defaultIconCallback: () {
                     hideKeyboard(context);
-                    p.refresh();
+                    final tp = context.read<TimerProvider>();
+                    if (tp.getTimer == null ||
+                        (tp.isRunning != null && !tp.isRunning!)) {
+                      tp.perdict(p.refresh());
+                    }
                   },
                   textEditingController: _suggetionNameInputController,
                   otherIconcallback: () {
@@ -237,7 +246,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   p.suggetionItemNameInputText!.isNotEmpty))) {
             AppToast().show(context, tr('keyword_must_not_null'));
           } else {
-            p.refresh().then((value) => hideKeyboard(context));
+            final tp = context.read<TimerProvider>();
+            if (tp.getTimer == null ||
+                (tp.isRunning != null && !tp.isRunning!)) {
+              tp.perdict(p.refresh().then((value) => hideKeyboard(context)));
+            }
           }
         }, doNotWithPadding: true),
         defaultSpacing()
@@ -267,7 +280,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   iconColor: AppColors.textFieldUnfoucsColor,
                   defaultIconCallback: () {
                     hideKeyboard(context);
-                    p.refresh();
+                    final tp = context.read<TimerProvider>();
+                    if (tp.getTimer == null ||
+                        (tp.isRunning != null && !tp.isRunning!)) {
+                      tp.perdict(p.refresh());
+                    }
                   },
                   textEditingController: _personInputController,
                   otherIconcallback: () {
@@ -396,7 +413,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
           if (p.customerInputText == null || p.customerInputText!.isEmpty) {
             AppToast().show(context, tr('keyword_must_not_null'));
           } else {
-            p.refresh().then((value) => hideKeyboard(context));
+            final tp = context.read<TimerProvider>();
+            if (tp.getTimer == null ||
+                (tp.isRunning != null && !tp.isRunning!)) {
+              tp.perdict(p.refresh().then((value) => hideKeyboard(context)));
+            }
           }
         }, doNotWithPadding: true),
       ],
@@ -567,7 +588,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
               p.customerInputText!.isEmpty) {
             AppToast().show(context, tr('keyword_must_not_null'));
           } else {
-            p.refresh().then((value) => hideKeyboard(context));
+            final tp = context.read<TimerProvider>();
+            if (tp.getTimer == null ||
+                (tp.isRunning != null && !tp.isRunning!)) {
+              tp.perdict(p.refresh().then((value) => hideKeyboard(context)));
+            }
           }
         }, doNotWithPadding: true),
       ],
@@ -639,7 +664,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
             if (p.seletedMaterialSearchKey!.isEmpty) {
               AppToast().show(context, tr('keyword_must_not_null'));
             } else {
-              p.refresh();
+              final tp = context.read<TimerProvider>();
+              if (tp.getTimer == null ||
+                  (tp.isRunning != null && !tp.isRunning!)) {
+                tp.perdict(p.refresh());
+              }
             }
           } else {
             AppToast().show(context, tr('plz_check_essential_option'));
@@ -672,7 +701,11 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                   iconColor: AppColors.textFieldUnfoucsColor,
                   defaultIconCallback: () {
                     hideKeyboard(context);
-                    p.refresh();
+                    final tp = context.read<TimerProvider>();
+                    if (tp.getTimer == null ||
+                        (tp.isRunning != null && !tp.isRunning!)) {
+                      tp.perdict(p.refresh());
+                    }
                   },
                   textEditingController: _personInputController,
                   otherIconcallback: () {

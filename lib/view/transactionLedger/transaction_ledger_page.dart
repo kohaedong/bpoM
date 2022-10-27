@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-10-26 13:28:13
+ * Last Modified: 2022-10-28 00:44:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:medsalesportal/globalProvider/timer_provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -376,16 +377,22 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                   context, '${tr('search')}', () {
                                 if (provider.isValidate) {
                                   _panelSwich.value = false;
-                                  provider.refresh().then((result) {
-                                    hideKeyboard(context);
-                                    if (result.isSuccessful) {
-                                      Future.delayed(Duration.zero, () {
-                                        if (!result.data) {
-                                          _panelSwich.value = true;
-                                        }
-                                      });
-                                    }
-                                  });
+                                  final tp = context.read<TimerProvider>();
+                                  if (tp.getTimer == null ||
+                                      (tp.isRunning != null &&
+                                          !tp.isRunning!)) {
+                                    tp.perdict(
+                                        provider.refresh().then((result) {
+                                      hideKeyboard(context);
+                                      if (result.isSuccessful) {
+                                        Future.delayed(Duration.zero, () {
+                                          if (!result.data) {
+                                            _panelSwich.value = true;
+                                          }
+                                        });
+                                      }
+                                    }));
+                                  }
                                 } else {
                                   AppToast().show(context,
                                       tr('plz_check_essential_option'));
