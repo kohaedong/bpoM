@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/firebase_service.dart
  * Created Date: 2022-10-18 15:55:12
- * Last Modified: 2022-10-26 08:39:34
+ * Last Modified: 2022-10-27 15:03:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -42,6 +42,7 @@ class FirebaseService {
   static late StreamSubscription<String> tockenSubscription;
   static late StreamSubscription<RemoteMessage> messageSubscription;
   static late StreamSubscription<RemoteMessage> openMessageSubscription;
+
   //초기화  --> 앱이 첫실행시 한번만 호출
   static Future<bool> init() async {
     await Firebase.initializeApp(
@@ -54,32 +55,21 @@ class FirebaseService {
       openMessageStream = FirebaseMessaging.onMessageOpenedApp;
       // await requstFcmPermission();
     });
-    startListenner();
+    // startListenner();
     return true;
   }
 
   static Future<bool> requstFcmPermission() async {
     await messaging.requestPermission().then((settings) async {
-      pr(settings.toString());
-      setNotiSettings(settings);
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        setNotiSettings(settings);
+        pr(settings.toString());
         getToken().then((token) => pr(token));
       }
     }).catchError((e) {
       pr(e);
     });
     return true;
-  }
-
-  static void startListenner() {
-    FirebaseMessaging.onBackgroundMessage(backgroundCallback);
-    startFirebaseMessageListenner();
-  }
-
-  static void stopListener() {
-    tockenSubscription.cancel();
-    messageSubscription.cancel();
-    openMessageSubscription.cancel();
   }
 
   @pragma('vm:entry-point')
@@ -108,6 +98,7 @@ class FirebaseService {
 
   static Future<void> startFirebaseMessageListenner() async {
     await setIOSNoticeOption();
+    await requstFcmPermission();
     tockenSubscription = fcmTokenStream.listen((newToken) async {
       pr("fcm 토큰 갱신 ---> $newToken");
       fcmTocken = newToken;
@@ -115,21 +106,27 @@ class FirebaseService {
       lp.sendFcmToken();
     });
     messageSubscription = messageStream.listen((message) {
+      pr(message);
       var notification = message.notification;
-      pr(notification);
-      pr(message.notification!.apple);
       var android = message.notification?.android;
       var ios = message.notification?.apple;
       if (notification != null && android != null && !kIsWeb) {
         pr(message.data);
         pr(message.messageId);
       } else if (notification != null && ios != null && !kIsWeb) {
+        pr(message.data);
+        pr(message.messageId);
         //
       }
     });
+
     openMessageSubscription = openMessageStream.listen((message) {
       // on message tap event
     });
+    FirebaseMessaging.onBackgroundMessage(backgroundCallback);
+    if (await FirebaseMessaging.instance.isSupported()) {
+      pr('FirebaseMessaging is successful!!');
+    }
     await getToken();
   }
 }

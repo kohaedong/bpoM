@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-10-26 07:57:35
+ * Last Modified: 2022-10-26 13:28:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -1320,7 +1320,8 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                           return _buildContents(context);
                         }
                         return Scaffold(
-                            body: DefaultShimmer.buildDefaultResultShimmer());
+                            body: DefaultShimmer.buildDefaultResultShimmer(
+                                isNotPadding: true));
                       }));
             },
           );

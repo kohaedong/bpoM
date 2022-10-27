@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:medsalesportal/service/firebase_service.dart';
 import 'package:medsalesportal/view/common/function_of_stop_or_start_listener.dart';
 
 import './home_icon_map.dart';
@@ -47,6 +48,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       disableCapture();
     }
     ConnectService.startListener();
+    FirebaseService.startFirebaseMessageListenner();
     WidgetsBinding.instance.addObserver(this);
   }
 

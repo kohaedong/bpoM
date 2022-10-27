@@ -8,7 +8,6 @@ part of 't_list_model.dart';
 
 TlistModel _$TlistModelFromJson(Map<String, dynamic> json) => TlistModel(
       json['ACCOMPANY'] as String?,
-      json['PVISIT'] as String?,
       json['ACCP_NM'] as String?,
       json['ACT_DTL'] as String?,
       json['ACT_FLAG'] as String?,
@@ -20,6 +19,7 @@ TlistModel _$TlistModelFromJson(Map<String, dynamic> json) => TlistModel(
       json['BZACTNO'] as String?,
       json['CFM_FLAG'] as String?,
       json['COMNT'] as String?,
+      json['PVISIT'] as String?,
       (json['DIST'] as num?)?.toDouble(),
       json['FADDCAT'] as String?,
       json['FADDCAT_NM'] as String?,
@@ -66,6 +66,7 @@ Map<String, dynamic> _$TlistModelToJson(TlistModel instance) =>
       'BZACTNO': instance.bzactno,
       'NAME': instance.name,
       'SEQNO': instance.seqno,
+      'PVISIT': instance.pvisit,
       'STPNO': instance.stpno,
       'ADATE': instance.adate,
       'ATIME': instance.atime,
@@ -114,5 +115,4 @@ Map<String, dynamic> _$TlistModelToJson(TlistModel instance) =>
       'MATKL': instance.matkl,
       'MVGR1': instance.mvgr1,
       'UMODE': instance.umode,
-      'PVISIT': instance.pvisit
     };

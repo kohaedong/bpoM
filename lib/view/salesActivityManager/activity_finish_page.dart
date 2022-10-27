@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/activity_finish_page.dart
  * Created Date: 2022-10-11 04:29:49
- * Last Modified: 2022-10-25 14:38:33
+ * Last Modified: 2022-10-27 11:43:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -101,7 +101,7 @@ class SalseActivityFinishPage extends StatelessWidget {
           child: Column(
             children: [
               BaseInfoRowByKeyAndValue.build(
-                  '${tr('visit_pharmacy')}1',
+                  '${tr('visit_pharmacy')}',
                   t260.pvisit != null && t260.pvisit == 'Y'
                       ? tr('visit')
                       : tr('not_visited')),
