@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/util/format_util.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_text.dart';
 import 'package:medsalesportal/styles/app_style.dart';
@@ -560,16 +560,16 @@ class CheckUpdateAndNoticeService {
         updateResult.updateData!.model!.result != 'NG') {
       final isPressedTure = await AppDialog.showPopup(context,
           updateContents(context, updateData: updateResult.updateData));
-      if (isPressedTure != null) {
-        isPressedTure as bool;
-        if (!isPressedTure) {
-          if (updateResult.updateData!.type == UpdateType.LOCAL_CHOOSE ||
-              updateResult.updateData!.type == UpdateType.WEB_CHOOSE) {
-            return;
-          } else {
-            exit(0);
-          }
+      if (isPressedTure != null && isPressedTure) {
+        if (updateResult.updateData!.type == UpdateType.LOCAL_CHOOSE ||
+            updateResult.updateData!.type == UpdateType.WEB_CHOOSE) {
+          CacheService.saveIsUpdateAndNoticeCheckDone(true);
+          return;
+        } else {
+          exit(0);
         }
+      } else {
+        CacheService.saveIsUpdateAndNoticeCheckDone(true);
       }
     } else {
       CacheService.saveIsUpdateAndNoticeCheckDone(true);

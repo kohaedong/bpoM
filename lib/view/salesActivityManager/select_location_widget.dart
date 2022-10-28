@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-10-07 15:18:01
+ * Last Modified: 2022-10-28 17:14:34
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,11 +12,10 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/styles/app_style.dart';
-import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/styles/app_text.dart';
+import 'package:medsalesportal/styles/app_style.dart';
 import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/enums/popup_list_type.dart';
@@ -27,6 +26,7 @@ import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
+import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';

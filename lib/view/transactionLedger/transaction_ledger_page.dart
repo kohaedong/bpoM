@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-10-28 00:44:19
+ * Last Modified: 2022-10-28 17:13:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,6 @@
  */
 import 'dart:io';
 import 'dart:math' as math;
-import 'package:medsalesportal/globalProvider/timer_provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +31,7 @@ import 'package:medsalesportal/enums/offset_direction_type.dart';
 import 'package:medsalesportal/model/rfc/et_customer_model.dart';
 import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
+import 'package:medsalesportal/globalProvider/timer_provider.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/trans_ledger_t_list_model.dart';

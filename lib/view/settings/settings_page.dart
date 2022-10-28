@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
-import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -16,6 +14,8 @@ import 'package:medsalesportal/view/settings/notice_setting_page.dart';
 import 'package:medsalesportal/view/commonLogin/common_login_page.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
+import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
+import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/settings/provider/settings_provider.dart';
 import 'package:medsalesportal/view/commonLogin/update_and_notice_dialog.dart';
 

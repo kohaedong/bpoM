@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/globalProvider/login_provider.dart';
-import 'package:medsalesportal/model/user/user_settings.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/service/firebase_service.dart';
-import 'package:app_settings/app_settings.dart';
-import 'package:medsalesportal/service/key_service.dart';
-import 'package:medsalesportal/service/permission_service.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:medsalesportal/enums/swich_type.dart';
-import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/styles/export_common.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
+import 'package:medsalesportal/service/firebase_service.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
@@ -240,39 +234,39 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
     );
   }
 
-  Widget _buildWhenSetNotDisturb(BuildContext context) {
-    final p = context.read<SettingsProvider>();
-    noticeSwichValue.value = p.noticeSwichValue ?? false;
-    notdisturbSwichValue.value = p.notdisturbSwichValue ?? false;
-    return Column(
-      children: [
-        Padding(
-            padding: AppSize.noticePageEndWidgetPadding,
-            child: _buildItemRow(context, '${tr('set_not_disturb')}',
-                isUseSubscription: true,
-                swichType: SwichType.SWICH_IS_NOT_DISTURB,
-                subscription: '${tr('set_not_disturb_discription')}')),
-        ValueListenableBuilder<bool>(
-            valueListenable: notdisturbSwichValue,
-            builder: (context, isShow, _) {
-              return isShow
-                  ? Padding(
-                      padding: AppSize.noticePageEndWidgetPadding,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          buildTimeBox(context, isStartTime: true),
-                          Center(
-                            child: Text('~'),
-                          ),
-                          buildTimeBox(context, isStartTime: false)
-                        ],
-                      ))
-                  : Container();
-            })
-      ],
-    );
-  }
+  // Widget _buildWhenSetNotDisturb(BuildContext context) {
+  //   final p = context.read<SettingsProvider>();
+  //   noticeSwichValue.value = p.noticeSwichValue ?? false;
+  //   notdisturbSwichValue.value = p.notdisturbSwichValue ?? false;
+  //   return Column(
+  //     children: [
+  //       Padding(
+  //           padding: AppSize.noticePageEndWidgetPadding,
+  //           child: _buildItemRow(context, '${tr('set_not_disturb')}',
+  //               isUseSubscription: true,
+  //               swichType: SwichType.SWICH_IS_NOT_DISTURB,
+  //               subscription: '${tr('set_not_disturb_discription')}')),
+  //       ValueListenableBuilder<bool>(
+  //           valueListenable: notdisturbSwichValue,
+  //           builder: (context, isShow, _) {
+  //             return isShow
+  //                 ? Padding(
+  //                     padding: AppSize.noticePageEndWidgetPadding,
+  //                     child: Row(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                       children: [
+  //                         buildTimeBox(context, isStartTime: true),
+  //                         Center(
+  //                           child: Text('~'),
+  //                         ),
+  //                         buildTimeBox(context, isStartTime: false)
+  //                       ],
+  //                     ))
+  //                 : Container();
+  //           })
+  //     ],
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

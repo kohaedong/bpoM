@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/connect_service.dart
  * Created Date: 2022-10-26 05:30:46
- * Last Modified: 2022-10-26 07:41:59
+ * Last Modified: 2022-10-28 17:07:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,11 +12,10 @@
  */
 
 import 'dart:async';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:medsalesportal/globalProvider/connect_status_provider.dart';
-import 'package:medsalesportal/service/key_service.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/service/key_service.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:medsalesportal/globalProvider/connect_status_provider.dart';
 
 class ConnectService {
   factory ConnectService() => _sharedInstance();

@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       isLocked = true;
       // 다이얼로그 호출시 업데이트 체크 재외 처리.
       final isDisable = CacheService.getIsDisableUpdate();
-      print('is isDisable${isDisable}');
+      print('is isDisable ${isDisable}');
       if (isDisable == false) {
         // chack update and alarm
         pr('???!!');

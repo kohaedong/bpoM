@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/globalProvider/login_provider.dart';
-import 'package:medsalesportal/model/user/user_settings.dart';
-import 'package:medsalesportal/service/key_service.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/enums/app_theme_type.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
+import 'package:medsalesportal/model/user/user_settings.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
+import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/settings/provider/settings_provider.dart';
 
 class FontSettingsPage extends StatefulWidget {

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/activity_finish_page.dart
  * Created Date: 2022-10-11 04:29:49
- * Last Modified: 2022-10-27 11:43:14
+ * Last Modified: 2022-10-28 17:13:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,10 +12,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
-import 'package:medsalesportal/view/salesActivityManager/current_month_scenario_page.dart';
-import 'package:medsalesportal/view/salesActivityManager/visit_result_history_page.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -23,11 +19,15 @@ import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
+import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
 import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
 import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
+import 'package:medsalesportal/view/salesActivityManager/visit_result_history_page.dart';
+import 'package:medsalesportal/view/salesActivityManager/current_month_scenario_page.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/activity_finish_page_provider.dart';
 
 class SalseActivityFinishPage extends StatelessWidget {

@@ -1,5 +1,3 @@
-import 'package:medsalesportal/globalProvider/login_provider.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +7,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/enums/input_icon_type.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
+import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
 import 'package:medsalesportal/view/signin/provider/signin_page_provider.dart';
