@@ -81,7 +81,7 @@ class CheckUpdateAndNoticeService {
           var text = updateDiscription + '\n\n\n' + updateContents;
           var enterLength = FormatUtil.howManyLengthForString(text);
 
-          var height = AppSize.buttonHeight +
+          var height = AppSize.buttonHeight * 1.5 +
               AppSize.defaultListItemSpacing * 4 +
               enterLength * 14;
           return isStart
