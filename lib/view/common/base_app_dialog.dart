@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-10-25 11:52:53
+ * Last Modified: 2022-10-28 21:13:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,6 +22,7 @@ import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 
 typedef DiaLogCallBack = Function(bool);
+typedef CanPopCallBack = Future<bool> Function();
 
 class AppDialog {
   static dynamic showPopup(BuildContext context, Widget widget,
@@ -93,7 +94,8 @@ class AppDialog {
         });
   }
 
-  static dynamic showDangermessage(BuildContext context, String str) {
+  static dynamic showDangermessage(BuildContext context, String str,
+      {bool? isPopToFirst}) {
     // str = str + "fdsaffsafdsafdsafklasfjdskal;jf\n\nd\n,\n,\n" * 15;
     var enterLength = FormatUtil.howManyLengthForString(str) + 1;
     var height =
@@ -120,7 +122,8 @@ class AppDialog {
             ),
             true,
             height > AppSize.realHeight * .6 ? AppSize.realHeight * .6 : height,
-            signgleButtonText: '${tr('ok')}'));
+            signgleButtonText: '${tr('ok')}',
+            isPoptoFirst: isPopToFirst));
   }
 
   static menu(BuildContext context) {

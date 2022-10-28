@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-10-27 15:48:19
+ * Last Modified: 2022-10-28 21:23:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,8 +13,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 
 typedef SuccessCallback = String Function();
 typedef PopContextDataCallback = Future<dynamic> Function();
@@ -71,6 +73,7 @@ Widget buildDialogContents(BuildContext context, Widget widget,
     bool? iswithTitle,
     String? titleText,
     bool? isNotPadding,
+    bool? isPoptoFirst,
     double? radius,
     CanPopCallBack? canPopCallBackk,
     PopContextDataCallback? dataCallback}) {
@@ -99,7 +102,9 @@ Widget buildDialogContents(BuildContext context, Widget widget,
           ),
           isSigngleButton
               ? popUpSignleButton(context, '$signgleButtonText',
-                  isWithBottomRadius: true)
+                  isWithBottomRadius: true,
+                  canPopCallBackk: canPopCallBackk,
+                  isPoptoFirst: isPoptoFirst)
               : popUpTwoButton(context, rightButtonText ?? tr('ok'),
                   leftButtonText ?? tr('cancel'),
                   radius: radius,
@@ -182,7 +187,8 @@ Widget popUpSignleButton(BuildContext context, String buttonText,
     bool? isWithBottomRadius,
     double? radius,
     PopContextDataCallback? callback,
-    CanPopCallBack? canPopCallBackk}) {
+    CanPopCallBack? canPopCallBackk,
+    bool? isPoptoFirst}) {
   return Container(
     alignment: Alignment.center,
     decoration: BoxDecoration(
@@ -204,15 +210,19 @@ Widget popUpSignleButton(BuildContext context, String buttonText,
             : AppColors.primary),
         radius ?? 25, () async {
       if (canPopCallBackk == null) {
-        Navigator.pop(
-            context,
-            callback == null
-                ? isLeftButton != null
-                    ? isLeftButton
-                        ? false
-                        : true
-                    : true
-                : callback.call());
+        if (isPoptoFirst ?? false) {
+          popToFirst(KeyService.baseAppKey.currentContext!);
+        } else {
+          Navigator.pop(
+              context,
+              callback == null
+                  ? isLeftButton != null
+                      ? isLeftButton
+                          ? false
+                          : true
+                      : true
+                  : callback.call());
+        }
       } else {
         var isCanPop = await canPopCallBackk.call();
         if (isCanPop) {

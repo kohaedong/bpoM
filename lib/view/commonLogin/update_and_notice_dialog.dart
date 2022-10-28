@@ -439,12 +439,12 @@ class CheckUpdateAndNoticeService {
           Navigator.pushNamedAndRemoveUntil(
               context, HomePage.routeName, (route) => false);
         } else {
-          Navigator.pushNamedAndRemoveUntil(
-              context, SigninPage.routeName, (route) => false, arguments: {
-            'id': lp.userId,
-            'pw': lp.userPw,
-            'loginResult': loginResult
-          });
+          Navigator.pushReplacementNamed(context, SigninPage.routeName,
+              arguments: {
+                'id': lp.userId,
+                'pw': lp.userPw,
+                'loginResult': loginResult
+              });
         }
       } else {
         print('FDSFDSFSDF&&*^&*^(*&^(&^*(');

@@ -12,6 +12,7 @@ import 'package:medsalesportal/model/rfc/sap_login_info_response_model.dart';
 class SigninPageProvider extends ChangeNotifier {
   String errorMessage = '';
   String? userAccount;
+  bool isFirstRun = true;
   String? password;
   bool isCheckedSaveIdBox = false;
   bool isCheckedAutoSigninBox = false;
@@ -32,6 +33,9 @@ class SigninPageProvider extends ChangeNotifier {
       userAccount!.trim().isNotEmpty &&
       password != null &&
       password!.trim().isNotEmpty;
+  void setIsFirstRun() {
+    isFirstRun = false;
+  }
 
   void setIdCheckBox() {
     this.isCheckedSaveIdBox = !isCheckedSaveIdBox;
@@ -63,7 +67,7 @@ class SigninPageProvider extends ChangeNotifier {
         userAccount = account;
       }
     }
-
+    isFirstRun = false;
     return map;
   }
 

@@ -1,3 +1,5 @@
+import 'package:medsalesportal/util/format_util.dart';
+import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +33,7 @@ class _SigninPageState extends State<SigninPage> {
   String? id;
   String? pw;
   String? message;
+  bool isFirstRun = true;
   late FocusNode? idFocus;
   late FocusNode? pwFocus;
   @override
@@ -352,9 +355,63 @@ class _SigninPageState extends State<SigninPage> {
                     if (snapshot.data!['pw'] != null) {
                       _passwordController.text = snapshot.data!['pw'];
                     }
-                    Future.delayed(Duration.zero, () {
-                      if (message != null && mounted) {
-                        AppDialog.showDangermessage(context, '${message}');
+                    Future.delayed(Duration.zero, () async {
+                      if (message != null && mounted && isFirstRun) {
+                        var enterLength =
+                            FormatUtil.howManyLengthForString(message ?? '') +
+                                1;
+                        var height = AppSize.buttonHeight * 3 +
+                            AppSize.padding * 2 +
+                            enterLength * 14;
+                        AppDialog.showPopup(
+                            context,
+                            Container(
+                              height: height + .5,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    height: height - AppSize.buttonHeight,
+                                    width: AppSize.defaultContentsWidth,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Center(
+                                            child: AppImage.getImage(
+                                                ImageType.INFO)),
+                                        defaultSpacing(),
+                                        AppText.text('$message',
+                                            textAlign: TextAlign.center,
+                                            maxLines: 50)
+                                      ],
+                                    ),
+                                  ),
+                                  Divider(height: .5),
+                                  SizedBox(
+                                    height: AppSize.buttonHeight,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                            width: AppSize.defaultContentsWidth,
+                                            child: TextButton(
+                                                onPressed: () {
+                                                  popToFirst(context);
+                                                },
+                                                child: AppText.text(tr('ok'),
+                                                    style: AppTextStyle.menu_18(
+                                                        AppColors.primary)))),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ));
                       }
                     });
                     return Stack(
