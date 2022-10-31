@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/firebase_service.dart
  * Created Date: 2022-10-18 15:55:12
- * Last Modified: 2022-10-27 16:24:21
+ * Last Modified: 2022-10-31 19:04:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -22,6 +22,7 @@ import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FirebaseService {
   factory FirebaseService() => _sharedInstance();
@@ -42,9 +43,24 @@ class FirebaseService {
   static late StreamSubscription<String> tockenSubscription;
   static late StreamSubscription<RemoteMessage> messageSubscription;
   static late StreamSubscription<RemoteMessage> openMessageSubscription;
-
+  static late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  static final initializationSettings = InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      iOS: DarwinInitializationSettings(
+        requestSoundPermission: true,
+        requestBadgePermission: true,
+        requestAlertPermission: true,
+      ));
+  static const channelId = 'kolon_medsalesportaldev';
+  static final channel = AndroidNotificationChannel(
+    channelId, // id
+    '??? title ?', // title
+    description: 'ok this is description', // description
+    importance: Importance.high,
+  );
   //초기화  --> 앱이 첫실행시 한번만 호출
   static Future<bool> init() async {
+    await initLocalNotifacation();
     await Firebase.initializeApp(
             name: 'medsalesportal',
             options: DefaultFirebaseOptions.currentPlatform)
@@ -64,7 +80,6 @@ class FirebaseService {
     var isSuccessful = true;
     await messaging.requestPermission().then((settings) async {
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        setNotiSettings(settings);
         pr(settings.toString());
         pr('permission ok');
       } else {
@@ -79,21 +94,14 @@ class FirebaseService {
 
   @pragma('vm:entry-point')
   static Future<void> backgroundCallback(RemoteMessage message) async {
-    pr(message);
-    // dosomething. background mode
+    pr('백그라운드 ${message.data}');
     pr('in back ground mode.');
   }
 
-  static Future<void> setIOSNoticeOption() async {
-    if (Platform.isIOS) {
-      await FirebaseMessaging.instance
-          .setForegroundNotificationPresentationOptions(
-              alert: true, badge: true, sound: true);
-    }
-  }
-
-  static void setNotiSettings(NotificationSettings settings) {
-    notiSettings = settings;
+  static Future<void> setNoticeOption() async {
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+            alert: true, badge: true, sound: true);
   }
 
   static Future<String?> getToken() async {
@@ -101,31 +109,70 @@ class FirebaseService {
     return token;
   }
 
+  static Future<void> initLocalNotifacation() async {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+    );
+    if (Platform.isAndroid) {
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()!
+          .requestPermission();
+    }
+  }
+
   static Future<void> startFirebaseMessageListenner() async {
-    await setIOSNoticeOption();
+    await setNoticeOption();
     await requstFcmPermission();
+
     tockenSubscription = fcmTokenStream.listen((newToken) async {
       pr("fcm 토큰 갱신 ---> $newToken");
       fcmTocken = newToken;
       final lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
       lp.sendFcmToken();
     });
-    messageSubscription = messageStream.listen((message) {
-      pr(message);
+    messageSubscription = messageStream.listen((message) async {
+      pr('?????? ${message}');
+      pr('category ${message.category}');
+      pr('collapseKey ${message.collapseKey}');
+      pr('contentAvailable ${message.contentAvailable}');
+      pr('data ${message.data}');
+      pr('from ${message.from}');
+      pr('messageId ${message.messageId}');
+      pr('messageType ${message.messageType}');
+      pr('mutableContent ${message.mutableContent}');
+      pr('notification ${message.notification}');
+      pr('senderId ${message.senderId}');
+      pr('sentTime ${message.sentTime}');
+      pr('threadId ${message.threadId}');
+      pr('ttl ${message.ttl}');
       var notification = message.notification;
-      var android = message.notification?.android;
-      var ios = message.notification?.apple;
-      if (notification != null && android != null && !kIsWeb) {
-        pr(message.data);
-        pr(message.messageId);
-      } else if (notification != null && ios != null && !kIsWeb) {
-        pr(message.data);
-        pr(message.messageId);
-        //
+      if (Platform.isAndroid) {
+        var title = message.data['jsonMessage']['title'];
+        var body = message.data['jsonMessage']['message'];
+        await flutterLocalNotificationsPlugin.show(
+          notification != null ? notification.hashCode : title.hashCode,
+          notification?.title,
+          notification?.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              title,
+              channelDescription: body,
+              // icon: 'launch_background',
+            ),
+          ),
+        );
       }
     });
 
     openMessageSubscription = openMessageStream.listen((message) {
+      pr('on open!!!! ${message.data}');
       // on message tap event
     });
     FirebaseMessaging.onBackgroundMessage(backgroundCallback);
@@ -133,6 +180,31 @@ class FirebaseService {
       pr('FirebaseMessaging is successful!!');
     }
     await getToken();
+  }
+
+  static Future<void> dodo() async {
+    const channelId = 'kolon_medsalesportaldev';
+    var title = '제약영업';
+    var body = '제약영업포탈 푸시테스트 ????';
+    var channel = AndroidNotificationChannel(
+      channelId, // id
+      title, // title
+      description: body, // description
+      importance: Importance.high,
+    );
+    await flutterLocalNotificationsPlugin.show(
+      title.length > 5 ? title.hashCode : body.hashCode,
+      title,
+      body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          title,
+          channelDescription: body,
+          // icon: 'launch_background',
+        ),
+      ),
+    );
   }
 }
 

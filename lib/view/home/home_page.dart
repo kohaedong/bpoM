@@ -359,6 +359,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () async {
+      await FirebaseService.dodo();
+    });
     return ChangeNotifierProvider(
       create: (context) => NoticeProvider(),
       builder: (context, _) {
