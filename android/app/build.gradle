@@ -103,4 +103,7 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation  project(':KolonSSOLib')
+    implementation("androidx.window:window:1.1.0-alpha03")
+    implementation("androidx.window:window-java:1.1.0-alpha03")
+    
 }

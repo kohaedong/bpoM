@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/firebase_service.dart
  * Created Date: 2022-10-18 15:55:12
- * Last Modified: 2022-10-31 19:04:14
+ * Last Modified: 2022-11-01 03:50:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -19,6 +19,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
 import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/service/key_service.dart';
+import 'package:medsalesportal/styles/app_colors.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';
@@ -197,12 +198,10 @@ class FirebaseService {
       title,
       body,
       NotificationDetails(
-        android: AndroidNotificationDetails(
-          channel.id,
-          title,
-          channelDescription: body,
-          // icon: 'launch_background',
-        ),
+        android: AndroidNotificationDetails(channel.id, title,
+            channelDescription: body,
+            icon: '@drawable/push_icon',
+            color: AppColors.primary),
       ),
     );
   }
