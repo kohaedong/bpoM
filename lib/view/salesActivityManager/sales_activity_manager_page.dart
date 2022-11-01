@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-10-28 00:32:34
+ * Last Modified: 2022-11-01 12:10:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -380,11 +380,13 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
       builder: (context, isShowPopup, _) {
         return Builder(builder: (context) {
           if (isShowPopup != null && isShowPopup) {
+            var ap = KeyService.baseAppKey.currentContext!
+                .read<ActivityStateProvider>();
             Future.delayed(Duration.zero, () async {
               await AppDialog.showSignglePopup(
                   KeyService.baseAppKey.currentContext!,
                   tr('have_unconfirmed_activity', args: [
-                    '${DateUtil.getDateStrForKR(p.previousWorkingDay!)}'
+                    '${DateUtil.getDateStrForKR(ap.previousWorkingDay!)}'
                   ]));
               p.resetIsShowPopup();
             });

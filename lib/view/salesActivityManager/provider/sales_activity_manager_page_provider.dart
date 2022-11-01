@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-10-28 00:28:08
+ * Last Modified: 2022-11-01 13:41:11
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
+import 'package:medsalesportal/model/rfc/sales_activity_weeks_model.dart';
 import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
@@ -58,7 +59,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   // -------- menu scope ------
   DateTime? selectedMonth;
   DateTime? selectedDay;
-  DateTime? previousWorkingDay;
+  // DateTime? previousWorkingDay;
   DateTime? checkPreviousWorkingDaysNextWorkingDay;
   List<DateTime> holidayList = [];
 
@@ -116,16 +117,17 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         t250.single.ftime!.isNotEmpty;
     var isConfirmed =
         t250 != null && t250.isNotEmpty && t250.single.stat == 'C';
-    await checkPreviousWorkingDay('', dt: DateTime.now());
-    var previouWorkday = previousWorkingDay;
+    // await checkPreviousWorkingDay('', dt: DateTime.now());
+    var ap =
+        KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
+    var previouWorkday = ap.previousWorkingDay;
     var isToday = (selectedDay!.year == DateTime.now().year) &&
         (selectedDay!.month == DateTime.now().month) &&
         (selectedDay!.day == DateTime.now().day);
-
     var seletedDayIsWorkingDayBeforeToday =
         selectedDay!.day == previouWorkday!.day;
-    var isPreviouDayNotConfirmed =
-        await checkConfiremStatus(datetime: previouWorkday);
+    var isPreviouDayNotConfirmed = await checkConfiremStatus(
+        datetime: previouWorkday, isCheckPrevMonth: true);
     isShowConfirm =
         (isToday || seletedDayIsWorkingDayBeforeToday) ? true : null;
     pr('isShowConfirm:: $isShowConfirm');
@@ -185,30 +187,86 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     return isNotConfirm && (temp2 > 0 || temp1 > 0);
   }
 
+  Future<ResultModel> searchMonthData() async {
+    _api.init(RequestType.SALESE_ACTIVITY_MONTH_DATA);
+    var esLogin = CacheService.getEsLogin();
+    var isLogin = CacheService.getIsLogin();
+    Map<String, dynamic> _body = {
+      "methodName": RequestType.SALESE_ACTIVITY_MONTH_DATA.serverMethod,
+      "methodParamMap": {
+        "IV_ZBIZ": searchKeyResponseModel!.tList!.first.zbiz,
+        "IV_RESID": esLogin!.logid!.toUpperCase(),
+        "IS_LOGIN": isLogin,
+        "IV_VKGRP": esLogin.vkgrp,
+        "IV_SPMON":
+            DateUtil.getMonthStr(DateUtil.getDate(DateUtil.prevMonth())),
+        "resultTables": RequestType.SALESE_ACTIVITY_MONTH_DATA.resultTable,
+        "functionName": RequestType.SALESE_ACTIVITY_MONTH_DATA.serverMethod
+      }
+    };
+    final result = await _api.request(body: _body);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
+    }
+    if (result.statusCode == 200) {
+      pr(result.body);
+      List<List<DateTime?>> dateList = [];
+      var temp = SalesActivityMonthResponseModel.fromJson(result.body['data']);
+      if (monthResponseModel!.esReturn!.mtype != 'S') {
+        return ResultModel(false,
+            errorMassage: monthResponseModel!.esReturn!.message);
+      } else {
+        if (temp.tList != null && temp.tList!.isNotEmpty) {
+          temp.tList!.forEach((e) {
+            var week0 = e.day0 != null ? DateUtil.getDate(e.day0!) : null;
+            var week1 = e.day1 != null ? DateUtil.getDate(e.day1!) : null;
+            var week2 = e.day2 != null ? DateUtil.getDate(e.day2!) : null;
+            var week3 = e.day3 != null ? DateUtil.getDate(e.day3!) : null;
+            var week4 = e.day4 != null ? DateUtil.getDate(e.day4!) : null;
+            var week5 = e.day5 != null ? DateUtil.getDate(e.day5!) : null;
+            var week6 = e.day6 != null ? DateUtil.getDate(e.day6!) : null;
+            dateList.add([week0, week1, week2, week3, week4, week5, week6]);
+          });
+        }
+        return ResultModel(true,
+            data: {'weekList': dateList, 'monthModel': temp});
+      }
+    }
+    return ResultModel(false);
+  }
+
   Future<bool> checkConfiremStatus(
-      {bool? isWithLastWorkdaysNextWorkDay, DateTime? datetime}) async {
+      {required DateTime datetime, bool? isCheckPrevMonth}) async {
     var weekListIndex = 0;
     var weekRowIndex = 0;
-    var day = DateUtil.getDate(FormatUtil.removeDash(DateUtil.getDateStr('',
-        // datetime :: passing된 date에 대한 확정여부 확인.
-        // isWithLastWorkdaysNextWorkDay::  null 일 경우 지난 영업일에 대한 확정여부 확인.[previousWorkingDay]
-        // 그외에 금일 확정여부 확인.  checkPreviousWorkingDaysNextWorkingDay 사실상 오늘이다.
-        dt: datetime != null
-            ? datetime
-            : isWithLastWorkdaysNextWorkDay == null
-                ? previousWorkingDay
-                : checkPreviousWorkingDaysNextWorkingDay)));
     var dateList = <List<DateTime?>>[];
-    dateList = weekListForMonth;
+    SalesActivityWeeksModel? model;
+    SalesActivityMonthResponseModel? monthResponse;
+    if (isCheckPrevMonth ?? false) {
+      var result = await searchMonthData();
+      if (result.isSuccessful) {
+        dateList = result.data['weekList'];
+        monthResponse =
+            result.data['monthModel'] as SalesActivityMonthResponseModel;
+      }
+    } else {
+      dateList = weekListForMonth;
+      monthResponse = monthResponseModel;
+    }
+
     dateList.asMap().entries.forEach((map) {
-      if (map.value.contains(day)) {
+      if (map.value.contains(datetime)) {
         weekListIndex = map.key;
-        weekRowIndex = map.value.indexOf(day);
+        weekRowIndex = map.value.indexOf(datetime);
         pr('weekListIndex ::: ${weekListIndex}');
         pr('weekRowIndex ::: ${weekRowIndex}');
       }
     });
-    var model = monthResponseModel!.tList![weekListIndex];
+
+    model = monthResponse!.tList![weekListIndex];
+
     var isNotConfirmed = (weekRowIndex == 0
         ? isHaveUnconfirmedActivity(
             model.day04 != 'C', model.day01, model.day02)
@@ -235,8 +293,21 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
 
   Future<void> checkIsShowPopup() async {
     // 지난영업일 확인.
-    await checkPreviousWorkingDay('', dt: DateTime.now());
-    isShowPopup = await checkConfiremStatus(datetime: previousWorkingDay);
+
+    var isCurrenMonth =
+        !(DateUtil.diffMounth(selectedMonth ?? DateTime.now(), DateTime.now()));
+    var isPrevMonth = !(DateUtil.diffMounth(selectedMonth ?? DateTime.now(),
+        DateUtil.getDate(DateUtil.prevMonth())));
+    if (isCurrenMonth || isPrevMonth) {
+      var ap =
+          KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
+      if (ap.previousWorkingDay == null) {
+        await checkPreviousWorkingDay('', dt: DateTime.now());
+      }
+      var previouWorkday = ap.previousWorkingDay;
+      isShowPopup = await checkConfiremStatus(
+          datetime: previouWorkday!, isCheckPrevMonth: true);
+    }
     notifyListeners();
   }
 
@@ -289,21 +360,20 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   }
 
   Future<void> checkPreviousWorkingDay(String day, {DateTime? dt}) async {
-    previousWorkingDay = DateUtil.previousDay(dt: dt ?? DateUtil.getDate(day));
+    var temp = DateUtil.previousDay(dt: dt ?? DateUtil.getDate(day));
 
-    var isNotConfirmed =
-        await checkConfiremStatus(datetime: previousWorkingDay);
-
-    while ((previousWorkingDay!.weekday == 7 ||
-            previousWorkingDay!.weekday == 6 ||
-            holidayList.contains(previousWorkingDay)) &&
+    var isNotConfirmed = await checkConfiremStatus(datetime: temp);
+    while ((temp.weekday == 7 ||
+            temp.weekday == 6 ||
+            holidayList.contains(temp)) &&
         !isNotConfirmed) {
-      previousWorkingDay = DateUtil.previousDay(dt: previousWorkingDay);
-      isNotConfirmed = await checkConfiremStatus(datetime: previousWorkingDay);
+      temp = DateUtil.previousDay(dt: temp);
+      isNotConfirmed = await checkConfiremStatus(datetime: temp);
     }
     var ap =
         KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
-    ap.setPrevWorkingDay(previousWorkingDay!);
+    ap.setPrevWorkingDay(temp);
+    pr('ap.previousWorkingDay ${ap.previousWorkingDay}');
   }
 
   Future<ResultModel> getOfficeAddress() async {
@@ -354,11 +424,12 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       if (result.statusCode == 200) {
         holidayList.clear();
         holidayResponseModel = HolidayResponseModel.fromJson(result.body);
-
+        pr(holidayResponseModel?.toJson());
         if (holidayResponseModel!.data != null &&
             holidayResponseModel!.data!.isNotEmpty) {
           holidayResponseModel!.data!.forEach((holidayModel) {
             holidayList.add(DateUtil.getDate(holidayModel.locdate!));
+            pr(holidayList);
           });
         }
         return ResultModel(true);
@@ -397,7 +468,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   }
 
   Future<ResultModel> getMonthData(
-      {bool? isWithLoading, bool? isCurrenMonth}) async {
+      {bool? isWithLoading, bool? isCurrenMonth, DateTime? searchMonth}) async {
     isLoadMonthData = true;
     if (isWithLoading != null && isWithLoading) {
       notifyListeners();
@@ -407,6 +478,13 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     }
     if (goinToMenuTime == null) {
       goinToMenuTime = DateTime.now();
+    }
+    var isDiffMonth =
+        DateUtil.diffMounth(DateTime.now(), selectedMonth ?? DateTime.now());
+    if (isDiffMonth || monthResponseModel == null) {
+      pr('diff month?? $isDiffMonth');
+      pr('selectedMonth?? $selectedMonth');
+      await getHolidayListForMonth(selectedMonth ?? DateTime.now());
     }
     _api.init(RequestType.SALESE_ACTIVITY_MONTH_DATA);
     var esLogin = CacheService.getEsLogin();
@@ -418,11 +496,12 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         "IV_RESID": esLogin!.logid!.toUpperCase(),
         "IS_LOGIN": isLogin,
         "IV_VKGRP": esLogin.vkgrp,
-        "IV_SPMON": DateUtil.getMonthStr(isCurrenMonth != null && isCurrenMonth
-            ? DateTime.now()
-            : selectedMonth != null
-                ? selectedMonth!
-                : DateTime.now()),
+        "IV_SPMON": DateUtil.getMonthStr(searchMonth ??
+            (isCurrenMonth != null && isCurrenMonth
+                ? DateTime.now()
+                : selectedMonth != null
+                    ? selectedMonth!
+                    : DateTime.now())),
         "resultTables": RequestType.SALESE_ACTIVITY_MONTH_DATA.resultTable,
         "functionName": RequestType.SALESE_ACTIVITY_MONTH_DATA.serverMethod
       }
@@ -460,12 +539,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
           });
         }
 
-        var isDiffMonth = DateUtil.diffMounth(
-            DateTime.now(), selectedMonth ?? DateTime.now());
-        if (isDiffMonth) {
-          pr('diff month!!!!!');
-          await getHolidayListForMonth(selectedDay ?? DateTime.now());
-        }
         await checkIsShowPopup();
         isLoadMonthData = false;
         notifyListeners();
@@ -523,16 +596,13 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (result == null || result.statusCode != 200) {
       if (isWithLoading != null && isWithLoading) {
         isLoadDayData = false;
-        try {
-          notifyListeners();
-        } catch (e) {}
       }
       if (isUpdateLoading != null && isUpdateLoading) {
         isLoadUpdateData = false;
-        try {
-          notifyListeners();
-        } catch (e) {}
       }
+      try {
+        notifyListeners();
+      } catch (e) {}
       return ResultModel(false,
           isNetworkError: result?.statusCode == -2,
           isServerError: result?.statusCode == -1);
