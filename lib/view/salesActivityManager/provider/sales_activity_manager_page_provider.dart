@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-11-01 18:45:39
+ * Last Modified: 2022-11-01 22:55:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -552,12 +552,12 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     // activityStatus = ActivityStatus.NONE;
     notifyListeners();
     selectedMonth ??= DateTime.now();
-    if (selectedDay != null &&
-        (selectedDay!.year != selectedMonth!.year ||
-            selectedDay!.month != selectedMonth!.month)) {
-      setSelectedMonth(selectedDay!);
-      getMonthData();
-    }
+    // if (selectedDay != null &&
+    //     (selectedDay!.year != selectedMonth!.year ||
+    //         selectedDay!.month != selectedMonth!.month)) {
+    //   setSelectedMonth(selectedDay!);
+    //   getMonthData();
+    // }
     if (isWithLoading != null && isWithLoading) {
       isLoadDayData = true;
       notifyListeners();
@@ -567,12 +567,12 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       notifyListeners();
     }
 
-    var isDiffMonth =
-        DateUtil.diffMounth(DateTime.now(), selectedDay ?? DateTime.now());
-    if (isDiffMonth) {
-      pr('diff month!!!!!');
-      await getHolidayListForMonth(selectedDay ?? DateTime.now());
-    }
+    // var isDiffMonth =
+    //     DateUtil.diffMounth(DateTime.now(), selectedDay ?? DateTime.now());
+    // if (isDiffMonth) {
+    //   pr('diff month!!!!!');
+    //   await getHolidayListForMonth(selectedDay ?? DateTime.now());
+    // }
     await getOfficeAddress();
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     var isLogin = CacheService.getIsLogin();

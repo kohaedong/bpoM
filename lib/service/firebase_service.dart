@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/firebase_service.dart
  * Created Date: 2022-10-18 15:55:12
- * Last Modified: 2022-11-01 15:53:09
+ * Last Modified: 2022-11-01 20:00:39
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -97,6 +97,24 @@ class FirebaseService {
   static Future<void> backgroundCallback(RemoteMessage message) async {
     pr('백그라운드 ${message.data}');
     pr('in back ground mode.');
+    var notification = message.notification;
+    if (Platform.isAndroid) {
+      var title = message.data['jsonMessage']['title'];
+      var body = message.data['jsonMessage']['message'];
+      await flutterLocalNotificationsPlugin.show(
+        notification != null ? notification.hashCode : title.hashCode,
+        notification?.title,
+        notification?.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            title,
+            channelDescription: body,
+            // icon: 'launch_background',
+          ),
+        ),
+      );
+    }
   }
 
   static Future<void> setNoticeOption() async {

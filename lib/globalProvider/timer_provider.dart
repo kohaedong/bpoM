@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/timer_provider.dart
  * Created Date: 2022-07-08 14:36:43
- * Last Modified: 2022-11-01 19:37:20
+ * Last Modified: 2022-11-01 23:07:17
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -28,7 +28,7 @@ class TimerProvider extends ChangeNotifier {
   final startWorkingHour = 00;
   final stopWorkingHour = 23;
   final startMinute = 00;
-  final stopMinute = 00;
+  final stopMinute = 59;
   bool get isToastRunnint =>
       _toastTimer == null ? false : _toastTimer!.isActive;
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  영업시간 제한

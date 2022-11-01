@@ -2,7 +2,7 @@
  * Project Name:  [koreaJob]
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/fuction_of_check_working_time.dart
  * Created Date: 2022-11-01 17:25:02
- * Last Modified: 2022-11-01 19:53:07
+ * Last Modified: 2022-11-01 23:04:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  MOMONETWORK ALL RIGHTS RESERVED. 
@@ -22,28 +22,23 @@ import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 void showWorkingTimePopup({BuildContext? contextt}) async {
   final context = contextt ?? KeyService.baseAppKey.currentContext!;
   final tp = context.read<TimerProvider>();
+  var fill = (int val) {
+    var temp = (val == 0) ? '00' : ('$val'.length == 1 ? '0$val' : '$val');
+    return temp;
+  };
   AppDialog.showDangermessage(
       context,
       tr('plz_check_working_time', args: [
-        '${tp.startWorkingHour}:${tp.startMinute}',
-        '${tp.stopWorkingHour}:${tp.stopMinute}'
+        '${fill(tp.startWorkingHour)}:${fill(tp.startMinute)}',
+        '${fill(tp.stopWorkingHour)}:${fill(tp.stopMinute)}'
       ]));
 }
 
 void showOverTimePopup({BuildContext? contextt}) async {
   final context = contextt ?? KeyService.baseAppKey.currentContext!;
   final tp = context.read<TimerProvider>();
-
-  var fill = (int val) {
-    var temp = (val == 0) ? '00' : ('$val'.length == 1 ? '0$val' : '$val');
-    return temp;
-  };
-  var popupResult = await AppDialog.showDangermessage(
-      context,
-      tr('plz_check_over_time', args: [
-        '${fill(tp.startWorkingHour)}:${fill(tp.startMinute)}',
-        '${fill(tp.stopWorkingHour)}:${fill(tp.stopMinute)}'
-      ]));
+  var popupResult =
+      await AppDialog.showDangermessage(context, tr('plz_check_over_time'));
   if (popupResult != null && popupResult) {
     tp.setLastActionTime();
     popToFirst(context);
