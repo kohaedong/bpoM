@@ -2,7 +2,7 @@
  * Project Name:  [koreaJob]
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/fuction_of_check_working_time.dart
  * Created Date: 2022-11-01 17:25:02
- * Last Modified: 2022-11-01 19:18:57
+ * Last Modified: 2022-11-01 19:53:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  MOMONETWORK ALL RIGHTS RESERVED. 
@@ -34,11 +34,15 @@ void showOverTimePopup({BuildContext? contextt}) async {
   final context = contextt ?? KeyService.baseAppKey.currentContext!;
   final tp = context.read<TimerProvider>();
 
+  var fill = (int val) {
+    var temp = (val == 0) ? '00' : ('$val'.length == 1 ? '0$val' : '$val');
+    return temp;
+  };
   var popupResult = await AppDialog.showDangermessage(
       context,
       tr('plz_check_over_time', args: [
-        '${tp.startWorkingHour}:${tp.startMinute}',
-        '${tp.stopWorkingHour}:${tp.stopMinute}'
+        '${fill(tp.startWorkingHour)}:${fill(tp.startMinute)}',
+        '${fill(tp.stopWorkingHour)}:${fill(tp.stopMinute)}'
       ]));
   if (popupResult != null && popupResult) {
     tp.setLastActionTime();
@@ -55,7 +59,7 @@ bool isNotWoringTime() {
 bool isOverTime() {
   final context = KeyService.baseAppKey.currentContext!;
   final tp = context.read<TimerProvider>();
-  return true;
+  return tp.isOverTime;
 }
 
 void setActionTime({BuildContext? contextt}) {
