@@ -607,7 +607,7 @@
     "plz_check_price":"수량 조회를 해주세요.",
     "review":"Review",
     "is_give_sample":"셈플 전달",
-    "visit_pharmacy":"약국방문"
-   
-   
+    "visit_pharmacy":"약국방문",
+    "plz_check_working_time":"영업이 종료되었습니다.\n영업시간은 {} ~ {} 입니다.",
+    "plz_check_over_time":"날짜가 변경되어 메인으로 이동합니다."
 }

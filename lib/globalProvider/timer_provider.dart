@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/timer_provider.dart
  * Created Date: 2022-07-08 14:36:43
- * Last Modified: 2022-11-01 13:50:38
+ * Last Modified: 2022-11-01 18:46:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/widgets.dart';
+import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 
 class TimerProvider extends ChangeNotifier {
@@ -23,8 +24,37 @@ class TimerProvider extends ChangeNotifier {
   Timer? _toastTimer;
   Timer? get getTimer => _timer;
   bool? get isRunning => _timer?.isActive;
+  // 영업시간 설정
+  final startWorkingHour = 00;
+  final stopWorkingHour = 23;
+  final startMinute = 00;
+  final stopMinute = 00;
   bool get isToastRunnint =>
       _toastTimer == null ? false : _toastTimer!.isActive;
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  영업시간 제한
+  DateTime? lastActionTime;
+  bool get isNotWorkingTime {
+    var nowHour = DateTime.now().hour;
+    var nowMinute = DateTime.now().minute;
+    var isWorkingTime = (nowHour >= startWorkingHour) &&
+        (nowHour == startWorkingHour ? nowMinute < startMinute : true) &&
+        (nowHour <= stopWorkingHour) &&
+        (nowHour == stopWorkingHour ? nowMinute < stopMinute : true);
+    return !isWorkingTime;
+  }
+
+  bool get isOverTime {
+    var isToday =
+        DateUtil.isToday(lastActionTime ?? DateTime.now(), DateTime.now());
+    return !isToday;
+  }
+
+  void setLastActionTime() {
+    lastActionTime = DateTime.now();
+  }
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  영업시간 제한
+//
   void stopToastTimer() {
     _toastTimer?.cancel();
     notifyListeners();

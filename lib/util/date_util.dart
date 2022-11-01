@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/date_util.dart
  * Created Date: 2021-11-23 07:56:54
- * Last Modified: 2022-10-28 17:07:29
+ * Last Modified: 2022-11-01 17:03:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -61,7 +61,7 @@ class DateUtil {
   // static int diffMounth(DateTime start, DateTime end) {
   //   int v = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
   //   pr(v);
-  //   return v ~/ (86400000 * 30);
+  // return v ~/ (86400000 * 30);
   // }
 
   static bool diffMounth(DateTime start, DateTime end) {
@@ -70,9 +70,7 @@ class DateUtil {
   }
 
   static bool isToday(DateTime start, DateTime end) {
-    return start.year == end.year &&
-        start.month == end.month &&
-        start.day == end.day;
+    return DateUtils.isSameDay(start, end);
   }
 
   static String prevWeek() {

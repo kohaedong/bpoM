@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-10-25 14:57:03
+ * Last Modified: 2022-11-01 18:43:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -37,13 +37,13 @@ import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/enums/add_activity_page_input_type.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
-import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/widget_of_customer_info_top.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
+import 'package:medsalesportal/view/common/fuction_of_check_working_time.dart';
 import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
 import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
@@ -253,32 +253,39 @@ class _AddActivityPageState extends State<AddActivityPage> {
                       )),
                   GestureDetector(
                     onTap: () {
-                      if (isVisit ||
-                          p.isDoNothing ||
-                          p.activityStatus == ActivityStatus.STOPED ||
-                          p.activityStatus ==
-                              ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
-                          p.activityStatus ==
-                              ActivityStatus.PREV_WORK_DAY_STOPED) {
-                        return;
+                      if (isOverTime()) {
+                        showOverTimePopup(contextt: context);
+                      } else if (isNotWoringTime()) {
+                        showWorkingTimePopup(contextt: context);
                       } else {
-                        if ((p.selectedKunnr == null ||
-                                p.selectedKeyMan == null) &&
-                            !p.isVisit) {
-                          AppToast()
-                              .show(context, tr('plz_check_essential_option2'));
-                        } else if (!p.isVisit) {
-                          p.getDistance().then((result) => result.isSuccessful
-                              ? () {
-                                  p.saveTable().then((result) {
-                                    if (result.isSuccessful) {
-                                      p.setIsInterviewIndex(0);
-                                      _interviewTextEditingController.text = '';
-                                      AppToast().show(context, tr('saved'));
-                                    }
-                                  });
-                                }()
-                              : DoNothingAction());
+                        if (isVisit ||
+                            p.isDoNothing ||
+                            p.activityStatus == ActivityStatus.STOPED ||
+                            p.activityStatus ==
+                                ActivityStatus.PREV_WORK_DAY_EN_STOPED ||
+                            p.activityStatus ==
+                                ActivityStatus.PREV_WORK_DAY_STOPED) {
+                          return;
+                        } else {
+                          if ((p.selectedKunnr == null ||
+                                  p.selectedKeyMan == null) &&
+                              !p.isVisit) {
+                            AppToast().show(
+                                context, tr('plz_check_essential_option2'));
+                          } else if (!p.isVisit) {
+                            p.getDistance().then((result) => result.isSuccessful
+                                ? () {
+                                    p.saveTable().then((result) {
+                                      if (result.isSuccessful) {
+                                        p.setIsInterviewIndex(0);
+                                        _interviewTextEditingController.text =
+                                            '';
+                                        AppToast().show(context, tr('saved'));
+                                      }
+                                    });
+                                  }()
+                                : DoNothingAction());
+                          }
                         }
                       }
                     },
@@ -486,32 +493,33 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 selfHeight: AppSize.bottomButtonHeight, () async {
               hideKeyboard(context);
 
-              final p = context.read<AddActivityPageProvider>();
-              if (p.isDifreentGoinTime) {
-                AppToast().show(context, tr('stats_is_changed'));
-                popToFirst(context);
-                return;
-              }
-              if (p.activityStatus == ActivityStatus.FINISH ||
-                  p.activityStatus == ActivityStatus.NONE) {
-                return;
+              if (isOverTime()) {
+                showOverTimePopup(contextt: context);
+              } else if (isNotWoringTime()) {
+                showWorkingTimePopup(contextt: context);
               } else {
-                if (canShow) {
-                  // var notInterviewValidation = p.isVisit
-                  //     ? p.isInterviewIndex == 1
-                  //         ? (p.reasonForinterviewFailure != null &&
-                  //             p.reasonForinterviewFailure!.isNotEmpty)
-                  //         : true
-                  //     : true;
-                  await p.saveTable().then((result) {
-                    if (result.isSuccessful) {
-                      AppToast().show(
-                          context,
-                          p.currenSeqNo == null
-                              ? tr('register_successful')
-                              : tr('saved'));
-                    }
-                  });
+                final p = context.read<AddActivityPageProvider>();
+                if (p.activityStatus == ActivityStatus.FINISH ||
+                    p.activityStatus == ActivityStatus.NONE) {
+                  return;
+                } else {
+                  if (canShow) {
+                    // var notInterviewValidation = p.isVisit
+                    //     ? p.isInterviewIndex == 1
+                    //         ? (p.reasonForinterviewFailure != null &&
+                    //             p.reasonForinterviewFailure!.isNotEmpty)
+                    //         : true
+                    //     : true;
+                    await p.saveTable().then((result) {
+                      if (result.isSuccessful) {
+                        AppToast().show(
+                            context,
+                            p.currenSeqNo == null
+                                ? tr('register_successful')
+                                : tr('saved'));
+                      }
+                    });
+                  }
                 }
               }
             }, isBottomButton: true);

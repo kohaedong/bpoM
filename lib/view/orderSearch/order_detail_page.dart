@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_detail_page.dart
  * Created Date: 2022-07-12 15:20:28
- * Last Modified: 2022-10-13 04:39:00
+ * Last Modified: 2022-11-01 18:59:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
+import 'package:medsalesportal/view/common/fuction_of_check_working_time.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -165,24 +166,30 @@ class OrderDetailPage extends StatelessWidget {
               action: isShowCancel
                   ? InkWell(
                       onTap: () async {
-                        final dialogResult = await AppDialog.showPopup(
-                            context,
-                            buildTowButtonTextContents(
-                                context, tr('is_realy_cancel_order'),
-                                successButtonText: tr('order_cancel'),
-                                faildButtonText: tr('close')));
-                        if (dialogResult != null && dialogResult) {
-                          final p = context.read<OrderDetailPageProvider>();
-                          final result =
-                              await p.orderCancel(modelList.first.vbeln!);
-                          if (result.isSuccessful) {
-                            AppToast().show(context, result.message!);
-                            Navigator.pop(context, modelList);
-                          } else {
-                            AppToast().show(
-                                context,
-                                tr('faild_for_something',
-                                    args: ['${tr('order_cancel')}']));
+                        if (isOverTime()) {
+                          showOverTimePopup(contextt: context);
+                        } else if (isNotWoringTime()) {
+                          showWorkingTimePopup(contextt: context);
+                        } else {
+                          final dialogResult = await AppDialog.showPopup(
+                              context,
+                              buildTowButtonTextContents(
+                                  context, tr('is_realy_cancel_order'),
+                                  successButtonText: tr('order_cancel'),
+                                  faildButtonText: tr('close')));
+                          if (dialogResult != null && dialogResult) {
+                            final p = context.read<OrderDetailPageProvider>();
+                            final result =
+                                await p.orderCancel(modelList.first.vbeln!);
+                            if (result.isSuccessful) {
+                              AppToast().show(context, result.message!);
+                              Navigator.pop(context, modelList);
+                            } else {
+                              AppToast().show(
+                                  context,
+                                  tr('faild_for_something',
+                                      args: ['${tr('order_cancel')}']));
+                            }
                           }
                         }
                       },

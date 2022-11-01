@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-10-26 08:30:22
+ * Last Modified: 2022-11-01 18:29:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
+import 'package:medsalesportal/view/common/fuction_of_check_working_time.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -1047,24 +1048,30 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                 AppTextStyle.menu_18(
                     isValidate ? AppColors.whiteText : AppColors.hintText),
                 0, () async {
-              if (isValidate) {
-                final p = context.read<OrderManagerPageProvider>();
-                final tp = context.read<TimerProvider>();
-                if (tp.getTimer == null ||
-                    (tp.isRunning != null && !tp.isRunning!)) {
-                  var popupResult = await AppDialog.showPopup(
-                      context,
-                      buildTowButtonTextContents(
-                          context, tr('is_really_registor')));
-                  if (popupResult != null && popupResult) {
-                    tp.perdict(p.onSubmmit().then((result) {
-                      if (result.isSuccessful) {
-                        AppToast().show(context, tr('success'));
-                        Navigator.popAndPushNamed(
-                            context, OrderSearchPage.routeName,
-                            arguments: p.selectedSalesPerson);
-                      }
-                    }));
+              if (isOverTime()) {
+                showOverTimePopup(contextt: context);
+              } else if (isNotWoringTime()) {
+                showWorkingTimePopup(contextt: context);
+              } else {
+                if (isValidate) {
+                  final p = context.read<OrderManagerPageProvider>();
+                  final tp = context.read<TimerProvider>();
+                  if (tp.getTimer == null ||
+                      (tp.isRunning != null && !tp.isRunning!)) {
+                    var popupResult = await AppDialog.showPopup(
+                        context,
+                        buildTowButtonTextContents(
+                            context, tr('is_really_registor')));
+                    if (popupResult != null && popupResult) {
+                      tp.perdict(p.onSubmmit().then((result) {
+                        if (result.isSuccessful) {
+                          AppToast().show(context, tr('success'));
+                          Navigator.popAndPushNamed(
+                              context, OrderSearchPage.routeName,
+                              arguments: p.selectedSalesPerson);
+                        }
+                      }));
+                    }
                   }
                 }
               }

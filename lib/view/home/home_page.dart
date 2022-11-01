@@ -1,9 +1,5 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:medsalesportal/globalProvider/timer_provider.dart';
-import 'package:medsalesportal/service/firebase_service.dart';
-import 'package:medsalesportal/view/common/function_of_stop_or_start_listener.dart';
-
 import './home_icon_map.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -14,17 +10,22 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/service/connect_service.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
+import 'package:medsalesportal/service/firebase_service.dart';
 import 'package:medsalesportal/view/home/notice_all_page.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/home/notice_list_item.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:medsalesportal/view/settings/settings_page.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:medsalesportal/globalProvider/timer_provider.dart';
 import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/home/provider/notice_provider.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
+import 'package:medsalesportal/view/orderManager/order_manager_page.dart';
 import 'package:medsalesportal/view/commonLogin/update_and_notice_dialog.dart';
+import 'package:medsalesportal/view/common/fuction_of_check_working_time.dart';
+import 'package:medsalesportal/view/common/function_of_stop_or_start_listener.dart';
 import 'package:medsalesportal/view/salesActivityManager/sales_activity_manager_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -131,14 +132,27 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             ...list.asMap().entries.map((map) {
               return InkWell(
                 onTap: () async {
+                  setActionTime();
                   if (map.value == ImageType.EMPTY) {
                     DoNothingAction();
                   } else {
                     if (map.value.routeName ==
                         SalseActivityManagerPage.routeName) {
-                      final lp = context.read<LoginProvider>();
-                      if (!lp.isPermidedSalseGroup) {
-                        AppToast().show(context, '${tr('permission_denied')}');
+                      if (isNotWoringTime()) {
+                        showWorkingTimePopup(contextt: context);
+                      } else {
+                        final lp = context.read<LoginProvider>();
+                        if (!lp.isPermidedSalseGroup) {
+                          AppToast()
+                              .show(context, '${tr('permission_denied')}');
+                        } else {
+                          Navigator.pushNamed(context, map.value.routeName);
+                        }
+                      }
+                    } else if (map.value.routeName ==
+                        OrderManagerPage.routeName) {
+                      if (isNotWoringTime()) {
+                        showWorkingTimePopup(contextt: context);
                       } else {
                         Navigator.pushNamed(context, map.value.routeName);
                       }

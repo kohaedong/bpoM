@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-10-27 12:14:50
+ * Last Modified: 2022-11-01 18:43:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,12 +12,11 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
-import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/enums/request_type.dart';
+import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/hive_service.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -31,6 +30,7 @@ import 'package:medsalesportal/model/rfc/et_kunnr_response_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_280.dart';
+import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_361.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_250.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
@@ -95,7 +95,6 @@ class AddActivityPageProvider extends ChangeNotifier {
 
     return newSeqno;
   };
-  DateTime? goinToMenuTime;
   bool get isNotToday {
     final t260 = fromParentResponseModel!.table260!;
     var isToday = t260.isNotEmpty
@@ -104,12 +103,9 @@ class AddActivityPageProvider extends ChangeNotifier {
     return !isToday;
   }
 
-  bool get isDifreentGoinTime => goinToMenuTime!.day != DateTime.now().day;
-
   Future<ResultModel> initData(
       SalesActivityDayResponseModel fromParentModel, ActivityStatus status,
       {String? seqno}) async {
-    goinToMenuTime = DateTime.now();
     distanceModel = AddActivityDistanceModel();
     fromParentResponseModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());

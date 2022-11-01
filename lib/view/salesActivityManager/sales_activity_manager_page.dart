@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-11-01 12:10:56
+ * Last Modified: 2022-11-01 18:44:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -37,13 +37,13 @@ import 'package:medsalesportal/view/common/base_popup_list.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/view/common/widget_of_tag_button.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
-import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_weeks_model.dart';
 import 'package:medsalesportal/globalProvider/activity_state_provder.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/view/common/base_date_picker_for_month.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_table_260.dart';
+import 'package:medsalesportal/view/common/fuction_of_check_working_time.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_single_date_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/view/salesActivityManager/add_activity_page.dart';
@@ -678,42 +678,43 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
             AppColors.whiteText,
             AppTextStyle.default_12.copyWith(color: AppColors.primary),
             AppSize.radius25, () async {
-          final p = context.read<ActivityMenuProvider>();
-          if (p.isDifreentGoinTime) {
-            AppToast().show(context, tr('stats_is_changed'));
-            popToFirst(context);
-            return;
-          }
-          switch (menuType) {
-            case MenuType.ACTIVITY_DELETE:
-              //! remove last table.
-              _showIsDeleteLastAvtivityPopup(context);
-              break;
-            case MenuType.ACTIVITY_ADD:
-              if (p.activityStatus == ActivityStatus.STARTED) {
-                _routeToAddActivityPage(context, hook: hook);
-              } else {
-                p.setIsNeedUpdate(true);
-                _showIsStartAvtivityPopup(context);
-              }
-              break;
-            case MenuType.ACTIVITY_STATUS:
-              switch (p.activityStatus) {
-                case ActivityStatus.INIT:
-                  // 영업활동 시작
-                  _showLocationPopup(context);
-                  break;
-                case ActivityStatus.STARTED:
-                  // 영업활동 종료.
-                  _showLocationPopup(context);
-                  break;
-                case ActivityStatus.PREV_WORK_DAY_EN_STOPED:
-                  // 영업활동 종료.
-                  _showLocationPopup(context);
-                  break;
-                default:
-              }
-              break;
+          if (isOverTime()) {
+            showOverTimePopup(contextt: context);
+          } else if (isNotWoringTime()) {
+            showWorkingTimePopup(contextt: context);
+          } else {
+            final p = context.read<ActivityMenuProvider>();
+            switch (menuType) {
+              case MenuType.ACTIVITY_DELETE:
+                //! remove last table.
+                _showIsDeleteLastAvtivityPopup(context);
+                break;
+              case MenuType.ACTIVITY_ADD:
+                if (p.activityStatus == ActivityStatus.STARTED) {
+                  _routeToAddActivityPage(context, hook: hook);
+                } else {
+                  p.setIsNeedUpdate(true);
+                  _showIsStartAvtivityPopup(context);
+                }
+                break;
+              case MenuType.ACTIVITY_STATUS:
+                switch (p.activityStatus) {
+                  case ActivityStatus.INIT:
+                    // 영업활동 시작
+                    _showLocationPopup(context);
+                    break;
+                  case ActivityStatus.STARTED:
+                    // 영업활동 종료.
+                    _showLocationPopup(context);
+                    break;
+                  case ActivityStatus.PREV_WORK_DAY_EN_STOPED:
+                    // 영업활동 종료.
+                    _showLocationPopup(context);
+                    break;
+                  default:
+                }
+                break;
+            }
           }
         }, selfHeight: AppSize.smallButtonHeight * 1.2);
       },
@@ -1092,11 +1093,6 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
 
   Future<void> doConfirmTable(BuildContext context) async {
     final p = context.read<SalseActivityManagerPageProvider>();
-    if (p.isDifreentGoinTime) {
-      AppToast().show(context, tr('stats_is_changed'));
-      popToFirst(context);
-      return;
-    }
     if (p.activityStatus! == ActivityStatus.STOPED ||
         p.activityStatus == ActivityStatus.PREV_WORK_DAY_STOPED) {
       await Future.delayed(Duration.zero, () async {

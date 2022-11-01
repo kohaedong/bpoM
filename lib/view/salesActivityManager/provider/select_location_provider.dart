@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-11-01 15:51:15
+ * Last Modified: 2022-11-01 18:43:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/app_size.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
@@ -29,7 +30,6 @@ import 'package:medsalesportal/model/rfc/sales_activity_day_table_250.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_coordinate_response_model.dart';
-import 'package:provider/provider.dart';
 
 // ---------------  description  --------------------
 // 1. [ActivityMenuProvider]에서  model 가져와 editDayModel에 저장한다.
@@ -55,9 +55,6 @@ class SelectLocationProvider extends ChangeNotifier {
   String? lat;
   String? lon;
 
-  DateTime? goinToMenuTime;
-  bool get isDifreentGoinTime => goinToMenuTime!.day != DateTime.now().day;
-
   bool get isHomeAddressEmpty =>
       locationList!.where((model) => model.addcat == 'H').isEmpty;
   bool get isOfficeAddressEmpty =>
@@ -78,7 +75,6 @@ class SelectLocationProvider extends ChangeNotifier {
       SalesActivityDayResponseModel fromParentModel,
       List<SalseActivityLocationModel> fromParentLocationList,
       ActivityStatus status) {
-    goinToMenuTime = DateTime.now();
     editDayModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
     locationList = fromParentLocationList;

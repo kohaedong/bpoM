@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_select_location_widget.dart
  * Created Date: 2022-08-07 20:02:49
- * Last Modified: 2022-10-28 17:14:34
+ * Last Modified: 2022-11-01 18:44:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -26,9 +26,9 @@ import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
-import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
 import 'package:medsalesportal/model/rfc/salse_activity_location_model.dart';
+import 'package:medsalesportal/view/common/fuction_of_check_working_time.dart';
 import 'package:medsalesportal/model/rfc/sales_activity_day_response_model.dart';
 import 'package:medsalesportal/view/common/base_column_with_title_and_textfiled.dart';
 import 'package:medsalesportal/view/salesActivityManager/provider/select_location_provider.dart';
@@ -86,56 +86,58 @@ class _SelectLocationWidgetState extends State<SelectLocationWidget> {
         return GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () async {
-              if (p.isDifreentGoinTime) {
-                AppToast().show(context, tr('stats_is_changed'));
-                popToFirst(context);
-              }
               if (isLeft) {
                 Navigator.pop(context, null);
               } else {
-                var index = p.selectedIndex;
-                var doAction = () async {
-                  await p.startOrStopActivity(index).then((result) {
-                    if (result.isSuccessful) {
-                      //!  table저장완료. 부모창으로 model전달.
-                      Navigator.pop(
-                          context,
-                          isLeft
-                              ? null
-                              : ResultModel(true, data: p.editDayModel));
-                    } else {
-                      AppToast().show(context, result.errorMassage!);
-                    }
-                  });
-                };
-                switch (index) {
-                  case 0:
-                    if (p.homeAddress.isNotEmpty) {
-                      p.setSelectedAddress(p.homeAddress);
-                      doAction.call();
-                    } else {
-                      AppToast().show(context, tr('plz_set_address'));
-                    }
-                    break;
-                  case 1:
-                    if (p.officeAddres.isNotEmpty) {
-                      if (p.selectedAddress != null &&
-                          p.officeAddres
-                              .where(
-                                  (model) => model.zadd1 == p.selectedAddress)
-                              .isNotEmpty) {
+                if (isOverTime()) {
+                  showOverTimePopup(contextt: context);
+                } else if (isNotWoringTime()) {
+                  showWorkingTimePopup(contextt: context);
+                } else {
+                  var index = p.selectedIndex;
+                  var doAction = () async {
+                    await p.startOrStopActivity(index).then((result) {
+                      if (result.isSuccessful) {
+                        //!  table저장완료. 부모창으로 model전달.
+                        Navigator.pop(
+                            context,
+                            isLeft
+                                ? null
+                                : ResultModel(true, data: p.editDayModel));
+                      } else {
+                        AppToast().show(context, result.errorMassage!);
+                      }
+                    });
+                  };
+                  switch (index) {
+                    case 0:
+                      if (p.homeAddress.isNotEmpty) {
+                        p.setSelectedAddress(p.homeAddress);
                         doAction.call();
                       } else {
-                        AppToast().show(context, tr('plz_selected_address'));
+                        AppToast().show(context, tr('plz_set_address'));
                       }
-                    } else {
-                      AppToast().show(context, tr('plz_set_address'));
-                    }
-                    break;
-                  case 2:
-                    doAction.call();
-                    break;
-                  default:
+                      break;
+                    case 1:
+                      if (p.officeAddres.isNotEmpty) {
+                        if (p.selectedAddress != null &&
+                            p.officeAddres
+                                .where(
+                                    (model) => model.zadd1 == p.selectedAddress)
+                                .isNotEmpty) {
+                          doAction.call();
+                        } else {
+                          AppToast().show(context, tr('plz_selected_address'));
+                        }
+                      } else {
+                        AppToast().show(context, tr('plz_set_address'));
+                      }
+                      break;
+                    case 2:
+                      doAction.call();
+                      break;
+                    default:
+                  }
                 }
               }
             },

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-10-25 13:59:12
+ * Last Modified: 2022-11-01 18:57:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 import 'dart:math' as math;
+import 'package:medsalesportal/view/common/fuction_of_check_working_time.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -141,20 +142,29 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
             AppColors.lightBlueColor,
             AppTextStyle.default_18.copyWith(color: AppColors.primary),
             AppSize.zero, () async {
-          final p = context.read<BulkOrderDetailProvider>();
-          final dialogResult = await AppDialog.showPopup(
-              context,
-              buildTowButtonTextContents(context, tr('is_realy_cancel_order'),
-                  successButtonText: tr('order_cancel'),
-                  faildButtonText: tr('close')));
-          if (dialogResult != null && dialogResult) {
-            await p.orderCancelOrSave(true).then((result) {
-              AppToast().show(context,
-                  result.isSuccessful ? result.message! : result.errorMassage!);
-              if (result.isSuccessful) {
-                Navigator.pop(context, true);
-              }
-            });
+          if (isOverTime()) {
+            showOverTimePopup(contextt: context);
+          } else if (isNotWoringTime()) {
+            showWorkingTimePopup(contextt: context);
+          } else {
+            final p = context.read<BulkOrderDetailProvider>();
+            final dialogResult = await AppDialog.showPopup(
+                context,
+                buildTowButtonTextContents(context, tr('is_realy_cancel_order'),
+                    successButtonText: tr('order_cancel'),
+                    faildButtonText: tr('close')));
+            if (dialogResult != null && dialogResult) {
+              await p.orderCancelOrSave(true).then((result) {
+                AppToast().show(
+                    context,
+                    result.isSuccessful
+                        ? result.message!
+                        : result.errorMassage!);
+                if (result.isSuccessful) {
+                  Navigator.pop(context, true);
+                }
+              });
+            }
           }
         }),
         AppStyles.buildButton(
@@ -166,41 +176,46 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
             AppSize.zero, () async {
           final p = context.read<BulkOrderDetailProvider>();
           //! 여신잔액 확인 안하고 바로 저장!.
-
-          var amount = double.tryParse(p.amountAvailable.replaceAll(',', ''));
-          pr('@@@@${p.amountAvailable}');
-          var overThan = false;
-          if (amount != null) {
-            pr('notEmpty');
-            overThan = p.amountAvailable.isNotEmpty && amount > p.orderTotal;
-          }
-          hideKeyboard(context);
-          var popupResult = await AppDialog.showPopup(context,
-              buildTowButtonTextContents(context, tr('is_really_save')));
-          if (popupResult != null && popupResult) {
-            await p.checkIsItemInStock().then((isInStockAll) async {
-              if (isInStockAll) {
-                if (overThan) {
-                  p.orderCancelOrSave(false).then((result) {
-                    AppToast().show(
-                        context,
-                        result.isSuccessful
-                            ? tr('saved')
-                            : result.errorMassage!);
-                  });
+          if (isOverTime()) {
+            showOverTimePopup(contextt: context);
+          } else if (isNotWoringTime()) {
+            showWorkingTimePopup(contextt: context);
+          } else {
+            var amount = double.tryParse(p.amountAvailable.replaceAll(',', ''));
+            pr('@@@@${p.amountAvailable}');
+            var overThan = false;
+            if (amount != null) {
+              pr('notEmpty');
+              overThan = p.amountAvailable.isNotEmpty && amount > p.orderTotal;
+            }
+            hideKeyboard(context);
+            var popupResult = await AppDialog.showPopup(context,
+                buildTowButtonTextContents(context, tr('is_really_save')));
+            if (popupResult != null && popupResult) {
+              await p.checkIsItemInStock().then((isInStockAll) async {
+                if (isInStockAll) {
+                  if (overThan) {
+                    p.orderCancelOrSave(false).then((result) {
+                      AppToast().show(
+                          context,
+                          result.isSuccessful
+                              ? tr('saved')
+                              : result.errorMassage!);
+                    });
+                  } else {
+                    AppDialog.showSignglePopup(context,
+                        tr('amount_available_for_order_entry_is_fail'));
+                  }
                 } else {
-                  AppDialog.showSignglePopup(
-                      context, tr('amount_available_for_order_entry_is_fail'));
+                  // var message = p.editItemList
+                  //     .where((item) => item.zmsg != '정상')
+                  //     .toList()
+                  //     .first
+                  //     .zmsg;
+                  AppDialog.showSignglePopup(context, tr('plz_check_message'));
                 }
-              } else {
-                // var message = p.editItemList
-                //     .where((item) => item.zmsg != '정상')
-                //     .toList()
-                //     .first
-                //     .zmsg;
-                AppDialog.showSignglePopup(context, tr('plz_check_message'));
-              }
-            });
+              });
+            }
           }
         })
       ],
