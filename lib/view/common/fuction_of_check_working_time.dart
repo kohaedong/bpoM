@@ -2,7 +2,7 @@
  * Project Name:  [koreaJob]
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/fuction_of_check_working_time.dart
  * Created Date: 2022-11-01 17:25:02
- * Last Modified: 2022-11-01 18:59:57
+ * Last Modified: 2022-11-01 19:18:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  MOMONETWORK ALL RIGHTS RESERVED. 
@@ -41,6 +41,7 @@ void showOverTimePopup({BuildContext? contextt}) async {
         '${tp.stopWorkingHour}:${tp.stopMinute}'
       ]));
   if (popupResult != null && popupResult) {
+    tp.setLastActionTime();
     popToFirst(context);
   }
 }

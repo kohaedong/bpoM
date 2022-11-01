@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
+
 import './home_icon_map.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +91,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (_isForeground) {
       pr('start all listener  !!!!!!!!!!');
       startAllListener();
+      if (isOverTime()) {
+        showOverTimePopup();
+      }
     }
 
     final arguments = ModalRoute.of(context)!.settings.arguments;
