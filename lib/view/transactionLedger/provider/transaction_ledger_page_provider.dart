@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-10-24 01:49:19
+ * Last Modified: 2022-11-01 16:39:52
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -328,8 +328,9 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
             selectedCustomerModel != null ? selectedCustomerModel!.kunnr : '',
         "IV_VKGRP": "",
         "IV_VTWEG": vtweg,
-        "IV_PERNR":
-            selectedSalesPerson != null ? selectedSalesPerson!.pernr : '',
+        // "IV_PERNR":
+        //     selectedSalesPerson != null ? selectedSalesPerson!.pernr : '',
+        "IV_PERNR": '',
         "IV_SPART": spart.isNotEmpty
             ? spart.first.substring(spart.first.indexOf('-') + 1)
             : '',
@@ -340,6 +341,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
         "resultTables": RequestType.SEARCH_TRANSACTION_LEDGER.resultTable,
       }
     };
+    pr(_body);
     _api.init(RequestType.SEARCH_TRANSACTION_LEDGER);
     final result = await _api.request(body: _body);
     if (result == null || result.statusCode != 200) {
@@ -351,7 +353,14 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     }
     if (result.statusCode == 200) {
       var temp = TransLedgerResponseModel.fromJson(result.body['data']);
-
+      for (var element in temp.tReport!) {
+        pr('tReport ${element.toJson()}');
+      }
+      for (var element in temp.tList!) {
+        pr('tList ${element.toJson()}');
+      }
+      pr(temp.tList?.length);
+      pr(temp.tReport?.length);
       pr(temp.tReport?.length == temp.tList?.length);
       pr(temp.esHead!.toJson());
       if (temp.tList!.length != partial) {
@@ -372,7 +381,9 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
       firstIn = false;
       hasResultData = transLedgerResponseModel != null &&
           transLedgerResponseModel!.tList!.isNotEmpty;
-      notifyListeners();
+      try {
+        notifyListeners();
+      } catch (e) {}
       return ResultModel(true, data: hasResultData);
     }
     return ResultModel(false);

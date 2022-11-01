@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-11-01 13:49:46
+ * Last Modified: 2022-11-01 16:36:18
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -457,21 +457,16 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
           children: [
             TableRow(children: [
               _buildTableBox(
-                  isTotalRow
-                      ? model.spmon!.contains('총 계')
-                          ? '총 합계'
-                          : FormatUtil.addDashForMonth(
-                              model.spmon!
-                                  .replaceAll('-', '')
-                                  .replaceAll('<', '')
-                                  .replaceAll('>', '')
-                                  .trim(),
-                              isYYMM: true)
-                      : FormatUtil.addDashForDateStr2(
-                          model.spmon!.replaceAll('-', '')),
-                  0,
-                  isBody: true,
-                  isTotalRow: isTotalRow),
+                isTotalRow
+                    ? model.spmon!.contains('총 계')
+                        ? '<총 계>'
+                        : model.spmon!
+                    : FormatUtil.addDashForDateStr2(
+                        model.spmon!.replaceAll('-', '')),
+                0,
+                isBody: true,
+                isTotalRow: isTotalRow,
+              ),
               _buildTableBox(model.netwrTC!, 1,
                   alignmentt: Alignment.centerRight,
                   isBody: true,
@@ -527,13 +522,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   isTotalRow
                       ? isLastRow
                           ? ''
-                          : FormatUtil.addDashForMonth(
-                              model.spmon!
-                                  .replaceAll('-', '')
-                                  .replaceAll('<', '')
-                                  .replaceAll('>', '')
-                                  .trim(),
-                              isYYMM: true)
+                          : model.spmon!
                       : FormatUtil.addDashForDateStr2(
                           model.spmon!.replaceAll('-', '')),
                   1,
