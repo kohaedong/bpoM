@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/date_util.dart
  * Created Date: 2021-11-23 07:56:54
- * Last Modified: 2022-11-02 16:25:38
+ * Last Modified: 2022-11-02 20:24:55
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -17,38 +17,47 @@ import 'package:medsalesportal/view/common/base_app_dialog.dart';
 
 // 날짜 관련 도구
 class DateUtil {
-  static String prevMonth({DateTime? dt, int? minYear}) {
+  static String prevMonth({DateTime? dt, DateTime? minYear}) {
     var date = dt ?? DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd');
     var temp = DateTime(date.year, date.month - 1, date.day);
-    if (minYear != null && temp.year >= minYear) {
+    if (minYear != null && temp.isAfter(minYear)) {
       return formatter.format(temp);
     } else {
       return formatter.format(date);
     }
   }
 
-  static String nextMonth({DateTime? dt, int? maxYear}) {
+  static String nextMonth({DateTime? dt, DateTime? maxYear}) {
     // 수정한 값 < maxYear
     var date = dt ?? DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd');
     var temp = DateTime(date.year, date.month + 1, date.day);
-    if (maxYear != null && temp.year <= maxYear) {
+    if (maxYear != null && temp.isBefore(maxYear)) {
       return formatter.format(temp);
     } else {
       return formatter.format(date);
     }
   }
 
-  static DateTime previousDay({DateTime? dt, int? minYear}) {
+  static DateTime previousDay({DateTime? dt, DateTime? minYear}) {
     var date = dt ?? DateTime.now();
-
-    return DateTime(date.year, date.month, date.day - 1);
+    var temp = DateTime(date.year, date.month, date.day - 1);
+    if (minYear != null && temp.isAfter(minYear)) {
+      return temp;
+    } else {
+      return date;
+    }
   }
 
-  static DateTime nextDay({DateTime? dt, int? maxYear}) {
+  static DateTime nextDay({DateTime? dt, DateTime? maxYear}) {
     var date = dt ?? DateTime.now();
-    return DateTime(date.year, date.month, date.day + 1);
+    var temp = DateTime(date.year, date.month, date.day + 1);
+    if (maxYear != null && temp.isBefore(maxYear)) {
+      return temp;
+    } else {
+      return date;
+    }
   }
 
   static int dateCount(DateTime dt) {
@@ -68,12 +77,6 @@ class DateUtil {
         ? dt1.year == dt2.year && dt1.month == dt2.month
         : dt1.year == dt2.year && dt1.month == dt2.month && dt1.day == dt2.day;
   }
-
-  // static int diffMounth(DateTime start, DateTime end) {
-  //   int v = end.millisecondsSinceEpoch - start.millisecondsSinceEpoch;
-  //   pr(v);
-  // return v ~/ (86400000 * 30);
-  // }
 
   static bool diffMounth(DateTime start, DateTime end) {
     return (start.year == end.year && start.month != end.month) ||

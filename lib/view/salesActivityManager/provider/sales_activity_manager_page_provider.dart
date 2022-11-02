@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-11-02 15:38:23
+ * Last Modified: 2022-11-02 20:20:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -63,8 +63,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   DateTime? checkPreviousWorkingDaysNextWorkingDay;
   List<DateTime> holidayList = [];
 
-  int get minYear => DateTime.now().year - 10;
-  int get maxYear => DateTime.now().year + 10;
+  DateTime get minYear => DateTime(DateTime.now().year - 10);
+  DateTime get maxYear => DateTime(DateTime.now().year + 10);
 
   final _api = ApiService();
 

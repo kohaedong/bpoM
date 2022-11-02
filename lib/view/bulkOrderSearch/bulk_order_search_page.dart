@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-10-28 17:07:46
+ * Last Modified: 2022-11-02 19:35:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -73,44 +73,50 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
 
   Widget _buildStaffSelector(BuildContext context) {
     final p = context.read<BulkOrderSearchPageProvider>();
-    return CheckSuperAccount.isMultiAccountOrLeaderAccount()
-        ? Column(
-            children: [
-              AppStyles.buildTitleRow(tr('manager')),
-              defaultSpacing(isHalf: true),
-              Selector<BulkOrderSearchPageProvider, EtStaffListModel?>(
-                  selector: (context, provider) => provider.selectedSalesPerson,
-                  builder: (context, person, _) {
-                    return BaseInputWidget(
-                      context: context,
-                      onTap: () {},
-                      width: AppSize.defaultContentsWidth,
-                      iconType: InputIconType.SEARCH,
-                      iconColor: AppColors.textFieldUnfoucsColor,
-                      hintText: person != null && person.sname != null
-                          ? person.sname!
-                          : tr('plz_select'),
-                      // 팀장 일때 만 팀원선택후 삭제가능.
-                      isShowDeleteForHintText: person != null ? true : false,
-                      deleteIconCallback: () => p.setSalesPerson(null),
-                      hintTextStyleCallBack: () => person != null
-                          ? AppTextStyle.default_16
-                          : AppTextStyle.hint_16,
-                      popupSearchType: PopupSearchType.SEARCH_SALSE_PERSON,
-                      isSelectedStrCallBack: (person) {
-                        return p.setSalesPerson(person);
-                      },
-                      // bodyMap: {'dptnm': CacheService.getEsLogin()!.dptnm},
-                      enable: false,
-                      bodyMap: CheckSuperAccount.isMultiAccount()
-                          ? {'dptnm': ''}
-                          : null,
-                    );
-                  }),
-              defaultSpacing(),
-            ],
-          )
-        : Container();
+    final isSupper = CheckSuperAccount.isMultiAccountOrLeaderAccount();
+    return Column(
+      children: [
+        AppStyles.buildTitleRow(tr('manager')),
+        defaultSpacing(isHalf: true),
+        Selector<BulkOrderSearchPageProvider,
+                Tuple2<EtStaffListModel?, String?>>(
+            selector: (context, provider) =>
+                Tuple2(provider.selectedSalesPerson, provider.staffName),
+            builder: (context, tuple, _) {
+              return BaseInputWidget(
+                context: context,
+                bgColor: isSupper ? null : AppColors.unReadySigninBg,
+                onTap: () {},
+                width: AppSize.defaultContentsWidth,
+                iconType: isSupper ? InputIconType.SEARCH : null,
+                iconColor: AppColors.textFieldUnfoucsColor,
+                hintText: tuple.item2 ?? tr('plz_select'),
+                // 팀장 일때 만 팀원선택후 삭제가능.
+                isShowDeleteForHintText: isSupper
+                    ? tuple.item2 != null && tuple.item2 != tr('all')
+                        ? true
+                        : false
+                    : null,
+                deleteIconCallback: () => p.setSalesPerson(null),
+                hintTextStyleCallBack: () => isSupper
+                    ? tuple.item2 != null
+                        ? AppTextStyle.default_16
+                        : AppTextStyle.hint_16
+                    : AppTextStyle.hint_16,
+                popupSearchType: isSupper
+                    ? PopupSearchType.SEARCH_SALSE_PERSON
+                    : PopupSearchType.DO_NOTHING,
+                isSelectedStrCallBack: (person) {
+                  return p.setSalesPerson(person);
+                },
+                bodyMap:
+                    CheckSuperAccount.isMultiAccount() ? {'dptnm': ''} : null,
+                enable: false,
+              );
+            }),
+        defaultSpacing(),
+      ],
+    );
   }
 
   // Widget _buildGroupSelector(BuildContext context) {

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/provider/order_search_page_provider.dart
  * Created Date: 2022-07-05 09:58:33
- * Last Modified: 2022-10-25 15:23:38
+ * Last Modified: 2022-11-02 19:17:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -33,12 +33,14 @@ class OrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   bool isFirstRun = true;
   bool? hasResultData;
+  String? staffName;
   // String? selectedSalseGroup;
   String? selectedStartDate;
   String? selectedEndDate;
   String? selectedProcessingStatus;
   String? selectedProductsFamily;
   EtStaffListModel? selectedSalesPerson;
+  EtStaffListModel? isMe;
   EtCustomerModel? selectedCustomerModel;
   SearchOrderResponseModel? searchOrderResponseModel;
   List<String>? processingStatusListWithCode;
@@ -112,6 +114,8 @@ class OrderSearchPageProvider extends ChangeNotifier {
           .toList();
       pr(staffList);
       selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
+      isMe = selectedSalesPerson;
+
       // return ResultModel(true);
     }
     return ResultModel(false);
@@ -121,10 +125,16 @@ class OrderSearchPageProvider extends ChangeNotifier {
     isLoadData = true;
     if (person == null) {
       await searchPerson();
+      if (CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
+        staffName = tr('all');
+      } else {
+        staffName = selectedSalesPerson!.sname;
+      }
     } else {
       selectedSalesPerson = person;
+      staffName = person.sname;
     }
-    await await getProcessingStatus();
+    await getProcessingStatus();
     await getProductsFamily();
     groupDataList = await HiveService.getSalesGroup();
     selectedStartDate = DateUtil.prevWeek();
@@ -151,9 +161,18 @@ class OrderSearchPageProvider extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void setSalesPerson(dynamic str) {
-    str as EtStaffListModel?;
-    selectedSalesPerson = str;
+  void setSalesPerson(dynamic person) async {
+    person as EtStaffListModel?;
+    selectedSalesPerson = person;
+    if (person == null) {
+      var isSupper = CheckSuperAccount.isMultiAccountOrLeaderAccount();
+      if (isSupper) {
+        selectedSalesPerson = isMe;
+      }
+      staffName = isSupper ? tr('all') : null;
+    } else {
+      staffName = person.sname;
+    }
     selectedCustomerModel = null;
     notifyListeners();
   }
@@ -167,6 +186,7 @@ class OrderSearchPageProvider extends ChangeNotifier {
         selectedProductsFamily = map['product_family'] as String?;
         var staff = map['staff'] as EtStaffListModel?;
         selectedSalesPerson = staff;
+        staffName = staff!.sname;
         if (CheckSuperAccount.isMultiAccount()) {
           if (groupDataList!
               .where((group) => group.contains(selectedSalesPerson!.dptnm!))
@@ -258,8 +278,11 @@ class OrderSearchPageProvider extends ChangeNotifier {
         "IV_VTWEG": vtweg,
         "pos": pos,
         "partial": partial,
-        "IV_PERNR":
-            selectedSalesPerson != null ? selectedSalesPerson!.pernr : '',
+        "IV_PERNR": staffName == tr('all')
+            ? ''
+            : selectedSalesPerson != null
+                ? selectedSalesPerson!.pernr
+                : '',
         "IV_SPART": spart.isNotEmpty
             ? spart.first.substring(spart.first.indexOf('-') + 1)
             : '',

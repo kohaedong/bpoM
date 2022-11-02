@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_search_page_provider.dart
  * Created Date: 2022-07-05 09:54:29
- * Last Modified: 2022-10-28 00:36:08
+ * Last Modified: 2022-11-02 19:33:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -34,12 +34,14 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
   bool isLoadData = true;
   bool isFirstRun = true;
   bool? hasResultData;
+  String? staffName;
   String? selectedStartDate;
   String? selectedEndDate;
   String? selectedOrderStatus;
   // String? selectedSalseGroup;
   String? selectedProductsFamily;
   EtStaffListModel? selectedSalesPerson;
+  EtStaffListModel? isMe;
   EtCustomerModel? selectedCustomerModel;
   BulkOrderResponseModel? bulkOrderResponseModel;
   List<String>? orderStatusListWithCode;
@@ -99,6 +101,7 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
           .where((model) => model.sname == esLogin.ename)
           .toList();
       selectedSalesPerson = staffList.isNotEmpty ? staffList.first : null;
+      isMe = selectedSalesPerson;
       return ResultModel(true);
     }
     return ResultModel(false);
@@ -106,6 +109,11 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
 
   Future<ResultModel> initPageData() async {
     await searchPersons();
+    if (CheckSuperAccount.isMultiAccountOrLeaderAccount()) {
+      staffName = tr('all');
+    } else {
+      staffName = selectedSalesPerson!.sname;
+    }
     groupDataList = await HiveService.getSalesGroup();
     selectedStartDate = DateUtil.prevWeek();
     selectedEndDate = DateUtil.now();
@@ -133,6 +141,16 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
   void setSalesPerson(dynamic person) {
     person as EtStaffListModel?;
     selectedSalesPerson = person;
+    if (person == null) {
+      var isSupper = CheckSuperAccount.isMultiAccountOrLeaderAccount();
+      if (isSupper) {
+        selectedSalesPerson = isMe;
+      }
+      staffName = isSupper ? tr('all') : null;
+    } else {
+      staffName = person.sname;
+    }
+
     selectedCustomerModel = null;
     notifyListeners();
   }
@@ -146,6 +164,7 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
         selectedProductsFamily = map['product_family'] as String?;
         var staff = map['staff'] as EtStaffListModel?;
         selectedSalesPerson = staff;
+        staffName = staff!.sname;
         if (CheckSuperAccount.isMultiAccount()) {
           if (groupDataList!
               .where((group) => group.contains(selectedSalesPerson!.dptnm!))
@@ -221,6 +240,10 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
     if (CheckSuperAccount.isMultiAccount()) {
       final isloginModel =
           EncodingUtils.decodeBase64ForIsLogin(CacheService.getIsLogin()!);
+      // if (staffName != tr('all')) {
+      //   isloginModel.vkorg = selectedSalesPerson!.vkorg;
+      //   isloginModel.vkgrp = selectedSalesPerson!.vkgrp;
+      // }
       isLogin = await EncodingUtils.getSimpleIsLogin(isloginModel);
     } else {
       var esLogin = CacheService.getEsLogin();
@@ -241,8 +264,11 @@ class BulkOrderSearchPageProvider extends ChangeNotifier {
         "IV_VKGRP": vkgrp,
         "IV_VTWEG": vtweg,
         "IS_LOGIN": isLogin,
-        "IV_PERNR":
-            selectedSalesPerson != null ? selectedSalesPerson!.pernr : '',
+        "IV_PERNR": staffName == tr('all')
+            ? ''
+            : selectedSalesPerson != null
+                ? selectedSalesPerson!.pernr
+                : '',
         "IV_SPART": spart.isNotEmpty
             ? spart.first.substring(spart.first.indexOf('-') + 1)
             : '',
