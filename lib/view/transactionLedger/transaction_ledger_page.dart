@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-11-01 16:36:18
+ * Last Modified: 2022-11-02 14:58:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -458,9 +458,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             TableRow(children: [
               _buildTableBox(
                 isTotalRow
-                    ? model.spmon!.contains('총 계')
-                        ? '<총 계>'
-                        : model.spmon!
+                    ? model.spmon!
                     : FormatUtil.addDashForDateStr2(
                         model.spmon!.replaceAll('-', '')),
                 0,
@@ -516,7 +514,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
           },
           children: [
             TableRow(children: [
-              _buildTableBox(isLastRow ? '총 합계' : model.bschlTx!, 0,
+              _buildTableBox(isLastRow ? model.spmon! : model.bschlTx!, 0,
                   isBody: true, isLandSpace: true, isTotalRow: isTotalRow),
               _buildTableBox(
                   isTotalRow
@@ -637,12 +635,10 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     };
 
     text = text.trim();
-    return isWithToptic != null || (isTotalRow != null && isTotalRow)
-        ? Tooltip(
-            message: text,
-            child: tempWidget(),
-          )
-        : tempWidget();
+    return Tooltip(
+      message: text,
+      child: tempWidget(),
+    );
   }
 
   Widget _buildResultTitle(BuildContext context) {
@@ -831,11 +827,18 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             ),
             SizedBox(
               width: widthSize * .3,
-              child: AppText.text(t2, textAlign: TextAlign.end, style: style2),
+              child: Tooltip(
+                  message: t2,
+                  child: AppText.text(t2,
+                      textAlign: TextAlign.end, style: style2)),
             ),
             SizedBox(
               width: widthSize * .4,
-              child: AppText.text(t3, textAlign: TextAlign.end, style: style3),
+              child: Tooltip(
+                message: t3,
+                child:
+                    AppText.text(t3, textAlign: TextAlign.end, style: style3),
+              ),
             ),
           ],
         ));
@@ -1164,63 +1167,59 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   }
 
   Widget _buildLandSpaceView(BuildContext context) {
-    return SafeArea(
-      left: false,
-      right: true,
-      child: Stack(
-        children: [
-          Container(
-            height: AppSize.realHeight,
-            width: AppSize.realWidth,
-            child: Column(
-              children: [
-                defaultSpacing(height: AppSize.defaultListItemSpacing / 4),
-                _buildAppBar(context),
-                defaultSpacing(height: AppSize.defaultListItemSpacing / 4),
-                _buildResultTitleWithLandSpaceScrren(context),
-                _buildResultForLandSpace(context),
-                defaultSpacing(times: 2),
-              ],
-            ),
+    return Stack(
+      children: [
+        Container(
+          height: AppSize.realHeight,
+          width: AppSize.realWidth,
+          child: Column(
+            children: [
+              defaultSpacing(height: AppSize.defaultListItemSpacing / 4),
+              _buildAppBar(context),
+              defaultSpacing(height: AppSize.defaultListItemSpacing / 4),
+              _buildResultTitleWithLandSpaceScrren(context),
+              _buildResultForLandSpace(context),
+              defaultSpacing(times: 2),
+            ],
           ),
-          Selector<TransactionLedgerPageProvider, Tuple2<bool, bool>>(
-            selector: (context, provider) => Tuple2(
-                provider.isOpenBottomSheet, provider.isAnimationNotReady),
-            builder: (context, tuple, _) {
-              return WidgetOfOffSetAnimationWidget(
-                  key: key,
-                  animationSwich: tuple.item2 ? null : () => tuple.item1,
-                  body: _buildAnimationBody(context, isLandSpace: true),
-                  height: AppSize.realHeight,
-                  width: AppSize.bottomSheetWidth,
-                  offset: Offset(-AppSize.bottomSheetWidth, 0),
-                  offsetType: OffsetDirectionType.RIGHT);
-            },
-          ),
-          Selector<TransactionLedgerPageProvider, Tuple2<bool, bool>>(
-            selector: (context, provider) => Tuple2(
-                provider.isOpenBottomSheetForLandSpace, provider.isFirstRun),
-            builder: (context, tuple, _) {
-              return DrawerButtonAnimationWidget(
-                animationSwich: () => tuple.item1,
-                body: InkWell(
-                    onTap: () {
-                      final p = context.read<TransactionLedgerPageProvider>();
-                      p.setIsOpenBottomSheet();
-                      p.setIsOpenBottomSheetForLandSpace();
-                    },
-                    child: WidgetOfRotationAnimationComponents(
-                      // 반대로.
-                      animationSwich: () => !tuple.item1,
-                      rotationValue: math.pi,
-                      body: Container(
-                          child: AppImage.getImage(ImageType.SELECT_RIGHT)),
-                    )),
-              );
-            },
-          ),
-        ],
-      ),
+        ),
+        Selector<TransactionLedgerPageProvider, Tuple2<bool, bool>>(
+          selector: (context, provider) =>
+              Tuple2(provider.isOpenBottomSheet, provider.isAnimationNotReady),
+          builder: (context, tuple, _) {
+            return WidgetOfOffSetAnimationWidget(
+                key: key,
+                animationSwich: tuple.item2 ? null : () => tuple.item1,
+                body: _buildAnimationBody(context, isLandSpace: true),
+                height: AppSize.realHeight,
+                width: AppSize.bottomSheetWidth,
+                offset: Offset(-AppSize.bottomSheetWidth, 0),
+                offsetType: OffsetDirectionType.RIGHT);
+          },
+        ),
+        Selector<TransactionLedgerPageProvider, Tuple2<bool, bool>>(
+          selector: (context, provider) => Tuple2(
+              provider.isOpenBottomSheetForLandSpace, provider.isFirstRun),
+          builder: (context, tuple, _) {
+            return DrawerButtonAnimationWidget(
+              animationSwich: () => tuple.item1,
+              body: InkWell(
+                  onTap: () {
+                    final p = context.read<TransactionLedgerPageProvider>();
+                    p.setIsOpenBottomSheet();
+                    p.setIsOpenBottomSheetForLandSpace();
+                  },
+                  child: WidgetOfRotationAnimationComponents(
+                    // 반대로.
+                    animationSwich: () => !tuple.item1,
+                    rotationValue: math.pi,
+                    body: Container(
+                        child: AppImage.getImage(ImageType.SELECT_RIGHT)),
+                  )),
+            );
+          },
+        ),
+      ],
     );
   }
 

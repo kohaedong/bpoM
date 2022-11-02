@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/kolonApp.dart
  * Created Date: 2022-07-02 14:46:59
- * Last Modified: 2022-10-26 09:55:34
+ * Last Modified: 2022-11-01 23:47:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -10,6 +10,8 @@
  * 												Discription													
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
+
+import 'package:medsalesportal/view/common/function_of_stop_or_start_listener.dart';
 
 import 'service/key_service.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +37,12 @@ class KolonApp extends StatefulWidget {
 }
 
 class KolonAppState extends State<KolonApp> {
+  @override
+  void dispose() {
+    stopAllListener();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

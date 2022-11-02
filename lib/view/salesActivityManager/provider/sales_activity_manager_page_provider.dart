@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-11-01 22:55:06
+ * Last Modified: 2022-11-02 15:38:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -63,6 +63,9 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   DateTime? checkPreviousWorkingDaysNextWorkingDay;
   List<DateTime> holidayList = [];
 
+  int get minYear => DateTime.now().year - 10;
+  int get maxYear => DateTime.now().year + 10;
+
   final _api = ApiService();
 
   void setSelectedDate(DateTime dt) {
@@ -95,15 +98,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getNextMonthData() {
-    if (selectedMonth == null) {
-      selectedMonth = DateUtil.getDate(DateUtil.nextMonth());
-    } else {
-      selectedMonth = DateUtil.getDate(DateUtil.nextMonth(dt: selectedMonth));
-    }
-    getMonthData(isWithLoading: true);
-  }
-
   Future<void> checkShowConfirm() async {
     var t250 = dayResponseModel!.table250;
     var isStoped = t250 != null &&
@@ -123,8 +117,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         (selectedDay!.day == DateTime.now().day);
     var seletedDayIsWorkingDayBeforeToday =
         selectedDay!.day == previouWorkday!.day;
-    var isPreviouDayNotConfirmed = await checkConfiremStatus(
-        datetime: previouWorkday, isCheckPrevMonth: true);
+    var isPreviouDayNotConfirmed =
+        await checkConfiremStatus(datetime: previouWorkday);
     isShowConfirm =
         (isToday || seletedDayIsWorkingDayBeforeToday) ? true : null;
     pr('isShowConfirm:: $isShowConfirm');
@@ -234,14 +228,13 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     return ResultModel(false);
   }
 
-  Future<bool> checkConfiremStatus(
-      {required DateTime datetime, bool? isCheckPrevMonth}) async {
+  Future<bool> checkConfiremStatus({required DateTime datetime}) async {
     var weekListIndex = 0;
     var weekRowIndex = 0;
     var dateList = <List<DateTime?>>[];
     SalesActivityWeeksModel? model;
     SalesActivityMonthResponseModel? monthResponse;
-    if (isCheckPrevMonth ?? false) {
+    if (DateUtil.diffMounth(datetime, DateTime.now())) {
       var result = await searchMonthData();
       if (result.isSuccessful) {
         dateList = result.data['weekList'];
@@ -302,8 +295,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         await checkPreviousWorkingDay('', dt: DateTime.now());
       }
       var previouWorkday = ap.previousWorkingDay;
-      isShowPopup = await checkConfiremStatus(
-          datetime: previouWorkday!, isCheckPrevMonth: true);
+      isShowPopup = await checkConfiremStatus(datetime: previouWorkday!);
     }
     notifyListeners();
   }
@@ -314,29 +306,24 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
   }
 
   void getPreviousMonthData() {
-    if (selectedMonth == null) {
-      selectedMonth = DateUtil.getDate(DateUtil.prevMonth());
-    } else {
-      selectedMonth = DateUtil.getDate(DateUtil.prevMonth(dt: selectedMonth));
-    }
+    selectedMonth = DateUtil.getDate(
+        DateUtil.prevMonth(dt: selectedMonth, minYear: minYear));
     getMonthData(isWithLoading: true);
   }
 
-  void getNextDayData() {
-    if (selectedDay == null) {
-      selectedDay = DateUtil.nextDay();
-    } else {
-      selectedDay = DateUtil.nextDay(dt: selectedDay);
-    }
-    getDayData(isWithLoading: true);
+  void getNextMonthData() {
+    selectedMonth = DateUtil.getDate(
+        DateUtil.nextMonth(dt: selectedMonth, maxYear: maxYear));
+    getMonthData(isWithLoading: true);
   }
 
   void getPreviousDayData() {
-    if (selectedDay == null) {
-      selectedDay = DateUtil.previousDay();
-    } else {
-      selectedDay = DateUtil.previousDay(dt: selectedDay);
-    }
+    selectedDay = DateUtil.previousDay(dt: selectedDay, minYear: minYear);
+    getDayData(isWithLoading: true);
+  }
+
+  void getNextDayData() {
+    selectedDay = DateUtil.nextDay(dt: selectedDay, maxYear: maxYear);
     getDayData(isWithLoading: true);
   }
 
@@ -549,7 +536,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
       {bool? isWithLoading, bool? isUpdateLoading}) async {
     pr('inin??????');
     isShowConfirm = false;
-    // activityStatus = ActivityStatus.NONE;
+    activityStatus = ActivityStatus.NONE;
     notifyListeners();
     selectedMonth ??= DateTime.now();
     // if (selectedDay != null &&

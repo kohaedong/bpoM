@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/util/number_format.dart
  * Created Date: 2021-09-08 09:34:02
- * Last Modified: 2022-10-13 16:26:50
+ * Last Modified: 2022-11-02 13:37:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -31,6 +31,10 @@ class FormatUtil {
     } else {
       return number;
     }
+  }
+
+  static double asFixed(String val, int fixed) {
+    return double.parse(double.parse(val).toStringAsFixed(fixed));
   }
 
   static String getDistance(data) {

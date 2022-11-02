@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-11-01 23:05:47
+ * Last Modified: 2022-11-02 13:37:13
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -598,7 +598,8 @@ class AddActivityPageProvider extends ChangeNotifier {
 
       t260.xLatitude = isVisit ? double.parse(latLonMap['lat']) : 0.00;
       t260.yLongitude = isVisit ? double.parse(latLonMap['lon']) : 0.00;
-      t260.dist = isVisit ? double.parse(distanceModel!.distance!) : 0.0;
+      t260.dist =
+          isVisit ? FormatUtil.asFixed(distanceModel!.distance!, 1) : 0.0;
       t260.isGps = 'X';
       t260.callType = 'M';
       t260.comntM = review ?? '';

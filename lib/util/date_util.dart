@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/date_util.dart
  * Created Date: 2021-11-23 07:56:54
- * Last Modified: 2022-11-01 17:03:32
+ * Last Modified: 2022-11-02 16:25:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -17,11 +17,38 @@ import 'package:medsalesportal/view/common/base_app_dialog.dart';
 
 // 날짜 관련 도구
 class DateUtil {
-  static String prevMonth({DateTime? dt}) {
+  static String prevMonth({DateTime? dt, int? minYear}) {
     var date = dt ?? DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd');
+    var temp = DateTime(date.year, date.month - 1, date.day);
+    if (minYear != null && temp.year >= minYear) {
+      return formatter.format(temp);
+    } else {
+      return formatter.format(date);
+    }
+  }
 
-    return formatter.format(DateTime(date.year, date.month - 1, date.day));
+  static String nextMonth({DateTime? dt, int? maxYear}) {
+    // 수정한 값 < maxYear
+    var date = dt ?? DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+    var temp = DateTime(date.year, date.month + 1, date.day);
+    if (maxYear != null && temp.year <= maxYear) {
+      return formatter.format(temp);
+    } else {
+      return formatter.format(date);
+    }
+  }
+
+  static DateTime previousDay({DateTime? dt, int? minYear}) {
+    var date = dt ?? DateTime.now();
+
+    return DateTime(date.year, date.month, date.day - 1);
+  }
+
+  static DateTime nextDay({DateTime? dt, int? maxYear}) {
+    var date = dt ?? DateTime.now();
+    return DateTime(date.year, date.month, date.day + 1);
   }
 
   static int dateCount(DateTime dt) {
@@ -29,27 +56,11 @@ class DateUtil {
     return dayCount;
   }
 
-  static String nextMonth({DateTime? dt}) {
-    var date = dt ?? DateTime.now();
-    var formatter = new DateFormat('yyyy-MM-dd');
-    return formatter.format(DateTime(date.year, date.month + 1, date.day));
-  }
-
   static getDateWithWeek(DateTime date, {bool? isWithMonth}) {
     var week = date.weekday;
     var weekKr = ['월', '화', '수', '목', '금', '토', '일'];
     var formater = DateFormat('yyyy-MM-dd(${weekKr[week - 1]})');
     return formater.format(date);
-  }
-
-  static DateTime previousDay({DateTime? dt}) {
-    var date = dt ?? DateTime.now();
-    return DateTime(date.year, date.month, date.day - 1);
-  }
-
-  static DateTime nextDay({DateTime? dt}) {
-    var date = dt ?? DateTime.now();
-    return DateTime(date.year, date.month, date.day + 1);
   }
 
   static bool equlse(DateTime dt1, DateTime dt2, {bool? isForMonth}) {

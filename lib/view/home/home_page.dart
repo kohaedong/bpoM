@@ -8,6 +8,7 @@ import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/service/cache_service.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:medsalesportal/service/connect_service.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/service/firebase_service.dart';
@@ -84,6 +85,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (_detached) {
       pr('stop all listener !!!!!!!!!!!!!');
       await stopAllListener();
+      await FlutterAppBadger.removeBadge();
       return;
     }
     if (_isForeground) {

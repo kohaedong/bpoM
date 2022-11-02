@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-11-01 18:43:43
+ * Last Modified: 2022-11-02 13:40:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -246,7 +246,7 @@ class SelectLocationProvider extends ChangeNotifier {
         total += visitModel.dist!;
       });
     }
-    return total + t250Dist;
+    return FormatUtil.asFixed('${total + t250Dist}', 1);
   }
 
   // Future<double> _getDistanceForFinishCourse() async {}
@@ -286,7 +286,7 @@ class SelectLocationProvider extends ChangeNotifier {
       t250.fcallType = 'M';
       t250.rtnDist = indexx != 2
           ? distanceModel != null
-              ? double.parse(distanceModel!.distance!.trim())
+              ? FormatUtil.asFixed(distanceModel!.distance!, 1)
               : 0
           : 0;
       t250.totDist = totoalDistans(t250.rtnDist!);
