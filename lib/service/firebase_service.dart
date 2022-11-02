@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/firebase_service.dart
  * Created Date: 2022-10-18 15:55:12
- * Last Modified: 2022-11-02 18:24:55
+ * Last Modified: 2022-11-02 22:38:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,8 @@
  */
 import 'dart:io';
 import 'dart:async';
+import 'package:medsalesportal/model/pushNotification/notification_message_model.dart';
+import 'package:medsalesportal/model/pushNotification/notification_noti_model.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart'
@@ -116,8 +118,27 @@ class FirebaseService {
   }
 
   static void showNotification(RemoteMessage message) async {
-    var notification = message.notification;
     if (Platform.isAndroid) {
+      var notification = message.notification;
+      var data = message.data;
+      NotificationMessageModel? noticedata;
+      NotificationDataModel? noticeMessage;
+      if (data['jsonMessage'] != null) {
+        noticedata = NotificationMessageModel.fromJson(data['jsonMessage']);
+      }
+      if (notification != null) {
+        noticeMessage = NotificationDataModel.fromJson(notification.toMap());
+      }
+      var title = noticedata != null
+          ? noticedata.title!
+          : noticeMessage != null
+              ? noticeMessage.title!
+              : '';
+      var body = noticedata != null
+          ? noticedata.message!
+          : noticeMessage != null
+              ? noticeMessage.body!
+              : '';
       await flutterLocalNotificationsPlugin.show(
         channel.hashCode,
         notification?.title,
@@ -125,8 +146,8 @@ class FirebaseService {
         NotificationDetails(
           android: AndroidNotificationDetails(
             channel.id,
-            notification?.title ?? '',
-            channelDescription: notification?.body ?? '',
+            title,
+            channelDescription: body,
           ),
         ),
       );

@@ -6,8 +6,9 @@ part of 'notification_noti_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-NotificatonModel _$NotificatonModelFromJson(Map<String, dynamic> json) =>
-    NotificatonModel(
+NotificationDataModel _$NotificationDataModelFromJson(
+        Map<String, dynamic> json) =>
+    NotificationDataModel(
       json['badge'] as int?,
       json['body'] as String?,
       json['icon'] as String?,
@@ -16,7 +17,8 @@ NotificatonModel _$NotificatonModelFromJson(Map<String, dynamic> json) =>
       json['title'] as String?,
     );
 
-Map<String, dynamic> _$NotificatonModelToJson(NotificatonModel instance) =>
+Map<String, dynamic> _$NotificationDataModelToJson(
+        NotificationDataModel instance) =>
     <String, dynamic>{
       'badge': instance.badge,
       'sound': instance.sound,

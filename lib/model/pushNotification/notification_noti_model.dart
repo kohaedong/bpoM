@@ -2,7 +2,7 @@
  * Project Name:  [koreaJob]
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/pushNoticefacation/notifacation_model.dart
  * Created Date: 2022-11-02 16:51:02
- * Last Modified: 2022-11-02 17:39:12
+ * Last Modified: 2022-11-02 22:23:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  MOMONETWORK ALL RIGHTS RESERVED. 
@@ -15,7 +15,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'notification_noti_model.g.dart';
 
 @JsonSerializable()
-class NotificatonModel {
+class NotificationDataModel {
   int? badge;
   String? sound;
   String? icon;
@@ -24,10 +24,10 @@ class NotificatonModel {
   @JsonKey(name: 'mutable-content')
   int? mutableContent;
 
-  NotificatonModel(this.badge, this.body, this.icon, this.mutableContent,
+  NotificationDataModel(this.badge, this.body, this.icon, this.mutableContent,
       this.sound, this.title);
-  factory NotificatonModel.fromJson(Object? json) =>
-      _$NotificatonModelFromJson(json as Map<String, dynamic>);
+  factory NotificationDataModel.fromJson(Object? json) =>
+      _$NotificationDataModelFromJson(json as Map<String, dynamic>);
 
-  Map<String, dynamic> toJson() => _$NotificatonModelToJson(this);
+  Map<String, dynamic> toJson() => _$NotificationDataModelToJson(this);
 }
