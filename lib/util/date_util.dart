@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/util/date_util.dart
  * Created Date: 2021-11-23 07:56:54
- * Last Modified: 2022-11-02 20:24:55
+ * Last Modified: 2022-11-02 21:37:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 
 // 날짜 관련 도구
 class DateUtil {
@@ -21,10 +22,14 @@ class DateUtil {
     var date = dt ?? DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd');
     var temp = DateTime(date.year, date.month - 1, date.day);
-    if (minYear != null && temp.isAfter(minYear)) {
-      return formatter.format(temp);
+    if (minYear != null) {
+      if (temp.isAfter(minYear)) {
+        return formatter.format(temp);
+      } else {
+        return formatter.format(date);
+      }
     } else {
-      return formatter.format(date);
+      return formatter.format(temp);
     }
   }
 
@@ -33,30 +38,46 @@ class DateUtil {
     var date = dt ?? DateTime.now();
     var formatter = new DateFormat('yyyy-MM-dd');
     var temp = DateTime(date.year, date.month + 1, date.day);
-    if (maxYear != null && temp.isBefore(maxYear)) {
-      return formatter.format(temp);
+    if (maxYear != null) {
+      if (temp.isBefore(maxYear)) {
+        return formatter.format(temp);
+      } else {
+        return formatter.format(date);
+      }
     } else {
-      return formatter.format(date);
+      return formatter.format(temp);
     }
   }
 
   static DateTime previousDay({DateTime? dt, DateTime? minYear}) {
     var date = dt ?? DateTime.now();
     var temp = DateTime(date.year, date.month, date.day - 1);
-    if (minYear != null && temp.isAfter(minYear)) {
-      return temp;
+    pr('really :: $temp');
+    pr('minYear:: $minYear');
+
+    if (minYear != null) {
+      if (temp.isAfter(minYear)) {
+        pr(' prev data $temp');
+        return temp;
+      } else {
+        return date;
+      }
     } else {
-      return date;
+      return temp;
     }
   }
 
   static DateTime nextDay({DateTime? dt, DateTime? maxYear}) {
     var date = dt ?? DateTime.now();
     var temp = DateTime(date.year, date.month, date.day + 1);
-    if (maxYear != null && temp.isBefore(maxYear)) {
-      return temp;
+    if (maxYear != null) {
+      if (temp.isBefore(maxYear)) {
+        return temp;
+      } else {
+        return date;
+      }
     } else {
-      return date;
+      return temp;
     }
   }
 

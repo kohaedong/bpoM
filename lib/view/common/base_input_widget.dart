@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-10-20 14:48:44
+ * Last Modified: 2022-11-02 22:16:07
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,6 +15,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
 import 'package:medsalesportal/view/common/dialog_contents.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 
 import 'base_popup_cell.dart';
 import 'package:flutter/material.dart';
@@ -349,8 +350,18 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                       : DoNothingAction();
                 },
                 onChanged: (text) {
-                  if (widget.onChangeCallBack != null) {
-                    widget.onChangeCallBack!.call(text);
+                  var isNotInt = int.tryParse(text) == null;
+                  if (widget.keybordType != null &&
+                      widget.keybordType == TextInputType.number &&
+                      isNotInt) {
+                    widget.textEditingController?.text = '';
+                    if (widget.onChangeCallBack != null) {
+                      widget.onChangeCallBack!.call('');
+                    }
+                  } else {
+                    if (widget.onChangeCallBack != null) {
+                      widget.onChangeCallBack!.call(text);
+                    }
                   }
                 },
                 enabled: widget.enable,

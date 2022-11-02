@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/base_date_picker_for_month.dart
  * Created Date: 2022-09-25 09:37:58
- * Last Modified: 2022-10-13 04:01:43
+ * Last Modified: 2022-11-02 20:47:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -67,6 +67,8 @@ class _BaseDatePickerForMonthState extends State<BaseDatePickerForMonth> {
                                             provider.currenMonth),
                                         builder: (context, tuple, _) {
                                           return Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
                                             children: [
                                               SizedBox(
                                                   width: 60,
@@ -77,9 +79,10 @@ class _BaseDatePickerForMonthState extends State<BaseDatePickerForMonth> {
                                                       style: AppTextStyle
                                                           .w500_20)),
                                               AppText.text('년',
-                                                  style: AppTextStyle.w500_20),
+                                                  style: AppTextStyle.w500_20
+                                                      .copyWith(fontSize: 18)),
                                               SizedBox(
-                                                  width: 25,
+                                                  width: 30,
                                                   child: AppText.text(
                                                       tuple.item2 != null
                                                           ? '${tuple.item2}'
@@ -87,7 +90,8 @@ class _BaseDatePickerForMonthState extends State<BaseDatePickerForMonth> {
                                                       style: AppTextStyle
                                                           .w500_20)),
                                               AppText.text('월',
-                                                  style: AppTextStyle.w500_20),
+                                                  style: AppTextStyle.w500_20
+                                                      .copyWith(fontSize: 18)),
                                             ],
                                           );
                                         },

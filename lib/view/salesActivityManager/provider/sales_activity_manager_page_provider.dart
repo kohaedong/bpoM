@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-11-02 20:20:43
+ * Last Modified: 2022-11-02 21:52:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -108,28 +108,18 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
         t250.single.ftime!.isNotEmpty;
     var isConfirmed =
         t250 != null && t250.isNotEmpty && t250.single.stat == 'C';
-    // await checkPreviousWorkingDay('', dt: DateTime.now());
     var ap =
         KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
     var previouWorkday = ap.previousWorkingDay;
-    var isToday = (selectedDay!.year == DateTime.now().year) &&
-        (selectedDay!.month == DateTime.now().month) &&
-        (selectedDay!.day == DateTime.now().day);
-    var seletedDayIsWorkingDayBeforeToday =
-        selectedDay!.day == previouWorkday!.day;
-    var isPreviouDayNotConfirmed =
-        await checkConfiremStatus(datetime: previouWorkday);
-    isShowConfirm =
-        (isToday || seletedDayIsWorkingDayBeforeToday) ? true : null;
-    pr('isShowConfirm:: $isShowConfirm');
-    if (seletedDayIsWorkingDayBeforeToday) {
-      activityStatus = isPreviouDayNotConfirmed
-          ? isConfirmed
-              ? ActivityStatus.FINISH
-              : isStoped
-                  ? ActivityStatus.PREV_WORK_DAY_STOPED
-                  : ActivityStatus.PREV_WORK_DAY_EN_STOPED
-          : ActivityStatus.FINISH;
+    var isToday = DateUtil.equlse(selectedDay!, DateTime.now());
+    var isPrevWorkday = DateUtil.equlse(selectedDay!, previouWorkday!);
+    isShowConfirm = (isToday || isPrevWorkday) ? true : null;
+    if (isPrevWorkday) {
+      activityStatus = isConfirmed
+          ? ActivityStatus.FINISH
+          : isStoped
+              ? ActivityStatus.PREV_WORK_DAY_STOPED
+              : ActivityStatus.PREV_WORK_DAY_EN_STOPED;
     } else if (isToday) {
       var table250 = dayResponseModel!.table250!;
       if (table250.isEmpty) {
@@ -291,11 +281,10 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (isCurrenMonth || isPrevMonth) {
       var ap =
           KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
-      if (ap.previousWorkingDay == null) {
-        await checkPreviousWorkingDay('', dt: DateTime.now());
-      }
+      await checkPreviousWorkingDay(dt: DateTime.now());
       var previouWorkday = ap.previousWorkingDay;
       isShowPopup = await checkConfiremStatus(datetime: previouWorkday!);
+      pr('isShowPopup::: $previouWorkday  $isShowPopup');
     }
     notifyListeners();
   }
@@ -343,9 +332,8 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     getDayData(isWithLoading: true);
   }
 
-  Future<void> checkPreviousWorkingDay(String day, {DateTime? dt}) async {
-    var temp = DateUtil.previousDay(dt: dt ?? DateUtil.getDate(day));
-
+  Future<void> checkPreviousWorkingDay({required DateTime? dt}) async {
+    var temp = DateUtil.previousDay();
     var isNotConfirmed = await checkConfiremStatus(datetime: temp);
     while ((temp.weekday == 7 ||
             temp.weekday == 6 ||
@@ -357,7 +345,6 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     var ap =
         KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
     ap.setPrevWorkingDay(temp);
-    pr('ap.previousWorkingDay ${ap.previousWorkingDay}');
   }
 
   Future<ResultModel> getOfficeAddress() async {
