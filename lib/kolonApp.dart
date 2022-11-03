@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/kolonApp.dart
  * Created Date: 2022-07-02 14:46:59
- * Last Modified: 2022-11-01 23:47:22
+ * Last Modified: 2022-11-03 19:35:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -78,7 +78,7 @@ class KolonAppState extends State<KolonApp> {
       child: ScreenUtilInit(
         designSize: const Size(360, 690),
         minTextAdapt: true,
-        builder: (context, child) => RepaintBoundary(
+        builder: (context, _) => RepaintBoundary(
           key: KeyService.screenKey,
           child: MaterialApp(
               //FirebaseAnalytics 연동.
@@ -89,10 +89,9 @@ class KolonAppState extends State<KolonApp> {
               locale: context.locale,
               debugShowCheckedModeBanner: false,
               theme: context.read<AppThemeProvider>().themeData,
-              home: child,
+              home: CommonLoginPage(),
               routes: routes),
         ),
-        child: CommonLoginPage(),
       ),
     );
   }

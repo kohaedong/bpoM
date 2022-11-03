@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/styles/app_text.dart
  * Created Date: 2022-07-03 14:42:12
- * Last Modified: 2022-10-23 22:07:28
+ * Last Modified: 2022-11-03 20:17:21
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -26,7 +26,7 @@ class AppText {
     TextAlign? textAlign,
   }) =>
       Text(data,
-          style: style ?? AppTextStyle.default_14,
+          style: style ?? AppTextStyle.default_16,
           textAlign: textAlign ?? TextAlign.center,
           maxLines: maxLines,
           overflow: overflow ?? TextOverflow.ellipsis);

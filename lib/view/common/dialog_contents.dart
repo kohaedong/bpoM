@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-10-28 21:23:41
+ * Last Modified: 2022-11-03 20:16:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -120,7 +120,7 @@ Widget buildTowButtonTextContents(BuildContext context, String text,
     Function? successCallback}) {
   var enterLength = FormatUtil.howManyLengthForString(text) + 1;
   var height =
-      AppSize.buttonHeight * 2 + AppSize.padding * 2 + enterLength * 14;
+      AppSize.buttonHeight * 2 + AppSize.padding * 2 + enterLength * 16;
   return Container(
       height: height,
       width: AppSize.defaultContentsWidth,
@@ -131,7 +131,10 @@ Widget buildTowButtonTextContents(BuildContext context, String text,
             padding: AppSize.defaultSidePadding,
             width: AppSize.defaultContentsWidth,
             height: height - AppSize.buttonHeight,
-            child: AppText.text(text, textAlign: TextAlign.left, maxLines: 20),
+            child: AppText.text(text,
+                textAlign: TextAlign.left,
+                maxLines: 20,
+                style: AppTextStyle.default_16),
           ),
           Positioned(
               left: 0,
@@ -156,7 +159,10 @@ Widget buildTowButtonTextContents(BuildContext context, String text,
                         onPressed: () {
                           Navigator.pop(context, false);
                         },
-                        child: Text('${faildButtonText ?? tr('cancel')}')),
+                        child: Text(
+                          '${faildButtonText ?? tr('cancel')}',
+                          style: AppTextStyle.default_16,
+                        )),
                   ),
                   Container(
                     width: AppSize.defaultContentsWidth / 2,
@@ -174,7 +180,10 @@ Widget buildTowButtonTextContents(BuildContext context, String text,
                         onPressed: () {
                           Navigator.pop(context, true);
                         },
-                        child: Text('${successButtonText ?? tr('ok')}')),
+                        child: Text(
+                          '${successButtonText ?? tr('ok')}',
+                          style: AppTextStyle.default_16,
+                        )),
                   )
                 ],
               ))

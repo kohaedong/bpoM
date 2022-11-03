@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/app_dialog.dart
  * Created Date: 2021-08-23 13:52:24
- * Last Modified: 2022-10-28 21:13:48
+ * Last Modified: 2022-11-03 20:13:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -87,7 +87,7 @@ class AppDialog {
               title: title != null ? Text(title) : Container(),
               content: Text(
                 text,
-                style: AppTextStyle.default_14,
+                style: AppTextStyle.default_16,
                 textAlign: TextAlign.center,
               ),
               actions: actionWidget);
@@ -99,7 +99,7 @@ class AppDialog {
     // str = str + "fdsaffsafdsafdsafklasfjdskal;jf\n\nd\n,\n,\n" * 15;
     var enterLength = FormatUtil.howManyLengthForString(str) + 1;
     var height =
-        AppSize.buttonHeight * 3 + AppSize.padding * 2 + enterLength * 14;
+        AppSize.buttonHeight * 3 + AppSize.padding * 2 + enterLength * 16;
     pr('enterLength $enterLength');
     return showPopup(
         context,
@@ -116,7 +116,9 @@ class AppDialog {
                   Center(child: AppImage.getImage(ImageType.INFO)),
                   defaultSpacing(),
                   AppText.text('$str',
-                      textAlign: TextAlign.center, maxLines: 50)
+                      textAlign: TextAlign.center,
+                      maxLines: 50,
+                      style: AppTextStyle.default_16)
                 ],
               ),
             ),
@@ -172,7 +174,7 @@ class AppDialog {
       {double? height}) {
     var enterLength = FormatUtil.howManyLengthForString(contents) + 1;
     var height =
-        AppSize.buttonHeight * 2 + AppSize.padding * 2 + enterLength * 14;
+        AppSize.buttonHeight * 2 + AppSize.padding * 2 + enterLength * 16;
     return showPopup(
         context,
         buildDialogContents(
@@ -181,7 +183,9 @@ class AppDialog {
               alignment: Alignment.centerLeft,
               height: height - AppSize.buttonHeight,
               child: AppText.text('$contents',
-                  textAlign: TextAlign.start, maxLines: 3),
+                  textAlign: TextAlign.start,
+                  maxLines: 3,
+                  style: AppTextStyle.default_16),
             ),
             true,
             height,

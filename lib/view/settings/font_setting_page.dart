@@ -67,7 +67,7 @@ class _FontSettingsPageState extends State<FontSettingsPage> {
         var temp = UserSettings.fromJson(lp.userSettings!.toJson());
         temp.textScale = type.textScale;
         lp.setUserSettings(temp);
-        pr(lp.userSettings!.toJson());
+        lp.saveUserEnvironment();
         themeTypeNotiffier.value = provider.themeType;
       },
       child: Row(

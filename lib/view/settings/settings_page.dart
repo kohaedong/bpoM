@@ -178,9 +178,9 @@ class SettingsPage extends StatelessWidget {
                         //         padding: AppSize.listPadding,
                         //         child:
                         //             _buildItemRow(context, '${tr('notice')}'))),
-                        Divider(
-                            color: AppColors.textGrey,
-                            height: AppSize.dividerHeight),
+                        // Divider(
+                        //     color: AppColors.textGrey,
+                        //     height: AppSize.dividerHeight),
                         InkWell(
                             onTap: () => Navigator.pushNamed(
                                 context, FontSettingsPage.routeName),

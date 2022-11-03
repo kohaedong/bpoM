@@ -53,7 +53,6 @@ firebase GoogleService-Info file 추가설명.
 data model 신규생성 
 flutter pub run build_runner build --delete-conflicting-outputs
 
-
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 [✓] Flutter (Channel stable, 3.3.5, on macOS 12.6 21G115 darwin-x64, locale zh-Hans-KR)
@@ -101,3 +100,4 @@ flutter pub run build_runner build --delete-conflicting-outputs
     • All required HTTP hosts are available
 
 • No issues found!
+

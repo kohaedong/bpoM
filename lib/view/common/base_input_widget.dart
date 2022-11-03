@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-11-03 17:08:28
+ * Last Modified: 2022-11-03 19:25:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -325,9 +325,12 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                           return;
                         }
                       },
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(widget.maxInputLength ?? 500)
-                ],
+                inputFormatters: widget.keybordType == TextInputType.number
+                    ? [FilteringTextInputFormatter.allow(RegExp('[0-9]'))]
+                    : [
+                        LengthLimitingTextInputFormatter(
+                            widget.maxInputLength ?? 500)
+                      ],
                 keyboardType: widget.keybordType,
                 obscureText: widget.keybordType != null &&
                         widget.keybordType == TextInputType.visiblePassword
@@ -353,26 +356,8 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                       : DoNothingAction();
                 },
                 onChanged: (text) {
-                  if (widget.keybordType != null &&
-                      widget.keybordType == TextInputType.number) {
-                    var isNotInt = int.tryParse(text) == null;
-                    var case1 = text.contains(' ');
-                    var case2 = text.contains(',');
-                    var case3 = text.contains('-');
-                    if (isNotInt || case1 || case2 || case3) {
-                      widget.textEditingController?.clear();
-                      if (widget.onChangeCallBack != null) {
-                        widget.onChangeCallBack!.call('');
-                      }
-                    } else {
-                      if (widget.onChangeCallBack != null) {
-                        widget.onChangeCallBack!.call(text);
-                      }
-                    }
-                  } else {
-                    if (widget.onChangeCallBack != null) {
-                      widget.onChangeCallBack!.call(text);
-                    }
+                  if (widget.onChangeCallBack != null) {
+                    widget.onChangeCallBack!.call(text);
                   }
                 },
                 enabled: widget.enable,
