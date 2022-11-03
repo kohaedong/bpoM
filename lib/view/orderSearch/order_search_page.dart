@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderSearch/order_search_page.dart
  * Created Date: 2022-07-05 09:58:56
- * Last Modified: 2022-11-02 19:35:48
+ * Last Modified: 2022-11-03 10:36:58
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -121,7 +121,6 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
             builder: (context, tuple, _) {
               return BaseInputWidget(
                 context: context,
-                bgColor: isSupper ? null : AppColors.unReadySigninBg,
                 onTap: () {},
                 width: AppSize.defaultContentsWidth,
                 iconType: isSupper ? InputIconType.SEARCH : null,
@@ -134,10 +133,8 @@ class _OrderSearchPageState extends State<OrderSearchPage> {
                         : false
                     : null,
                 deleteIconCallback: () => p.setSalesPerson(null),
-                hintTextStyleCallBack: () => isSupper
-                    ? tuple.item2 != null
-                        ? AppTextStyle.default_16
-                        : AppTextStyle.hint_16
+                hintTextStyleCallBack: () => tuple.item2 != null
+                    ? AppTextStyle.default_16
                     : AppTextStyle.hint_16,
                 popupSearchType: isSupper
                     ? PopupSearchType.SEARCH_SALSE_PERSON

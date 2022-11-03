@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-10-28 17:14:55
+ * Last Modified: 2022-11-03 10:35:45
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -177,6 +177,7 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                                     '${tr('salse_person')}',
                                     BaseInputWidget(
                                       context: context,
+
                                       iconType: CheckSuperAccount
                                               .isMultiAccountOrLeaderAccount()
                                           ? InputIconType.SEARCH
@@ -203,7 +204,7 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                                       popupSearchType: CheckSuperAccount
                                               .isMultiAccountOrLeaderAccount()
                                           ? PopupSearchType.SEARCH_SALSE_PERSON
-                                          : null,
+                                          : PopupSearchType.DO_NOTHING,
                                       isSelectedStrCallBack: (persion) {
                                         return p.setSalesPerson(persion);
                                       },

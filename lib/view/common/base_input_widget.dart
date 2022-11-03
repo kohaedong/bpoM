@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-11-02 22:37:59
+ * Last Modified: 2022-11-03 11:32:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -54,6 +54,7 @@ class BaseInputWidget extends StatefulWidget {
   final String? dateStr;
   final Color? iconColor;
   final Color? bgColor;
+  final int? maxInputLength;
   final dynamic arguments;
   final Map<String, dynamic>? bodyMap;
   final TextStyle? textStyle;
@@ -101,6 +102,7 @@ class BaseInputWidget extends StatefulWidget {
       this.threeCellType,
       this.oneCellType,
       this.popupSearchType,
+      this.maxInputLength,
       this.height,
       this.otherIconcallback,
       this.onChangeCallBack,
@@ -323,7 +325,9 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                           return;
                         }
                       },
-                inputFormatters: [LengthLimitingTextInputFormatter(200)],
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(widget.maxInputLength ?? 500)
+                ],
                 keyboardType: widget.keybordType,
                 obscureText: widget.keybordType != null &&
                         widget.keybordType == TextInputType.visiblePassword
@@ -349,13 +353,17 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                       : DoNothingAction();
                 },
                 onChanged: (text) {
-                  var isNotInt = int.tryParse(text) == null;
                   if (widget.keybordType != null &&
-                      widget.keybordType == TextInputType.number &&
-                      isNotInt) {
-                    widget.textEditingController?.text = '';
-                    if (widget.onChangeCallBack != null) {
-                      widget.onChangeCallBack!.call('');
+                      widget.keybordType == TextInputType.number) {
+                    var isNotInt = int.tryParse(text) == null;
+                    var case1 = text.contains(' ');
+                    var case2 = text.contains(',');
+                    var case3 = text.contains('-');
+                    if (isNotInt || case1 || case2 || case3) {
+                      widget.textEditingController?.clear();
+                      if (widget.onChangeCallBack != null) {
+                        widget.onChangeCallBack!.call('');
+                      }
                     }
                   } else {
                     if (widget.onChangeCallBack != null) {

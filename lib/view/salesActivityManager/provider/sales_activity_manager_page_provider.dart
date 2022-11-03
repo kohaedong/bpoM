@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-11-02 21:52:02
+ * Last Modified: 2022-11-02 23:29:50
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -281,7 +281,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     if (isCurrenMonth || isPrevMonth) {
       var ap =
           KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
-      await checkPreviousWorkingDay(dt: DateTime.now());
+      await checkPreviousWorkingDay();
       var previouWorkday = ap.previousWorkingDay;
       isShowPopup = await checkConfiremStatus(datetime: previouWorkday!);
       pr('isShowPopup::: $previouWorkday  $isShowPopup');
@@ -332,7 +332,7 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
     getDayData(isWithLoading: true);
   }
 
-  Future<void> checkPreviousWorkingDay({required DateTime? dt}) async {
+  Future<void> checkPreviousWorkingDay() async {
     var temp = DateUtil.previousDay();
     var isNotConfirmed = await checkConfiremStatus(datetime: temp);
     while ((temp.weekday == 7 ||

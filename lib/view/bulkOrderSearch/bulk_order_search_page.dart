@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_search_page.dart
  * Created Date: 2022-07-05 09:53:16
- * Last Modified: 2022-11-02 19:35:00
+ * Last Modified: 2022-11-03 10:37:20
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -85,7 +85,6 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
             builder: (context, tuple, _) {
               return BaseInputWidget(
                 context: context,
-                bgColor: isSupper ? null : AppColors.unReadySigninBg,
                 onTap: () {},
                 width: AppSize.defaultContentsWidth,
                 iconType: isSupper ? InputIconType.SEARCH : null,
@@ -98,10 +97,8 @@ class _BulkOrderSearchPageState extends State<BulkOrderSearchPage> {
                         : false
                     : null,
                 deleteIconCallback: () => p.setSalesPerson(null),
-                hintTextStyleCallBack: () => isSupper
-                    ? tuple.item2 != null
-                        ? AppTextStyle.default_16
-                        : AppTextStyle.hint_16
+                hintTextStyleCallBack: () => tuple.item2 != null
+                    ? AppTextStyle.default_16
                     : AppTextStyle.hint_16,
                 popupSearchType: isSupper
                     ? PopupSearchType.SEARCH_SALSE_PERSON
