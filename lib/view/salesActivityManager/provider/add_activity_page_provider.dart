@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-11-02 13:37:13
+ * Last Modified: 2022-11-03 16:20:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -67,10 +67,10 @@ class AddActivityPageProvider extends ChangeNotifier {
   String? successSeqNO;
   String? review;
   List<String>? activityList;
-
+  bool isFirstRun = true;
   bool? isLockOtherSalerSelector;
   bool isLoadData = false;
-  bool isModified = false;
+  bool isModified = true;
   bool isVisitPharmacy = false;
   bool isVisit = false;
   bool isWithTeamLeader = false;
@@ -253,7 +253,9 @@ class AddActivityPageProvider extends ChangeNotifier {
       suggestedItemList ??= [];
       distanceModel!.distance = '0.0';
     }
+    isFirstRun = false;
     isModified = false;
+    notifyListeners();
     return ResultModel(true);
   }
 

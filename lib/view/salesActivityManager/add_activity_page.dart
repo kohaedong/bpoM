@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-11-02 19:47:15
+ * Last Modified: 2022-11-03 16:21:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -1254,30 +1254,36 @@ class _AddActivityPageState extends State<AddActivityPage> {
 
   @override
   Widget build(BuildContext context) {
-    var arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    var model = arguments['model'] as SalesActivityDayResponseModel;
-    var activityStatus = arguments['status'] as ActivityStatus;
-    var seqNo = arguments['seqNo'] as String?;
-    if (seqNo != null) {
-      var temp = model.table260!.where((table) => table.seqno == seqNo).single;
-      _interviewTextEditingController.text = temp.meetRmk!;
-      _notVisitEditingController.text = temp.visitRmk!;
-      _visitResultTextEditingController.text = temp.rslt!;
-      _leaderAdviceTextEditingController.text = temp.comnt!;
-      var has280Data =
-          model.table280!.where((table) => table.seqno == seqNo).isNotEmpty;
-
-      if (has280Data) {
-        var amount =
-            model.table280!.where((table) => table.seqno == seqNo).single;
-        _amountEditingController.text = '${amount.amount1!.toInt()}';
-      }
-    }
     return ChangeNotifierProvider(
       create: (context) => AddActivityPageProvider(),
       builder: (context, _) {
         final p = context.read<AddActivityPageProvider>();
+
+        if (p.isFirstRun) {
+          var arguments = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
+          var model = arguments['model'] as SalesActivityDayResponseModel;
+          var activityStatus = arguments['status'] as ActivityStatus;
+          var seqNo = arguments['seqNo'] as String?;
+          if (seqNo != null) {
+            var temp =
+                model.table260!.where((table) => table.seqno == seqNo).single;
+            _interviewTextEditingController.text = temp.meetRmk!;
+            _notVisitEditingController.text = temp.visitRmk!;
+            _visitResultTextEditingController.text = temp.rslt!;
+            _leaderAdviceTextEditingController.text = temp.comnt!;
+            var has280Data = model.table280!
+                .where((table) => table.seqno == seqNo)
+                .isNotEmpty;
+
+            if (has280Data) {
+              var amount =
+                  model.table280!.where((table) => table.seqno == seqNo).single;
+              _amountEditingController.text = '${amount.amount1!.toInt()}';
+            }
+          }
+          p.initData(model, activityStatus, seqno: seqNo);
+        }
         return BaseLayout(
             hasForm: true,
             isWithWillPopScope: true,
@@ -1292,55 +1298,44 @@ class _AddActivityPageState extends State<AddActivityPage> {
                 }
               },
             ),
-            child: FutureBuilder<ResultModel>(
-                future: context
-                    .read<AddActivityPageProvider>()
-                    .initData(model, activityStatus, seqno: seqNo),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData &&
-                      snapshot.connectionState == ConnectionState.done) {
-                    return WillPopScope(
-                      onWillPop: () async => !p.isLoadData,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                CustomerinfoWidget.buildSubTitle(
-                                    context, '${tr('activity_report')}'),
-                                Padding(
-                                  padding: AppSize.defaultSidePadding,
-                                  child: Column(
-                                    children: [
-                                      defaultSpacing(times: 2),
-                                      _buildSelectCustomer(context),
-                                      _buildCustomerDiscription(context),
-                                      _buildSelectKeyMan(context),
-                                      defaultSpacing(),
-                                      _buildIsVisitRow(context),
-                                      _buildDistanceDiscription(context),
-                                      defaultSpacing(),
-                                      _buildWidthTeamLeaderAndOtherSallers(
-                                          context),
-                                      _buildReasonForNotVisit(context),
-                                      defaultSpacing(),
-                                    ],
-                                  ),
-                                ),
-                                _buildWhenVisitContents(context),
-                                defaultSpacing(times: 10),
-                              ],
-                            ),
+            child: WillPopScope(
+              onWillPop: () async => !p.isLoadData,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        CustomerinfoWidget.buildSubTitle(
+                            context, '${tr('activity_report')}'),
+                        Padding(
+                          padding: AppSize.defaultSidePadding,
+                          child: Column(
+                            children: [
+                              defaultSpacing(times: 2),
+                              _buildSelectCustomer(context),
+                              _buildCustomerDiscription(context),
+                              _buildSelectKeyMan(context),
+                              defaultSpacing(),
+                              _buildIsVisitRow(context),
+                              _buildDistanceDiscription(context),
+                              defaultSpacing(),
+                              _buildWidthTeamLeaderAndOtherSallers(context),
+                              _buildReasonForNotVisit(context),
+                              defaultSpacing(),
+                            ],
                           ),
-                          _buildSubmmitButton(context),
-                          _buildLoadingWidget(context),
-                        ],
-                      ),
-                    );
-                  }
-                  return _buildShimmer(context);
-                }));
+                        ),
+                        _buildWhenVisitContents(context),
+                        defaultSpacing(times: 10),
+                      ],
+                    ),
+                  ),
+                  _buildSubmmitButton(context),
+                  _buildLoadingWidget(context),
+                ],
+              ),
+            ));
       },
     );
   }
