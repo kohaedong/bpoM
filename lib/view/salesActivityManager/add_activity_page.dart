@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-11-03 16:21:27
+ * Last Modified: 2022-11-03 16:24:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -30,14 +30,12 @@ import 'package:medsalesportal/enums/popup_search_type.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
 import 'package:medsalesportal/view/common/base_app_toast.dart';
 import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
 import 'package:medsalesportal/view/common/base_input_widget.dart';
 import 'package:medsalesportal/enums/add_activity_page_input_type.dart';
 import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
-import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
 import 'package:medsalesportal/model/rfc/add_activity_distance_model.dart';
 import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
@@ -1238,17 +1236,6 @@ class _AddActivityPageState extends State<AddActivityPage> {
               )
             : Container();
       },
-    );
-  }
-
-  Widget _buildShimmer(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          CustomerinfoWidget.buildSubTitle(context, '${tr('activity_report')}'),
-          DefaultShimmer.buildDefaultResultShimmer(isNotPadding: true)
-        ],
-      ),
     );
   }
 
