@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-11-01 18:57:15
+ * Last Modified: 2022-11-03 17:36:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -422,7 +422,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                                         width:
                                             AppSize.defaultContentsWidth * .7,
                                         defaultIconCallback: () async {
-                                          controller.text = '';
+                                          controller.clear();
                                           p.setQuantity(null, index);
                                           p.setMessage(null, index);
                                         },
@@ -478,22 +478,6 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                             );
                           },
                         ),
-                        // Selector<BulkOrderDetailProvider, double?>(
-                        //   selector: (context, provider) =>
-                        //       provider.editItemList[index].kwmeng,
-                        //   builder: (context, quantity, _) {
-                        //     return OrderItemInputWidget(
-                        //       onSubmittedCallBack: (str) =>
-                        //           p.setQuantityAndCheckPrice(str, index),
-                        //       deleteCallback: () {
-                        //         p.setQuantityAndCheckPrice(null, index);
-                        //         p.resetMessage(index);
-                        //       },
-                        //       icon: quantity == 0 ? null : InputIconType.DELETE,
-                        //       defaultValue: model.kwmeng!.toInt().toString(),
-                        //     );
-                        //   },
-                        // )
                       ],
                     )
                   : BaseInfoRowByKeyAndValue.build(tr('processing_quantity'),

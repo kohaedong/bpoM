@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-11-01 18:29:45
+ * Last Modified: 2022-11-03 17:11:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -736,7 +736,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         //   controller.clear();
                         // },
                         defaultIconCallback: () {
-                          controller.text = '';
+                          controller.clear();
                           hideKeyboard(context);
                           p.updateQuantityList(index, 0);
                           p.setTableQuantity(index, 0, isResetTotal: true);
@@ -856,7 +856,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         },
                         hintText: isNotEmpty ? '' : tr('plz_enter'),
                         defaultIconCallback: () {
-                          controller.text = '';
+                          controller.clear();
                           p.updateSurchargeQuantityList(index, 0);
                           p.setTableSurchargeQuantity(index, 0);
                         },

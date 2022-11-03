@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-11-02 14:58:56
+ * Last Modified: 2022-11-03 17:51:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -820,13 +820,15 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
             : AppSize.defaultSidePadding,
         child: Row(
           children: [
+            Tooltip(
+                message: t1,
+                child: SizedBox(
+                  width: widthSize * .2,
+                  child: AppText.text(t1,
+                      textAlign: TextAlign.start, style: style1),
+                )),
             SizedBox(
-              width: widthSize * .3,
-              child:
-                  AppText.text(t1, textAlign: TextAlign.start, style: style1),
-            ),
-            SizedBox(
-              width: widthSize * .3,
+              width: widthSize * .4,
               child: Tooltip(
                   message: t2,
                   child: AppText.text(t2,

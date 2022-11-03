@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-10-26 08:33:01
+ * Last Modified: 2022-11-03 16:39:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -302,6 +302,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
     final esLogin = CacheService.getEsLogin();
     Map<String, dynamic>? body;
     var dptnm = bodyMap?['dptnm'];
+
     body = {
       "methodName": RequestType.SEARCH_STAFF.serverMethod,
       "methodParamMap": {

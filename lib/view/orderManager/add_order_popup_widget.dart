@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-11-01 15:53:08
+ * Last Modified: 2022-11-03 17:31:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -129,9 +129,10 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                     ? InputIconType.DELETE
                     : null,
                 onChangeCallBack: (t) => p.setQuantity(t),
+
                 defaultIconCallback: () {
                   p.setQuantity(null);
-                  _productQuantityInputController.text = '';
+                  _productQuantityInputController.clear();
                 },
                 textEditingController: _productQuantityInputController,
                 keybordType: TextInputType.number,
@@ -232,18 +233,30 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                 builder: (context, surcharge, _) {
                   return BaseInputWidget(
                     context: context,
+
                     textEditingController: _surchargeQuantityInputController,
                     iconColor: AppColors.textFieldUnfoucsColor,
-                    hintText: surcharge ?? tr('plz_enter'),
+                    hintText: surcharge != null && surcharge.isNotEmpty
+                        ? surcharge
+                        : tr('plz_enter'),
                     keybordType: TextInputType.number,
+                    defaultIconCallback: () {
+                      p.setSurcharge(null);
+                      _surchargeQuantityInputController.clear();
+                    },
+
+                    iconType: surcharge != null && surcharge.isNotEmpty
+                        ? InputIconType.DELETE
+                        : null,
                     onChangeCallBack: (str) {
                       p.setSurcharge(str);
                     },
                     // 팀장 일때 만 팀원선택후 삭제가능.
                     width: AppSize.defaultContentsWidth,
-                    hintTextStyleCallBack: () => surcharge != null
-                        ? AppTextStyle.default_16
-                        : AppTextStyle.hint_16,
+                    hintTextStyleCallBack: () =>
+                        surcharge != null && surcharge.isNotEmpty
+                            ? AppTextStyle.default_16
+                            : AppTextStyle.hint_16,
                     enable: true,
                   );
                 }),

@@ -171,13 +171,13 @@ class SettingsPage extends StatelessWidget {
                       children: [
                         _buildNameRow(context, snapshot.data!),
                         _buildDividerLine(),
-                        InkWell(
-                            onTap: () => Navigator.pushNamed(
-                                context, NoticeSettingPage.routeName),
-                            child: Padding(
-                                padding: AppSize.listPadding,
-                                child:
-                                    _buildItemRow(context, '${tr('notice')}'))),
+                        // InkWell(
+                        //     onTap: () => Navigator.pushNamed(
+                        //         context, NoticeSettingPage.routeName),
+                        //     child: Padding(
+                        //         padding: AppSize.listPadding,
+                        //         child:
+                        //             _buildItemRow(context, '${tr('notice')}'))),
                         Divider(
                             color: AppColors.textGrey,
                             height: AppSize.dividerHeight),
