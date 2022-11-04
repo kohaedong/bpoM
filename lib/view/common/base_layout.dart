@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_widget.dart
  * Created Date: 2021-08-19 11:37:50
- * Last Modified: 2022-10-19 19:04:47
+ * Last Modified: 2022-11-04 18:20:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -25,6 +25,9 @@ class BaseLayout extends StatelessWidget {
       required this.appBar,
       this.isWithWillPopScope,
       this.isWithBottomSafeArea,
+      this.isWithRightSafeArea,
+      this.isWithLeftSafeArea,
+      this.isWithTopSafeArea,
       this.isResizeToAvoidBottomInset,
       this.isShowAppBarCallBack,
       this.bgColog,
@@ -37,6 +40,10 @@ class BaseLayout extends StatelessWidget {
   final bool hasForm;
   final AppBar? appBar;
   final bool? isWithBottomSafeArea;
+  final bool? isWithRightSafeArea;
+  final bool? isWithLeftSafeArea;
+  final bool? isWithTopSafeArea;
+
   final bool? isResizeToAvoidBottomInset;
   final Color? bgColog;
   final OnwillpopCallback? willpopCallback;
@@ -76,6 +83,8 @@ class BaseLayout extends StatelessWidget {
               bottom: Platform.isIOS
                   ? isWithBottomSafeArea ?? false
                   : isWithBottomSafeArea ?? true,
+              right: isWithRightSafeArea ?? false,
+              left: isWithLeftSafeArea ?? false,
               child: GestureDetector(
                   onTap: () {
                     hasForm

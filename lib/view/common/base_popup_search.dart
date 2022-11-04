@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-11-04 16:20:37
+ * Last Modified: 2022-11-04 18:09:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -955,8 +955,6 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         });
   }
 
-
-
   Widget _buildPersonContentsItem(BuildContext context, EtStaffListModel model,
       int index, bool isShowLastPageText) {
     return InkWell(
@@ -1171,7 +1169,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              AppText.listViewText(model.maktx ?? '',
+              AppText.listViewText(
+                  model.maktx != null
+                      ? '${model.maktx!}${model.wgbez != null ? '(${model.wgbez})' : ''}'
+                      : '',
                   style: AppTextStyle.h4.copyWith(fontWeight: FontWeight.bold),
                   maxLines: 2,
                   textAlign: TextAlign.start),

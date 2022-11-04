@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-11-04 11:55:36
+ * Last Modified: 2022-11-04 18:59:09
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -64,6 +64,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
   var _scrollSwich = ValueNotifier<bool>(false);
   var _panelSwich = ValueNotifier<bool>(true);
   var _bottomPanelSwich = ValueNotifier<bool>(true);
+  var _landSwich = ValueNotifier<bool>(false);
   @override
   void initState() {
     key = Key('last');
@@ -80,6 +81,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
     _bottomPanelSwich.dispose();
     _scrollController.dispose();
     _scrollController2.dispose();
+    _landSwich.dispose();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -394,10 +396,10 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
         Table(
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           columnWidths: {
-            0: FlexColumnWidth(.25),
-            1: FlexColumnWidth(.25),
-            2: FlexColumnWidth(.25),
-            3: FlexColumnWidth(.25),
+            0: FlexColumnWidth(.3),
+            1: FlexColumnWidth(.23),
+            2: FlexColumnWidth(.23),
+            3: FlexColumnWidth(.233),
           },
           children: [
             TableRow(children: [
@@ -450,12 +452,12 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           columnWidths: {
             0: FlexColumnWidth(.11),
-            1: FlexColumnWidth(.11),
+            1: FlexColumnWidth(.14),
             2: FlexColumnWidth(.2),
-            3: FlexColumnWidth(.12),
-            4: FlexColumnWidth(.153),
-            5: FlexColumnWidth(.153),
-            6: FlexColumnWidth(.153),
+            3: FlexColumnWidth(.11),
+            4: FlexColumnWidth(.15),
+            5: FlexColumnWidth(.15),
+            6: FlexColumnWidth(.14),
           },
           children: [
             TableRow(children: [
@@ -564,7 +566,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                               ? AppTextStyle.blod_16
                               : isTotalRow != null && isTotalRow
                                   ? AppTextStyle.default_12
-                                  : null
+                                  : AppTextStyle.default_12
                           : AppTextStyle.blod_16
                               .copyWith(fontWeight: FontWeight.w600),
                       textAlign: TextAlign.right),
@@ -573,7 +575,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                   style: isBody != null && isBody
                       ? isTotalRow != null && isTotalRow && text.contains('계')
                           ? AppTextStyle.blod_16
-                          : null
+                          : AppTextStyle.default_12
                       : AppTextStyle.blod_16
                           .copyWith(fontWeight: FontWeight.w600),
                   textAlign: TextAlign.left));
@@ -828,9 +830,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                 : defaultSpacing();
             var width = Platform.isAndroid
                 ? AppSize.bottomSheetWidth - AppSize.padding
-                : AppSize.bottomSheetWidth -
-                    AppSize.padding -
-                    MediaQuery.of(context).padding.top;
+                : AppSize.bottomSheetWidth - AppSize.padding;
             return head != null && report != null
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -1018,12 +1018,12 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           columnWidths: {
             0: FlexColumnWidth(.11),
-            1: FlexColumnWidth(.11),
+            1: FlexColumnWidth(.14),
             2: FlexColumnWidth(.2),
-            3: FlexColumnWidth(.12),
-            4: FlexColumnWidth(.153),
-            5: FlexColumnWidth(.153),
-            6: FlexColumnWidth(.153),
+            3: FlexColumnWidth(.11),
+            4: FlexColumnWidth(.15),
+            5: FlexColumnWidth(.15),
+            6: FlexColumnWidth(.14),
           },
           children: [
             TableRow(children: [
@@ -1246,34 +1246,47 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
           return Selector<TransactionLedgerPageProvider, bool>(
             selector: (context, provider) => provider.isShowAppBar,
             builder: (context, isShowAppBar, _) {
-              return BaseLayout(
-                  hasForm: true,
-                  isResizeToAvoidBottomInset: false,
-                  isWithWillPopScope: true,
-                  willpopCallback: () => isShowAppBar ? true : false,
-                  appBar: !isShowAppBar
-                      ? null
-                      : MainAppBar(
+              return FutureBuilder(
+                  future: isShowAppBar
+                      ? p.initPageData()
+                      : Future.delayed(Duration.zero, () {
+                          return;
+                        }),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return OrientationBuilder(builder: (context, orantaion) {
+                        return BaseLayout(
+                            hasForm: true,
+                            isResizeToAvoidBottomInset: true,
+                            isWithBottomSafeArea:
+                                orantaion == Orientation.portrait
+                                    ? false
+                                    : true,
+                            isWithWillPopScope: true,
+                            willpopCallback: () => isShowAppBar ? true : false,
+                            appBar: !isShowAppBar
+                                ? null
+                                : MainAppBar(
+                                    context,
+                                    titleText: AppText.text(
+                                      '${tr('transaction_ledger')}',
+                                      style: AppTextStyle.w500_22,
+                                    ),
+                                  ),
+                            child: _buildContents(context));
+                      });
+                    }
+                    return Scaffold(
+                        appBar: MainAppBar(
                           context,
                           titleText: AppText.text(
                             '${tr('transaction_ledger')}',
                             style: AppTextStyle.w500_22,
                           ),
                         ),
-                  child: FutureBuilder(
-                      future: isShowAppBar
-                          ? p.initPageData()
-                          : Future.delayed(Duration.zero, () {
-                              return;
-                            }),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return _buildContents(context);
-                        }
-                        return Scaffold(
-                            body: DefaultShimmer.buildDefaultResultShimmer(
-                                isNotPadding: true));
-                      }));
+                        body: DefaultShimmer.buildDefaultResultShimmer(
+                            isNotPadding: true));
+                  });
             },
           );
         });

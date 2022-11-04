@@ -6,6 +6,8 @@ class AppSize {
   static double fontSize(double size) => size;
   static double bottomSafeAreaHeight(BuildContext context) =>
       MediaQuery.of(context).padding.bottom;
+  static double rightSafeAreaHeight(BuildContext context) =>
+      MediaQuery.of(context).padding.right;
   static double topSafeAreaHeight(BuildContext context) =>
       MediaQuery.of(context).padding.top;
   static double get defaultContentsWidth => realWidth - padding * 2;
