@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/dialog_contents.dart
  * Created Date: 2021-08-29 18:05:23
- * Last Modified: 2022-11-03 20:16:36
+ * Last Modified: 2022-11-04 15:36:33
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -114,10 +114,17 @@ Widget buildDialogContents(BuildContext context, Widget widget,
       ));
 }
 
-Widget buildTowButtonTextContents(BuildContext context, String text,
-    {String? faildButtonText,
-    String? successButtonText,
-    Function? successCallback}) {
+Widget buildTowButtonTextContents(
+  BuildContext context,
+  String text, {
+  String? faildButtonText,
+  String? successButtonText,
+  Function? successCallback,
+  Color? successButtonColor,
+  Color? faildButtonColor,
+  Color? successTextColor,
+  Color? faildTextColor,
+}) {
   var enterLength = FormatUtil.howManyLengthForString(text) + 1;
   var height =
       AppSize.buttonHeight * 2 + AppSize.padding * 2 + enterLength * 16;
@@ -151,17 +158,21 @@ Widget buildTowButtonTextContents(BuildContext context, String text,
                             top: BorderSide(
                                 width: .5, color: AppColors.textGrey))),
                     child: TextButton(
+                        key: Key('left'),
                         style: AppStyles.getButtonStyle(
                             AppColors.whiteText,
                             AppColors.defaultText,
                             AppTextStyle.hint_16,
-                            AppSize.radius15),
+                            AppSize.radius15,
+                            isOnlyLeftBottom: true),
                         onPressed: () {
                           Navigator.pop(context, false);
                         },
                         child: Text(
                           '${faildButtonText ?? tr('cancel')}',
-                          style: AppTextStyle.default_16,
+                          style: AppTextStyle.default_16.copyWith(
+                              color: faildTextColor ??
+                                  AppTextStyle.default_16.color),
                         )),
                   ),
                   Container(
@@ -172,17 +183,20 @@ Widget buildTowButtonTextContents(BuildContext context, String text,
                             top: BorderSide(
                                 width: .5, color: AppColors.textGrey))),
                     child: TextButton(
+                        key: Key('right'),
                         style: AppStyles.getButtonStyle(
                             AppColors.whiteText,
-                            AppColors.primary,
+                            AppColors.whiteText,
                             AppTextStyle.hint_16,
-                            AppSize.radius15),
+                            AppSize.radius15,
+                            isOnlyRightBottom: true),
                         onPressed: () {
                           Navigator.pop(context, true);
                         },
                         child: Text(
                           '${successButtonText ?? tr('ok')}',
-                          style: AppTextStyle.default_16,
+                          style: AppTextStyle.default_16.copyWith(
+                              color: successTextColor ?? AppColors.primary),
                         )),
                   )
                 ],

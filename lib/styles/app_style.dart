@@ -20,14 +20,20 @@ class AppStyles {
   /// [TextButton] 사용시 style 사전 정의.
   static ButtonStyle getButtonStyle(Color backgroundColor, Color forgroundColor,
       TextStyle textStyle, double radius,
-      {MaterialStateProperty<EdgeInsetsGeometry?>? padding}) {
+      {MaterialStateProperty<EdgeInsetsGeometry?>? padding,
+      bool? isOnlyLeftBottom,
+      bool? isOnlyRightBottom}) {
     return ButtonStyle(
       padding: padding,
       backgroundColor: MaterialStateProperty.all(backgroundColor),
       foregroundColor: MaterialStateProperty.all(forgroundColor),
       textStyle: MaterialStateProperty.all(textStyle),
-      shape: MaterialStateProperty.all(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius))),
+      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+          borderRadius: isOnlyRightBottom ?? false
+              ? BorderRadius.only(bottomRight: Radius.circular(radius))
+              : isOnlyLeftBottom ?? false
+                  ? BorderRadius.only(bottomLeft: Radius.circular(radius))
+                  : BorderRadius.circular(radius))),
     );
   }
 

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/currunt_month_scenario_page.dart
  * Created Date: 2022-08-17 23:33:31
- * Last Modified: 2022-10-02 16:59:59
+ * Last Modified: 2022-11-04 16:20:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,7 +12,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/styles/export_common.dart';
@@ -58,79 +57,21 @@ class _CurruntMonthScenarioPageState extends State<CurruntMonthScenarioPage> {
     super.dispose();
   }
 
-  Widget _buildTextField(
-      BuildContext context, int index, SalesActivityDayTable430 model) {
-    final p = context.read<CurrentMonthScenarioProvider>();
-    if (p.isFirstRun && p.table430 != null && p.table430!.isNotEmpty) {
-      for (var i = 0; i < p.table430!.length; i++) {
-        var temp = p.table430![i].pdesc ?? p.table430![i].rslt ?? '';
-        i == 0
-            ? textEditingController.text = temp
-            : i == 1
-                ? textEditingController1.text = temp
-                : i == 2
-                    ? textEditingController2.text = temp
-                    : i == 3
-                        ? textEditingController3.text = temp
-                        : i == 4
-                            ? textEditingController4.text = temp
-                            : DoNothingAction();
-      }
-      p.setIsFirstRun(false);
-    }
-    return TextField(
-      readOnly: true,
-      controller: index == 0
-          ? textEditingController
-          : index == 1
-              ? textEditingController1
-              : index == 2
-                  ? textEditingController2
-                  : index == 3
-                      ? textEditingController3
-                      : index == 4
-                          ? textEditingController4
-                          : null,
-      onChanged: (str) {
-        index == 0
-            ? p.setIndex0Descriptiopn(str)
-            : index == 1
-                ? p.setIndex1Descriptiopn(str)
-                : index == 2
-                    ? p.setIndex2Descriptiopn(str)
-                    : index == 3
-                        ? p.setIndex3Descriptiopn(str)
-                        : index == 4
-                            ? p.setIndex4Descriptiopn(str)
-                            : DoNothingAction();
-      },
-      autofocus: false,
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(100),
-      ],
-      autocorrect: false,
-      keyboardType: TextInputType.multiline,
-      maxLines: 6,
-      style: AppTextStyle.default_16,
-      decoration: InputDecoration(
-          fillColor: AppColors.whiteText,
-          hintText: model.pdesc,
-          hintStyle: AppTextStyle.hint_16,
-          border: InputBorder.none,
-          focusedBorder: InputBorder.none),
-    );
-  }
-
   Widget _buildBox(
       BuildContext context, int index, SalesActivityDayTable430 model) {
     return Padding(
         padding: AppSize.defaultSidePadding,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             defaultSpacing(),
             Container(
-                width: AppSize.defaultContentsWidth,
-                height: AppSize.scenarioBoxHeight,
+                constraints: BoxConstraints(
+                  maxWidth: AppSize.defaultContentsWidth,
+                  minWidth: AppSize.defaultContentsWidth,
+                  minHeight: AppSize.scenarioBoxHeight,
+                ),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.textFieldUnfoucsColor),
                     borderRadius: BorderRadius.circular(AppSize.radius4)),
@@ -151,7 +92,12 @@ class _CurruntMonthScenarioPageState extends State<CurruntMonthScenarioPage> {
                     AppStyles.defultRowSpacing(),
                     AppText.listViewText('-'),
                     AppStyles.defultRowSpacing(),
-                    Expanded(child: _buildTextField(context, index, model)),
+                    Expanded(
+                        child: SingleChildScrollView(
+                      padding: EdgeInsets.all(AppSize.padding),
+                      child: AppText.text(model.pdesc!,
+                          maxLines: 20, textAlign: TextAlign.left),
+                    )),
                     // AppText.listViewText(model.pdesc!, maxLines: 3)
                   ],
                 )),
@@ -172,16 +118,18 @@ class _CurruntMonthScenarioPageState extends State<CurruntMonthScenarioPage> {
               return table430 != null && table430.isNotEmpty
                   ? SizedBox(
                       height: AppSize.realHeight * .8,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ...table430
-                              .asMap()
-                              .entries
-                              .map((e) => _buildBox(context, e.key, e.value)),
-                        ],
-                      ),
-                    )
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ...table430
+                                .asMap()
+                                .entries
+                                .map((e) => _buildBox(context, e.key, e.value)),
+                          ],
+                        ),
+                      ))
                   : Padding(
                       padding: EdgeInsets.only(top: AppSize.appBarHeight),
                       child: BaseNullDataWidget.build(context,

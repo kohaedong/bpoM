@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-11-02 20:28:43
+ * Last Modified: 2022-11-04 15:20:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -523,14 +523,18 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                     builder: (context, snapshot) {
                       var hasData = snapshot.hasData &&
                           snapshot.connectionState == ConnectionState.done;
-                      return AppText.text(hasData ? snapshot.data!.single : '');
+                      return AppText.listViewText(
+                          hasData ? snapshot.data!.single : '',
+                          isSubTitle: true);
                     }),
                 model.zkmnoNm != null && model.zkmnoNm!.isNotEmpty
                     ? AppStyles.buildPipe()
                     : Container(),
-                AppText.text(model.zkmnoNm ?? ''),
+                AppText.listViewText(model.zkmnoNm ?? '', isSubTitle: true),
                 AppStyles.buildPipe(),
-                AppText.text(tr(model.xvisit == 'Y' ? 'visit' : 'not_visit')),
+                AppText.listViewText(
+                    tr(model.xvisit == 'Y' ? 'visit' : 'not_visit'),
+                    isSubTitle: true),
               ],
             ),
             defaultSpacing(height: AppSize.defaultListItemSpacing / 2),
@@ -602,7 +606,8 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
         context,
         buildTowButtonTextContents(
             context, tr('is_realy_delete_last_activity', args: [date, person]),
-            successButtonText: tr('delete')));
+            successButtonText: tr('delete'),
+            successButtonColor: AppColors.primary));
 
     if (result != null && result) {
       p.deletLastActivity().then((result) {

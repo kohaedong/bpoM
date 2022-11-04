@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/visit_result_history_page.dart
  * Created Date: 2022-08-17 23:31:14
- * Last Modified: 2022-11-04 12:12:26
+ * Last Modified: 2022-11-04 13:43:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -56,14 +56,11 @@ class VisitResultHistoryPage extends StatelessWidget {
         defaultSpacing(),
         Padding(
             padding: AppSize.defaultSidePadding,
-            child: Tooltip(
-              message: model.rslt!,
-              child: BaseInfoRowByKeyAndValue.build(
-                  tr('visit_result'), model.rslt!,
-                  leadingTextWidth: AppSize.defaultContentsWidth * .3,
-                  contentsTextWidth: AppSize.defaultContentsWidth * .7,
-                  maxLine: 3),
-            )),
+            child: BaseInfoRowByKeyAndValue.build(
+                tr('visit_result'), model.rslt!,
+                leadingTextWidth: AppSize.defaultContentsWidth * .3,
+                contentsTextWidth: AppSize.defaultContentsWidth * .7,
+                maxLine: 10)),
         defaultSpacing()
       ],
     );

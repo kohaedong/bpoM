@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/provider/base_popup_search_provider.dart
  * Created Date: 2021-09-11 17:15:06
- * Last Modified: 2022-11-04 13:30:49
+ * Last Modified: 2022-11-04 15:57:12
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -111,11 +111,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
   void setPersonInputText(String? value) {
     personInputText = value;
     if (value == null || value.length == 1 || value == '') {
-      if (value == '*') {
-        personInputText = ' ';
-      }
       if (value == '') {
         personInputText = null;
+      }
+      if (value == '*') {
+        personInputText = ' ';
       }
       notifyListeners();
     }
@@ -124,11 +124,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
   void setSuggetionItemNameInputText(String? value) {
     suggetionItemNameInputText = value;
     if (value == null || value.length == 1 || value == '') {
-      if (value == '*') {
-        suggetionItemNameInputText = ' ';
-      }
       if (value == '') {
         suggetionItemNameInputText = null;
+      }
+      if (value == '*') {
+        suggetionItemNameInputText = ' ';
       }
       notifyListeners();
     }
@@ -137,24 +137,21 @@ class BasePopupSearchProvider extends ChangeNotifier {
   void setMeatrialSearchKeyInputText(String? value) {
     seletedMaterialSearchKey = value;
     if (value == null || value.length == 1 || value == '') {
-      if (value == '*') {
-        seletedMaterialSearchKey = ' ';
-      }
       if (value == '') {
         seletedMaterialSearchKey = null;
       }
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   void setSuggetionItemGroupInputText(String? value) {
     suggetionItemGroupInputText = value;
     if (value == null || value.length == 1 || value == '') {
-      if (value == '*') {
-        suggetionItemGroupInputText = ' ';
-      }
       if (value == '') {
         suggetionItemGroupInputText = null;
+      }
+      if (value == '*') {
+        suggetionItemGroupInputText = ' ';
       }
       notifyListeners();
     }
@@ -163,11 +160,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
   void setKeymanInputText(String? value) {
     keymanInputText = value;
     if (value == null || value.length == 1 || value == '') {
-      if (value == '*') {
-        keymanInputText = ' ';
-      }
       if (value == '') {
         keymanInputText = null;
+      }
+      if (value == '*') {
+        keymanInputText = ' ';
       }
       notifyListeners();
     }
@@ -198,11 +195,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
   void setCustomerInputText(String? value) {
     customerInputText = value;
     if (value == null || value.length == 1 || value == '') {
-      if (value == '*') {
-        customerInputText = ' ';
-      }
       if (value == '') {
         customerInputText = null;
+      }
+      if (value == '*') {
+        customerInputText = ' ';
       }
       notifyListeners();
     }
@@ -211,11 +208,11 @@ class BasePopupSearchProvider extends ChangeNotifier {
   void setEndCustomerInputText(String? value) {
     endCustomerInputText = value;
     if (value == null || value.length == 1 || value == '') {
-      if (value == '*') {
-        endCustomerInputText = ' ';
-      }
       if (value == '') {
         endCustomerInputText = null;
+      }
+      if (value == '*') {
+        endCustomerInputText = ' ';
       }
       notifyListeners();
     }
@@ -476,6 +473,7 @@ class BasePopupSearchProvider extends ChangeNotifier {
           "functionName": RequestType.SEARCH_MATERIAL.serverMethod,
         }
       };
+      pr(_body);
       _api.init(RequestType.SEARCH_MATERIAL);
       final result = await _api.request(body: _body);
       if (result == null || result.statusCode != 200) {
@@ -815,10 +813,10 @@ class BasePopupSearchProvider extends ChangeNotifier {
           "IV_MAKTX": suggetionItemNameInputText != null
               ? RegExpUtil.removeSpace(suggetionItemNameInputText!)
               : '', // input
-          "IV_MATKL": suggetionItemGroupInputText != null
+          "IV_MATKL": "",
+          "IV_WGBEZ": suggetionItemGroupInputText != null
               ? RegExpUtil.removeSpace(suggetionItemGroupInputText!)
-              : '', // input
-          "IV_WGBEZ": "",
+              : '', // input,
           "IV_MTART": "",
           "pos": pos,
           "partial": partial,

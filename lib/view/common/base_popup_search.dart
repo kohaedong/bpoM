@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-11-03 17:30:14
+ * Last Modified: 2022-11-04 16:20:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -955,16 +955,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         });
   }
 
-//좌우 스크롤 가능한 위젯
-  Widget _horizontalRow(Widget w) {
-    return Align(
-        alignment: Alignment.centerLeft,
-        child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          child: w,
-        ));
-  }
+
 
   Widget _buildPersonContentsItem(BuildContext context, EtStaffListModel model,
       int index, bool isShowLastPageText) {
@@ -1005,34 +996,29 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
           padding:
               index == 0 ? EdgeInsets.all(0) : AppSize.searchPopupListPadding,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _horizontalRow(
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FutureBuilder<List<String>?>(
-                            future: HiveService.getCustomerType(model.zstatus!),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData &&
-                                  snapshot.connectionState ==
-                                      ConnectionState.done) {
-                                return AppText.text(
-                                    '${model.name} (${snapshot.data!.single})',
-                                    style: AppTextStyle.h3);
-                              }
-                              return AppText.text('${model.name} ()',
-                                  style: AppTextStyle.h3);
-                            }),
-                        AppText.text('${model.zaddName1}',
-                            style: AppTextStyle.h5),
-                        AppText.text('${model.telf1}', style: AppTextStyle.h5),
-                      ],
-                    ),
-                  ],
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FutureBuilder<List<String>?>(
+                      future: HiveService.getCustomerType(model.zstatus!),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData &&
+                            snapshot.connectionState == ConnectionState.done) {
+                          return AppText.listViewText(
+                              '${model.name} (${snapshot.data!.single})',
+                              maxLines: 2);
+                        }
+                        return Container();
+                      }),
+                  AppText.listViewText('${model.zaddName1}',
+                      maxLines: 2, isSubTitle: true),
+                  AppText.text('${model.telf1}',
+                      style:
+                          AppTextStyle.h5.copyWith(color: AppColors.subText)),
+                ],
               ),
               isShowLastPageText ? lastPageText() : Container()
             ],
@@ -1060,36 +1046,28 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _horizontalRow(
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppText.listViewText(
-                            '${model.kunnrNm!} (${model.kunnr})',
-                            textAlign: TextAlign.start),
-                        AppText.listViewText('${model.ort01} ${model.stras}',
-                            isSubTitle: true,
-                            maxLines: 1,
-                            textAlign: TextAlign.start),
-                        Row(
-                          children: [
-                            model.telf1 != null && model.telf1!.isNotEmpty
-                                ? AppText.listViewText('${model.telf1}',
-                                    isSubTitle: true)
-                                : Container(),
-                            model.stcd2 != null && model.stcd2!.isNotEmpty
-                                ? AppStyles.buildPipe()
-                                : Container(),
-                            AppText.listViewText('${model.stcd2}',
-                                isSubTitle: true),
-                          ],
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppText.listViewText('${model.kunnrNm!} (${model.kunnr})',
+                      textAlign: TextAlign.start, maxLines: 2),
+                  AppText.listViewText('${model.ort01} ${model.stras}',
+                      isSubTitle: true,
+                      maxLines: 2,
+                      textAlign: TextAlign.start),
+                  Row(
+                    children: [
+                      model.telf1 != null && model.telf1!.isNotEmpty
+                          ? AppText.listViewText('${model.telf1}',
+                              isSubTitle: true)
+                          : Container(),
+                      model.stcd2 != null && model.stcd2!.isNotEmpty
+                          ? AppStyles.buildPipe()
+                          : Container(),
+                      AppText.listViewText('${model.stcd2}', isSubTitle: true),
+                    ],
+                  )
+                ],
               ),
               isShowLastPageText ? lastPageText() : Container()
             ],
@@ -1108,7 +1086,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
           padding:
               index == 0 ? EdgeInsets.all(0) : AppSize.searchPopupListPadding,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Selector<BasePopupSearchProvider, bool?>(
                   selector: (context, provider) => provider.isSingleData,
@@ -1121,33 +1100,20 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                         : DoNothingAction();
                     return Container();
                   }),
-              _horizontalRow(
-                Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppText.listViewText(
-                            '${model.kunnrNm!} (${model.kunnr})'),
-                        AppText.listViewText('${model.ort01} ${model.stras}',
-                            isSubTitle: true),
-                        Row(
-                          children: [
-                            model.telf1 != null && model.telf1!.isNotEmpty
-                                ? AppText.listViewText('${model.telf1}',
-                                    isSubTitle: true)
-                                : Container(),
-                            model.telf1 != null && model.telf1!.isNotEmpty
-                                ? AppStyles.buildPipe()
-                                : Container(),
-                            AppText.listViewText('${model.ort01}',
-                                isSubTitle: true),
-                          ],
-                        )
-                      ],
-                    ),
-                  ],
-                ),
+              AppText.listViewText('${model.kunnrNm!} (${model.kunnr})',
+                  maxLines: 2),
+              AppText.listViewText('${model.ort01} ${model.stras}',
+                  isSubTitle: true, maxLines: 2),
+              Row(
+                children: [
+                  model.telf1 != null && model.telf1!.isNotEmpty
+                      ? AppText.listViewText('${model.telf1}', isSubTitle: true)
+                      : Container(),
+                  model.telf1 != null && model.telf1!.isNotEmpty
+                      ? AppStyles.buildPipe()
+                      : Container(),
+                  AppText.listViewText('${model.ort01}', isSubTitle: true),
+                ],
               ),
               isShowLastPageText ? lastPageText() : Container()
             ],
@@ -1167,7 +1133,8 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
               ? AppSize.searchPopupListPadding.copyWith(top: 0)
               : AppSize.searchPopupListPadding,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Selector<BasePopupSearchProvider, bool?>(
                   selector: (context, provider) => provider.isSingleData,
@@ -1180,17 +1147,10 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                         : DoNothingAction();
                     return Container();
                   }),
-              _horizontalRow(
-                Row(
-                  children: [
-                    AppText.text(model.zkmnoNm!,
-                        style: AppTextStyle.h4
-                            .copyWith(fontWeight: FontWeight.bold)),
-                    SizedBox(width: AppSize.defaultShimmorSpacing),
-                    AppText.text('${model.zskunnrNm!}/${model.zskunnr!}'),
-                  ],
-                ),
-              ),
+              AppText.listViewText(model.zkmnoNm!),
+              SizedBox(width: AppSize.defaultShimmorSpacing),
+              AppText.listViewText('${model.zskunnrNm!}/${model.zskunnr!}',
+                  maxLines: 2, isSubTitle: true),
               isShowLastPageText ? lastPageText() : Container()
             ],
           )),
@@ -1208,16 +1168,27 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
               ? AppSize.searchPopupListPadding.copyWith(top: 0)
               : AppSize.searchPopupListPadding,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _horizontalRow(
-                Row(
-                  children: [
-                    AppText.listViewText(model.maktx ?? ''),
-                    SizedBox(width: AppSize.defaultShimmorSpacing),
-                    AppText.text(model.kbetr1!),
-                  ],
-                ),
+              AppText.listViewText(model.maktx ?? '',
+                  style: AppTextStyle.h4.copyWith(fontWeight: FontWeight.bold),
+                  maxLines: 2,
+                  textAlign: TextAlign.start),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  AppText.listViewText(model.matnr ?? '',
+                      style: AppTextStyle.sub_12),
+                  model.kbetr2!.trim().isNotEmpty
+                      ? AppStyles.buildPipe()
+                      : Container(),
+                  model.kbetr2!.trim().isNotEmpty
+                      ? AppText.listViewText(
+                          FormatUtil.addComma(model.kbetr2!.trim()),
+                          style: AppTextStyle.sub_12)
+                      : Container(),
+                ],
               ),
               isShowLastPageText ? lastPageText() : Container()
             ],
@@ -1237,18 +1208,12 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
               : AppSize.searchPopupListPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _horizontalRow(
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    AppText.listViewText(model.maktx ?? '',
-                        style: AppTextStyle.h4
-                            .copyWith(fontWeight: FontWeight.bold)),
-                    SizedBox(width: AppSize.defaultShimmorSpacing),
-                  ],
-                ),
-              ),
+              AppText.listViewText(model.maktx ?? '',
+                  style: AppTextStyle.h4.copyWith(fontWeight: FontWeight.bold),
+                  maxLines: 2,
+                  textAlign: TextAlign.start),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
