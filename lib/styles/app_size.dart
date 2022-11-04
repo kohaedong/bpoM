@@ -34,7 +34,7 @@ class AppSize {
   static double get defaultCheckBoxHeight => 20.w;
   static double get dangerPopHeight => 157.h;
   static double get appBarHeight => 56.h;
-  static double get bottomSheetHeight => 300;
+  static double get bottomSheetHeight => 350;
   static double get bottomSheetWidth => 380;
   static double get smallButtonWidth => 70;
   static double get downLoadPopupHeight => 100.w;

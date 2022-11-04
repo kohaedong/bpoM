@@ -8,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/model/user/user_settings.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';

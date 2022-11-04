@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/provider/salse_report_page_provider.dart
  * Created Date: 2022-07-05 09:59:52
- * Last Modified: 2022-11-01 16:39:52
+ * Last Modified: 2022-11-04 12:04:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -195,7 +195,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
     } else {
       if (map['model'] != null) {
         selectedCustomerModel = map['model'] as EtCustomerModel?;
-        selectedProductsFamily = map['product_family'] as String?;
+        // selectedProductsFamily = map['product_family'] as String?;
         selectedEndCustomerModel = null;
         endCustomerList = [];
         await searchEndCustomer();
@@ -312,7 +312,7 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
       notifyListeners();
     }
     final isLogin = CacheService.getIsLogin();
-    var spart =
+    var spartList =
         productsFamilyListWithCode != null && selectedProductsFamily != null
             ? productsFamilyListWithCode!
                 .where((str) => str.contains(selectedProductsFamily ?? ''))
@@ -331,8 +331,8 @@ class TransactionLedgerPageProvider extends ChangeNotifier {
         // "IV_PERNR":
         //     selectedSalesPerson != null ? selectedSalesPerson!.pernr : '',
         "IV_PERNR": '',
-        "IV_SPART": spart.isNotEmpty
-            ? spart.first.substring(spart.first.indexOf('-') + 1)
+        "IV_SPART": spartList.isNotEmpty
+            ? spartList.first.substring(spartList.first.indexOf('-') + 1)
             : '',
         "IV_SPMON_S": FormatUtil.monthStr(selectedStartDate!),
         "IV_SPMON_E": FormatUtil.monthStr(selectedEndDate!),

@@ -10,11 +10,9 @@ import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
 import 'package:medsalesportal/model/update/check_update_model.dart';
 import 'package:medsalesportal/view/settings/font_setting_page.dart';
-import 'package:medsalesportal/view/settings/notice_setting_page.dart';
 import 'package:medsalesportal/view/commonLogin/common_login_page.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
-import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
 import 'package:medsalesportal/view/settings/provider/settings_provider.dart';
 import 'package:medsalesportal/view/commonLogin/update_and_notice_dialog.dart';
@@ -158,8 +156,8 @@ class SettingsPage extends StatelessWidget {
               titleText: AppText.text('${tr('settings')}',
                   style: AppTextStyle.w500_22),
               callback: () async {
-                await p.saveUserEvn();
-                popToFirst(context);
+                Future.wait([p.saveUserEvn()]);
+                Navigator.pop(context);
               },
             ),
             child: FutureBuilder<SettingsResult>(
