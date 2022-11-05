@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-11-04 15:09:46
+ * Last Modified: 2022-11-05 21:11:49
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -96,9 +96,11 @@ class AddActivityPageProvider extends ChangeNotifier {
     return newSeqno;
   };
   bool get isNotToday {
-    final t260 = fromParentResponseModel!.table260!;
-    var isToday = t260.isNotEmpty
-        ? DateUtil.isToday(DateTime.now(), DateUtil.getDate(t260.first.erdat!))
+    // final t260 = fromParentResponseModel!.table260!;
+    final t250 = fromParentResponseModel!.table250!;
+    var isToday = t250.isNotEmpty
+        // 영업 활동 시작시 250 의 adate는 무조건 생성한다.
+        ? DateUtil.isToday(DateTime.now(), DateUtil.getDate(t250.single.adate!))
         : true;
     return !isToday;
   }
@@ -109,7 +111,9 @@ class AddActivityPageProvider extends ChangeNotifier {
     distanceModel = AddActivityDistanceModel();
     fromParentResponseModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
-    pr(fromParentResponseModel?.toJson());
+    fromParentResponseModel?.table260?.forEach((element) {
+      pr(element.toJson());
+    });
     activityStatus = status;
     pr(activityStatus);
     if (seqno != null) {
@@ -569,8 +573,8 @@ class AddActivityPageProvider extends ChangeNotifier {
               }
               pr('currenSeqNo:::${currenSeqNo}');
               t260.seqno = currenSeqNo;
-              t260.erdat = FormatUtil.removeDash(
-                  DateUtil.getDateStr(DateTime.now().toIso8601String()));
+              // t260.erdat = FormatUtil.removeDash(
+              //     DateUtil.getDateStr(DateTime.now().toIso8601String()));
               t260.erzet = DateUtil.getTimeNow(isNotWithColon: true);
               t260.ernam = esLogin.ename;
               t260.erwid = esLogin.logid;
@@ -620,7 +624,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       t260.xmeet = isInterviewIndex == 0 ? 'S' : 'F';
       t260.meetRmk =
           isInterviewIndex == 0 ? '' : reasonForinterviewFailure ?? '';
-      t260.rslt = visitResultInput ?? '';
+      t260.rslt = isVisit ? (visitResultInput ?? '') : '';
       t260.comnt = leaderAdviceInput ?? '';
       var withLeaderOnly = isWithTeamLeader && anotherSaller == null;
       var withLeaderAndSaller = isWithTeamLeader && anotherSaller != null;
@@ -838,7 +842,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     if (isProvDay) {
       final ap =
           KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
-      provDay = await ap.previousWorkingDay;
+      provDay = ap.previousWorkingDay;
     }
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     Map<String, dynamic> _body = {
