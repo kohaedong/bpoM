@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/provider/activity_manager_page_provider.dart
  * Created Date: 2022-07-05 09:48:24
- * Last Modified: 2022-11-05 21:35:31
+ * Last Modified: 2022-11-06 15:30:10
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -578,10 +578,11 @@ class SalseActivityManagerPageProvider extends ChangeNotifier {
           isServerError: result?.statusCode == -1);
     }
     if (result.statusCode == 200) {
-      pr(result.body);
       dayResponseModel =
           SalesActivityDayResponseModel.fromJson(result.body['data']);
 
+      var copy =
+          SalesActivityDayResponseModel.fromJson(dayResponseModel?.toJson());
       // 영업활동 종료 후 다시 페이지로 돌아 왔을때 대비.
       var t250 = dayResponseModel!.table250;
       var isStoped = t250 != null &&

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/select_location_provider.dart
  * Created Date: 2022-08-07 20:01:39
- * Last Modified: 2022-11-05 22:00:07
+ * Last Modified: 2022-11-05 22:49:44
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -66,10 +66,11 @@ class SelectLocationProvider extends ChangeNotifier {
 
   List<SalseActivityLocationModel> get officeAddres =>
       locationList!.where((model) => model.addcat != 'H').toList();
-  String get locationType => locationList!
-      .where((model) => model.zadd1 == selectedAddress)
-      .first
-      .addcat!;
+  String get locationType => selectedIndex == 0
+      ? 'H'
+      : selectedIndex == 1
+          ? 'O'
+          : 'C';
 
   void initData(
       SalesActivityDayResponseModel fromParentModel,
@@ -78,9 +79,6 @@ class SelectLocationProvider extends ChangeNotifier {
     editDayModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
     locationList = fromParentLocationList;
-    locationList?.forEach((element) {
-      pr('addcat ${element.addcat}');
-    });
     if (!isHomeAddressEmpty) {
       selectedAddress = homeAddress;
     }
@@ -294,7 +292,7 @@ class SelectLocationProvider extends ChangeNotifier {
           : 0;
       t250.totDist = totoalDistans(t250.rtnDist!);
       pr('t250.rtnDist::: ${t250.rtnDist}');
-      t250.faddcat = indexx != 2 ? locationType : 'C';
+      t250.faddcat = locationType;
       t250.fxLatitude = double.parse(lat!.trim());
       t250.fylongitude = double.parse(lon!.trim());
       t250.ftime = activityStatus == ActivityStatus.PREV_WORK_DAY_EN_STOPED
@@ -306,7 +304,7 @@ class SelectLocationProvider extends ChangeNotifier {
       t250.adate =
           FormatUtil.removeDash(DateUtil.getDateStr('', dt: DateTime.now()));
       t250.aezet = DateUtil.getTimeNow(isNotWithColon: true);
-      t250.saddcat = indexx != 2 ? locationType : 'C';
+      t250.saddcat = locationType;
       t250.szaddr = indexx != 2 ? selectedAddress : '';
       t250.ernam = esLogin!.ename;
       t250.sxLatitude = double.parse(lat!.trim());
