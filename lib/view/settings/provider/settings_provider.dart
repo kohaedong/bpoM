@@ -138,8 +138,8 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setSuggestion(String text) {
-    this.suggetionText = text;
+  setSuggestion(String? text) {
+    suggetionText = text;
     notifyListeners();
   }
 

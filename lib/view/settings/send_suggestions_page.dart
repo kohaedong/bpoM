@@ -121,6 +121,7 @@ class _SendSuggestionPageState extends State<SendSuggestionPage> {
                   if (isSended) {
                     AppToast().show(context, '${tr('send_success')}');
                     _textEditingController.clear();
+                    provider.setSuggestion(null);
                   }
                 }
               },

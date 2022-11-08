@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/menu_provider.dart
  * Created Date: 2022-08-04 23:17:24
- * Last Modified: 2022-11-01 23:15:03
+ * Last Modified: 2022-11-08 15:31:32
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -117,36 +117,36 @@ class ActivityMenuProvider extends ChangeNotifier {
         isLoadData = false;
         notifyListeners();
         return ResultModel(false, data: 'empty');
-      }
-
-      _api.init(RequestType.DELETE_LAST_ACTIVITY);
-      var isLogin = CacheService.getIsLogin();
-      var esLogin = CacheService.getEsLogin();
-      Map<String, dynamic> _body = {
-        "methodName": RequestType.DELETE_LAST_ACTIVITY.serverMethod,
-        "methodParamMap": {
-          "IV_PTYPE": "D",
-          "confirmType": "Y",
-          "IS_LOGIN": isLogin,
-          "IV_SANUM": esLogin!.logid!.toUpperCase(),
-          "IV_ADATE": DateUtil.getDateStr(DateTime.now().toIso8601String()),
-          "resultTables": RequestType.DELETE_LAST_ACTIVITY.resultTable,
-          "functionName": RequestType.DELETE_LAST_ACTIVITY.serverMethod
+      } else {
+        _api.init(RequestType.DELETE_LAST_ACTIVITY);
+        var isLogin = CacheService.getIsLogin();
+        var esLogin = CacheService.getEsLogin();
+        Map<String, dynamic> _body = {
+          "methodName": RequestType.DELETE_LAST_ACTIVITY.serverMethod,
+          "methodParamMap": {
+            "IV_PTYPE": "D",
+            "confirmType": "Y",
+            "IS_LOGIN": isLogin,
+            "IV_SANUM": esLogin!.logid!.toUpperCase(),
+            "IV_ADATE": DateUtil.getDateStr(DateTime.now().toIso8601String()),
+            "resultTables": RequestType.DELETE_LAST_ACTIVITY.resultTable,
+            "functionName": RequestType.DELETE_LAST_ACTIVITY.serverMethod
+          }
+        };
+        final result = await _api.request(body: _body);
+        if (result == null || result.statusCode != 200) {
+          isLoadData = false;
+          notifyListeners();
+          return ResultModel(false,
+              isNetworkError: result?.statusCode == -2,
+              isServerError: result?.statusCode == -1);
         }
-      };
-      final result = await _api.request(body: _body);
-      if (result == null || result.statusCode != 200) {
-        isLoadData = false;
-        notifyListeners();
-        return ResultModel(false,
-            isNetworkError: result?.statusCode == -2,
-            isServerError: result?.statusCode == -1);
-      }
-      if (result.statusCode == 200) {
-        pr(result.body);
-        isLoadData = false;
-        notifyListeners();
-        return ResultModel(true);
+        if (result.statusCode == 200) {
+          pr(result.body);
+          isLoadData = false;
+          notifyListeners();
+          return ResultModel(true);
+        }
       }
     }
 

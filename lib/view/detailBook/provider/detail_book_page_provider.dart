@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/detailBook/provider/detail_book_page_provider.dart
  * Created Date: 2022-07-05 09:55:29
- * Last Modified: 2022-10-20 13:08:29
+ * Last Modified: 2022-11-08 16:17:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/api_service.dart';
@@ -76,14 +77,17 @@ class DetailBookPageProvider extends ChangeNotifier {
     if (result.statusCode == 200) {
       fileKeyResponseModel =
           DetailBookFileKeyResponseModel.fromJson(result.body['data']);
+
       final key = fileKeyResponseModel!.attachInfo!.id;
+      var isHaveKey = (key != null && key.isNotEmpty);
       var dev = ' https://mkolonviewdev.kolon.com';
       var prod = ' https://mkolonview.kolon.com';
       var url =
           '${KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev' ? '$dev' : '$prod'}/SynapDocViewServer/viewer/doc.html?key=$key&contextPath=/SynapDocViewServer';
       isLoadData = false;
       notifyListeners();
-      return ResultModel(true, data: '${url.trim()}');
+      return ResultModel(isHaveKey,
+          data: '${url.trim()}', errorMassage: tr('not_search_detailbook_key'));
     }
     isLoadData = false;
     notifyListeners();

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-11-08 11:35:08
+ * Last Modified: 2022-11-08 16:00:03
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -411,7 +411,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
       },
       autofocus: false,
       inputFormatters: [
-        LengthLimitingTextInputFormatter(100),
+        LengthLimitingTextInputFormatter(50),
       ],
       autocorrect: false,
       keyboardType: TextInputType.multiline,
