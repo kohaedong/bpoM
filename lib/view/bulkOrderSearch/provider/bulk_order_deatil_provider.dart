@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart
  * Created Date: 2022-07-21 14:21:16
- * Last Modified: 2022-10-25 13:56:50
+ * Last Modified: 2022-11-08 14:08:41
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -72,6 +72,7 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     } else {
       editItemList[index].kwmeng = 0;
     }
+    setOrderTotal(index);
     editItemList[index].isFirstRun = false;
     notifyListeners();
   }
@@ -88,6 +89,7 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     } else {
       editItemList[index].kwmeng = 0;
     }
+    setOrderTotal(index);
     checkMetaPriceAndStock(index);
     notifyListeners();
   }
@@ -95,6 +97,19 @@ class BulkOrderDetailProvider extends ChangeNotifier {
   void resetMessage(int index) {
     editItemList[index].zmsg = '';
     notifyListeners();
+  }
+
+  void setOrderTotal(int index) {
+    orderTotal = 0;
+    var unitPrice =
+        (editItemList[index].znetpr ?? 0) / (editItemList[index].zkwmeng ?? 0);
+    pr(unitPrice);
+    var taxRate = unitPrice / (editItemList[index].netpr ?? 0);
+
+    for (var item in editItemList) {
+      orderTotal += item.kwmeng! * (item.netpr ?? 0);
+    }
+    orderTotal = orderTotal * taxRate;
   }
 
   Future<ResultModel> searchPerson({String? dptnm}) async {
@@ -185,7 +200,7 @@ class BulkOrderDetailProvider extends ChangeNotifier {
       "methodParamMap": {
         "IV_PTYPE": isCancel ? 'D' : 'C',
         "IV_ZREQNO": bulkOrderDetailResponseModel!.tHead!.single.zreqno,
-        "ZKWMENG": editItemList.length == 1 ? editItemList.single.zkwmeng : '',
+        "ZKWMENG": "",
         "UMODE": isCancel ? '' : 'U',
         "T_HEAD": tHeadBase64,
         "T_ITEM": tItemBase64,
@@ -269,7 +284,9 @@ class BulkOrderDetailProvider extends ChangeNotifier {
       editItemList[index] = BulkOrderDetailTItemModel.fromJson(temp.toJson());
       pr(editItemList[index].zmsg);
       editItemList[index].isShowLoading = false;
-      notifyListeners();
+      try {
+        notifyListeners();
+      } catch (e) {}
       return ResultModel(true);
     }
     editItemList[index].isShowLoading = false;

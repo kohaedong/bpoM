@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-11-05 21:11:49
+ * Last Modified: 2022-11-08 11:45:36
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -278,8 +278,6 @@ class AddActivityPageProvider extends ChangeNotifier {
   }
 
   void setAmount(String? str) {
-    pr(str);
-    pr(str);
     isModified = true;
     seletedAmount = str;
     notifyListeners();
@@ -295,6 +293,7 @@ class AddActivityPageProvider extends ChangeNotifier {
   }
 
   void setReview(String str) {
+    isModified = true;
     review = str;
     notifyListeners();
   }
@@ -844,6 +843,7 @@ class AddActivityPageProvider extends ChangeNotifier {
           KeyService.baseAppKey.currentContext!.read<ActivityStateProvider>();
       provDay = ap.previousWorkingDay;
     }
+    pr(t260Base64);
     _api.init(RequestType.SALESE_ACTIVITY_DAY_DATA);
     Map<String, dynamic> _body = {
       "methodName": RequestType.SALESE_ACTIVITY_DAY_DATA.serverMethod,

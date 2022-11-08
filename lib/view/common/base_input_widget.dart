@@ -4,7 +4,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_input_widget.dart
  * Created Date: 2021-09-05 17:20:52
- * Last Modified: 2022-11-03 19:25:48
+ * Last Modified: 2022-11-08 12:35:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -326,7 +326,10 @@ class _BaseInputWidgetState extends State<BaseInputWidget> {
                         }
                       },
                 inputFormatters: widget.keybordType == TextInputType.number
-                    ? [FilteringTextInputFormatter.allow(RegExp('[0-9]'))]
+                    ? [
+                        FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+                        LengthLimitingTextInputFormatter(13)
+                      ]
                     : [
                         LengthLimitingTextInputFormatter(
                             widget.maxInputLength ?? 500)

@@ -61,7 +61,7 @@ android {
         minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
         versionCode 90000000
-        versionName "02.00.36"
+        versionName "02.00.37"
         multiDexEnabled true
         // 빌드옵션  개발 및 운영 환경
         manifestPlaceholders["app_name"] = "(개발)제약영업포탈" // 개발

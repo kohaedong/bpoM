@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-11-03 17:36:31
+ * Last Modified: 2022-11-08 14:04:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -101,7 +101,8 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                       style: AppTextStyle.blod_16),
                   Row(
                     children: [
-                      AppText.text('${FormatUtil.addComma('${tuple.item2}')}',
+                      AppText.text(
+                          '${FormatUtil.addComma('${tuple.item2}', isReturnZero: true)}',
                           style: AppTextStyle.blod_16
                               .copyWith(color: AppColors.primary)),
                       Padding(
@@ -416,6 +417,12 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                                     if (tuple.item2) {
                                       controller.text =
                                           '${tuple.item1?.toInt()}';
+                                    } else {
+                                      pr(tuple.item1);
+                                      if (tuple.item1 == 0 ||
+                                          tuple.item1 == null) {
+                                        controller.clear();
+                                      }
                                     }
                                     return BaseInputWidget(
                                         context: context,
