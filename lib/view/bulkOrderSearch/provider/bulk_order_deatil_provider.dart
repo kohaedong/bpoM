@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart
  * Created Date: 2022-07-21 14:21:16
- * Last Modified: 2022-11-08 14:08:41
+ * Last Modified: 2022-11-08 14:43:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -54,8 +54,8 @@ class BulkOrderDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setModelIsFirstRun(int index) {
-    editItemList[index].isFirstRun = false;
+  void setModelIsFirstRun(int index, {bool? val}) {
+    editItemList[index].isFirstRun = val ?? false;
   }
 
   void setIsOpenBottomSheet() {
@@ -83,13 +83,13 @@ class BulkOrderDetailProvider extends ChangeNotifier {
   }
 
   void setQuantityAndCheckPrice(String? str, int index) {
-    pr(index);
-    if (str != null && str.isNotEmpty) {
-      editItemList[index].kwmeng = double.parse(str);
-    } else {
-      editItemList[index].kwmeng = 0;
-    }
-    setOrderTotal(index);
+    // pr(index);
+    // if (str != null && str.isNotEmpty) {
+    //   editItemList[index].kwmeng = double.parse(str);
+    // } else {
+    //   editItemList[index].kwmeng = 0;
+    // }
+    // setOrderTotal(index);
     checkMetaPriceAndStock(index);
     notifyListeners();
   }
@@ -282,8 +282,12 @@ class BulkOrderDetailProvider extends ChangeNotifier {
           BulkOrderDetailTItemModel.fromJson(editItemList[index].toJson());
       temp.zmsg = searchMetaPriceResponseModel!.tList!.single.zmsg;
       editItemList[index] = BulkOrderDetailTItemModel.fromJson(temp.toJson());
-      pr(editItemList[index].zmsg);
       editItemList[index].isShowLoading = false;
+      if (searchMetaPriceResponseModel!.esReturn!.mtype != 'S') {
+        setQuantity(null, index);
+        setOrderTotal(index);
+        setModelIsFirstRun(index, val: true);
+      }
       try {
         notifyListeners();
       } catch (e) {}

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-11-08 14:04:25
+ * Last Modified: 2022-11-08 14:38:47
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -415,13 +415,11 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                                 TextControllerFactoryWidget(
                                   giveTextEditControllerWidget: (controller) {
                                     if (tuple.item2) {
-                                      controller.text =
-                                          '${tuple.item1?.toInt()}';
-                                    } else {
-                                      pr(tuple.item1);
-                                      if (tuple.item1 == 0 ||
-                                          tuple.item1 == null) {
+                                      var kwmeng = tuple.item1?.toInt();
+                                      if (kwmeng == 0) {
                                         controller.clear();
+                                      } else {
+                                        controller.text = '$kwmeng';
                                       }
                                     }
                                     return BaseInputWidget(
