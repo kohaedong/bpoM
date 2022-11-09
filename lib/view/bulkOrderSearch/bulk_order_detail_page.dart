@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-11-08 14:55:35
+ * Last Modified: 2022-11-09 16:55:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -155,6 +155,8 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                     successButtonText: tr('order_cancel'),
                     faildButtonText: tr('close')));
             if (dialogResult != null && dialogResult) {
+              hideKeyboard(context);
+              await Future.delayed(Duration(milliseconds: 500));
               await p.orderCancelOrSave(true).then((result) {
                 AppToast().show(
                     context,
@@ -193,6 +195,7 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
             var popupResult = await AppDialog.showPopup(context,
                 buildTowButtonTextContents(context, tr('is_really_save')));
             if (popupResult != null && popupResult) {
+              await Future.delayed(Duration(milliseconds: 500));
               await p.checkIsItemInStock().then((isInStockAll) async {
                 if (isInStockAll) {
                   if (overThan) {

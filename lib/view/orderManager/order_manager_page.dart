@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-11-09 12:34:25
+ * Last Modified: 2022-11-09 15:16:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
 import 'package:medsalesportal/view/common/fuction_of_check_working_time.dart';
+import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -1067,9 +1068,10 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                       tp.perdict(p.onSubmmit().then((result) {
                         if (result.isSuccessful) {
                           AppToast().show(context, tr('success'));
-                          Navigator.popAndPushNamed(
-                              context, OrderSearchPage.routeName,
-                              arguments: p.selectedSalesPerson);
+                          popToFirst(context);
+                          // Navigator.popAndPushNamed(
+                          //     context, OrderSearchPage.routeName,
+                          //     arguments: p.selectedSalesPerson);
                         }
                       }));
                     }

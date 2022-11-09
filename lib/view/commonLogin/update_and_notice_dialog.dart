@@ -529,30 +529,29 @@ class CheckUpdateAndNoticeService {
   }
 
   static void updateAndNotice(BuildContext context, bool isHome) async {
-    /// Andy.KO 2022.03.16 공지, 업데이트 순서 변경
+    // Andy.KO 2022.03.16 공지, 업데이트 순서 변경
     //await showNotice(context, isHome);
-    // final up = context.read<UpdateAndNoticeProvider>();
-    // final updateResult = await up.checkUpdate();
-    // if (updateResult.isSuccessful &&
-    //     updateResult.updateData!.model!.result != 'NG') {
-    //   final isPressedTure = await AppDialog.showPopup(context,
-    //       updateContents(context, updateData: updateResult.updateData));
-    //   if (isPressedTure != null) {
-    //     isPressedTure as bool;
-    //     if (!isPressedTure) {
-    //       if (updateResult.updateData!.type != UpdateType.LOCAL_CHOOSE &&
-    //           updateResult.updateData!.type != UpdateType.WEB_CHOOSE) {
-    //         exit(0);
-    //       } else {
-    //         print('shownotice!!');
-    //         showNotice(context, isHome);
-    //       }
-    //     }
-    //   }
-    // } else {
-    //   showNotice(context, isHome);
-    // }
-    showNotice(context, isHome);
+    final up = context.read<UpdateAndNoticeProvider>();
+    final updateResult = await up.checkUpdate();
+    if (updateResult.isSuccessful &&
+        updateResult.updateData!.model!.result != 'NG') {
+      final isPressedTure = await AppDialog.showPopup(context,
+          updateContents(context, updateData: updateResult.updateData));
+      if (isPressedTure != null) {
+        isPressedTure as bool;
+        if (!isPressedTure) {
+          if (updateResult.updateData!.type != UpdateType.LOCAL_CHOOSE &&
+              updateResult.updateData!.type != UpdateType.WEB_CHOOSE) {
+            exit(0);
+          } else {
+            print('shownotice!!');
+            showNotice(context, isHome);
+          }
+        }
+      }
+    } else {
+      showNotice(context, isHome);
+    }
   }
 
   static void updateOnly(BuildContext context) async {

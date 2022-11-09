@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-11-09 13:56:48
+ * Last Modified: 2022-11-09 14:12:19
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -15,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:medsalesportal/util/is_super_account.dart';

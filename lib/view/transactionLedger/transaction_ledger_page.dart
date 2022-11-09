@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salseReport/salse_search_page.dart
  * Created Date: 2022-07-05 10:00:17
- * Last Modified: 2022-11-04 21:45:10
+ * Last Modified: 2022-11-09 15:13:14
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -297,7 +297,7 @@ class _TransactionLedgerPageState extends State<TransactionLedgerPage> {
                                         hintText: tuple.item3.isEmpty ||
                                                 tuple.item2 == null
                                             ? tr('plz_select')
-                                            : tuple.item2!.kunnrNm!,
+                                            : '${tuple.item2!.kunnrNm!}/${tuple.item2!.kunnr!}',
                                         width: AppSize.defaultContentsWidth,
                                         isNotInsertAll: true,
                                         hintTextStyleCallBack: () =>
