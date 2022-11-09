@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivitySearch/salse_activity_detail_page.dart
  * Created Date: 2022-07-07 13:41:48
- * Last Modified: 2022-10-25 14:49:07
+ * Last Modified: 2022-11-09 13:57:38
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -44,17 +44,8 @@ class SalseActivityDetailPage extends StatelessWidget {
                   FormatUtil.addDashForDateStr(model.adate!)),
               BaseInfoRowByKeyAndValue.build(
                   tr('customer_name'), model.zskunnrNm ?? ''),
-              FutureBuilder<List<String>?>(
-                  future: HiveService.getCustomerType(model.zstatus!),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData &&
-                        snapshot.connectionState == ConnectionState.done) {
-                      return BaseInfoRowByKeyAndValue.build(
-                          tr('customer_type_2'), snapshot.data!.single);
-                    }
-                    return BaseInfoRowByKeyAndValue.build(
-                        tr('customer_type_2'), '');
-                  }),
+              BaseInfoRowByKeyAndValue.build(tr('customer_type_2'),
+                  model.activityStatus!.isEmpty ? '-' : model.activityStatus!),
               BaseInfoRowByKeyAndValue.build(tr('address'), model.zaddr ?? ''),
               BaseInfoRowByKeyAndValue.build(
                   tr('key_man'), model.zkmnoNm ?? ''),

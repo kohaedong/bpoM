@@ -58,6 +58,7 @@ TlistModel _$TlistModelFromJson(Map<String, dynamic> json) => TlistModel(
       json['ZSKUNNR_NM'] as String?,
       json['ZSTATUS'] as String?,
       json['ZTREAT3'] as String?,
+      json['activityStatus'] as String?,
       json['ZTREAT3_NM'] as String?,
     );
 
@@ -115,4 +116,5 @@ Map<String, dynamic> _$TlistModelToJson(TlistModel instance) =>
       'MATKL': instance.matkl,
       'MVGR1': instance.mvgr1,
       'UMODE': instance.umode,
+      'activityStatus': instance.activityStatus,
     };

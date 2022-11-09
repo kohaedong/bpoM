@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-11-08 16:02:38
+ * Last Modified: 2022-11-09 12:34:25
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -778,7 +778,6 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         var isAllValidate =
                             isQuantityNotEmpty && isPriceModelNotEmpty;
                         var isShowButton = isAllValidate && isDifferentValue;
-                        pr('isShowButton :: $isShowButton');
                         return GestureDetector(
                           onTap: () async {
                             if (isShowButton) {

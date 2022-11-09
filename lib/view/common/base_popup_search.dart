@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-11-04 20:24:03
+ * Last Modified: 2022-11-09 13:59:24
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -235,7 +235,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                       : '${tr('plz_enter_search_key_for_something_1', args: [
                               '${tr('materials_name')}',
                               ''
-                            ])}(*)');
+                            ])}');
             }),
         defaultSpacing(),
         AppStyles.buildSearchButton(context, tr('search'), () {
@@ -660,19 +660,17 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
         defaultSpacing(),
         AppStyles.buildSearchButton(context, tr('search'), () {
           final p = context.read<BasePopupSearchProvider>();
-          if (p.selectedProductFamily != null &&
-              p.seletedMaterialSearchKey != null) {
-            if (p.seletedMaterialSearchKey!.isEmpty) {
-              AppToast().show(context, tr('keyword_must_not_null'));
-            } else {
-              final tp = context.read<TimerProvider>();
-              if (tp.getTimer == null ||
-                  (tp.isRunning != null && !tp.isRunning!)) {
-                tp.perdict(p.refresh());
-              }
-            }
+          if (p.seletedMaterialSearchKey == null) {
+            AppToast().show(context, tr('keyword_must_not_null'));
+          } else if (p.selectedProductFamily == null) {
+            AppToast().show(context,
+                tr('plz_select_something_1', args: [tr('product_family')]));
           } else {
-            AppToast().show(context, tr('plz_check_essential_option'));
+            final tp = context.read<TimerProvider>();
+            if (tp.getTimer == null ||
+                (tp.isRunning != null && !tp.isRunning!)) {
+              tp.perdict(p.refresh());
+            }
           }
         }, doNotWithPadding: true),
       ],
@@ -1006,7 +1004,7 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                         if (snapshot.hasData &&
                             snapshot.connectionState == ConnectionState.done) {
                           return AppText.listViewText(
-                              '${model.name} (${snapshot.data!.single})',
+                              '${model.name} (${(snapshot.data == null || snapshot.data!.isEmpty) ? '-' : snapshot.data!.single})',
                               maxLines: 2);
                         }
                         return Container();

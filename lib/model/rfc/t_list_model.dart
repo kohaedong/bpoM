@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/salse_activity_result_model.dart
  * Created Date: 2022-07-07 09:29:23
- * Last Modified: 2022-10-25 14:47:12
+ * Last Modified: 2022-11-09 13:32:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -120,6 +120,7 @@ class TlistModel {
   String? mvgr1;
   @JsonKey(name: 'UMODE')
   String? umode;
+  String? activityStatus;
 
   TlistModel(
       this.accompany,
@@ -173,6 +174,7 @@ class TlistModel {
       this.zskunnrNm,
       this.zstatus,
       this.ztreat3,
+      this.activityStatus,
       this.ztreat3Nm);
   factory TlistModel.fromJson(Object? json) =>
       _$TlistModelFromJson(json as Map<String, dynamic>);

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/activity_search_page.dart
  * Created Date: 2022-07-05 09:51:03
- * Last Modified: 2022-11-03 10:35:45
+ * Last Modified: 2022-11-09 13:56:48
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -314,21 +314,13 @@ class _SalseActivitySearchPageState extends State<SalseActivitySearchPage> {
                     isSubTitle: true),
                 AppText.listViewText(model.sanumNm!, isSubTitle: true),
                 AppStyles.buildPipe(),
-                FutureBuilder<List<String>?>(
-                    future: HiveService.getCustomerType(model.zstatus!),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData &&
-                          snapshot.connectionState == ConnectionState.done) {
-                        return AppText.listViewText(snapshot.data!.single,
-                            isSubTitle: true);
-                      }
-                      return Container(
-                        width: AppSize.padding * 4,
-                        height: AppSize.padding * 4,
-                      );
-                    }),
+                AppText.listViewText(
+                    model.activityStatus!.isEmpty ? '-' : model.activityStatus!,
+                    isSubTitle: true),
                 AppStyles.buildPipe(),
-                AppText.listViewText(model.zkmnoNm!, isSubTitle: true),
+                AppText.listViewText(
+                    model.zkmnoNm!.isEmpty ? '-' : model.zkmnoNm!,
+                    isSubTitle: true),
                 AppStyles.buildPipe(),
                 AppText.listViewText(
                     model.xvisit != null && model.xvisit == 'Y'

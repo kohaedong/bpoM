@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activitySearch/provider/activity_search_page_provider.dart
  * Created Date: 2022-07-05 09:51:16
- * Last Modified: 2022-10-27 12:44:15
+ * Last Modified: 2022-11-09 13:47:46
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,6 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/service/hive_service.dart';
 import 'package:medsalesportal/util/date_util.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/util/encoding_util.dart';
@@ -35,6 +36,7 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
   String? selectedStartDate;
   String? selectedEndDate;
   String? customerName;
+  List<String> statusList = [];
   EtStaffListModel? selectedSalesPerson;
   EtKunnrModel? selectedCustomerModel;
   SalseActivitySearchResponseModel? searchResponseModel;
@@ -169,9 +171,20 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
       if (temp.tList!.length != partial) {
         hasMore = false;
       }
+      var addStatus = () async {
+        if (temp.tList!.isNotEmpty) {
+          for (var model in temp.tList!) {
+            var status = await HiveService.getCustomerType(model.zstatus!);
+            model.activityStatus =
+                status == null || status.isEmpty ? '' : status.single;
+          }
+        }
+      };
       if (searchResponseModel == null) {
+        await addStatus();
         searchResponseModel = temp;
       } else {
+        await addStatus();
         searchResponseModel!.tList!.addAll(temp.tList!);
       }
       if (searchResponseModel != null &&
@@ -179,6 +192,7 @@ class SalseSalseActivitySearchPageProvider extends ChangeNotifier {
               searchResponseModel!.tList!.isEmpty)) {
         searchResponseModel = null;
       }
+
       isLoadData = false;
       isFirstRun = false;
       hasResultData =

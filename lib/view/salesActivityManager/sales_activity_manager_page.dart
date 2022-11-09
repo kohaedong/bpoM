@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/activityManeger/activity_manager_page.dart
  * Created Date: 2022-07-05 09:46:17
- * Last Modified: 2022-11-08 15:58:44
+ * Last Modified: 2022-11-09 14:01:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -524,7 +524,11 @@ class _SalseActivityManagerPageState extends State<SalseActivityManagerPage>
                       var hasData = snapshot.hasData &&
                           snapshot.connectionState == ConnectionState.done;
                       return AppText.listViewText(
-                          hasData ? snapshot.data!.single : '',
+                          hasData
+                              ? snapshot.data == null || snapshot.data!.isEmpty
+                                  ? '-'
+                                  : snapshot.data!.single
+                              : '',
                           isSubTitle: true);
                     }),
                 model.zkmnoNm != null && model.zkmnoNm!.isNotEmpty

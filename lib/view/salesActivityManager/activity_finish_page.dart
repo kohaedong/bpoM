@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/activity_finish_page.dart
  * Created Date: 2022-10-11 04:29:49
- * Last Modified: 2022-10-28 17:13:57
+ * Last Modified: 2022-11-09 14:00:15
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -56,7 +56,10 @@ class SalseActivityFinishPage extends StatelessWidget {
                     if (snapshot.hasData &&
                         snapshot.connectionState == ConnectionState.done) {
                       return BaseInfoRowByKeyAndValue.build(
-                          tr('customer_type_2'), snapshot.data!.single);
+                          tr('customer_type_2'),
+                          snapshot.data == null || snapshot.data!.isEmpty
+                              ? '-'
+                              : snapshot.data!.single);
                     }
                     return BaseInfoRowByKeyAndValue.build(
                         tr('customer_type_2'), '');
