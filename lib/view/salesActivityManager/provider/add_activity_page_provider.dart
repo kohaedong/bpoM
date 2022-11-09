@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-11-08 11:45:36
+ * Last Modified: 2022-11-09 17:21:53
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -124,7 +124,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       currenSeqNo = data.seqno;
       isVisit = data.xvisit != null && data.xvisit == 'Y';
       isVisitPharmacy = data.pvisit != null && data.pvisit == 'Y';
-      review = data.comntM;
+      review = data.comnt;
       selectedKunnr = EtKunnrModel();
       selectedKunnr!.name = data.zskunnrNm;
       selectedKunnr!.zskunnr = data.zskunnr;
@@ -142,7 +142,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       reasonForNotVisit = data.visitRmk ?? '';
       reasonForinterviewFailure = data.meetRmk ?? '';
       visitResultInput = data.rslt ?? '';
-      leaderAdviceInput = data.comnt ?? '';
+      leaderAdviceInput = data.comntM ?? '';
       isVisit = data.xvisit == 'Y';
       isInterviewIndex = data.xmeet == 'S' ? 0 : 1;
       suggestedItemList ??= [];
@@ -610,7 +610,7 @@ class AddActivityPageProvider extends ChangeNotifier {
           isVisit ? FormatUtil.asFixed(distanceModel!.distance!, 1) : 0.0;
       t260.isGps = 'X';
       t260.callType = 'M';
-      t260.comntM = review ?? '';
+      t260.comntM = leaderAdviceInput ?? '';
       t260.zskunnr = selectedKunnr!.zskunnr;
       t260.zskunnrNm = selectedKunnr!.name;
       t260.zaddr = selectedKunnr!.zaddName1;
@@ -624,7 +624,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       t260.meetRmk =
           isInterviewIndex == 0 ? '' : reasonForinterviewFailure ?? '';
       t260.rslt = isVisit ? (visitResultInput ?? '') : '';
-      t260.comnt = leaderAdviceInput ?? '';
+      t260.comnt = review ?? '';
       var withLeaderOnly = isWithTeamLeader && anotherSaller == null;
       var withLeaderAndSaller = isWithTeamLeader && anotherSaller != null;
       var withSallerOnly = !isWithTeamLeader && anotherSaller != null;

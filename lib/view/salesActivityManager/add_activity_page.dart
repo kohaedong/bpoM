@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/add_activity_page.dart
  * Created Date: 2022-08-11 10:39:53
- * Last Modified: 2022-11-09 14:01:07
+ * Last Modified: 2022-11-09 17:22:30
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -1266,9 +1266,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
             _interviewTextEditingController.text = temp.meetRmk!;
             _notVisitEditingController.text = temp.visitRmk!;
             _visitResultTextEditingController.text = temp.rslt!;
-            _leaderAdviceTextEditingController.text = temp.comnt!;
+            _leaderAdviceTextEditingController.text = temp.comntM!;
             pr('comntM: ${temp.comntM}');
-            _reviewEditingController.text = temp.comntM!;
+            _reviewEditingController.text = temp.comnt!;
             var has280Data = model.table280!
                 .where((table) => table.seqno == seqNo)
                 .isNotEmpty;
