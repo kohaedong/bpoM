@@ -50,6 +50,7 @@ class SettingsPage extends StatelessWidget {
                             context,
                             buildTowButtonTextContents(
                               context,
+                              // 빌드옵션
                               '${KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev' ? '(개발)제약 영업포탈' : '제약 영업포탈'}${tr('is_ready_to_logout')}',
                             ));
 

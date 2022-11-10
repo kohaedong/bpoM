@@ -528,7 +528,8 @@ class CheckUpdateAndNoticeService {
     }
   }
 
-  static void updateAndNotice(BuildContext context, bool isHome) async {
+  static void updateAndNotice(BuildContext context, bool isHome,
+      {required bool isUpdateOnly}) async {
     // Andy.KO 2022.03.16 공지, 업데이트 순서 변경
     //await showNotice(context, isHome);
     final up = context.read<UpdateAndNoticeProvider>();
@@ -545,34 +546,20 @@ class CheckUpdateAndNoticeService {
             exit(0);
           } else {
             print('shownotice!!');
-            showNotice(context, isHome);
+            if (isUpdateOnly) {
+              CacheService.saveIsUpdateAndNoticeCheckDone(true);
+            } else {
+              showNotice(context, isHome);
+            }
           }
         }
       }
     } else {
-      showNotice(context, isHome);
-    }
-  }
-
-  static void updateOnly(BuildContext context) async {
-    final updateResult = await UpdateAndNoticeProvider().checkUpdate();
-    if (updateResult.isSuccessful &&
-        updateResult.updateData!.model!.result != 'NG') {
-      final isPressedTure = await AppDialog.showPopup(context,
-          updateContents(context, updateData: updateResult.updateData));
-      if (isPressedTure != null && isPressedTure) {
-        if (updateResult.updateData!.type == UpdateType.LOCAL_CHOOSE ||
-            updateResult.updateData!.type == UpdateType.WEB_CHOOSE) {
-          CacheService.saveIsUpdateAndNoticeCheckDone(true);
-          return;
-        } else {
-          exit(0);
-        }
-      } else {
+      if (isUpdateOnly) {
         CacheService.saveIsUpdateAndNoticeCheckDone(true);
+      } else {
+        showNotice(context, isHome);
       }
-    } else {
-      CacheService.saveIsUpdateAndNoticeCheckDone(true);
     }
   }
 
@@ -584,10 +571,10 @@ class CheckUpdateAndNoticeService {
     CacheService.saveIsUpdateAndNoticeCheckDone(false);
     switch (checkType) {
       case CheckType.UPDATE_AND_NOTICE:
-        updateAndNotice(context, isHome);
+        updateAndNotice(context, isHome, isUpdateOnly: false);
         break;
       case CheckType.UPDATE_ONLY:
-        updateOnly(context);
+        updateAndNotice(context, isHome, isUpdateOnly: true);
         break;
       case CheckType.NOTICE_ONLY:
         noticeOnly(context, isHome);
