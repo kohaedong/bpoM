@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/bulkOrderSearch/bulk_order_detail_page.dart
  * Created Date: 2022-07-21 14:20:27
- * Last Modified: 2022-11-09 16:55:00
+ * Last Modified: 2022-11-11 20:47:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,6 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 import 'dart:math' as math;
+import 'package:medsalesportal/view/common/base_text_controller_factory_widget.dart';
 import 'package:medsalesportal/view/common/fuction_of_check_working_time.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,6 @@ import 'package:medsalesportal/model/rfc/bulk_order_detail_t_item_model.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_detail_t_header_model.dart';
 import 'package:medsalesportal/model/rfc/bulk_order_detail_response_model.dart';
 import 'package:medsalesportal/view/common/base_info_row_by_key_and_value.dart';
-import 'package:medsalesportal/view/orderManager/text_controller_factory_widget.dart';
 import 'package:medsalesportal/view/common/widget_of_offset_animation_components.dart';
 import 'package:medsalesportal/view/common/widget_of_rotation_animation_components.dart';
 import 'package:medsalesportal/view/bulkOrderSearch/provider/bulk_order_deatil_provider.dart';
@@ -415,8 +415,9 @@ class _BulkOrderDetailPageState extends State<BulkOrderDetailPage> {
                             return Stack(
                               alignment: Alignment.center,
                               children: [
-                                TextControllerFactoryWidget(
-                                  giveTextEditControllerWidget: (controller) {
+                                BaseTextControllerFactoryWidget(
+                                  giveTextEditControllerWidget:
+                                      (controller, focusNode) {
                                     if (tuple.item2) {
                                       var kwmeng = tuple.item1?.toInt();
                                       if (kwmeng == 0) {

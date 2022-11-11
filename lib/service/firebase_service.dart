@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/firebase_service.dart
  * Created Date: 2022-10-18 15:55:12
- * Last Modified: 2022-11-11 20:18:00
+ * Last Modified: 2022-11-11 20:29:27
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -98,15 +98,7 @@ class FirebaseService {
   @pragma('vm:entry-point')
   static void locakNotificationTapBackground(
       NotificationResponse notificationResponse) {
-    // ignore: avoid_print
-    print('notification(${notificationResponse.id}) action tapped: '
-        '${notificationResponse.actionId} with'
-        ' payload: ${notificationResponse.payload}');
-    if (notificationResponse.input?.isNotEmpty ?? false) {
-      // ignore: avoid_print
-      print(
-          'notification action tapped with input: ${notificationResponse.input}');
-    }
+    // do something.
   }
 
   static Future<void> initLocalNotifacation() async {
@@ -128,10 +120,10 @@ class FirebaseService {
           (NotificationResponse notificationResponse) {
         switch (notificationResponse.notificationResponseType) {
           case NotificationResponseType.selectedNotification:
-            pr('seleleted');
+            pr('selected');
             break;
           case NotificationResponseType.selectedNotificationAction:
-            pr('ok tapted action');
+            pr('taped action');
             break;
         }
       },
