@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/firebase_service.dart
  * Created Date: 2022-10-18 15:55:12
- * Last Modified: 2022-11-02 22:38:00
+ * Last Modified: 2022-11-11 20:18:00
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,13 +12,13 @@
  */
 import 'dart:io';
 import 'dart:async';
-import 'package:medsalesportal/model/pushNotification/notification_message_model.dart';
-import 'package:medsalesportal/model/pushNotification/notification_noti_model.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, TargetPlatform;
 import 'package:firebase_core/firebase_core.dart';
+import 'package:medsalesportal/styles/app_colors.dart';
+import 'package:medsalesportal/util/encoding_util.dart';
 import 'package:medsalesportal/service/key_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
@@ -39,6 +39,7 @@ class FirebaseService {
   static NotificationSettings? notiSettings;
   static bool isPermissed = false;
   static String fcmTocken = '';
+  static bool isSupptedBadge = false;
   static late FirebaseMessaging messaging;
   static late Stream<String> fcmTokenStream;
   static late Stream<RemoteMessage> messageStream;
@@ -57,11 +58,12 @@ class FirebaseService {
             name: 'medsalesportal',
             options: DefaultFirebaseOptions.currentPlatform)
         .then((firebaseApp) async {
-      await Future.delayed(Duration(milliseconds: 300), () {
+      await Future.delayed(Duration(milliseconds: 300), () async {
         messaging = FirebaseMessaging.instance;
         messageStream = FirebaseMessaging.onMessage;
         fcmTokenStream = messaging.onTokenRefresh;
         openMessageStream = FirebaseMessaging.onMessageOpenedApp;
+        isSupptedBadge = await FlutterAppBadger.isAppBadgeSupported();
       });
     });
     return true;
@@ -77,15 +79,15 @@ class FirebaseService {
   }
 
   @pragma('vm:entry-point')
-  static Future<void> backgroundCallback(RemoteMessage message) async =>
-      showNotification(message);
+  static Future<void> backgroundCallback(RemoteMessage message) async {
+    //
+    show(message);
+  }
 
   static Future<void> setNoticeOption() async {
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
-            alert: true,
-            badge: await FlutterAppBadger.isAppBadgeSupported(),
-            sound: true);
+            alert: true, badge: isSupptedBadge, sound: true);
   }
 
   static Future<String?> getToken() async {
@@ -93,13 +95,27 @@ class FirebaseService {
     return token;
   }
 
+  @pragma('vm:entry-point')
+  static void locakNotificationTapBackground(
+      NotificationResponse notificationResponse) {
+    // ignore: avoid_print
+    print('notification(${notificationResponse.id}) action tapped: '
+        '${notificationResponse.actionId} with'
+        ' payload: ${notificationResponse.payload}');
+    if (notificationResponse.input?.isNotEmpty ?? false) {
+      // ignore: avoid_print
+      print(
+          'notification action tapped with input: ${notificationResponse.input}');
+    }
+  }
+
   static Future<void> initLocalNotifacation() async {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     final initializationSettings = InitializationSettings(
-        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        android: AndroidInitializationSettings('@drawable/push_icon'),
         iOS: DarwinInitializationSettings(
           requestSoundPermission: true,
-          requestBadgePermission: await FlutterAppBadger.isAppBadgeSupported(),
+          requestBadgePermission: isSupptedBadge,
           requestAlertPermission: true,
         ));
     await flutterLocalNotificationsPlugin
@@ -108,6 +124,19 @@ class FirebaseService {
         ?.createNotificationChannel(channel);
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) {
+        switch (notificationResponse.notificationResponseType) {
+          case NotificationResponseType.selectedNotification:
+            pr('seleleted');
+            break;
+          case NotificationResponseType.selectedNotificationAction:
+            pr('ok tapted action');
+            break;
+        }
+      },
+      onDidReceiveBackgroundNotificationResponse:
+          locakNotificationTapBackground,
     );
     if (Platform.isAndroid) {
       await flutterLocalNotificationsPlugin
@@ -117,40 +146,27 @@ class FirebaseService {
     }
   }
 
-  static void showNotification(RemoteMessage message) async {
-    if (Platform.isAndroid) {
-      var notification = message.notification;
-      var data = message.data;
-      NotificationMessageModel? noticedata;
-      NotificationDataModel? noticeMessage;
-      if (data['jsonMessage'] != null) {
-        noticedata = NotificationMessageModel.fromJson(data['jsonMessage']);
-      }
-      if (notification != null) {
-        noticeMessage = NotificationDataModel.fromJson(notification.toMap());
-      }
-      var title = noticedata != null
-          ? noticedata.title!
-          : noticeMessage != null
-              ? noticeMessage.title!
-              : '';
-      var body = noticedata != null
-          ? noticedata.message!
-          : noticeMessage != null
-              ? noticeMessage.body!
-              : '';
+  static void show(RemoteMessage? message) async {
+    try {
+      var str = message?.data['jsonMessage'] as String;
+      str = str.trim();
+      var map = EncodingUtils.jsonStrConvert(str);
+      var title = map['title'];
+      var body = map['message'];
       await flutterLocalNotificationsPlugin.show(
-        channel.hashCode,
-        notification?.title,
-        notification?.body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
+          channel.id.hashCode,
+          title,
+          body,
+          NotificationDetails(
+              android: AndroidNotificationDetails(
             channel.id,
             title,
             channelDescription: body,
-          ),
-        ),
-      );
+            color: AppColors.primary,
+            importance: Importance.max,
+          )));
+    } catch (e) {
+      pr(e);
     }
   }
 
@@ -164,8 +180,11 @@ class FirebaseService {
       final lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
       lp.sendFcmToken();
     });
-    messageSubscription = messageStream.listen(showNotification);
-
+    messageSubscription = messageStream.listen((message) async {
+      if (Platform.isAndroid) {
+        show(message);
+      }
+    });
     openMessageSubscription = openMessageStream.listen((message) async {
       // on message tap event
       if (await FlutterAppBadger.isAppBadgeSupported()) {

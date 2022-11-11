@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/api_service.dart
  * Created Date: 2021-08-22 21:53:15
- * Last Modified: 2022-10-28 17:07:09
+ * Last Modified: 2022-11-11 20:18:35
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -111,14 +111,18 @@ class ApiService {
         options.headers.addAll({
           'Authorization': 'Bearer ${user.tokenInfo!.accessToken}',
         });
+        // var token = user.tokenInfo!.accessToken;
+        // var length = token.length ~/ 2;
+        // customLogger.d(token.substring(0, length));
+        // customLogger.d(token.substring(length));
       }
     } else {
       if (requestType == RequestType.REFRESHE_TOKEN ||
           requestType == RequestType.REQEUST_TOKEN) {
-        final token =
+        final tokenInfo =
             EncodingUtils.encodeBase64(str: '$_clientID:$_clientSecret');
         options.headers.addAll({
-          'Authorization': 'Basic $token',
+          'Authorization': 'Basic $tokenInfo',
         });
       }
     }

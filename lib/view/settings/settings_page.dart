@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/view/common/base_layout.dart';
 import 'package:medsalesportal/view/common/base_app_bar.dart';
 import 'package:medsalesportal/view/common/base_app_dialog.dart';
@@ -10,6 +9,7 @@ import 'package:medsalesportal/view/common/dialog_contents.dart';
 import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
 import 'package:medsalesportal/model/update/check_update_model.dart';
 import 'package:medsalesportal/view/settings/font_setting_page.dart';
+import 'package:medsalesportal/view/settings/notice_setting_page.dart';
 import 'package:medsalesportal/view/commonLogin/common_login_page.dart';
 import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
 import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
@@ -55,7 +55,6 @@ class SettingsPage extends StatelessWidget {
                             ));
 
                         if (result != null && result) {
-                          CacheService.deleteUserInfoWhenSignOut();
                           final p = context.read<SettingsProvider>();
                           await p.signOut();
                           Navigator.pushNamedAndRemoveUntil(context,
@@ -170,16 +169,16 @@ class SettingsPage extends StatelessWidget {
                       children: [
                         _buildNameRow(context, snapshot.data!),
                         _buildDividerLine(),
-                        // InkWell(
-                        //     onTap: () => Navigator.pushNamed(
-                        //         context, NoticeSettingPage.routeName),
-                        //     child: Padding(
-                        //         padding: AppSize.listPadding,
-                        //         child:
-                        //             _buildItemRow(context, '${tr('notice')}'))),
-                        // Divider(
-                        //     color: AppColors.textGrey,
-                        //     height: AppSize.dividerHeight),
+                        InkWell(
+                            onTap: () => Navigator.pushNamed(
+                                context, NoticeSettingPage.routeName),
+                            child: Padding(
+                                padding: AppSize.listPadding,
+                                child:
+                                    _buildItemRow(context, '${tr('notice')}'))),
+                        Divider(
+                            color: AppColors.textGrey,
+                            height: AppSize.dividerHeight),
                         InkWell(
                             onTap: () => Navigator.pushNamed(
                                 context, FontSettingsPage.routeName),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:medsalesportal/service/cache_service.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/enums/image_type.dart';
 import 'package:medsalesportal/styles/export_common.dart';
@@ -24,6 +25,7 @@ class _CommonLoginPageState extends State<CommonLoginPage> {
   @override
   void initState() {
     super.initState();
+    CacheService.deleteALL();
     timer = Timer(Duration(seconds: 60), () {
       loadingSwich.value = false;
     });

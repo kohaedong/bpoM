@@ -95,7 +95,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         showOverTimePopup();
       }
     }
-
     final arguments = ModalRoute.of(context)!.settings.arguments;
     // update or notice 확인 완료 여부.
     final isCheckDone = CacheService.isUpdateAndNoticeCheckDone();
@@ -106,6 +105,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     pr(arguments == null);
     pr(!isLocked);
     pr('isCheckDone $isCheckDone');
+    if (_isForeground) {
+      FlutterAppBadger.removeBadge();
+    }
     if (_isForeground &&
         (isLandSpace == null || !isLandSpace) &&
         arguments == null &&

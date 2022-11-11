@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/service/cache_service.dart
  * Created Date: 2021-08-22 19:45:10
- * Last Modified: 2022-09-27 23:27:05
+ * Last Modified: 2022-11-10 18:39:56
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -192,13 +192,7 @@ class CacheService {
     return null;
   }
 
-  static void deleteUserInfoWhenSignOut() {
-    deleteData('user');
-    deleteData('lifecycle_', withConstans: true);
-    deleteData('isDisable');
-    deleteData('is_login');
-    deleteData('es_login');
-    deleteData('is_loged_in');
-    deleteData('is_check_done');
+  static void deleteAll() {
+    sharedPreferences?.clear();
   }
 }
