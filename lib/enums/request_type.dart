@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-10-24 20:02:47
+ * Last Modified: 2022-11-12 21:26:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -67,7 +67,9 @@ enum RequestType {
   DELETE_LAST_ACTIVITY,
   CHECK_RECENT_ORDER,
   CREATE_ORDER,
-  CONFIRM_ACTIVITY
+  CONFIRM_ACTIVITY,
+  GET_PUSH_INFO,
+  SET_PUSH_INFO,
 }
 
 // [KolonBuildConfig] 빌드 옵션에 따라 url가 변한다.
@@ -87,7 +89,7 @@ extension RequestTypeExtension on RequestType {
   String get specialNoticeUrl => isDev
       ? '$devSpecialNoticeUrl/notice/restApi/getNoticesByCondition'
       : '$prodSpecialNoticeUrl/notice/restApi/getNoticesByCondition';
-
+  String get testPushUrl => 'http://172.30.158.133:8080/common/v2/api/rest';
   // api 에 header 추가 필요시 사전 등록.
   Future<Map<String, String>> get anotherHeader async {
     final deviceInfo = await DeviceInfoService.getDeviceInfo();
@@ -122,6 +124,10 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.SPECIAL_NOTICE:
         return '$specialNoticeUrl';
+      case RequestType.GET_PUSH_INFO:
+        return '$testPushUrl';
+      case RequestType.SET_PUSH_INFO:
+        return '$testPushUrl';
       case RequestType.SEARCH_STAFF:
         return '$rfcURL/common';
       case RequestType.ACCESS_PERMISSION:
@@ -323,6 +329,10 @@ extension RequestTypeExtension on RequestType {
     switch (this) {
       case RequestType.CHECK_NOTICE:
         return "noticeAll";
+      case RequestType.GET_PUSH_INFO:
+        return "getAppNotfc";
+      case RequestType.SET_PUSH_INFO:
+        return "saveAppNotfc";
       case RequestType.SEND_FCM_TOKEN:
         return "saveOfFCMDeviceTokenByAnonymous";
       case RequestType.SEARCH_MATERIAL:

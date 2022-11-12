@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
- * Last Modified: 2022-11-03 19:46:46
+ * Last Modified: 2022-11-12 21:28:43
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,6 +14,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:medsalesportal/model/notice/notice_settings_response_model.dart';
 import 'package:medsalesportal/service/firebase_service.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/model/user/user.dart';
@@ -42,7 +43,7 @@ class LoginProvider extends ChangeNotifier {
   final _api = ApiService();
   final buildType = KolonBuildConfig.KOLON_APP_BUILD_TYPE;
   final MethodChannel iosPlatform = MethodChannel('kolonbase/keychain');
-  final MethodChannel androidPlatform = MethodChannel("mKolon.sso.channel");
+  final MethodChannel androidPlatform = MethodChannel('mKolon.sso.channel');
 
   SapLoginInfoResponseModel? sapResponseModel;
   List<EtOrghkModel?> salseGroupList = [];
@@ -175,7 +176,7 @@ class LoginProvider extends ChangeNotifier {
   Future<bool> setIsSaveId(bool val) async {
     if (Platform.isIOS) {
       final idResult =
-          await iosPlatform.invokeMethod('setIsSaveId', {"value": val});
+          await iosPlatform.invokeMethod('setIsSaveId', {'value': val});
       return idResult == 'success';
     }
     if (Platform.isAndroid) {
@@ -213,7 +214,7 @@ class LoginProvider extends ChangeNotifier {
     pr('autoLogin value???:::$value');
     if (Platform.isIOS) {
       final idResult =
-          await iosPlatform.invokeMethod('saveAutoLogin', {"value": value});
+          await iosPlatform.invokeMethod('saveAutoLogin', {'value': value});
       return idResult == 'success';
     }
     if (Platform.isAndroid) {
@@ -290,10 +291,10 @@ class LoginProvider extends ChangeNotifier {
 
   Future<ResultModel> checkUserEnvironment({String? userAccont}) async {
     Map<String, dynamic> _body = {
-      "methodName": RequestType.GET_ENV.serverMethod,
-      "methodParam": {
-        "categoryCode":
-            userAccont != null ? "envKey_$userAccont" : "envKey_$userId",
+      'methodName': RequestType.GET_ENV.serverMethod,
+      'methodParam': {
+        'categoryCode':
+            userAccont != null ? 'envKey_$userAccont' : 'envKey_$userId',
       }
     };
     _api.init(RequestType.GET_ENV);
@@ -324,11 +325,11 @@ class LoginProvider extends ChangeNotifier {
     pr('token $token');
     var deviceInfo = await DeviceInfoService.getDeviceInfo();
     Map<String, dynamic> _body = {
-      "methodName": RequestType.SEND_FCM_TOKEN.serverMethod,
-      "methodParam": {
-        "fcmToken": token,
-        "devId": deviceInfo.deviceId,
-        "userId": CacheService.getEsLogin()!.logid
+      'methodName': RequestType.SEND_FCM_TOKEN.serverMethod,
+      'methodParam': {
+        'fcmToken': token,
+        'devId': deviceInfo.deviceId,
+        'userId': CacheService.getEsLogin()!.logid
       }
     };
     final result = await _api.request(body: _body);
@@ -348,10 +349,10 @@ class LoginProvider extends ChangeNotifier {
     var _api = ApiService();
     pr('save!!! ${userSettings!.toJson()}');
     Map<String, dynamic> saveEnvBody = {
-      "methodName": RequestType.SAVE_ENV.serverMethod,
-      "methodParam": {
-        "categoryCode": "envKey_$userId",
-        "description": userSettings!.toJson()
+      'methodName': RequestType.SAVE_ENV.serverMethod,
+      'methodParam': {
+        'categoryCode': 'envKey_$userId',
+        'description': userSettings!.toJson()
       }
     };
     _api.init(RequestType.SAVE_ENV);
@@ -372,12 +373,12 @@ class LoginProvider extends ChangeNotifier {
     final deviceInfo = await DeviceInfoService.getDeviceInfo();
     print(deviceInfo.toJson());
     Map<String, dynamic> deviceInfoBody = {
-      "methodName": RequestType.SAVE_DEVICE_INFO.serverMethod,
-      "methodParam": {
-        "deviceId": deviceInfo.deviceId,
-        "deviceModelNo": deviceInfo.deviceModel,
-        "devicePlatformName": Platform.isIOS ? 'iOS' : 'Android',
-        "userId": userId!
+      'methodName': RequestType.SAVE_DEVICE_INFO.serverMethod,
+      'methodParam': {
+        'deviceId': deviceInfo.deviceId,
+        'deviceModelNo': deviceInfo.deviceModel,
+        'devicePlatformName': Platform.isIOS ? 'iOS' : 'Android',
+        'userId': userId!
       }
     };
 
@@ -401,18 +402,18 @@ class LoginProvider extends ChangeNotifier {
     var message = '';
     if (isAutoLogin != null && isAutoLogin) {
       var ssoResultMap = await getUserIdAndPasswordFromSSO();
-      userId = "${ssoResultMap['userAccount']}".trim();
-      userPw = "${ssoResultMap['password']}".trim();
-      signBody = {"userAccount": userId, "passwd": userPw};
+      userId = '${ssoResultMap['userAccount']}'.trim();
+      userPw = '${ssoResultMap['password']}'.trim();
+      signBody = {'userAccount': userId, 'passwd': userPw};
     } else {
       assert(id != null && pw != null);
       userId = id!;
       userPw = pw!;
-      signBody = {"userAccount": userId, "passwd": userPw};
+      signBody = {'userAccount': userId, 'passwd': userPw};
     }
     _api.init(RequestType.SIGNIN);
     final signResult = await _api.request(body: signBody);
-    if (signResult!.statusCode == 200 && signResult.body['code'] == "NG") {
+    if (signResult!.statusCode == 200 && signResult.body['code'] == 'NG') {
       var message = signResult.body['message'] as String;
       var isMessageStartWithNumber =
           int.tryParse(message.trim().substring(0, 1)) != null;
@@ -433,7 +434,7 @@ class LoginProvider extends ChangeNotifier {
           message: message, isShowErrorText: !isShowPopup);
     }
     if (signResult.statusCode == 200 &&
-        signResult.body['code'] != "NG" &&
+        signResult.body['code'] != 'NG' &&
         signResult.body['data'] != null) {
       var isSuccess = true;
       pr('@@@@code:: ${signResult.body['code']}');
@@ -455,12 +456,12 @@ class LoginProvider extends ChangeNotifier {
 
   Future<ResultModel> sapSignIn() async {
     Map<String, dynamic>? sapBody = {
-      "methodName": RequestType.SAP_SIGNIN_INFO.serverMethod,
-      "methodParamMap": {
-        "functionName": RequestType.SAP_SIGNIN_INFO.serverMethod,
-        "IV_LOGID": userId!.toUpperCase(),
-        "resultTables": RequestType.SAP_SIGNIN_INFO.resultTable,
-        "appName": "medsalesportal"
+      'methodName': RequestType.SAP_SIGNIN_INFO.serverMethod,
+      'methodParamMap': {
+        'functionName': RequestType.SAP_SIGNIN_INFO.serverMethod,
+        'IV_LOGID': userId!.toUpperCase(),
+        'resultTables': RequestType.SAP_SIGNIN_INFO.resultTable,
+        'appName': 'medsalesportal'
       }
     };
     _api.init(RequestType.SAP_SIGNIN_INFO);
@@ -502,6 +503,40 @@ class LoginProvider extends ChangeNotifier {
     pr('p.isSalseGroup  $isPermidedSalseGroup');
     await saveTcode();
     return ResultModel(true);
+  }
+
+  Future<ResultModel> getAndSaveNotice(
+      {bool? isSave, String? startTime, String? endTime}) async {
+    final _api = ApiService();
+    Map<String, dynamic> _body = {
+      'methodName': isSave ?? false
+          ? RequestType.SET_PUSH_INFO.serverMethod
+          : RequestType.GET_PUSH_INFO.serverMethod,
+      'methodParam': isSave ?? false
+          ? {
+              'notiUseYn': userSettings!.isShowNotice ? 'y' : 'n',
+              'stopNotiTimeUseYn': userSettings!.isSetNotDisturb ? 'y' : 'n',
+              'stopNotiTimeBeginTime': startTime ?? '',
+              'stopNotiTimeEndTime': endTime ?? ''
+            }
+          : {}
+    };
+    _api.init(isSave ?? false
+        ? RequestType.SET_PUSH_INFO
+        : RequestType.GET_PUSH_INFO);
+    final result = await _api.request(body: _body);
+    if (result == null || result.statusCode != 200) {
+      return ResultModel(false,
+          isNetworkError: result?.statusCode == -2,
+          isServerError: result?.statusCode == -1);
+    }
+    if (result.statusCode == 200) {
+      var temp = NoticeSettingsResponseModel.fromJson(result.body);
+      var isSuccess = temp.code == 'OK' && temp.message == 'Success';
+      // pr(temp.toJson());
+      return ResultModel(isSuccess, data: temp.data);
+    }
+    return ResultModel(false);
   }
 
   Future<ResultModel> startSignin(String userId, String userPw,

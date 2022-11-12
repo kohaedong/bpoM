@@ -55,17 +55,16 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
               value: value ?? false,
               onChanged: (value) async {
                 if (type == SwichType.SWICH_IS_NOT_DISTURB) {
-                  await provider.setNotdisturbSwichValue(value);
+                  await provider.setNoticeSettings(type, value);
                   notdisturbSwichValue.value = value;
                 }
                 if (type == SwichType.SWICH_IS_USE_NOTICE) {
                   noticeSwichValue.value = value;
-                  await provider.setNoticeSwichValue(value);
+                  await provider.setNoticeSettings(type, value);
                   if (value) {
                     await FirebaseService.requstFcmPermission()
                         .then((isSuccess) async {
                       if (!isSuccess) {
-                        CacheService.setIsDisableUpdate(true);
                         await AppSettings.openNotificationSettings();
                       }
                     });
@@ -234,39 +233,40 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
     );
   }
 
-  // Widget _buildWhenSetNotDisturb(BuildContext context) {
-  //   final p = context.read<SettingsProvider>();
-  //   noticeSwichValue.value = p.noticeSwichValue ?? false;
-  //   notdisturbSwichValue.value = p.notdisturbSwichValue ?? false;
-  //   return Column(
-  //     children: [
-  //       Padding(
-  //           padding: AppSize.noticePageEndWidgetPadding,
-  //           child: _buildItemRow(context, '${tr('set_not_disturb')}',
-  //               isUseSubscription: true,
-  //               swichType: SwichType.SWICH_IS_NOT_DISTURB,
-  //               subscription: '${tr('set_not_disturb_discription')}')),
-  //       ValueListenableBuilder<bool>(
-  //           valueListenable: notdisturbSwichValue,
-  //           builder: (context, isShow, _) {
-  //             return isShow
-  //                 ? Padding(
-  //                     padding: AppSize.noticePageEndWidgetPadding,
-  //                     child: Row(
-  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                       children: [
-  //                         buildTimeBox(context, isStartTime: true),
-  //                         Center(
-  //                           child: Text('~'),
-  //                         ),
-  //                         buildTimeBox(context, isStartTime: false)
-  //                       ],
-  //                     ))
-  //                 : Container();
-  //           })
-  //     ],
-  //   );
-  // }
+  Widget _buildWhenSetNotDisturb(BuildContext context) {
+    final p = context.read<SettingsProvider>();
+    noticeSwichValue.value = p.noticeSwichValue ?? false;
+    notdisturbSwichValue.value = p.notdisturbSwichValue ?? false;
+
+    return Column(
+      children: [
+        Padding(
+            padding: AppSize.noticePageEndWidgetPadding,
+            child: _buildItemRow(context, '${tr('set_not_disturb')}',
+                isUseSubscription: true,
+                swichType: SwichType.SWICH_IS_NOT_DISTURB,
+                subscription: '${tr('set_not_disturb_discription')}')),
+        ValueListenableBuilder<bool>(
+            valueListenable: notdisturbSwichValue,
+            builder: (context, isShow, _) {
+              return isShow
+                  ? Padding(
+                      padding: AppSize.noticePageEndWidgetPadding,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          buildTimeBox(context, isStartTime: true),
+                          Center(
+                            child: Text('~'),
+                          ),
+                          buildTimeBox(context, isStartTime: false)
+                        ],
+                      ))
+                  : Container();
+            })
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -274,8 +274,16 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
       create: (context) => SettingsProvider(),
       builder: (context, _) {
         final p = context.read<SettingsProvider>();
+        CacheService.setIsDisableUpdate(true);
         return BaseLayout(
             hasForm: false,
+            isWithWillPopScope: true,
+            willpopCallback: () {
+              CacheService.setIsDisableUpdate(false);
+              p.setNoticeSettings(SwichType.SWICH_IS_NOT_DISTURB,
+                  p.notdisturbSwichValue ?? false);
+              return true;
+            },
             appBar: MainAppBar(
               context,
               titleText:
@@ -296,16 +304,7 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
                         Divider(
                             color: AppColors.textGrey,
                             height: AppSize.dividerHeight),
-                        ValueListenableBuilder<bool>(
-                          valueListenable: noticeSwichValue,
-                          builder: (context, value, child) {
-                            return value
-                                ? Container()
-                                // 방해금지 시간 설정 제외.
-                                // ? _buildWhenSetNotDisturb(context)
-                                : Container();
-                          },
-                        ),
+                        _buildWhenSetNotDisturb(context)
                       ],
                     );
                   }

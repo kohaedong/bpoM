@@ -1,12 +1,16 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:medsalesportal/model/notice/notice_settings_data_model.dart';
 import 'package:provider/provider.dart';
+import 'package:medsalesportal/enums/swich_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
 import 'package:medsalesportal/service/key_service.dart';
 import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/rfc/es_login_model.dart';
 import 'package:medsalesportal/model/user/user_settings.dart';
+import 'package:medsalesportal/globalProvider/timer_provider.dart';
 import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/model/update/check_update_model.dart';
 import 'package:medsalesportal/view/commonLogin/provider/update_and_notice_provider.dart';
@@ -40,7 +44,36 @@ class SettingsProvider extends ChangeNotifier {
 
   Future<UserSettings> initData() async {
     var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+    NoticeSettingsDataModel? noticeDataModel;
+    //! 현재 2중으로 저장하고 있음.
+    // 유저환경저장 + notice Api 저장. (유저환경저장 methodName getOfAppUserEnv )
+    // 수정 해야 할것!:
+    // - 글씨크기는 local에 저장하고
+    // - Notice 관련 정보는 신규개발될 noticeApi로 실시간 저장처리.
+
     var settings = lp.userSettings!;
+    // var result = await lp.getAndSaveNotice();
+    // if (result.isSuccessful) {
+    //   noticeDataModel = result.data as NoticeSettingsDataModel;
+    //   noticeSwichValue = noticeDataModel.notiUseYn == 'y';
+    //   notdisturbSwichValue = noticeDataModel.stopNotiTimeUseYn == 'y';
+    //   notDisturbStartHour =
+    //       noticeDataModel.stopNotiTimeBeginTime?.substring(0, 2);
+    //   notDisturbStartMinute =
+    //       noticeDataModel.stopNotiTimeBeginTime?.substring(2);
+    //   notDisturbEndHour = noticeDataModel.stopNotiTimeEndTime?.substring(0, 2);
+    //   notDisturbEndMinute = noticeDataModel.stopNotiTimeEndTime?.substring(2);
+    //   textScale = lp.userSettings!.textScale;
+    // } else {
+    //   noticeSwichValue = settings.isShowNotice;
+    //   notdisturbSwichValue = settings.isSetNotDisturb;
+    //   notDisturbStartHour = settings.notDisturbStartHour;
+    //   notDisturbStartMinute = settings.notDisturbStartMine;
+    //   notDisturbEndHour = settings.notDisturbStopHour;
+    //   notDisturbEndMinute = settings.notDisturbStopMine;
+    //   textScale = settings.textScale;
+    // }
+
     noticeSwichValue = settings.isShowNotice;
     notdisturbSwichValue = settings.isSetNotDisturb;
     notDisturbStartHour = settings.notDisturbStartHour;
@@ -48,6 +81,7 @@ class SettingsProvider extends ChangeNotifier {
     notDisturbEndHour = settings.notDisturbStopHour;
     notDisturbEndMinute = settings.notDisturbStopMine;
     textScale = settings.textScale;
+
     return settings;
   }
 
@@ -84,25 +118,29 @@ class SettingsProvider extends ChangeNotifier {
     return this._timePickerminuteList;
   }
 
-  setNotdisturbSwichValue(bool value) {
-    var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
-    var settings = lp.userSettings!;
-    this.notdisturbSwichValue = value;
-    settings.isSetNotDisturb = value;
-    lp.setUserSettings(settings);
-    notifyListeners();
-  }
-
-  setNoticeSwichValue(bool value) {
+  Future<void> setNoticeSettings(SwichType swichType, bool val) async {
     var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
     var settings = UserSettings.fromJson(lp.userSettings!.toJson());
-    this.noticeSwichValue = value;
-    settings.isShowNotice = value;
+    switch (swichType) {
+      case SwichType.SWICH_IS_NOT_DISTURB:
+        settings.isSetNotDisturb = val;
+        break;
+      case SwichType.SWICH_IS_USE_NOTICE:
+        settings.isShowNotice = val;
+        break;
+    }
     lp.setUserSettings(settings);
-    notifyListeners();
+    var tp = KeyService.baseAppKey.currentContext!.read<TimerProvider>();
+    tp.executeLastAction(
+      lp.getAndSaveNotice(
+          isSave: true,
+          startTime:
+              '${notDisturbStartHour ?? ''}${notDisturbStartMinute ?? ''}',
+          endTime: '${notDisturbEndHour ?? ''}${notDisturbEndMinute ?? ''}'),
+    );
   }
 
-  setNotDisturbStartHourValue(String hour) {
+  void setNotDisturbStartHourValue(String hour) {
     var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
     var settings = UserSettings.fromJson(lp.userSettings!.toJson());
     this.notDisturbStartHour = hour;
@@ -111,7 +149,7 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setNotDisturbStartMinuteValue(String minute) {
+  void setNotDisturbStartMinuteValue(String minute) {
     var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
     var settings = UserSettings.fromJson(lp.userSettings!.toJson());
     this.notDisturbStartMinute = minute;
@@ -120,7 +158,7 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setNotDisturbEndHourValue(String hour) {
+  void setNotDisturbEndHourValue(String hour) {
     var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
     var settings = UserSettings.fromJson(lp.userSettings!.toJson());
     this.notDisturbEndHour = hour;
@@ -129,7 +167,7 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setNotDisturbEndMinuteValue(String minute) {
+  void setNotDisturbEndMinuteValue(String minute) {
     var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
     var settings = UserSettings.fromJson(lp.userSettings!.toJson());
     this.notDisturbEndMinute = minute;
@@ -138,7 +176,7 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setSuggestion(String? text) {
+  void setSuggestion(String? text) {
     suggetionText = text;
     notifyListeners();
   }
