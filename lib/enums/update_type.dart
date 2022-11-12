@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/update_type.dart
  * Created Date: 2021-08-12 14:35:41
- * Last Modified: 2022-01-28 11:11:01
+ * Last Modified: 2022-11-12 11:50:22
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 

@@ -7,9 +7,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.5
+  cupertino_icons: ^1.0.5 
   shared_preferences: ^2.0.15  # flutter 공식지원
   webview_flutter: ^3.0.4 # flutter 공식지원
+  firebase_messaging: ^14.0.2 # flutter 공식지원
+  firebase_core: ^2.1.0  # flutter 공식지원
   connectivity_plus: ^2.3.5 # flutterCommunity 공식지원
   device_info_plus: ^4.0.0 # flutterCommunity 공식지원
   package_info_plus: ^1.4.2 # flutterCommunity 공식지원
@@ -27,21 +29,18 @@ dependencies:
   permission_handler: ^10.0.0 # 유지보수 양호 
   easy_localization: ^3.0.1 # 유지보수 양호
   shimmer: ^2.0.0 # 유지보수 보통
-  flutter_windowmanager: ^0.2.0 ### 유지보수 보통 ###
   flutter_svg: ^1.1.4 # 유지보수 양호 
   fluttertoast: ^8.0.9 # 유지보수 양호
   logger: ^1.1.0 # 유지보수 양호
   flutter_inappwebview: ^5.4.3+8 # 유지보수 양호
+  internet_connection_checker: ^1.0.0+1  # 유지보수 양호
+  flutter_local_notifications: ^12.0.3  # 유지보수 양호
+  platform_device_id: ^1.0.1 # 유지보수 양호
+  flutter_app_badger: ^1.5.0 # 유지보수 양호
+  flutter_windowmanager: ^0.2.0 ### 유지보수 보통 ###
+  app_settings: ^4.1.8  ### 유지보수 보통 ###
   open_file: ^3.2.1 #### !!!!!폐기의심,현재 까지 사용가능.####  .apk 파일 open 용 #### !!!!!!!!
   flutter_screenutil: ^5.5.4 #### !!!!!폐기의심,현재 까지 사용가능. font size 설정  #### !!!!!!!!!
-  firebase_messaging: ^14.0.2
-  firebase_core: ^2.1.0
-  internet_connection_checker: ^1.0.0+1
-  platform_device_id: ^1.0.1
-  app_settings: ^4.1.8
-  flutter_local_notifications: ^12.0.3
-  flutter_app_badger: ^1.5.0
-  # workmanager: ^0.5.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

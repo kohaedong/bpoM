@@ -306,6 +306,92 @@ class _SigninPageState extends State<SigninPage> {
     );
   }
 
+  void _doFirstRunProcess() {
+    var enterLength = FormatUtil.howManyLengthForString(message ?? '') + 1;
+    var height =
+        AppSize.buttonHeight * 3 + AppSize.padding * 2 + enterLength * 14;
+    AppDialog.showPopup(
+        context,
+        Container(
+          height: height + .5,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                height: height - AppSize.buttonHeight,
+                width: AppSize.defaultContentsWidth,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Center(child: AppImage.getImage(ImageType.INFO)),
+                    defaultSpacing(),
+                    AppText.text('$message',
+                        textAlign: TextAlign.center, maxLines: 50)
+                  ],
+                ),
+              ),
+              Divider(height: .5),
+              SizedBox(
+                height: AppSize.buttonHeight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                        width: AppSize.defaultContentsWidth,
+                        child: TextButton(
+                            onPressed: () {
+                              popToFirst(context);
+                            },
+                            child: AppText.text(tr('ok'),
+                                style:
+                                    AppTextStyle.menu_18(AppColors.primary)))),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ));
+  }
+
+  Widget _buildContents(BuildContext context, AsyncSnapshot snapshot) {
+    return Builder(builder: (context) {
+      if (snapshot.data!['id'] != null) {
+        _idController.text = snapshot.data!['id'];
+      }
+      if (snapshot.data!['pw'] != null) {
+        _passwordController.text = snapshot.data!['pw'];
+      }
+      Future.delayed(Duration.zero, () async {
+        if (message != null && mounted && isFirstRun) {
+          _doFirstRunProcess();
+        }
+      });
+      return Stack(
+        children: [
+          SizedBox(
+              height: AppSize.realHeight,
+              child: ListView(
+                shrinkWrap: true,
+                controller: _scrollController,
+                children: [
+                  _buildLogo(),
+                  _buildTextFormForId(context),
+                  defaultSpacing(),
+                  _buildTextFormForPassword(context),
+                  _buildErrorMessage(context),
+                  _buildCheckBoxRow(context),
+                  defaultSpacing(times: 4),
+                  _buildSubmmitButton(context),
+                ],
+              )),
+          _buildLoadingWidget(context)
+        ],
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseLayout(
@@ -327,13 +413,6 @@ class _SigninPageState extends State<SigninPage> {
               if (loginResult.isShowErrorText ?? false) {
                 p.startErrorMessage(loginResult.message ?? '');
               }
-              // if (loginResult.isNetworkError ?? false) {
-              //   await AppDialog.showDangermessage(context, tr('check_network'));
-              // }
-              // if (loginResult.isServerError ?? false) {
-              //   await AppDialog.showDangermessage(context, tr('server_error'));
-              // }
-
             }
           });
 
@@ -348,94 +427,7 @@ class _SigninPageState extends State<SigninPage> {
               builder: (context, snapshot) {
                 if (snapshot.hasData &&
                     snapshot.connectionState == ConnectionState.done) {
-                  return Builder(builder: (context) {
-                    if (snapshot.data!['id'] != null) {
-                      _idController.text = snapshot.data!['id'];
-                    }
-                    if (snapshot.data!['pw'] != null) {
-                      _passwordController.text = snapshot.data!['pw'];
-                    }
-                    Future.delayed(Duration.zero, () async {
-                      if (message != null && mounted && isFirstRun) {
-                        var enterLength =
-                            FormatUtil.howManyLengthForString(message ?? '') +
-                                1;
-                        var height = AppSize.buttonHeight * 3 +
-                            AppSize.padding * 2 +
-                            enterLength * 14;
-                        AppDialog.showPopup(
-                            context,
-                            Container(
-                              height: height + .5,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    height: height - AppSize.buttonHeight,
-                                    width: AppSize.defaultContentsWidth,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Center(
-                                            child: AppImage.getImage(
-                                                ImageType.INFO)),
-                                        defaultSpacing(),
-                                        AppText.text('$message',
-                                            textAlign: TextAlign.center,
-                                            maxLines: 50)
-                                      ],
-                                    ),
-                                  ),
-                                  Divider(height: .5),
-                                  SizedBox(
-                                    height: AppSize.buttonHeight,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                            width: AppSize.defaultContentsWidth,
-                                            child: TextButton(
-                                                onPressed: () {
-                                                  popToFirst(context);
-                                                },
-                                                child: AppText.text(tr('ok'),
-                                                    style: AppTextStyle.menu_18(
-                                                        AppColors.primary)))),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ));
-                      }
-                    });
-                    return Stack(
-                      children: [
-                        SizedBox(
-                            height: AppSize.realHeight,
-                            child: ListView(
-                              shrinkWrap: true,
-                              controller: _scrollController,
-                              children: [
-                                _buildLogo(),
-                                _buildTextFormForId(context),
-                                defaultSpacing(),
-                                _buildTextFormForPassword(context),
-                                _buildErrorMessage(context),
-                                _buildCheckBoxRow(context),
-                                defaultSpacing(times: 4),
-                                _buildSubmmitButton(context),
-                              ],
-                            )),
-                        _buildLoadingWidget(context)
-                      ],
-                    );
-                  });
+                  return _buildContents(context, snapshot);
                 }
                 return Container();
               },
