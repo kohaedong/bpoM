@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
- * Last Modified: 2022-11-14 15:42:29
+ * Last Modified: 2022-11-14 16:35:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 

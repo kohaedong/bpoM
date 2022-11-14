@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/model/notice/notice_settings_data_model.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/enums/swich_type.dart';
 import 'package:medsalesportal/enums/request_type.dart';
@@ -10,9 +9,9 @@ import 'package:medsalesportal/service/api_service.dart';
 import 'package:medsalesportal/service/cache_service.dart';
 import 'package:medsalesportal/model/rfc/es_login_model.dart';
 import 'package:medsalesportal/model/user/user_settings.dart';
-import 'package:medsalesportal/globalProvider/timer_provider.dart';
 import 'package:medsalesportal/globalProvider/login_provider.dart';
 import 'package:medsalesportal/model/update/check_update_model.dart';
+import 'package:medsalesportal/model/notice/notice_settings_data_model.dart';
 import 'package:medsalesportal/view/commonLogin/provider/update_and_notice_provider.dart';
 
 class SettingsProvider extends ChangeNotifier {
@@ -44,7 +43,7 @@ class SettingsProvider extends ChangeNotifier {
 
   Future<UserSettings> initData() async {
     var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
-    NoticeSettingsDataModel? noticeDataModel;
+    // NoticeSettingsDataModel? noticeDataModel;
     //! 현재 2중으로 저장하고 있음.
     // 유저환경저장 + notice Api 저장. (유저환경저장 methodName getOfAppUserEnv )
     // 수정 해야 할것!:
@@ -130,15 +129,12 @@ class SettingsProvider extends ChangeNotifier {
         break;
     }
     lp.setUserSettings(settings);
-    var tp = KeyService.baseAppKey.currentContext!.read<TimerProvider>();
-    tp.executeLastAction(
-      Future(() => lp.getAndSaveNotice(
-          isSave: true,
-          startTime:
-              '${notDisturbStartHour ?? '07'}${notDisturbStartMinute ?? '00'}',
-          endTime:
-              '${notDisturbEndHour ?? '23'}${notDisturbEndMinute ?? '00'}')),
-    );
+    lp.getAndSaveNotice(
+        isSave: true,
+        startTime:
+            '${notDisturbStartHour != null && notDisturbStartHour!.isNotEmpty ? notDisturbStartHour : '07'}${notDisturbStartMinute != null && notDisturbStartMinute!.isNotEmpty ? notDisturbStartMinute : '00'}',
+        endTime:
+            '${notDisturbEndHour != null && notDisturbEndHour!.isNotEmpty ? notDisturbEndHour : '23'}${notDisturbEndMinute != null && notDisturbEndMinute!.isNotEmpty ? notDisturbEndMinute : '00'}');
   }
 
   void setNotDisturbStartHourValue(String hour) {
@@ -183,14 +179,19 @@ class SettingsProvider extends ChangeNotifier {
   }
 
   Future<bool> saveUserEvn() async {
-    var loginProvider =
-        KeyService.baseAppKey.currentContext!.read<LoginProvider>();
-    var result = await loginProvider.saveUserEnvironment();
-    loginProvider.getAndSaveNotice(
+    var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
+    var settings = lp.userSettings!;
+    var result = await lp.saveUserEnvironment();
+    var sth = settings.notDisturbStartHour;
+    var stm = settings.notDisturbStartMine;
+    var eth = settings.notDisturbStopHour;
+    var etm = settings.notDisturbStopMine;
+    await lp.getAndSaveNotice(
         isSave: true,
         startTime:
-            '${notDisturbStartHour ?? '07'}${notDisturbStartMinute ?? '00'}',
-        endTime: '${notDisturbEndHour ?? '23'}${notDisturbEndMinute ?? '00'}');
+            '${sth != null && sth.isNotEmpty ? sth : '07'}${stm != null && stm.isNotEmpty ? stm : '00'}',
+        endTime:
+            '${eth != null && eth.isNotEmpty ? eth : '07'}${etm != null && etm.isNotEmpty ? etm : '00'}');
     return result.data != null;
   }
 
