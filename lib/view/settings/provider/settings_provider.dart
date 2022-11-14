@@ -51,6 +51,7 @@ class SettingsProvider extends ChangeNotifier {
     // - Notice 관련 정보는 신규개발될 noticeApi로 실시간 저장처리.
 
     var settings = lp.userSettings!;
+
     // var result = await lp.getAndSaveNotice();
     // if (result.isSuccessful) {
     //   noticeDataModel = result.data as NoticeSettingsDataModel;
