@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-11-09 13:59:24
+ * Last Modified: 2022-11-14 15:07:40
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -179,19 +179,15 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                           ? null
                           : () => AppTextStyle.hint_16,
                   iconType: _suggetionGroupInputController.text.isNotEmpty
-                      ? InputIconType.DELETE_AND_SEARCH
-                      : InputIconType.SEARCH,
+                      ? InputIconType.DELETE
+                      : null,
                   onChangeCallBack: (e) => p.setSuggetionItemGroupInputText(e),
                   iconColor: AppColors.textFieldUnfoucsColor,
                   defaultIconCallback: () {
-                    hideKeyboard(context);
-                    p.refresh();
-                  },
-                  textEditingController: _suggetionGroupInputController,
-                  otherIconcallback: () {
                     p.setSuggetionItemGroupInputText(null);
                     _suggetionGroupInputController.text = '';
                   },
+                  textEditingController: _suggetionGroupInputController,
                   hintText: _suggetionGroupInputController.text.isNotEmpty
                       ? _suggetionGroupInputController.text
                       : '${tr('plz_enter_search_key_for_something_1', args: [
@@ -213,23 +209,15 @@ class _PopupSearchOneRowContentsState extends State<PopupSearchOneRowContents> {
                           ? null
                           : () => AppTextStyle.hint_16,
                   iconType: _suggetionNameInputController.text.isNotEmpty
-                      ? InputIconType.DELETE_AND_SEARCH
-                      : InputIconType.SEARCH,
+                      ? InputIconType.DELETE
+                      : null,
                   onChangeCallBack: (e) => p.setSuggetionItemNameInputText(e),
                   iconColor: AppColors.textFieldUnfoucsColor,
                   defaultIconCallback: () {
-                    hideKeyboard(context);
-                    final tp = context.read<TimerProvider>();
-                    if (tp.getTimer == null ||
-                        (tp.isRunning != null && !tp.isRunning!)) {
-                      tp.perdict(p.refresh());
-                    }
-                  },
-                  textEditingController: _suggetionNameInputController,
-                  otherIconcallback: () {
                     p.setSuggetionItemNameInputText(null);
                     _suggetionNameInputController.text = '';
                   },
+                  textEditingController: _suggetionNameInputController,
                   hintText: _suggetionNameInputController.text.isNotEmpty
                       ? _suggetionNameInputController.text
                       : '${tr('plz_enter_search_key_for_something_1', args: [

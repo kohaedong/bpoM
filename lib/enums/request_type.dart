@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/enums/request_type.dart
  * Created Date: 2021-08-27 10:22:15
- * Last Modified: 2022-11-12 21:26:37
+ * Last Modified: 2022-11-14 14:53:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -89,7 +89,7 @@ extension RequestTypeExtension on RequestType {
   String get specialNoticeUrl => isDev
       ? '$devSpecialNoticeUrl/notice/restApi/getNoticesByCondition'
       : '$prodSpecialNoticeUrl/notice/restApi/getNoticesByCondition';
-  String get testPushUrl => 'http://172.30.158.133:8080/common/v2/api/rest';
+  String get testPushUrl => '$v2URL/rest';
   // api 에 header 추가 필요시 사전 등록.
   Future<Map<String, String>> get anotherHeader async {
     final deviceInfo = await DeviceInfoService.getDeviceInfo();

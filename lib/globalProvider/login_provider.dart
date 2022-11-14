@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
- * Last Modified: 2022-11-12 21:40:23
+ * Last Modified: 2022-11-14 15:42:29
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -516,8 +516,8 @@ class LoginProvider extends ChangeNotifier {
           ? {
               'notiUseYn': userSettings!.isShowNotice ? 'y' : 'n',
               'stopNotiTimeUseYn': userSettings!.isSetNotDisturb ? 'y' : 'n',
-              'stopNotiTimeBeginTime': startTime ?? '',
-              'stopNotiTimeEndTime': endTime ?? ''
+              'stopNotiTimeBeginTime': startTime ?? '0700',
+              'stopNotiTimeEndTime': endTime ?? '2300'
             }
           : {}
     };

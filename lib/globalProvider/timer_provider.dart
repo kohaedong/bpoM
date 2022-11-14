@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/timer_provider.dart
  * Created Date: 2022-07-08 14:36:43
- * Last Modified: 2022-11-12 20:37:57
+ * Last Modified: 2022-11-14 14:48:16
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -114,7 +114,6 @@ class TimerProvider extends ChangeNotifier {
     _timer = Timer.periodic(Duration(seconds: 1), (t) {
       counter--;
       if (counter == 0) {
-        pr('start');
         func.then((_) {
           _timer?.cancel();
           _timer = null;

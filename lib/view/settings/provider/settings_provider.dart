@@ -132,11 +132,12 @@ class SettingsProvider extends ChangeNotifier {
     lp.setUserSettings(settings);
     var tp = KeyService.baseAppKey.currentContext!.read<TimerProvider>();
     tp.executeLastAction(
-      lp.getAndSaveNotice(
+      Future(() => lp.getAndSaveNotice(
           isSave: true,
           startTime:
-              '${notDisturbStartHour ?? ''}${notDisturbStartMinute ?? ''}',
-          endTime: '${notDisturbEndHour ?? ''}${notDisturbEndMinute ?? ''}'),
+              '${notDisturbStartHour ?? '07'}${notDisturbStartMinute ?? '00'}',
+          endTime:
+              '${notDisturbEndHour ?? '23'}${notDisturbEndMinute ?? '00'}')),
     );
   }
 
@@ -170,7 +171,7 @@ class SettingsProvider extends ChangeNotifier {
   void setNotDisturbEndMinuteValue(String minute) {
     var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
     var settings = UserSettings.fromJson(lp.userSettings!.toJson());
-    this.notDisturbEndMinute = minute;
+    notDisturbEndMinute = minute;
     settings.notDisturbStopMine = minute;
     lp.setUserSettings(settings);
     notifyListeners();
@@ -185,6 +186,11 @@ class SettingsProvider extends ChangeNotifier {
     var loginProvider =
         KeyService.baseAppKey.currentContext!.read<LoginProvider>();
     var result = await loginProvider.saveUserEnvironment();
+    loginProvider.getAndSaveNotice(
+        isSave: true,
+        startTime:
+            '${notDisturbStartHour ?? '07'}${notDisturbStartMinute ?? '00'}',
+        endTime: '${notDisturbEndHour ?? '23'}${notDisturbEndMinute ?? '00'}');
     return result.data != null;
   }
 
