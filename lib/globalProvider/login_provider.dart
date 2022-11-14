@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
- * Last Modified: 2022-11-12 21:28:43
+ * Last Modified: 2022-11-12 21:40:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -533,7 +533,7 @@ class LoginProvider extends ChangeNotifier {
     if (result.statusCode == 200) {
       var temp = NoticeSettingsResponseModel.fromJson(result.body);
       var isSuccess = temp.code == 'OK' && temp.message == 'Success';
-      // pr(temp.toJson());
+      pr(temp.toJson());
       return ResultModel(isSuccess, data: temp.data);
     }
     return ResultModel(false);

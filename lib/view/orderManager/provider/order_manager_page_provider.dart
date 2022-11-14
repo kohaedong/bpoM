@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/provider/order_manager_page_provider.dart
  * Created Date: 2022-07-05 09:57:03
- * Last Modified: 2022-10-26 08:28:26
+ * Last Modified: 2022-11-14 14:39:31
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -224,7 +224,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     await Future.delayed(Duration.zero, () async {
       if (isfromRecentModel != null && isfromRecentModel) {
         model.kwmeng = 0.0;
-        model.zfreeQty = 0.0;
+        model.zfreeQtyIn = 0.0;
       }
       items ??= [];
       var insertIndex = (isfromRecentModel != null && isfromRecentModel)
@@ -238,7 +238,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
       items = [...temp];
       insertPriceList(priceModel ?? BulkOrderDetailSearchMetaPriceModel(),
           indexx ?? insertIndex);
-      insertSurchargeQuantityList(model.zfreeQty!, indexx ?? insertIndex);
+      insertSurchargeQuantityList(model.zfreeQtyIn!, indexx ?? insertIndex);
       insertQuantityList(model.kwmeng!, indexx ?? insertIndex);
       if (priceModel == null) {
         await checkPrice(indexx ?? insertIndex, isNotifier: false);
@@ -383,8 +383,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
 
   void setTableSurchargeQuantity(int indexx, double quantity) {
     var tempModel = items![indexx];
-    tempModel.zfreeQty = quantity;
-    pr('4444:${tempModel.zfreeQty}');
+    tempModel.zfreeQtyIn = quantity;
     updateItem(indexx, tempModel);
     notifyListeners();
   }
@@ -615,7 +614,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     temp.vrkme = items![indexx].vrkme;
     temp.kwmeng =
         selectedQuantityList.isNotEmpty ? selectedQuantityList[indexx] : 0;
-    temp.zfreeQtyIn = items![indexx].zfreeQty;
+    temp.zfreeQtyIn = items![indexx].zfreeQtyIn ?? 0;
     var tListBase64 = await EncodingUtils.base64Convert(temp.toJson());
     var isLoginModel =
         EncodingUtils.decodeBase64ForIsLogin(CacheService.getIsLogin()!);
@@ -1007,7 +1006,7 @@ class OrderManagerPageProvider extends ChangeNotifier {
     var createItemModel = (int indexx, RecentOrderTItemModel item) async {
       item = RecentOrderTItemModel.fromJson(priceModelList[indexx]!.toJson());
       item.kwmeng = selectedQuantityList[indexx];
-      item.zfreeQty = selectedSurchargeList[indexx];
+      item.zfreeQtyIn = selectedSurchargeList[indexx];
       item.erdat = DateUtil.getDateStr(DateTime.now().toIso8601String());
       item.erzet = DateUtil.getTimeNow(isNotWithColon: true);
 

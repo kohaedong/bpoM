@@ -487,6 +487,7 @@
     "salse_surcharge_quantity":"할증수량",
     "salse_surcharge_quantity_option":"할증(추가입력)",
     "salse_surcharge_quantity_option1":"할증수량(추가입력)",
+    "salse_surcharge_quantity_option2":"할증수량\n(추가입력)",
     "supply_price":"공급가",
     "unit_price":"단가",
     "discount_rate":"할인율(%)",

@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/add_order_popup_widget.dart
  * Created Date: 2022-09-04 17:55:15
- * Last Modified: 2022-11-11 20:46:56
+ * Last Modified: 2022-11-14 14:40:02
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -13,6 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:medsalesportal/view/common/base_text_controller_factory_widget.dart';
+import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:provider/provider.dart';
 import 'package:medsalesportal/util/format_util.dart';
 import 'package:medsalesportal/styles/export_common.dart';
@@ -123,7 +124,9 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                       tuple.item1!.isNotEmpty &&
                       int.parse(tuple.item1!) != '0';
                   var isPriceModelNotEmpty =
-                      tuple.item3 != null && tuple.item3!.zfreeQty != 0.0;
+                      tuple.item3 != null && tuple.item3!.zfreeQtyIn != 0.0;
+                  pr('isPriceModelNotEmpty $isPriceModelNotEmpty');
+                  pr(tuple.item3?.toJson());
                   return Row(
                     children: [
                       BaseInputWidget(
@@ -359,10 +362,10 @@ class _AddOrderPopupWidgetState extends State<AddOrderPopupWidget> {
                   _productQuantityInputController.text =
                       '${widget.editModel!.kwmeng!.toInt()}';
                 }
-                if (widget.editModel!.zfreeQty != 0.0 &&
+                if (widget.editModel!.zfreeQtyIn != 0.0 &&
                     _surchargeQuantityInputController.text == '') {
                   _surchargeQuantityInputController.text =
-                      '${widget.editModel!.zfreeQty!.toInt()}';
+                      '${widget.editModel!.zfreeQtyIn!.toInt()}';
                 }
               }
               if (snapshot.hasData &&

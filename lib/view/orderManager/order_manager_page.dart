@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/orderManager/order_manager_page.dart
  * Created Date: 2022-07-05 09:57:28
- * Last Modified: 2022-11-11 20:46:49
+ * Last Modified: 2022-11-14 14:42:23
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -593,10 +593,8 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
     );
   }
 
-  Widget _buildTextAndInputWidget(
-    String text,
-    Widget widgetUi,
-  ) {
+  Widget _buildTextAndInputWidget(String text, Widget widgetUi,
+      {int? maxLines}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -604,7 +602,9 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         SizedBox(
           width: AppSize.defaultContentsWidth * .3,
           child: AppText.text(text,
-              style: AppTextStyle.sub_14, textAlign: TextAlign.left),
+              style: AppTextStyle.sub_14,
+              textAlign: TextAlign.left,
+              maxLines: maxLines ?? 1),
         ),
         widgetUi
       ],
@@ -661,10 +661,10 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                             );
                             p.setTableQuantity(index, itemModel.kwmeng!);
                             p.updateSurchargeQuantityList(
-                                index, itemModel.zfreeQty!,
+                                index, itemModel.zfreeQtyIn ?? 0,
                                 isNotifier: true);
                             p.setTableSurchargeQuantity(
-                                index, itemModel.zfreeQty!);
+                                index, itemModel.zfreeQtyIn ?? 0);
                           });
                         }
                       }
@@ -838,7 +838,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
         family.contains('비처방의약품') ||
                 family.contains('건강식품') ||
                 family.contains('처방의약품')
-            ? _buildTextAndInputWidget(tr('salse_surcharge_quantity'),
+            ? _buildTextAndInputWidget(tr('salse_surcharge_quantity_option2'),
                 BaseTextControllerFactoryWidget(
                     giveTextEditControllerWidget: (controller, focusNode) {
                 return Selector<OrderManagerPageProvider, List<double>>(
@@ -885,7 +885,7 @@ class _OrderManagerPageState extends State<OrderManagerPage> {
                         enable: true);
                   },
                 );
-              }))
+              }), maxLines: 2)
             : Container(),
         defaultSpacing(),
         _buildTextAndInputWidget(

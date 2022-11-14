@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/salesActivityManager/provider/add_activity_page_provider.dart
  * Created Date: 2022-08-11 11:12:00
- * Last Modified: 2022-11-09 17:21:53
+ * Last Modified: 2022-11-14 12:17:42
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -111,6 +111,7 @@ class AddActivityPageProvider extends ChangeNotifier {
     distanceModel = AddActivityDistanceModel();
     fromParentResponseModel =
         SalesActivityDayResponseModel.fromJson(fromParentModel.toJson());
+    pr(fromParentResponseModel?.table250?.single.toJson());
     fromParentResponseModel?.table260?.forEach((element) {
       pr(element.toJson());
     });
@@ -536,11 +537,9 @@ class AddActivityPageProvider extends ChangeNotifier {
     };
     t250 = SalesActivityDayTable250.fromJson(
         fromParentResponseModel!.table250!.single.toJson());
-    t250.aedat =
-        FormatUtil.removeDash(DateUtil.getDateStr(now.toIso8601String()));
-    t250.aezet = DateUtil.getTimeNow(isNotWithColon: true);
-    pr('${esLogin?.toJson()}');
-    t250.aenam = esLogin!.ename;
+    // t250.aedat = FormatUtil.removeDash(DateUtil.getDateStr(now.toIso8601String()));
+    // t250.aezet = DateUtil.getTimeNow(isNotWithColon: true);
+    // t250.aenam = esLogin!.ename;
     temp.addAll([t250.toJson()]);
     t250Base64 = await EncodingUtils.base64ConvertForListMap(temp);
     var _isPrevDay =
@@ -558,7 +557,7 @@ class AddActivityPageProvider extends ChangeNotifier {
                   .single;
               t260 = SalesActivityDayTable260.fromJson(temp.toJson());
               t260.umode = 'U';
-              t260.aenam = esLogin.ename;
+              t260.aenam = esLogin!.ename;
               t260.aewid = esLogin.logid;
             }()
           : () async {
@@ -575,7 +574,7 @@ class AddActivityPageProvider extends ChangeNotifier {
               // t260.erdat = FormatUtil.removeDash(
               //     DateUtil.getDateStr(DateTime.now().toIso8601String()));
               t260.erzet = DateUtil.getTimeNow(isNotWithColon: true);
-              t260.ernam = esLogin.ename;
+              t260.ernam = esLogin!.ename;
               t260.erwid = esLogin.logid;
               t260.aenam = esLogin.ename;
               t260.aewid = esLogin.logid;
@@ -600,7 +599,6 @@ class AddActivityPageProvider extends ChangeNotifier {
                 : today);
         t260.sminute = '1';
       }
-
       var latLonMap = await getAddressLatLon(selectedKunnr!.zaddName1!)
           .then((result) => result.data);
 
@@ -608,6 +606,7 @@ class AddActivityPageProvider extends ChangeNotifier {
       t260.yLongitude = isVisit ? double.parse(latLonMap['lon']) : 0.00;
       t260.dist =
           isVisit ? FormatUtil.asFixed(distanceModel!.distance!, 1) : 0.0;
+
       t260.isGps = 'X';
       t260.callType = 'M';
       t260.comntM = leaderAdviceInput ?? '';
@@ -674,7 +673,7 @@ class AddActivityPageProvider extends ChangeNotifier {
           t361!.umode = 'I';
           t361!.bzactno = t260.bzactno;
           t361!.seqno = t260.seqno;
-          t361!.ernam = esLogin.ename;
+          t361!.ernam = esLogin!.ename;
           t361!.erwid = esLogin.logid;
           t361!.erzet = DateUtil.getTimeNow(isNotWithColon: true);
         }
@@ -683,7 +682,7 @@ class AddActivityPageProvider extends ChangeNotifier {
         t361!.aedat =
             FormatUtil.removeDash(DateUtil.getDateStr(now.toIso8601String()));
         t361!.aezet = DateUtil.getTimeNow(isNotWithColon: true);
-        t361!.aenam = esLogin.ename;
+        t361!.aenam = esLogin!.ename;
         t361!.subseq = 1;
         t361!.logid = anotherSaller!.logid;
         t361!.sname = anotherSaller!.sname;
@@ -789,7 +788,7 @@ class AddActivityPageProvider extends ChangeNotifier {
           t280!.umode = 'U';
         } else {
           t280!.umode = 'I';
-          t280!.ernam = esLogin.ename;
+          t280!.ernam = esLogin!.ename;
           t280!.erwid = esLogin.logid;
           t280!.bzactno = t260.bzactno;
           t280!.seqno = t260.seqno;
@@ -801,7 +800,7 @@ class AddActivityPageProvider extends ChangeNotifier {
         t280!.aedat =
             FormatUtil.removeDash(DateUtil.getDateStr(now.toIso8601String()));
         t280!.aezet = DateUtil.getTimeNow(isNotWithColon: true);
-        t280!.aenam = esLogin.ename;
+        t280!.aenam = esLogin!.ename;
         t280!.amount1 =
             seletedAmount != null && seletedAmount!.trim().isNotEmpty
                 ? double.parse(seletedAmount!)
@@ -887,6 +886,7 @@ class AddActivityPageProvider extends ChangeNotifier {
         var singleData =
             temp.table260!.where((table) => table.seqno == currenSeqNo).single;
         editModel260 = SalesActivityDayTable260.fromJson(singleData.toJson());
+
         if (anotherSaller != null) {
           isLockOtherSalerSelector = true;
         }

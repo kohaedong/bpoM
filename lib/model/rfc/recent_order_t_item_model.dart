@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/recent_order_t_item_model.dart
  * Created Date: 2022-09-04 16:09:34
- * Last Modified: 2022-09-05 16:51:52
+ * Last Modified: 2022-11-14 13:03:06
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -37,6 +37,8 @@ class RecentOrderTItemModel {
   double? zdisPrice;
   @JsonKey(name: 'ZFREE_QTY')
   double? zfreeQty;
+  @JsonKey(name: 'ZFREE_QTY_IN')
+  double? zfreeQtyIn;
   @JsonKey(name: 'VRKME')
   String? vrkme;
   @JsonKey(name: 'NETWR')
@@ -106,6 +108,7 @@ class RecentOrderTItemModel {
     this.kwmeng,
     this.loevm,
     this.loevmOr,
+    this.zfreeQtyIn,
     this.maktx,
     this.matnr,
     this.mwsbp,
