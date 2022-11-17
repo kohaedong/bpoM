@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:medsalesportal/model/http/token_model.dart';
+import 'package:bpom/model/http/token_model.dart';
 part 'user.g.dart';
 
 @JsonSerializable()

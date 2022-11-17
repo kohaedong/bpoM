@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
  * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
- * Last Modified: 2022-11-14 16:35:06
+ * Last Modified: 2022-11-15 11:19:59
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -14,30 +14,30 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medsalesportal/model/notice/notice_settings_response_model.dart';
-import 'package:medsalesportal/service/firebase_service.dart';
+import 'package:bpom/model/common/et_orghk_model.dart';
+import 'package:bpom/model/common/sap_login_info_response_model.dart';
 import 'package:provider/provider.dart';
-import 'package:medsalesportal/model/user/user.dart';
-import 'package:medsalesportal/enums/account_type.dart';
-import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/service/api_service.dart';
-import 'package:medsalesportal/service/key_service.dart';
-import 'package:medsalesportal/enums/hive_box_type.dart';
-import 'package:medsalesportal/enums/app_theme_type.dart';
+import 'package:bpom/model/user/user.dart';
+import 'package:bpom/enums/account_type.dart';
+import 'package:bpom/enums/request_type.dart';
+import 'package:bpom/service/api_service.dart';
+import 'package:bpom/service/key_service.dart';
+import 'package:bpom/enums/hive_box_type.dart';
+import 'package:bpom/enums/app_theme_type.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/service/hive_service.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/model/http/token_model.dart';
-import 'package:medsalesportal/model/user/user_settings.dart';
-import 'package:medsalesportal/model/rfc/et_orghk_model.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/service/deviceInfo_service.dart';
-import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
-import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
-import 'package:medsalesportal/globalProvider/water_marke_provider.dart';
-import 'package:medsalesportal/model/rfc/sap_login_info_response_model.dart';
-import 'package:medsalesportal/model/user/access_permission_model.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:bpom/service/hive_service.dart';
+import 'package:bpom/service/cache_service.dart';
+import 'package:bpom/model/http/token_model.dart';
+import 'package:bpom/service/firebase_service.dart';
+import 'package:bpom/model/user/user_settings.dart';
+import 'package:bpom/model/common/result_model.dart';
+import 'package:bpom/service/deviceInfo_service.dart';
+import 'package:bpom/view/common/function_of_print.dart';
+import 'package:bpom/buildConfig/kolon_build_config.dart';
+import 'package:bpom/globalProvider/app_theme_provider.dart';
+import 'package:bpom/model/user/access_permission_model.dart';
+import 'package:bpom/globalProvider/water_marke_provider.dart';
+import 'package:bpom/model/notice/notice_settings_response_model.dart';
 
 class LoginProvider extends ChangeNotifier {
   final _api = ApiService();
@@ -544,22 +544,22 @@ class LoginProvider extends ChangeNotifier {
     ResultModel? result;
     result = await webSignIn(userId, userPw, isAutoLogin: isAutoLogin);
     if (!result.isSuccessful) return result;
-    result = await requestToken();
-    if (!result.isSuccessful) return result;
-    result = await sapSignIn();
-    if (!result.isSuccessful) return result;
+    //result = await requestToken();
+    //if (!result.isSuccessful) return result;
+    //result = await sapSignIn();
+    //if (!result.isSuccessful) return result;
     result = await saveUserIdAndPasswordToSSO();
     if (!result.isSuccessful) return result;
-    result = await saveLoginInfo();
-    if (!result.isSuccessful) return result;
+    //result = await saveLoginInfo();
+    //if (!result.isSuccessful) return result;
     result = await getDeviceInfo();
     if (!result.isSuccessful) return result;
     result = await checkUserEnvironment();
     if (!result.isSuccessful) return result;
     result = await saveUserEnvironment(isFirstSave: true);
     if (!result.isSuccessful) return result;
-    result = await sendFcmToken();
-    if (result.isSuccessful) isLogedin = true;
+    //result = await sendFcmToken();
+    //if (result.isSuccessful) isLogedin = true;
     return result;
   }
 }

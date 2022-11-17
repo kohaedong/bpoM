@@ -14,7 +14,7 @@
 import 'dart:async';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
+import 'package:bpom/styles/app_colors.dart';
 
 class BaseShimmer extends StatefulWidget {
   BaseShimmer({Key? key, this.child}) : super(key: key);

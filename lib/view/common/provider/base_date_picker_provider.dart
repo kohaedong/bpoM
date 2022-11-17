@@ -12,8 +12,8 @@
  */
 
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:bpom/model/common/result_model.dart';
+import 'package:bpom/view/common/function_of_print.dart';
 
 class BaseDatePickerForMonthProvider extends ChangeNotifier {
   List<List<int>> dayInMonth = [];

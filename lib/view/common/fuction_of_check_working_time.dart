@@ -13,11 +13,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:medsalesportal/service/key_service.dart';
+import 'package:bpom/service/key_service.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/globalProvider/timer_provider.dart';
-import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
+import 'package:bpom/view/common/base_app_dialog.dart';
+import 'package:bpom/globalProvider/timer_provider.dart';
+import 'package:bpom/view/common/function_of_pop_to_first.dart';
 
 void showWorkingTimePopup({BuildContext? contextt}) async {
   final context = contextt ?? KeyService.baseAppKey.currentContext!;

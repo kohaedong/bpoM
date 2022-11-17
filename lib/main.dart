@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medsalesportal/kolonApp.dart';
+import 'package:bpom/kolonApp.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/service/firebase_service.dart';
-import 'package:medsalesportal/service/screen_capture_service.dart';
-import 'package:medsalesportal/model/commonCode/t_code_model.dart';
-import 'package:medsalesportal/model/commonCode/t_values_model.dart';
-import 'package:medsalesportal/model/commonCode/et_dd07v_customer_category_model.dart';
+import 'package:bpom/service/cache_service.dart';
+import 'package:bpom/service/firebase_service.dart';
+import 'package:bpom/service/screen_capture_service.dart';
+import 'package:bpom/model/commonCode/t_code_model.dart';
+import 'package:bpom/model/commonCode/t_values_model.dart';
+import 'package:bpom/model/commonCode/et_dd07v_customer_category_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  await FirebaseService.init();
   await Hive.initFlutter();
-  Hive.registerAdapter(TCodeModelAdapter());
-  Hive.registerAdapter(TValuesModelAdapter());
-  Hive.registerAdapter(TCustomerCustomsModelAdapter());
+  // await FirebaseService.init();
+  //Hive.registerAdapter(TCodeModelAdapter());
+  //Hive.registerAdapter(TValuesModelAdapter());
+  //Hive.registerAdapter(TCustomerCustomsModelAdapter());
   ScreenCaptrueService.startListener();
   CacheService.init();
   setSystemOverlay();

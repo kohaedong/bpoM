@@ -12,7 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/styles/app_size.dart';
+import 'package:bpom/styles/app_size.dart';
 
 Widget defaultSpacing({double? height, int? times, bool? isHalf}) => Padding(
     padding: EdgeInsets.only(

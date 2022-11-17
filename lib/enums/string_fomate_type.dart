@@ -11,7 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/util/format_util.dart';
+import 'package:bpom/util/format_util.dart';
 
 // 포맷 유형
 enum StringFormateType {

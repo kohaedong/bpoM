@@ -7,8 +7,8 @@
  * Copyright (c) 2021 KOLON GROUP.
  */
 
-import 'package:medsalesportal/enums/hive_box_type.dart';
-import 'package:medsalesportal/enums/popup_cell_type.dart';
+import 'package:bpom/enums/hive_box_type.dart';
+import 'package:bpom/enums/popup_cell_type.dart';
 
 //* 잠재고객등록 -> 부가정보2 -> 고객대분류 / 중분류 /수요사업군/ 설비 / 고객용도1,2 / 실적 구분자
 enum CustomerCategoryType {

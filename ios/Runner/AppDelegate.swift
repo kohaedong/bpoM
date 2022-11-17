@@ -38,7 +38,7 @@ enum KolonbaseErrorCode {
     // WorkmanagerPlugin.setPluginRegistrantCallback { registry in
     //         GeneratedPluginRegistrant.register(with: registry)
     //     }
-    //     WorkmanagerPlugin.registerTask(withIdentifier: "com.kolon.medsalesportaldev.taskId")
+    //     WorkmanagerPlugin.registerTask(withIdentifier: "com.kolon.bpomdev.taskId")
        
 //      KB.Detect.showWaterMark()
 //      KB.Detect.setScreenshotDetector()  

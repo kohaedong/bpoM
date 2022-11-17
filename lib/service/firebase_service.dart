@@ -17,14 +17,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, TargetPlatform;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/util/encoding_util.dart';
-import 'package:medsalesportal/service/key_service.dart';
+import 'package:bpom/styles/app_colors.dart';
+import 'package:bpom/util/encoding_util.dart';
+import 'package:bpom/service/key_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:medsalesportal/globalProvider/login_provider.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
+import 'package:bpom/globalProvider/login_provider.dart';
+import 'package:bpom/view/common/function_of_print.dart';
+import 'package:bpom/buildConfig/kolon_build_config.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FirebaseService {
@@ -220,7 +220,7 @@ class DefaultFirebaseOptions {
         'com.googleusercontent.apps.1013306379146-14hmg485d94l83kirhp50582i7vgpnhd',
     iosClientId:
         '1013306379146-14hmg485d94l83kirhp50582i7vgpnhd.apps.googleusercontent.com',
-    iosBundleId: 'com.kolon.medsalesportaldev',
+    iosBundleId: 'com.kolon.bpomdev',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -241,6 +241,6 @@ class DefaultFirebaseOptions {
         'com.googleusercontent.apps.1013306379146-q3mthqstu5fggas3re6ca3hjrerbn3cg',
     iosClientId:
         '1013306379146-q3mthqstu5fggas3re6ca3hjrerbn3cg.apps.googleusercontent.com',
-    iosBundleId: 'com.kolon.medsalesportal',
+    iosBundleId: 'com.kolon.bpom',
   );
 }

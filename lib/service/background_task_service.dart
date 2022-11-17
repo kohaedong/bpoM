@@ -11,9 +11,9 @@
 //  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
 //  */
 // import 'dart:io';
-// import 'package:medsalesportal/globalProvider/login_provider.dart';
-// import 'package:medsalesportal/service/key_service.dart';
-// import 'package:medsalesportal/view/common/function_of_print.dart';
+// import 'package:bpom/globalProvider/login_provider.dart';
+// import 'package:bpom/service/key_service.dart';
+// import 'package:bpom/view/common/function_of_print.dart';
 // import 'package:provider/provider.dart';
 // import 'package:workmanager/workmanager.dart';
 
@@ -33,7 +33,7 @@
 //       "be.tramckrijte.workmanagerExample.simplePeriodicTask";
 //   static const simplePeriodic1HourTask =
 //       "be.tramckrijte.workmanagerExample.simplePeriodic1HourTask";
-//   static const iosTaskKey = 'com.kolon.medsalesportaldev.taskId';
+//   static const iosTaskKey = 'com.kolon.bpomdev.taskId';
 
 //   @pragma('vm:entry-point')
 //   static void callbackDispatcher() {

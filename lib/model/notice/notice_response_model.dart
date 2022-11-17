@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:medsalesportal/model/notice/notice_model.dart';
+import 'package:bpom/model/notice/notice_model.dart';
 part 'notice_response_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)

@@ -1,6 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:medsalesportal/model/commonCode/common_object.dart';
+import 'package:bpom/model/commonCode/common_object.dart';
 part 't_code_model.g.dart';
 
 @JsonSerializable()

@@ -15,16 +15,16 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
-import 'package:medsalesportal/util/log_util.dart';
-import 'package:medsalesportal/util/encoding_util.dart';
-import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/service/key_service.dart';
+import 'package:bpom/util/log_util.dart';
+import 'package:bpom/util/encoding_util.dart';
+import 'package:bpom/enums/request_type.dart';
+import 'package:bpom/service/key_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/model/http/request_result.dart';
-import 'package:medsalesportal/service/deviceInfo_service.dart';
-import 'package:medsalesportal/service/local_file_servicer.dart';
-import 'package:medsalesportal/globalProvider/connect_status_provider.dart';
+import 'package:bpom/service/cache_service.dart';
+import 'package:bpom/model/http/request_result.dart';
+import 'package:bpom/service/deviceInfo_service.dart';
+import 'package:bpom/service/local_file_servicer.dart';
+import 'package:bpom/globalProvider/connect_status_provider.dart';
 // * 서버 에러 statusCode -1 으로 리턴.
 // * 넷트워크 에러 statusCode  99 으로  리턴.
 //*  기타 에러 statusCode 0 으로 리턴.

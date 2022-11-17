@@ -14,8 +14,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/util/date_util.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:bpom/util/date_util.dart';
+import 'package:bpom/view/common/function_of_print.dart';
 
 class TimerProvider extends ChangeNotifier {
   String? lastToastText;

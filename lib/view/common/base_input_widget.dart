@@ -13,23 +13,23 @@
  * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
  */
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/view/common/dialog_contents.dart';
+import 'package:bpom/view/common/base_app_dialog.dart';
+import 'package:bpom/view/common/dialog_contents.dart';
 
 import 'base_popup_cell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medsalesportal/enums/check_box_type.dart';
-import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/enums/popup_cell_type.dart';
-import 'package:medsalesportal/enums/input_icon_type.dart';
-import 'package:medsalesportal/enums/popup_list_type.dart';
-import 'package:medsalesportal/enums/popup_search_type.dart';
-import 'package:medsalesportal/model/commonCode/cell_model.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/base_popup_list.dart';
-import 'package:medsalesportal/view/common/base_popup_search.dart';
-import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
+import 'package:bpom/enums/check_box_type.dart';
+import 'package:bpom/enums/image_type.dart';
+import 'package:bpom/enums/popup_cell_type.dart';
+import 'package:bpom/enums/input_icon_type.dart';
+import 'package:bpom/enums/popup_list_type.dart';
+import 'package:bpom/enums/popup_search_type.dart';
+import 'package:bpom/model/commonCode/cell_model.dart';
+import 'package:bpom/styles/export_common.dart';
+import 'package:bpom/view/common/base_popup_list.dart';
+import 'package:bpom/view/common/base_popup_search.dart';
+import 'package:bpom/view/common/fountion_of_hidden_key_borad.dart';
 
 typedef OnChangeCallBack = Function(String);
 typedef OnSubmittedCallBack = Function(String);

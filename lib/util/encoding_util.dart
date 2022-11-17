@@ -12,9 +12,9 @@
  */
 
 import 'dart:convert';
-import 'package:medsalesportal/util/regular.dart';
-import 'package:medsalesportal/model/commonCode/is_login_model.dart';
-import 'package:medsalesportal/model/commonCode/is_login_simple_model.dart';
+import 'package:bpom/util/regular.dart';
+import 'package:bpom/model/commonCode/is_login_model.dart';
+import 'package:bpom/model/commonCode/is_login_simple_model.dart';
 
 // 인코딩 도구.
 class EncodingUtils {

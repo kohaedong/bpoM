@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:app_settings/app_settings.dart';
-import 'package:medsalesportal/enums/swich_type.dart';
+import 'package:bpom/enums/swich_type.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/view/common/base_layout.dart';
-import 'package:medsalesportal/service/firebase_service.dart';
-import 'package:medsalesportal/view/common/base_app_bar.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/view/common/dialog_contents.dart';
-import 'package:medsalesportal/view/settings/provider/settings_provider.dart';
+import 'package:bpom/styles/export_common.dart';
+import 'package:bpom/service/cache_service.dart';
+import 'package:bpom/view/common/base_layout.dart';
+import 'package:bpom/service/firebase_service.dart';
+import 'package:bpom/view/common/base_app_bar.dart';
+import 'package:bpom/view/common/base_app_dialog.dart';
+import 'package:bpom/view/common/dialog_contents.dart';
+import 'package:bpom/view/settings/provider/settings_provider.dart';
 
 class NoticeSettingPage extends StatefulWidget {
   const NoticeSettingPage({Key? key}) : super(key: key);

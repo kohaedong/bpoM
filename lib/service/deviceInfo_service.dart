@@ -12,7 +12,7 @@
  */
 
 import 'dart:io';
-import 'package:medsalesportal/model/user/user_device_info.dart';
+import 'package:bpom/model/user/user_device_info.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 

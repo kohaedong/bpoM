@@ -13,9 +13,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
+import 'package:bpom/globalProvider/app_theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:medsalesportal/styles/export_common.dart';
+import 'package:bpom/styles/export_common.dart';
 
 class CustomerinfoWidget {
   static Widget buildCustomerTopRow(BuildContext context, String data,

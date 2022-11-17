@@ -2,12 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:medsalesportal/model/user/user.dart';
-import 'package:medsalesportal/service/key_service.dart';
-import 'package:medsalesportal/model/user/user_settings.dart';
-import 'package:medsalesportal/globalProvider/login_provider.dart';
-import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
-import 'package:medsalesportal/model/rfc/sap_login_info_response_model.dart';
+import 'package:bpom/model/user/user.dart';
+import 'package:bpom/service/key_service.dart';
+import 'package:bpom/model/user/user_settings.dart';
+import 'package:bpom/globalProvider/login_provider.dart';
+import 'package:bpom/buildConfig/kolon_build_config.dart';
 
 class SigninPageProvider extends ChangeNotifier {
   String errorMessage = '';
@@ -21,7 +20,6 @@ class SigninPageProvider extends ChangeNotifier {
   bool isLoadData = false;
   double keybordHeight = 0;
   UserSettings? userSettings;
-  SapLoginInfoResponseModel? sapLoginInfoResponseModel;
   static const MethodChannel iosPlatform = MethodChannel('kolonbase/keychain');
   static const MethodChannel androidPlatform =
       MethodChannel("mKolon.sso.channel");

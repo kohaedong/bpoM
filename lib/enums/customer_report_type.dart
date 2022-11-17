@@ -13,10 +13,10 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/styles/app_text.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
+import 'package:bpom/styles/app_colors.dart';
+import 'package:bpom/styles/app_size.dart';
+import 'package:bpom/styles/app_text.dart';
+import 'package:bpom/styles/app_text_style.dart';
 
 //* appBar에 state가 있는 페이지의 구분자.
 //* title / icon / action 등 사전에 정의 후 사용.

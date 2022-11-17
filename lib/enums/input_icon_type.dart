@@ -12,9 +12,9 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/styles/app_image.dart';
-import 'package:medsalesportal/styles/app_size.dart';
+import 'package:bpom/enums/image_type.dart';
+import 'package:bpom/styles/app_image.dart';
+import 'package:bpom/styles/app_size.dart';
 
 // input 아이콘 유형.
 enum InputIconType {

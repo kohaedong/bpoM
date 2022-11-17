@@ -13,8 +13,8 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
+import 'package:bpom/styles/export_common.dart';
+import 'package:bpom/view/common/fountion_of_hidden_key_borad.dart';
 
 typedef IsShowAppBarCallBack = bool Function();
 typedef OnwillpopCallback = bool Function();

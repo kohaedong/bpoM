@@ -12,8 +12,8 @@
  */
 
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_size.dart';
+import 'package:bpom/styles/app_colors.dart';
+import 'package:bpom/styles/app_size.dart';
 
 Widget buildDividingLine() {
   return Container(

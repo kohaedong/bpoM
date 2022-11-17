@@ -14,9 +14,9 @@
 // import 'package:easy_localization/easy_localization.dart';
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter/material.dart';
-// import 'package:medsalesportal/model/common/result_model.dart';
-// import 'package:medsalesportal/styles/export_common.dart';
-// import 'package:medsalesportal/view/common/provider/base_date_picker_provider.dart';
+// import 'package:bpom/model/common/result_model.dart';
+// import 'package:bpom/styles/export_common.dart';
+// import 'package:bpom/view/common/provider/base_date_picker_provider.dart';
 // import 'package:provider/provider.dart';
 
 // typedef DateCallback = Function(DateTime?);

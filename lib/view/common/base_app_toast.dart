@@ -15,8 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/globalProvider/timer_provider.dart';
+import 'package:bpom/styles/export_common.dart';
+import 'package:bpom/globalProvider/timer_provider.dart';
 
 class AppToast {
   final FToast? fToast;

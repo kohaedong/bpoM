@@ -12,9 +12,9 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_size.dart';
+import 'package:bpom/globalProvider/next_page_loading_provider.dart';
+import 'package:bpom/styles/app_colors.dart';
+import 'package:bpom/styles/app_size.dart';
 import 'package:provider/provider.dart';
 
 class NextPageLoadingWdiget {

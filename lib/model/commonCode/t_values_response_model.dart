@@ -12,7 +12,7 @@
  */
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:medsalesportal/model/commonCode/t_values_model.dart';
+import 'package:bpom/model/commonCode/t_values_model.dart';
 part 't_values_response_model.g.dart';
 
 /// 검색결과 모듈.  List<TValuesModel>

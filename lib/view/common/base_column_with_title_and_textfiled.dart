@@ -8,7 +8,7 @@
  */
 
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/styles/export_common.dart';
+import 'package:bpom/styles/export_common.dart';
 
 // title 과 input 묶음으로 보여주는 widget.
 // 예:

@@ -12,7 +12,7 @@
  */
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:medsalesportal/model/notice/notice_settings_data_model.dart';
+import 'package:bpom/model/notice/notice_settings_data_model.dart';
 part 'notice_settings_response_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)

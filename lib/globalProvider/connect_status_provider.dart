@@ -15,7 +15,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:bpom/view/common/function_of_print.dart';
 
 class ConnectStatusProvider extends ChangeNotifier {
   final streamController = StreamController<ConnectivityResult>();

@@ -12,9 +12,9 @@
  */
 
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/base_layout.dart';
+import 'package:bpom/enums/image_type.dart';
+import 'package:bpom/styles/export_common.dart';
+import 'package:bpom/view/common/base_layout.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({Key? key}) : super(key: key);

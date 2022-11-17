@@ -13,10 +13,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/service/key_service.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/view/common/function_of_pop_to_first.dart';
+import 'package:bpom/service/key_service.dart';
+import 'package:bpom/styles/export_common.dart';
+import 'package:bpom/util/format_util.dart';
+import 'package:bpom/view/common/function_of_pop_to_first.dart';
 
 typedef SuccessCallback = String Function();
 typedef PopContextDataCallback = Future<dynamic> Function();

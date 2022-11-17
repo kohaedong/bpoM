@@ -12,8 +12,8 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/app_theme_type.dart';
-import 'package:medsalesportal/styles/app_theme.dart';
+import 'package:bpom/enums/app_theme_type.dart';
+import 'package:bpom/styles/app_theme.dart';
 
 class AppThemeProvider with ChangeNotifier {
   AppThemeType themeType = AppThemeType.TEXT_MEDIUM;

@@ -12,8 +12,8 @@
  */
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/enums/order_type.dart';
-import 'package:medsalesportal/styles/app_size.dart';
+import 'package:bpom/enums/order_type.dart';
+import 'package:bpom/styles/app_size.dart';
 
 // 팝업창이 단순 list 형태 일 경우 팝업 title / 내용 / 버튼 / 등 구분 해주는 enum.
 typedef CommononeCellDataCallback = Future<List<String>?> Function();

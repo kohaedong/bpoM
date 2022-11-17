@@ -12,8 +12,8 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
-import 'package:medsalesportal/styles/app_theme.dart';
+import 'package:bpom/styles/app_text_style.dart';
+import 'package:bpom/styles/app_theme.dart';
 
 enum AppThemeType {
   DARK,

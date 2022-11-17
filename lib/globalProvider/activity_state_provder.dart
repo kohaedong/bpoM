@@ -12,7 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:bpom/view/common/function_of_print.dart';
 
 class ActivityStateProvider extends ChangeNotifier {
   bool isNeedUpdateDayData = false;

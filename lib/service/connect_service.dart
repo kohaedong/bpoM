@@ -13,9 +13,9 @@
 
 import 'dart:async';
 import 'package:provider/provider.dart';
-import 'package:medsalesportal/service/key_service.dart';
+import 'package:bpom/service/key_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:medsalesportal/globalProvider/connect_status_provider.dart';
+import 'package:bpom/globalProvider/connect_status_provider.dart';
 
 class ConnectService {
   factory ConnectService() => _sharedInstance();

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:medsalesportal/model/commonCode/t_code_model.dart';
-import 'package:medsalesportal/model/commonCode/t_values_model.dart';
-import 'package:medsalesportal/model/rfc/es_return_model.dart';
+import 'package:bpom/model/commonCode/t_code_model.dart';
+import 'package:bpom/model/commonCode/t_values_model.dart';
+import 'package:bpom/model/common/es_return_model.dart';
 part 'common_code_response_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)

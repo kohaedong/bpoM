@@ -13,9 +13,9 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/view/common/dialog_contents.dart';
-import 'package:medsalesportal/view/common/provider/base_date_picker_provider.dart';
+import 'package:bpom/model/common/result_model.dart';
+import 'package:bpom/view/common/dialog_contents.dart';
+import 'package:bpom/view/common/provider/base_date_picker_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 

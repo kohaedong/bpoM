@@ -12,8 +12,8 @@
  */
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/model/commonCode/cell_model.dart';
-import 'package:medsalesportal/styles/app_size.dart';
+import 'package:bpom/model/commonCode/cell_model.dart';
+import 'package:bpom/styles/app_size.dart';
 
 typedef CommonThreeCellDataCallback = Future<List<CellModel>> Function();
 

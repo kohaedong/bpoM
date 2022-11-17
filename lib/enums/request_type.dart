@@ -12,8 +12,8 @@
  */
 
 import 'dart:io';
-import 'package:medsalesportal/buildConfig/kolon_build_config.dart';
-import 'package:medsalesportal/service/deviceInfo_service.dart';
+import 'package:bpom/buildConfig/kolon_build_config.dart';
+import 'package:bpom/service/deviceInfo_service.dart';
 
 //*  api url / functionName/ resultTable 사전 정의.
 enum RequestType {

@@ -18,14 +18,14 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/service/api_service.dart';
-import 'package:medsalesportal/service/key_service.dart';
-import 'package:medsalesportal/service/cache_service.dart';
+import 'package:bpom/enums/request_type.dart';
+import 'package:bpom/service/api_service.dart';
+import 'package:bpom/service/key_service.dart';
+import 'package:bpom/service/cache_service.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/globalProvider/login_provider.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:bpom/view/common/base_app_dialog.dart';
+import 'package:bpom/globalProvider/login_provider.dart';
+import 'package:bpom/view/common/function_of_print.dart';
 
 // 캡쳐방지
 typedef ScreenCaptrueCallback = Future<Uint8List?> Function();

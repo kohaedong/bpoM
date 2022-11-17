@@ -12,7 +12,7 @@
  */
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:medsalesportal/model/common/holiday_model.dart';
+import 'package:bpom/model/common/holiday_model.dart';
 part 'holiday_response_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)

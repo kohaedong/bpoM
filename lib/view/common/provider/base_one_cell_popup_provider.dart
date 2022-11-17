@@ -12,7 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/view/common/base_popup_list.dart';
+import 'package:bpom/view/common/base_popup_list.dart';
 
 typedef AddressSelectedCity = String Function();
 

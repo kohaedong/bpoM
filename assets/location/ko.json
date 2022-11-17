@@ -25,7 +25,9 @@
     "signout":"로그아웃",
     "notice":"알림",
     "font_size":"글자 크기",
-    "send_suggestion":"의견 보내기",
+    "send_suggestion":"의견 보내기",  
+     "send_suggestion2":"{} 앱 개선 의견 보내기",
+
     "version_info":"버전 정보",
     "is_latest_version":"현재 최신버전입니다.",
     "do_update":"업데이트",

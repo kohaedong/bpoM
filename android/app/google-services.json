@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1013306379146:android:8dd20aad5e4f646b",
         "android_client_info": {
-          "package_name": "com.kolon.medsalesportal"
+          "package_name": "com.kolon.bpom"
         }
       },
       "oauth_client": [
@@ -35,7 +35,7 @@
               "client_id": "1013306379146-14hmg485d94l83kirhp50582i7vgpnhd.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.kolon.medsalesportaldev",
+                "bundle_id": "com.kolon.bpomdev",
                 "app_store_id": "101010202020"
               }
             }
@@ -47,7 +47,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1013306379146:android:d2bb5fb291cacad5",
         "android_client_info": {
-          "package_name": "com.kolon.medsalesportaldev"
+          "package_name": "com.kolon.bpomdev"
         }
       },
       "oauth_client": [
@@ -72,7 +72,7 @@
               "client_id": "1013306379146-14hmg485d94l83kirhp50582i7vgpnhd.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.kolon.medsalesportaldev",
+                "bundle_id": "com.kolon.bpomdev",
                 "app_store_id": "101010202020"
               }
             }

@@ -1,18 +1,17 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:bpom/model/common/es_login_model.dart';
 import 'package:provider/provider.dart';
-import 'package:medsalesportal/enums/swich_type.dart';
-import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/service/key_service.dart';
-import 'package:medsalesportal/service/api_service.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/model/rfc/es_login_model.dart';
-import 'package:medsalesportal/model/user/user_settings.dart';
-import 'package:medsalesportal/globalProvider/login_provider.dart';
-import 'package:medsalesportal/model/update/check_update_model.dart';
-import 'package:medsalesportal/model/notice/notice_settings_data_model.dart';
-import 'package:medsalesportal/view/commonLogin/provider/update_and_notice_provider.dart';
+import 'package:bpom/enums/swich_type.dart';
+import 'package:bpom/enums/request_type.dart';
+import 'package:bpom/service/key_service.dart';
+import 'package:bpom/service/api_service.dart';
+import 'package:bpom/service/cache_service.dart';
+import 'package:bpom/model/user/user_settings.dart';
+import 'package:bpom/globalProvider/login_provider.dart';
+import 'package:bpom/model/update/check_update_model.dart';
+import 'package:bpom/view/commonLogin/provider/update_and_notice_provider.dart';
 
 class SettingsProvider extends ChangeNotifier {
   CheckUpdateModel? updateInfo;

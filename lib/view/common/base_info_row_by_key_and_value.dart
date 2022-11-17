@@ -13,9 +13,9 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/enums/string_fomate_type.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/widget_of_text_row_model_by_key_value.dart';
+import 'package:bpom/enums/string_fomate_type.dart';
+import 'package:bpom/styles/export_common.dart';
+import 'package:bpom/view/common/widget_of_text_row_model_by_key_value.dart';
 
 /// [TextRowModelByKeyValue]  참조.
 // 한줄의 text가 key 와 value로 구성 되 있을 경우 사용.

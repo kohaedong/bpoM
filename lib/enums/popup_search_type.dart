@@ -12,7 +12,7 @@
  */
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/styles/app_size.dart';
+import 'package:bpom/styles/app_size.dart';
 
 import 'popup_list_type.dart';
 

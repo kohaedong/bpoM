@@ -11,7 +11,7 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/enums/validate_type.dart';
+import 'package:bpom/enums/validate_type.dart';
 
 class ValidateModel {
   dynamic data;

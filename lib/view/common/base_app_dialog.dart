@@ -13,13 +13,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/styles/export_common.dart';
+import 'package:bpom/util/format_util.dart';
+import 'package:bpom/enums/image_type.dart';
+import 'package:bpom/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/view/common/dialog_contents.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
+import 'package:bpom/view/common/dialog_contents.dart';
+import 'package:bpom/view/common/function_of_print.dart';
+import 'package:bpom/view/common/widget_of_default_spacing.dart';
 
 typedef DiaLogCallBack = Function(bool);
 typedef CanPopCallBack = Future<bool> Function();

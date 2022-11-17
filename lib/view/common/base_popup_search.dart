@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/SalesPortal/lib/view/common/base_popup_search.dart
  * Created Date: 2021-09-11 00:27:49
- * Last Modified: 2022-11-14 15:07:40
+ * Last Modified: 2022-11-15 11:12:57
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -11,39 +11,39 @@
  * ---  --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
  */
 
-import 'package:medsalesportal/globalProvider/timer_provider.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/model/rfc/add_activity_key_man_model.dart';
-import 'package:medsalesportal/model/rfc/add_activity_suggetion_item_model.dart';
-import 'package:medsalesportal/model/rfc/et_cust_list_model.dart';
-import 'package:medsalesportal/model/rfc/order_manager_material_model.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
 import 'package:tuple/tuple.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:medsalesportal/enums/popup_list_type.dart';
-import 'package:medsalesportal/service/hive_service.dart';
-import 'package:medsalesportal/styles/export_common.dart';
+import 'package:bpom/util/format_util.dart';
+import 'package:bpom/service/cache_service.dart';
+import 'package:bpom/util/is_super_account.dart';
+import 'package:bpom/enums/popup_list_type.dart';
+import 'package:bpom/service/hive_service.dart';
+import 'package:bpom/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/enums/input_icon_type.dart';
-import 'package:medsalesportal/enums/popup_search_type.dart';
-import 'package:medsalesportal/view/common/base_shimmer.dart';
-import 'package:medsalesportal/view/common/base_app_toast.dart';
-import 'package:medsalesportal/model/rfc/et_kunnr_model.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/model/rfc/et_customer_model.dart';
-import 'package:medsalesportal/model/rfc/et_staff_list_model.dart';
-import 'package:medsalesportal/view/common/base_input_widget.dart';
-import 'package:medsalesportal/view/common/widget_of_last_page_text.dart';
-import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
-import 'package:medsalesportal/view/common/widget_of_default_shimmer.dart';
-import 'package:medsalesportal/view/common/widget_of_next_page_loading.dart';
-import 'package:medsalesportal/view/common/fountion_of_hidden_key_borad.dart';
-import 'package:medsalesportal/globalProvider/next_page_loading_provider.dart';
-import 'package:medsalesportal/view/common/provider/base_popup_search_provider.dart';
+import 'package:bpom/enums/input_icon_type.dart';
+import 'package:bpom/enums/popup_search_type.dart';
+import 'package:bpom/view/common/base_shimmer.dart';
+import 'package:bpom/model/common/result_model.dart';
+import 'package:bpom/view/common/base_app_toast.dart';
+import 'package:bpom/model/common/et_kunnr_model.dart';
+import 'package:bpom/view/common/base_app_dialog.dart';
+import 'package:bpom/globalProvider/timer_provider.dart';
+import 'package:bpom/view/common/function_of_print.dart';
+import 'package:bpom/view/common/base_input_widget.dart';
+import 'package:bpom/model/common/et_customer_model.dart';
+import 'package:bpom/model/common/et_cust_list_model.dart';
+import 'package:bpom/model/common/et_staff_list_model.dart';
+import 'package:bpom/view/common/widget_of_last_page_text.dart';
+import 'package:bpom/view/common/widget_of_default_spacing.dart';
+import 'package:bpom/view/common/widget_of_default_shimmer.dart';
+import 'package:bpom/model/common/add_activity_key_man_model.dart';
+import 'package:bpom/view/common/widget_of_next_page_loading.dart';
+import 'package:bpom/view/common/fountion_of_hidden_key_borad.dart';
+import 'package:bpom/model/common/order_manager_material_model.dart';
+import 'package:bpom/globalProvider/next_page_loading_provider.dart';
+import 'package:bpom/model/common/add_activity_suggetion_item_model.dart';
+import 'package:bpom/view/common/provider/base_popup_search_provider.dart';
 
 class BasePopupSearch {
   final PopupSearchType? type;

@@ -1,37 +1,34 @@
 import 'dart:io';
 import 'dart:async';
+import '../common/base_web_view.dart';
 import './home_icon_map.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/image_type.dart';
-import 'package:medsalesportal/service/key_service.dart';
-import 'package:medsalesportal/styles/export_common.dart';
+import 'package:bpom/enums/image_type.dart';
+import 'package:bpom/service/key_service.dart';
+import 'package:bpom/styles/export_common.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/service/cache_service.dart';
+import 'package:bpom/service/cache_service.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:medsalesportal/service/connect_service.dart';
-import 'package:medsalesportal/view/common/base_layout.dart';
-import 'package:medsalesportal/service/firebase_service.dart';
-import 'package:medsalesportal/view/home/notice_all_page.dart';
-import 'package:medsalesportal/view/common/base_app_toast.dart';
-import 'package:medsalesportal/view/home/notice_list_item.dart';
-import 'package:medsalesportal/view/settings/settings_page.dart';
+import 'package:bpom/service/connect_service.dart';
+import 'package:bpom/view/common/base_layout.dart';
+import 'package:bpom/view/common/base_app_toast.dart';
+import 'package:bpom/view/settings/settings_page.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
-import 'package:medsalesportal/globalProvider/timer_provider.dart';
-import 'package:medsalesportal/globalProvider/login_provider.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/view/home/provider/notice_provider.dart';
-import 'package:medsalesportal/enums/update_and_notice_check_type.dart';
-import 'package:medsalesportal/view/settings/send_suggestions_page.dart';
-import 'package:medsalesportal/view/orderManager/order_manager_page.dart';
-import 'package:medsalesportal/view/commonLogin/update_and_notice_dialog.dart';
-import 'package:medsalesportal/view/common/fuction_of_check_working_time.dart';
-import 'package:medsalesportal/view/common/function_of_stop_or_start_listener.dart';
-import 'package:medsalesportal/view/salesActivityManager/sales_activity_manager_page.dart';
+import 'package:bpom/globalProvider/timer_provider.dart';
+import 'package:bpom/globalProvider/login_provider.dart';
+import 'package:bpom/view/common/function_of_print.dart';
+import 'package:bpom/view/home/provider/notice_provider.dart';
+import 'package:bpom/enums/update_and_notice_check_type.dart';
+import 'package:bpom/view/settings/send_suggestions_page.dart';
+import 'package:bpom/view/commonLogin/update_and_notice_dialog.dart';
+import 'package:bpom/view/common/fuction_of_check_working_time.dart';
+import 'package:bpom/view/common/function_of_stop_or_start_listener.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
   static const String routeName = '/home';
+
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -39,19 +36,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   var _isNoticeCheckDone = false;
-  ScrollController? _scrollController;
   Timer? exitAppTimer;
 
   var showToast = true;
+  final String? url = 'http://naver.com';
+
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
     if (Platform.isAndroid) {
       disableCapture();
     }
     ConnectService.startListener();
-    FirebaseService.startFirebaseMessageListenner();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -60,15 +56,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (exitAppTimer != null) {
       exitAppTimer!.cancel();
     }
-    _scrollController!.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  Future<void> checkNoticeWhenLogedin() async {
-    await Future.delayed(Duration.zero, () async {
-      CheckUpdateAndNoticeService.check(context, CheckType.NOTICE_ONLY, true);
-    }).then((value) => _isNoticeCheckDone = true);
   }
 
   Future disableCapture() async {
@@ -141,10 +130,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 onTap: () async {
                   setActionTime();
                   if (map.value == ImageType.EMPTY) {
-                    DoNothingAction();
+                    // homeIconsListOne == icon 첫번째 줄.
+                    // homeIconsListTow == icon 2번째 줄.
+                    // 현재는 모두 ImageType.EMPTY , ImageType 등록후 혜당page로 route 하세요.
+                    AppToast().show(context, 'this is ImageType.EMPTY');
                   } else {
-                    if (map.value.routeName ==
-                        SalseActivityManagerPage.routeName) {
+                    if (map.value.routeName == '') {
                       if (isNotWoringTime()) {
                         showWorkingTimePopup(contextt: context);
                       } else {
@@ -155,13 +146,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         } else {
                           Navigator.pushNamed(context, map.value.routeName);
                         }
-                      }
-                    } else if (map.value.routeName ==
-                        OrderManagerPage.routeName) {
-                      if (isNotWoringTime()) {
-                        showWorkingTimePopup(contextt: context);
-                      } else {
-                        Navigator.pushNamed(context, map.value.routeName);
                       }
                     } else {
                       Navigator.pushNamed(context, map.value.routeName);
@@ -223,8 +207,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             padding: EdgeInsets.only(left: AppSize.padding),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: AppText.text('${tr('med_sales_portal')}',
-                  style: AppTextStyle.blod30),
+              // 빌드옵션
+              child: AppText.text('BPO', style: AppTextStyle.blod30),
             ),
           ),
           InkWell(
@@ -255,17 +239,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   style: AppTextStyle.bold_20)),
         ])),
         InkWell(
-          onTap: () async {
-            final result =
-                await Navigator.pushNamed(context, NoticeAllPage.routeName);
-            if (result != null) {
-              final tp = context.read<TimerProvider>();
-              if (tp.getTimer == null ||
-                  (tp.isRunning != null && !tp.isRunning!)) {
-                tp.perdict(p.refresh());
-              }
-            }
-          },
           child: Align(
               alignment: Alignment.centerRight,
               child: Row(
@@ -282,91 +255,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     );
   }
 
-  Widget buildNoticeBody() {
-    return Padding(
-        padding: EdgeInsets.symmetric(vertical: AppSize.padding * 2),
-        child: Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.all(Radius.circular(AppSize.radius8)),
-                color: AppColors.whiteText),
-            child: Consumer<NoticeProvider>(builder: (context, provider, _) {
-              return provider.homeNoticeResponseModel != null &&
-                      provider.homeNoticeResponseModel!.tZltsp0710 != null &&
-                      provider.homeNoticeResponseModel!.tZltsp0710!.isNotEmpty
-                  ? ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.all(AppSize.padding),
-                      shrinkWrap: true,
-                      itemCount: provider.homeNoticeResponseModel!.tZltsp0710!
-                          .take(2)
-                          .toList()
-                          .length,
-                      itemBuilder: (BuildContext context, int index) {
-                        var model = provider
-                            .homeNoticeResponseModel!.tZltsp0710!
-                            .take(2)
-                            .toList()[index];
-                        // home cache 된 알림, 다른 페이지로 이동하거나 앱이 종료 되면 확인처리 함.
-                        return homeNoticeListItem(
-                            context,
-                            model,
-                            index,
-                            true,
-                            !provider.hasMore &&
-                                index ==
-                                    provider.homeNoticeResponseModel!
-                                            .tZltsp0710!
-                                            .take(2)
-                                            .toList()
-                                            .length -
-                                        1,
-                            provider.homeNoticeResponseModel!.tZltsp0710!
-                                    .length ==
-                                1);
-                      })
-                  : provider.isLoadData
-                      ? Container(
-                          alignment: Alignment.center,
-                          height: 200,
-                          child: Container(
-                              height: AppSize.defaultIconWidth * 1.5,
-                              width: AppSize.defaultIconWidth * 1.5,
-                              child: CircularProgressIndicator(
-                                strokeWidth: AppSize.strokeWidth,
-                              )),
-                        )
-                      : provider.homeNoticeResponseModel != null &&
-                              provider.homeNoticeResponseModel!.tZltsp0710 !=
-                                  null &&
-                              provider
-                                  .homeNoticeResponseModel!.tZltsp0710!.isEmpty
-                          ? Container(
-                              height: 100,
-                              child: Center(
-                                child: AppText.listViewText(
-                                    tr('not_recent_notice')),
-                              ))
-                          : Container(height: 200);
-            })));
-  }
-
-  Widget buildNoticeBox(BuildContext context) {
-    return Padding(
-      padding: AppSize.homeNoticeBoxPadding,
-      child: Column(
-        children: [buildNoticeTitleBar(context), buildNoticeBody()],
-      ),
-    );
-  }
-
   Widget buildSendSuggestion() {
     return Padding(
         padding: AppSize.sendSuggestionPadding,
         child: AppStyles.buildButton(
             context,
-            '${tr('home_send_suggestion')}',
+            // 빌드옵션
+            tr('send_suggestion2', args: ['kolonLogin']),
             AppSize.realWidth - AppSize.padding * 2,
             AppColors.lightBlueColor,
             AppTextStyle.color_16(AppColors.blueTextColor),
@@ -381,8 +276,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => NoticeProvider(),
+      create: (BuildContext context) {  },
+      // create: (context) => NoticeProvider(),
       builder: (context, _) {
+        /*
         final p = context.read<NoticeProvider>();
         if (!_isNoticeCheckDone) {
           checkNoticeWhenLogedin().then((value) {
@@ -395,6 +292,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               ? p.getNoticeList(true)
               : DoNothingAction();
         }
+        */
 
         return WillPopScope(
             onWillPop: () async {
@@ -415,16 +313,23 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 hasForm: false,
                 bgColog: AppColors.homeBgColor,
                 appBar: buildHomeAppBar(),
+                child: BaseWebView(url),
+
+                /*
                 child: SingleChildScrollView(
                   physics: ClampingScrollPhysics(),
                   child: Column(
                     children: [
-                      buildIcons(),
-                      buildNoticeBox(context),
-                      buildSendSuggestion()
+                      // buildIcons(),
+                      // buildNoticeBox(context),
+                      // buildSendSuggestion()
                     ],
                   ),
-                )));
+                )
+
+                 */
+            ));
+
       },
     );
   }

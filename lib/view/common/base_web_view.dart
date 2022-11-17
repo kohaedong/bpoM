@@ -18,8 +18,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/widget_of_loading_view.dart';
+import 'package:bpom/styles/export_common.dart';
+import 'package:bpom/view/common/widget_of_loading_view.dart';
 
 class BaseWebView extends StatefulWidget {
   const BaseWebView(this.url, {Key? key}) : super(key: key);
@@ -69,18 +69,6 @@ class _BaseWebViewState extends State<BaseWebView> {
     } else if (str.startsWith('<html>')) {
       return ContentsModel(
           isStartWithHttp: false, isBase64: false, contents: str);
-    } else {
-      var temp = """<!DOCTYPE html>
-    <html>
-      <head><meta name="viewport" content="width=device-width, initial-scale=${scale != null ? '$scale' : '1.0'}"></head>
-      <body style='"margin: 0; padding: 0;'>
-        <div style="overflow:auto">
-        $str
-        </div>
-      </body>
-    </html>""";
-      return ContentsModel(
-          isStartWithHttp: false, isBase64: false, contents: temp);
     }
   }
 

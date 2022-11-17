@@ -12,7 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/styles/export_common.dart';
+import 'package:bpom/styles/export_common.dart';
 
 class BaseLoadingViewOnStackWidget {
   static build(BuildContext context, bool isLoadData,

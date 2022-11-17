@@ -11,8 +11,8 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/enums/account_type.dart';
-import 'package:medsalesportal/service/cache_service.dart';
+import 'package:bpom/enums/account_type.dart';
+import 'package:bpom/service/cache_service.dart';
 
 class CheckSuperAccount {
   static bool isMultiAccountOrLeaderAccount() {

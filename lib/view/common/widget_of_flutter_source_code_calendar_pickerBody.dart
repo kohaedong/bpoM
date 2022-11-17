@@ -18,8 +18,8 @@ import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_size.dart';
+import 'package:bpom/styles/app_colors.dart';
+import 'package:bpom/styles/app_size.dart';
 import 'widget_of_flutter_source_code_calendar_datePicker.dart' as date_picker;
 
 const Size _calendarPortraitDialogSize = Size(330.0, 518.0);

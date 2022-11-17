@@ -13,10 +13,10 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/enums/popup_cell_type.dart';
-import 'package:medsalesportal/model/commonCode/cell_model.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
+import 'package:bpom/styles/export_common.dart';
+import 'package:bpom/enums/popup_cell_type.dart';
+import 'package:bpom/model/commonCode/cell_model.dart';
+import 'package:bpom/view/common/base_app_dialog.dart';
 
 class BasePopupCell {
   BasePopupCell({

@@ -13,16 +13,16 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
+import 'package:bpom/globalProvider/app_theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:medsalesportal/util/regular.dart';
-import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/styles/app_text.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/view/common/base_shimmer.dart';
+import 'package:bpom/util/regular.dart';
+import 'package:bpom/styles/app_size.dart';
+import 'package:bpom/styles/app_text.dart';
+import 'package:bpom/styles/app_colors.dart';
+import 'package:bpom/styles/app_text_style.dart';
+import 'package:bpom/service/cache_service.dart';
+import 'package:bpom/view/common/base_shimmer.dart';
 
 class TextRowModelByKeyValue extends StatelessWidget {
   const TextRowModelByKeyValue(this.title, this.discription,

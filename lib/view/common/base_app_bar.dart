@@ -14,9 +14,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/view/common/dialog_contents.dart';
+import 'package:bpom/styles/export_common.dart';
+import 'package:bpom/view/common/base_app_dialog.dart';
+import 'package:bpom/view/common/dialog_contents.dart';
 
 typedef IsEditPageCallBack = Function();
 

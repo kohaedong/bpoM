@@ -13,8 +13,8 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/view/common/base_app_dialog.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:bpom/view/common/base_app_dialog.dart';
+import 'package:bpom/view/common/function_of_print.dart';
 
 // 날짜 관련 도구
 class DateUtil {

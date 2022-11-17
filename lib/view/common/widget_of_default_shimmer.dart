@@ -14,11 +14,11 @@
 import 'dart:math';
 import 'base_shimmer.dart';
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/styles/app_size.dart';
-import 'package:medsalesportal/styles/app_style.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
-import 'package:medsalesportal/view/common/widget_of_default_spacing.dart';
+import 'package:bpom/styles/app_size.dart';
+import 'package:bpom/styles/app_style.dart';
+import 'package:bpom/styles/app_colors.dart';
+import 'package:bpom/styles/app_text_style.dart';
+import 'package:bpom/view/common/widget_of_default_spacing.dart';
 
 class DefaultShimmer {
   static buildDefaultResultShimmer({bool? isNotPadding}) {

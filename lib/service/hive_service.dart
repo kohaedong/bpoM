@@ -12,14 +12,14 @@
  */
 
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:medsalesportal/enums/hive_box_type.dart';
-import 'package:medsalesportal/util/is_super_account.dart';
-import 'package:medsalesportal/util/hive_select_data_util.dart';
-import 'package:medsalesportal/model/commonCode/t_code_model.dart';
-import 'package:medsalesportal/enums/common_code_return_type.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/model/commonCode/t_values_model.dart';
-import 'package:medsalesportal/model/commonCode/et_dd07v_customer_category_model.dart';
+import 'package:bpom/enums/hive_box_type.dart';
+import 'package:bpom/util/is_super_account.dart';
+import 'package:bpom/util/hive_select_data_util.dart';
+import 'package:bpom/model/commonCode/t_code_model.dart';
+import 'package:bpom/enums/common_code_return_type.dart';
+import 'package:bpom/view/common/function_of_print.dart';
+import 'package:bpom/model/commonCode/t_values_model.dart';
+import 'package:bpom/model/commonCode/et_dd07v_customer_category_model.dart';
 
 typedef SearchEtDd07vCustomerConditional = bool Function(TCustomerCustomsModel);
 

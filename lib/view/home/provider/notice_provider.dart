@@ -2,7 +2,7 @@
  * Project Name:  [mKolon3.0] - SalesPortal
  * File: /Users/bakbeom/work/sm/si/salesportal/lib/view/home/provider/alarm_provider.dart
  * Created Date: 2022-01-03 14:00:12
- * Last Modified: 2022-10-28 17:11:51
+ * Last Modified: 2022-11-15 11:04:37
  * Author: bakbeom
  * Modified By: bakbeom
  * copyright @ 2022  KOLON GROUP. ALL RIGHTS RESERVED. 
@@ -12,16 +12,16 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/util/date_util.dart';
-import 'package:medsalesportal/util/format_util.dart';
-import 'package:medsalesportal/enums/request_type.dart';
-import 'package:medsalesportal/service/api_service.dart';
+import 'package:bpom/model/notice/home_notice_detail_response_model.dart';
+import 'package:bpom/model/notice/home_notice_response_model.dart';
+import 'package:bpom/util/date_util.dart';
+import 'package:bpom/util/format_util.dart';
+import 'package:bpom/enums/request_type.dart';
+import 'package:bpom/service/api_service.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/service/cache_service.dart';
-import 'package:medsalesportal/model/common/result_model.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
-import 'package:medsalesportal/model/rfc/home_notice_response_model.dart';
-import 'package:medsalesportal/model/rfc/home_notice_detail_response_model.dart';
+import 'package:bpom/service/cache_service.dart';
+import 'package:bpom/model/common/result_model.dart';
+import 'package:bpom/view/common/function_of_print.dart';
 
 class NoticeProvider extends ChangeNotifier {
   HomeNoticeResponseModel? homeNoticeResponseModel;

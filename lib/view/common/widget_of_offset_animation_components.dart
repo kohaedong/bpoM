@@ -11,9 +11,9 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 import 'package:flutter/widgets.dart';
-import 'package:medsalesportal/enums/offset_direction_type.dart';
-import 'package:medsalesportal/styles/export_common.dart';
-import 'package:medsalesportal/view/common/function_of_print.dart';
+import 'package:bpom/enums/offset_direction_type.dart';
+import 'package:bpom/styles/export_common.dart';
+import 'package:bpom/view/common/function_of_print.dart';
 
 typedef AnimationCallBack = bool Function();
 

@@ -13,9 +13,9 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:medsalesportal/styles/app_colors.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
-import 'package:medsalesportal/globalProvider/app_theme_provider.dart';
+import 'package:bpom/styles/app_colors.dart';
+import 'package:bpom/styles/app_text_style.dart';
+import 'package:bpom/globalProvider/app_theme_provider.dart';
 
 class AppText {
   static text(

@@ -11,8 +11,8 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 
-import 'package:medsalesportal/service/connect_service.dart';
-import 'package:medsalesportal/service/screen_capture_service.dart';
+import 'package:bpom/service/connect_service.dart';
+import 'package:bpom/service/screen_capture_service.dart';
 
 Future<void> stopAllListener() async {
   ScreenCaptrueService.stopListener();

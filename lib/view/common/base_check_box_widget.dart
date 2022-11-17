@@ -12,7 +12,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/enums/check_box_type.dart';
+import 'package:bpom/enums/check_box_type.dart';
 
 // by flutter source code [CheckBox]
 // by flutter source code [CheckBox]

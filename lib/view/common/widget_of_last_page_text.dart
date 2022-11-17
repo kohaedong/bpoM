@@ -12,10 +12,10 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:medsalesportal/styles/app_size.dart';
+import 'package:bpom/styles/app_size.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:medsalesportal/styles/app_text.dart';
-import 'package:medsalesportal/styles/app_text_style.dart';
+import 'package:bpom/styles/app_text.dart';
+import 'package:bpom/styles/app_text_style.dart';
 
 Widget lastPageText() {
   return Padding(
