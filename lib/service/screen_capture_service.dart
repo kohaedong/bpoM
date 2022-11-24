@@ -52,7 +52,8 @@ class ScreenCaptrueService {
     Map<String, dynamic> body = {
       "methodName": RequestType.SEND_IMAGE_TO_SERVER.serverMethod,
       "methodParam": {
-        "appGrpId": Platform.isIOS ? '80' : '79',
+        //"appGrpId": Platform.isIOS ? '80' : '79',
+        "appGrpId": '99',
         "screenId":
             "${esLogin != null ? esLogin.ename : ''}${DateTime.now().toIso8601String()}",
         "screenShot": "$base64Image"

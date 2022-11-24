@@ -99,7 +99,7 @@ class ApiService {
     final header = {
       'deviceSerialNo': deviceInfo.deviceId,
       'deviceModelNo': deviceInfo.deviceModel,
-      'appId': Platform.isIOS ? '80' : '79',
+      'appId': Platform.isIOS ? '16893' : '16892',
     };
     final anotherHeader = await requestType!.anotherHeader;
     options.headers.addAll(header);

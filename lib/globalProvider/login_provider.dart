@@ -229,7 +229,7 @@ class LoginProvider extends ChangeNotifier {
   Future<ResultModel> checkAccessPermmision(String userId) async {
     _api.init(RequestType.ACCESS_PERMISSION);
     var url =
-        '${RequestType.ACCESS_PERMISSION.url()}/${Platform.isIOS ? '80' : '79'}/$userId';
+        '${RequestType.ACCESS_PERMISSION.url()}/${Platform.isIOS ? '16893' : '16892'}/$userId';
     final result = await _api.request(passingUrl: url);
     if (result != null && result.body != null) {
       var accessPermmisionModel =
