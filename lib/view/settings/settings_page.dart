@@ -1,21 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:bpom/buildConfig/kolon_build_config.dart';
+import 'package:bpom/enums/update_and_notice_check_type.dart';
+import 'package:bpom/model/update/check_update_model.dart';
 import 'package:bpom/styles/export_common.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:bpom/view/common/base_layout.dart';
 import 'package:bpom/view/common/base_app_bar.dart';
 import 'package:bpom/view/common/base_app_dialog.dart';
+import 'package:bpom/view/common/base_layout.dart';
 import 'package:bpom/view/common/dialog_contents.dart';
-import 'package:bpom/buildConfig/kolon_build_config.dart';
-import 'package:bpom/model/update/check_update_model.dart';
-import 'package:bpom/view/settings/font_setting_page.dart';
-import 'package:bpom/view/settings/notice_setting_page.dart';
-import 'package:bpom/view/commonLogin/common_login_page.dart';
-import 'package:bpom/enums/update_and_notice_check_type.dart';
-import 'package:bpom/view/settings/send_suggestions_page.dart';
 import 'package:bpom/view/common/widget_of_default_shimmer.dart';
-import 'package:bpom/view/settings/provider/settings_provider.dart';
+import 'package:bpom/view/commonLogin/common_login_page.dart';
 import 'package:bpom/view/commonLogin/update_and_notice_dialog.dart';
+import 'package:bpom/view/settings/provider/settings_provider.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -33,12 +30,11 @@ class SettingsPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppText.listViewText('${data.esLogin!.ename}',
-                        style: AppTextStyle.w500_16),
+                    AppText.listViewText('${data.user!.userName}', style: AppTextStyle.w500_16),
                     Padding(
                         padding: EdgeInsets.only(top: AppSize.listFontSpacing)),
                     AppText.listViewText(
-                      '${data.esLogin!.logid!.toLowerCase()}',
+                      '${data.user!.userAccount!.toLowerCase()}',
                     )
                   ],
                 ),
@@ -51,7 +47,7 @@ class SettingsPage extends StatelessWidget {
                             buildTowButtonTextContents(
                               context,
                               // 빌드옵션
-                              '${KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev' ? '(개발)kolonLogin' : 'kolonLogin'}${tr('is_ready_to_logout')}',
+                              '${KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev' ? '(개발)BPO' : 'BPO'}${tr('is_ready_to_logout')}',
                             ));
 
                         if (result != null && result) {
@@ -76,15 +72,6 @@ class SettingsPage extends StatelessWidget {
                 padding: EdgeInsets.only(top: AppSize.defaultListItemSpacing))
           ],
         ));
-  }
-
-  Widget _buildItemRow(BuildContext context, String text) {
-    return Row(
-      children: [
-        AppText.listViewText('$text', style: AppTextStyle.w500_16),
-        Spacer()
-      ],
-    );
   }
 
   Widget _buildVersionRow(BuildContext context, CheckUpdateModel versionInfo) {
@@ -148,7 +135,6 @@ class SettingsPage extends StatelessWidget {
             hasForm: true,
             isWithWillPopScope: true,
             willpopCallback: () {
-              Future.wait([p.saveUserEvn()]);
               return true;
             },
             appBar: MainAppBar(
@@ -156,7 +142,6 @@ class SettingsPage extends StatelessWidget {
               titleText: AppText.text('${tr('settings')}',
                   style: AppTextStyle.w500_22),
               callback: () async {
-                Future.wait([p.saveUserEvn()]);
                 Navigator.pop(context);
               },
             ),
@@ -169,33 +154,6 @@ class SettingsPage extends StatelessWidget {
                       children: [
                         _buildNameRow(context, snapshot.data!),
                         _buildDividerLine(),
-                        InkWell(
-                            onTap: () => Navigator.pushNamed(
-                                context, NoticeSettingPage.routeName),
-                            child: Padding(
-                                padding: AppSize.listPadding,
-                                child:
-                                    _buildItemRow(context, '${tr('notice')}'))),
-                        Divider(
-                            color: AppColors.textGrey,
-                            height: AppSize.dividerHeight),
-                        InkWell(
-                            onTap: () => Navigator.pushNamed(
-                                context, FontSettingsPage.routeName),
-                            child: Padding(
-                                padding: AppSize.listPadding,
-                                child: _buildItemRow(
-                                    context, '${tr('font_size')}'))),
-                        Divider(
-                            color: AppColors.textGrey,
-                            height: AppSize.dividerHeight),
-                        InkWell(
-                            onTap: () => Navigator.pushNamed(
-                                context, SendSuggestionPage.routeName),
-                            child: Padding(
-                                padding: AppSize.listPadding,
-                                child: _buildItemRow(
-                                    context, '${tr('send_suggestion')}'))),
                         Divider(
                             color: AppColors.textGrey,
                             height: AppSize.dividerHeight),

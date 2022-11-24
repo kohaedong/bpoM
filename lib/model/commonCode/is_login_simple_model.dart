@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/commonCode/is_login_simple_model.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/model/commonCode/is_login_simple_model.dart
  * Created Date: 2022-07-18 10:24:55
  * Last Modified: 2022-07-18 13:14:10
  * Author: bakbeom

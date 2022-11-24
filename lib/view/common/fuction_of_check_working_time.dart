@@ -1,6 +1,6 @@
 /*
  * Project Name:  [koreaJob]
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/fuction_of_check_working_time.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/view/common/fuction_of_check_working_time.dart
  * Created Date: 2022-11-01 17:25:02
  * Last Modified: 2022-11-01 23:04:57
  * Author: bakbeom

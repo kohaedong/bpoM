@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/util/is_super_account.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/util/is_super_account.dart
  * Created Date: 2022-07-19 10:51:06
  * Last Modified: 2022-07-19 15:14:17
  * Author: bakbeom

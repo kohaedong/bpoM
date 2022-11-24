@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/update_and_notice_state_provider.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/globalProvider/update_and_notice_state_provider.dart
  * Created Date: 2022-09-24 16:16:24
  * Last Modified: 2022-09-24 16:47:29
  * Author: bakbeom

@@ -1,34 +1,37 @@
-import 'dart:io';
 import 'dart:async';
-import '../common/base_web_view.dart';
-import './home_icon_map.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:bpom/enums/image_type.dart';
-import 'package:bpom/service/key_service.dart';
-import 'package:bpom/styles/export_common.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:bpom/service/cache_service.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:bpom/service/connect_service.dart';
-import 'package:bpom/view/common/base_layout.dart';
-import 'package:bpom/view/common/base_app_toast.dart';
-import 'package:bpom/view/settings/settings_page.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
-import 'package:bpom/globalProvider/timer_provider.dart';
-import 'package:bpom/globalProvider/login_provider.dart';
-import 'package:bpom/view/common/function_of_print.dart';
-import 'package:bpom/view/home/provider/notice_provider.dart';
 import 'package:bpom/enums/update_and_notice_check_type.dart';
-import 'package:bpom/view/settings/send_suggestions_page.dart';
-import 'package:bpom/view/commonLogin/update_and_notice_dialog.dart';
+import 'package:bpom/globalProvider/login_provider.dart';
+import 'package:bpom/styles/export_common.dart';
+import 'package:bpom/view/common/base_app_toast.dart';
+import 'package:bpom/view/common/base_layout.dart';
 import 'package:bpom/view/common/fuction_of_check_working_time.dart';
-import 'package:bpom/view/common/function_of_stop_or_start_listener.dart';
+import 'package:bpom/view/commonLogin/update_and_notice_dialog.dart';
+import 'package:bpom/view/settings/settings_page.dart';
+import 'package:crypto/crypto.dart' as crypto;
+import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:provider/provider.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
+import './home_icon_map.dart';
+import '../../buildConfig/kolon_build_config.dart';
+import '../../model/user/user.dart';
+import '../../service/cache_service.dart';
+import '../../util/encoding_util.dart';
+import '../attach/attach_page.dart';
+import '../common/base_app_dialog.dart';
+
+String? initUrl;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
   static const String routeName = '/home';
-
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -36,19 +39,44 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   var _isNoticeCheckDone = false;
+  WebViewController? _webViewController;
+  ScrollController? _scrollController;
+  User? user;
   Timer? exitAppTimer;
-
   var showToast = true;
-  final String? url = 'http://naver.com';
+
+  String _sUrl = 'https://test-kbow.kolon.com/web/main.do/mobileSSO?hash=';
+  String? userId;
+  bool isLoading = false;
+  late DateTime backbuttonpressedTime;
+
+  //final _request = HttpRequest(API.BASE_URL);
+  final Completer<WebViewController> _controller =
+  Completer<WebViewController>();
 
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
     if (Platform.isAndroid) {
       disableCapture();
     }
-    ConnectService.startListener();
     WidgetsBinding.instance.addObserver(this);
+
+    user = CacheService.getUser();
+    var userId = 'kolonmobile@''${user?.userAccount}';
+    var hashCode = crypto.md5.convert(utf8.encode(userId)).toString();
+
+    var datetimeFormatter = new DateFormat('yyyyMMddHHmmss');
+    var curDateTime = datetimeFormatter.format(DateTime.now());
+
+    var base64 = '$curDateTime' '@' '$hashCode';
+    var encodingLoginInfor = EncodingUtils.encodeBase64(str: base64);
+    initUrl = '$_sUrl''$encodingLoginInfor';
+
+    initUrl = 'https://test-kbow.kolon.com/web/main.do';
+    print('URL: $initUrl');
+
   }
 
   @override
@@ -56,8 +84,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (exitAppTimer != null) {
       exitAppTimer!.cancel();
     }
+    _scrollController!.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  Future<void> checkNoticeWhenLogedin() async {
+    await Future.delayed(Duration.zero, () async {
+      CheckUpdateAndNoticeService.check(context, CheckType.NOTICE_ONLY, true);
+    }).then((value) => _isNoticeCheckDone = true);
   }
 
   Future disableCapture() async {
@@ -67,56 +102,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState lifeCycle) async {
     super.didChangeAppLifecycleState(lifeCycle);
-    var _paused = (lifeCycle == AppLifecycleState.paused);
-    var _detached = (lifeCycle == AppLifecycleState.detached);
-    var _isForeground = (lifeCycle == AppLifecycleState.resumed);
-    if (_paused || _detached) return;
-    if (_detached) {
-      pr('stop all listener !!!!!!!!!!!!!');
-      await stopAllListener();
-      await FlutterAppBadger.removeBadge();
-      return;
-    }
-    if (_isForeground) {
-      pr('start all listener  !!!!!!!!!!');
-      startAllListener();
-      if (isOverTime()) {
-        showOverTimePopup();
-      }
-    }
-    final arguments = ModalRoute.of(context)!.settings.arguments;
-    // update or notice 확인 완료 여부.
-    final isCheckDone = CacheService.isUpdateAndNoticeCheckDone();
-    final isLandSpace = CacheService.getIsLandSpaceMode();
-    var isLocked = false;
-    pr(_isForeground);
-    pr((isLandSpace == null || !isLandSpace));
-    pr(arguments == null);
-    pr(!isLocked);
-    pr('isCheckDone $isCheckDone');
-    if (_isForeground) {
-      FlutterAppBadger.removeBadge();
-    }
-    if (_isForeground &&
-        (isLandSpace == null || !isLandSpace) &&
-        arguments == null &&
-        !isLocked &&
-        isCheckDone) {
-      isLocked = true;
-      // 다이얼로그 호출시 업데이트 체크 재외 처리.
-      final isDisable = CacheService.getIsDisableUpdate();
-      print('is isDisable ${isDisable}');
-      if (isDisable == false) {
-        // chack update and alarm
-        pr('???!!');
-        CheckUpdateAndNoticeService.check(
-            KeyService.baseAppKey.currentContext!, CheckType.UPDATE_ONLY, true);
-        isLocked = false;
-      } else {
-        // 엡데이트 체크 리셋.
-        CacheService.setIsDisableUpdate(false);
-      }
-    }
   }
 
   Widget buildIconRow(List<ImageType> list, List<String> testList) {
@@ -130,9 +115,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 onTap: () async {
                   setActionTime();
                   if (map.value == ImageType.EMPTY) {
-                    // homeIconsListOne == icon 첫번째 줄.
-                    // homeIconsListTow == icon 2번째 줄.
-                    // 현재는 모두 ImageType.EMPTY , ImageType 등록후 혜당page로 route 하세요.
                     AppToast().show(context, 'this is ImageType.EMPTY');
                   } else {
                     if (map.value.routeName == '') {
@@ -226,111 +208,139 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     );
   }
 
-  Widget buildNoticeTitleBar(BuildContext context) {
-    final p = context.read<NoticeProvider>();
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Padding(
-              padding: EdgeInsets.only(right: AppSize.noticeTitleTextSpacing),
-              child: AppText.text('${tr('recent_notice')}',
-                  style: AppTextStyle.bold_20)),
-        ])),
-        InkWell(
-          child: Align(
-              alignment: Alignment.centerRight,
-              child: Row(
-                children: [
-                  SizedBox(width: 50),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: AppSize.defaultIconWidth,
-                  ),
-                ],
-              )),
-        )
-      ],
-    );
+  Future<bool> _goBack(BuildContext context) async {
+    if (_webViewController == null) {
+      return true;
+    }
+    if (await _webViewController!.canGoBack()) {
+      _webViewController!.goBack();
+      return Future.value(false);
+    } else {
+      if (exitAppTimer == null) {
+        exitAppTimer = Timer(Duration(seconds: 3), () {});
+        AppToast().show(context, '${tr('ext_app_when_tap_again')}');
+      } else {
+        if (exitAppTimer!.isActive) {
+          exit(0);
+        } else {
+          exitAppTimer = Timer(Duration(seconds: 3), () {});
+          AppToast().show(context, '${tr('ext_app_when_tap_again')}');
+        }
+      }
+      return false;
+    }
   }
 
-  Widget buildSendSuggestion() {
-    return Padding(
-        padding: AppSize.sendSuggestionPadding,
-        child: AppStyles.buildButton(
-            context,
-            // 빌드옵션
-            tr('send_suggestion2', args: ['kolonLogin']),
-            AppSize.realWidth - AppSize.padding * 2,
-            AppColors.lightBlueColor,
-            AppTextStyle.color_16(AppColors.blueTextColor),
-            AppSize.radius8, () {
-          Navigator.pushNamed(context, SendSuggestionPage.routeName);
-        },
-            selfHeight: AppSize.sendSuggestionBoxHeight,
-            isWithBorder: true,
-            borderColor: AppColors.blueTextColor));
+  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
+    /// fid=test&filePath=http://ndeviken.kolon.com/data/brochure/KOLON_Brochure_Korean.pdf
+    return JavascriptChannel(
+        name: 'webToAppKolon',
+        onMessageReceived: (JavascriptMessage message) async {
+          //Scaffold.of(context).showSnackBar(SnackBar(content: Text(message.message)),);
+          await attachRequest(message.message);
+        });
+  }
+
+  // 첨부파일 변환 요청 API 호출
+  Future<void> attachRequest(String? str) async {
+    int? pos = str?.lastIndexOf(".");
+    String? ext = str?.substring(pos! + 1);
+
+    bool exists = await _checkAttachExt(ext!);
+    if (!exists) {
+      AppDialog.showSignglePopup(context, '${tr('no_support_attach')}');
+    } else {
+      var _filePath = '${KolonBuildConfig.ATTACH_BASE_URL}' '$str';
+      var dio = Dio();
+      final response = await dio.get(_filePath);
+      print(response.data);
+      var attachKey = response.data['key'];
+      // 첨부파일 웹뷰 화면 호출
+      Navigator.pushNamed(context, AttachPage.routeName, arguments: {'key': attachKey});
+    }
+  }
+
+  Future<bool> _checkAttachExt(String strExt) async {
+    switch(strExt.toUpperCase()) {
+      case "HTML": case "MHT": case "MHML": case "HWP": case "HML": case "HWX":case "DOCX": case "DOCM": case "DOTM": case "PPTX":
+      case "PPTM": case "POTX": case "POTM": case "PPSX": case "THMX": case "XLSX": case "XLSM": case "XLTX": case "XLTM": case "XLSB":
+      case "DOC": case "DOT": case "DOTX": case "PPT": case "POT": case "PPS": case "XLS": case "XLT": case "TXT": case "CSV": case "XML":
+      case "BMP": case "GIF": case "JPEG": case "JPG": case "PNG": case "TIFF": case "ODT": case "PDF":
+      break;
+      default:
+        return false;
+    }
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (BuildContext context) {  },
-      // create: (context) => NoticeProvider(),
-      builder: (context, _) {
-        /*
-        final p = context.read<NoticeProvider>();
-        if (!_isNoticeCheckDone) {
-          checkNoticeWhenLogedin().then((value) {
-            p.homeNoticeResponseModel == null
-                ? p.getNoticeList(true)
-                : DoNothingAction();
-          });
+    return WillPopScope(
+      onWillPop: () async {
+        if (exitAppTimer == null) {
+          exitAppTimer = Timer(Duration(seconds: 3), () {});
+          AppToast().show(context, '${tr('ext_app_when_tap_again')}');
         } else {
-          p.homeNoticeResponseModel == null
-              ? p.getNoticeList(true)
-              : DoNothingAction();
+          if (exitAppTimer!.isActive) {
+            exit(0);
+          } else {
+            exitAppTimer = Timer(Duration(seconds: 3), () {});
+            AppToast().show(context, '${tr('ext_app_when_tap_again')}');
+          }
         }
-        */
-
-        return WillPopScope(
-            onWillPop: () async {
-              if (exitAppTimer == null) {
-                exitAppTimer = Timer(Duration(seconds: 3), () {});
-                AppToast().show(context, '${tr('ext_app_when_tap_again')}');
-              } else {
-                if (exitAppTimer!.isActive) {
-                  exit(0);
-                } else {
-                  exitAppTimer = Timer(Duration(seconds: 3), () {});
-                  AppToast().show(context, '${tr('ext_app_when_tap_again')}');
-                }
-              }
-              return false;
-            },
-            child: BaseLayout(
-                hasForm: false,
-                bgColog: AppColors.homeBgColor,
-                appBar: buildHomeAppBar(),
-                child: BaseWebView(url),
-
-                /*
-                child: SingleChildScrollView(
-                  physics: ClampingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      // buildIcons(),
-                      // buildNoticeBox(context),
-                      // buildSendSuggestion()
-                    ],
-                  ),
-                )
-
-                 */
-            ));
-
+        return false;
       },
+      child: BaseLayout(
+        hasForm: false,
+        bgColog: AppColors.homeBgColor,
+        appBar: buildHomeAppBar(),
+        child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Builder(builder: (BuildContext context) {
+            return Stack(
+              children: <Widget> [
+                WebView(
+                  initialUrl: initUrl,
+                  // zoomEnabled: false,
+                  javascriptMode: JavascriptMode.unrestricted,
+                  onWebViewCreated: (WebViewController webViewController) {
+                    _controller.future.then((value) => _webViewController = value);
+                    _controller.complete(webViewController);
+                  },
+                  onProgress: (int progress) {
+                    print('WebView is loading (progress : $progress%)');
+                  },
+                  javascriptChannels: <JavascriptChannel>{
+                    _toasterJavascriptChannel(context),
+                  },
+                  navigationDelegate: (NavigationRequest request) {
+                    if (request.url.startsWith('https://www.youtube.com/')) {
+                      print('blocking navigation to $request}');
+                      return NavigationDecision.prevent;
+                    }
+                    print('allowing navigation to $request');
+                    return NavigationDecision.navigate;
+                  },
+                  onPageStarted: (value) {setState(() {
+                    isLoading = true;
+                  });
+                  },
+                  onPageFinished: (value) {setState(() {
+                    isLoading = false;
+                  });
+                  },
+                  gestureNavigationEnabled: true,
+                  backgroundColor: const Color(0x00000000),
+                ),
+                isLoading ? Center(child: CircularProgressIndicator(),) : Stack(),
+              ],
+            );
+          }),
+        ),
+      ),
+      ),
     );
   }
+
 }

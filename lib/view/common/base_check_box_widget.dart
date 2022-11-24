@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/base_check_box_widget.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/view/common/base_check_box_widget.dart
  * Created Date: 2022-10-18 13:50:43
  * Last Modified: 2022-10-18 13:53:58
  * Author: bakbeom

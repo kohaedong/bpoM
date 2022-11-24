@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/activity_state_provder.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/globalProvider/activity_state_provder.dart
  * Created Date: 2022-10-06 01:55:53
  * Last Modified: 2022-11-02 21:17:38
  * Author: bakbeom

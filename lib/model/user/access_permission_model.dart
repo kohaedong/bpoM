@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/user/access_permission_model.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/model/user/access_permission_model.dart
  * Created Date: 2022-10-01 13:27:11
  * Last Modified: 2022-10-01 13:31:09
  * Author: bakbeom

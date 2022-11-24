@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/login_provider.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/globalProvider/login_provider.dart
  * Created Date: 2022-10-18 00:31:14
  * Last Modified: 2022-11-15 11:19:59
  * Author: bakbeom
@@ -12,32 +12,26 @@
  */
 
 import 'dart:io';
+
+import 'package:bpom/buildConfig/kolon_build_config.dart';
+import 'package:bpom/enums/request_type.dart';
+import 'package:bpom/globalProvider/water_marke_provider.dart';
+import 'package:bpom/model/common/et_orghk_model.dart';
+import 'package:bpom/model/common/result_model.dart';
+import 'package:bpom/model/common/sap_login_info_response_model.dart';
+import 'package:bpom/model/notice/notice_settings_response_model.dart';
+import 'package:bpom/model/user/access_permission_model.dart';
+import 'package:bpom/model/user/user.dart';
+import 'package:bpom/model/user/user_settings.dart';
+import 'package:bpom/service/api_service.dart';
+import 'package:bpom/service/cache_service.dart';
+import 'package:bpom/service/deviceInfo_service.dart';
+import 'package:bpom/service/key_service.dart';
+import 'package:bpom/view/common/function_of_print.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:bpom/model/common/et_orghk_model.dart';
-import 'package:bpom/model/common/sap_login_info_response_model.dart';
 import 'package:provider/provider.dart';
-import 'package:bpom/model/user/user.dart';
-import 'package:bpom/enums/account_type.dart';
-import 'package:bpom/enums/request_type.dart';
-import 'package:bpom/service/api_service.dart';
-import 'package:bpom/service/key_service.dart';
-import 'package:bpom/enums/hive_box_type.dart';
-import 'package:bpom/enums/app_theme_type.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:bpom/service/hive_service.dart';
-import 'package:bpom/service/cache_service.dart';
-import 'package:bpom/model/http/token_model.dart';
-import 'package:bpom/service/firebase_service.dart';
-import 'package:bpom/model/user/user_settings.dart';
-import 'package:bpom/model/common/result_model.dart';
-import 'package:bpom/service/deviceInfo_service.dart';
-import 'package:bpom/view/common/function_of_print.dart';
-import 'package:bpom/buildConfig/kolon_build_config.dart';
-import 'package:bpom/globalProvider/app_theme_provider.dart';
-import 'package:bpom/model/user/access_permission_model.dart';
-import 'package:bpom/globalProvider/water_marke_provider.dart';
-import 'package:bpom/model/notice/notice_settings_response_model.dart';
 
 class LoginProvider extends ChangeNotifier {
   final _api = ApiService();
@@ -82,29 +76,6 @@ class LoginProvider extends ChangeNotifier {
   void setSsalseGroupList(List<EtOrghkModel> list) {
     salseGroupList.clear();
     salseGroupList = list;
-  }
-
-  Future<ResultModel> requestToken() async {
-    Map<String, dynamic> tokenBody = {
-      'username': userId,
-      'password': userPw,
-      'grant_type': 'password',
-      'scope': 'read',
-      'client_id': 'default',
-      'client_secret': 'secret'
-    };
-
-    _api.init(RequestType.REQEUST_TOKEN);
-    final tokenResult = await _api.request(body: tokenBody);
-    if (tokenResult != null && tokenResult.statusCode == 200) {
-      var temp = TokenModel.fromJson(tokenResult.body);
-      user!.tokenInfo = temp;
-      return ResultModel(true);
-    }
-    return ResultModel(false,
-        message: tokenResult?.errorMessage,
-        isNetworkError: tokenResult?.statusCode == -2,
-        isServerError: tokenResult?.statusCode == -1);
   }
 
   Future<Map<String, dynamic>> getIosSSOLibUserData() async {
@@ -255,22 +226,6 @@ class LoginProvider extends ChangeNotifier {
     return null;
   }
 
-  Future<void> saveTcode() async {
-    final commonTCODE = sapResponseModel!.data!.tCode!;
-    var isNeedDownLoad = await HiveService.isNeedDownLoad();
-    // var isTvalueDownLoadDone = CacheService.isTValueDownLoadDone();
-    if (isNeedDownLoad) {
-      commonTCODE.forEach((tcode) {
-        tcode.timestamp = DateTime.now();
-      });
-      await HiveService.init(HiveBoxType.T_CODE);
-      await HiveService.deleteBox();
-      await HiveService.getBox();
-      await HiveService.save(commonTCODE);
-      print('new CommonCode downLoaded!');
-    }
-  }
-
   Future<ResultModel> checkAccessPermmision(String userId) async {
     _api.init(RequestType.ACCESS_PERMISSION);
     var url =
@@ -317,56 +272,6 @@ class LoginProvider extends ChangeNotifier {
       );
       return ResultModel(true, data: userSettings);
     }
-  }
-
-  Future<ResultModel> sendFcmToken() async {
-    _api.init(RequestType.SEND_FCM_TOKEN);
-    var token = await FirebaseService.getToken();
-    pr('token $token');
-    var deviceInfo = await DeviceInfoService.getDeviceInfo();
-    Map<String, dynamic> _body = {
-      'methodName': RequestType.SEND_FCM_TOKEN.serverMethod,
-      'methodParam': {
-        'fcmToken': token,
-        'devId': deviceInfo.deviceId,
-        'userId': CacheService.getEsLogin()!.logid
-      }
-    };
-    final result = await _api.request(body: _body);
-    if (result == null || result.statusCode != 200) {
-      return ResultModel(false,
-          isNetworkError: result?.statusCode == -2,
-          isServerError: result?.statusCode == -1);
-    }
-    if (result.statusCode == 200) {
-      pr(result.body);
-      return ResultModel(true);
-    }
-    return ResultModel(false, message: result.errorMessage);
-  }
-
-  Future<ResultModel> saveUserEnvironment({bool? isFirstSave}) async {
-    var _api = ApiService();
-    pr('save!!! ${userSettings!.toJson()}');
-    Map<String, dynamic> saveEnvBody = {
-      'methodName': RequestType.SAVE_ENV.serverMethod,
-      'methodParam': {
-        'categoryCode': 'envKey_$userId',
-        'description': userSettings!.toJson()
-      }
-    };
-    _api.init(RequestType.SAVE_ENV);
-    final envRequest = await _api.request(body: saveEnvBody);
-    if (envRequest!.statusCode == 200) {
-      if (isFirstSave ?? false) {
-        var type = getThemeType(userSettings!.textScale!);
-        var sp = KeyService.baseAppKey.currentContext!.read<AppThemeProvider>();
-        sp.setThemeType(type);
-        setIsWaterMarkeUser();
-      }
-      return ResultModel(true);
-    }
-    return ResultModel(false, message: 'save Environment faild');
   }
 
   Future<ResultModel> getDeviceInfo() async {
@@ -439,6 +344,7 @@ class LoginProvider extends ChangeNotifier {
       var isSuccess = true;
       pr('@@@@code:: ${signResult.body['code']}');
       user = User.fromJson(signResult.body['data']);
+      CacheService.saveUser(user);
       var accessPermissionResult = await checkAccessPermmision(userId!);
       if (!accessPermissionResult.isSuccessful) {
         isSuccess = false;
@@ -452,57 +358,6 @@ class LoginProvider extends ChangeNotifier {
         message: message,
         isNetworkError: signResult.statusCode == -2,
         isServerError: signResult.statusCode == -1);
-  }
-
-  Future<ResultModel> sapSignIn() async {
-    Map<String, dynamic>? sapBody = {
-      'methodName': RequestType.SAP_SIGNIN_INFO.serverMethod,
-      'methodParamMap': {
-        'functionName': RequestType.SAP_SIGNIN_INFO.serverMethod,
-        'IV_LOGID': userId!.toUpperCase(),
-        'resultTables': RequestType.SAP_SIGNIN_INFO.resultTable,
-        'appName': 'medsalesportal'
-      }
-    };
-    _api.init(RequestType.SAP_SIGNIN_INFO);
-    final sapResult = await _api.request(body: sapBody);
-    if (sapResult == null || sapResult.statusCode != 200) {
-      return ResultModel(false,
-          message: sapResult?.message,
-          isNetworkError: sapResult?.statusCode == -2,
-          isServerError: sapResult?.statusCode == -1);
-    }
-    if (sapResult.statusCode == 200) {
-      sapResponseModel = SapLoginInfoResponseModel.fromJson(sapResult.body);
-      var isSuccessfull = sapResponseModel!.data!.esReturn!.mtype == 'S';
-      var message = tr('permission_denied');
-      return ResultModel(isSuccessfull, message: message);
-    }
-    return ResultModel(false, message: sapResult.errorMessage ?? '');
-  }
-
-  Future<ResultModel> saveLoginInfo() async {
-    var esLogin = sapResponseModel!.data!.esLogin!;
-    var isLogin = sapResponseModel!.data!.isLogin!;
-    var isTeamLeader = esLogin.xtm == 'X';
-    var isMultiAccount =
-        (esLogin.xtm == '' && esLogin.vkgrp == '' && esLogin.salem == '');
-    CacheService.saveEsLogin(esLogin);
-    CacheService.saveIsLogin(isLogin);
-    CacheService.saveUser(user!);
-    CacheService.saveAccountType(isMultiAccount
-        ? AccountType.MULTI
-        : isTeamLeader
-            ? AccountType.LEADER
-            : AccountType.NORMAL);
-
-    setSsalseGroupList(sapResponseModel!.data!.etOrghk!);
-    pr('xtm ::${esLogin.xtm}\n');
-    pr('vkgrp ::${esLogin.vkgrp}\n');
-    pr('salem ::${esLogin.salem}\n');
-    pr('p.isSalseGroup  $isPermidedSalseGroup');
-    await saveTcode();
-    return ResultModel(true);
   }
 
   Future<ResultModel> getAndSaveNotice(
@@ -554,10 +409,10 @@ class LoginProvider extends ChangeNotifier {
     //if (!result.isSuccessful) return result;
     result = await getDeviceInfo();
     if (!result.isSuccessful) return result;
-    result = await checkUserEnvironment();
-    if (!result.isSuccessful) return result;
-    result = await saveUserEnvironment(isFirstSave: true);
-    if (!result.isSuccessful) return result;
+    //result = await checkUserEnvironment();
+    //if (!result.isSuccessful) return result;
+    //result = await saveUserEnvironment(isFirstSave: true);
+    //if (!result.isSuccessful) return result;
     //result = await sendFcmToken();
     //if (result.isSuccessful) isLogedin = true;
     return result;

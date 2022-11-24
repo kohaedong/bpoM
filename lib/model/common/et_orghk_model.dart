@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/et_vkorghk_model.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/model/rfc/et_vkorghk_model.dart
  * Created Date: 2022-07-04 14:39:18
  * Last Modified: 2022-07-04 14:57:56
  * Author: bakbeom

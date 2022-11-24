@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/connect_status_provider.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/globalProvider/connect_status_provider.dart
  * Created Date: 2022-10-26 07:14:36
  * Last Modified: 2022-10-27 15:08:22
  * Author: bakbeom

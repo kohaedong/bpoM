@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/order_manager_material_model.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/model/rfc/order_manager_material_model.dart
  * Created Date: 2022-09-08 11:01:26
  * Last Modified: 2022-09-14 11:08:31
  * Author: bakbeom

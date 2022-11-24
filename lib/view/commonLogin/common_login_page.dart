@@ -1,15 +1,14 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:bpom/service/cache_service.dart';
-import 'package:provider/provider.dart';
+
 import 'package:bpom/enums/image_type.dart';
+import 'package:bpom/enums/update_and_notice_check_type.dart';
+import 'package:bpom/service/cache_service.dart';
 import 'package:bpom/styles/export_common.dart';
 import 'package:bpom/view/common/base_layout.dart';
-import 'package:bpom/enums/update_and_notice_check_type.dart';
 import 'package:bpom/view/common/widget_of_loading_view.dart';
-import 'package:bpom/globalProvider/special_notice_provider.dart';
 import 'package:bpom/view/commonLogin/update_and_notice_dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class CommonLoginPage extends StatefulWidget {
   const CommonLoginPage({Key? key}) : super(key: key);
@@ -42,10 +41,9 @@ class _CommonLoginPageState extends State<CommonLoginPage> {
   @override
   Widget build(BuildContext context) {
     print('commligin page build done');
-
     Future.delayed(Duration.zero, () async {
       CheckUpdateAndNoticeService.check(
-          context, CheckType.UPDATE_AND_NOTICE, false);
+          context, CheckType.NOTICE_AND_UPDATE, false);
     });
     return BaseLayout(
         hasForm: false,

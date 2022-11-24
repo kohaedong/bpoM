@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/et_customer_response_model.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/model/rfc/et_customer_response_model.dart
  * Created Date: 2022-07-06 22:28:46
  * Last Modified: 2022-11-15 11:04:21
  * Author: bakbeom

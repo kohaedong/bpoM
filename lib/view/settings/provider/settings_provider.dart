@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:bpom/model/user/user.dart';
 import 'package:flutter/material.dart';
 import 'package:bpom/model/common/es_login_model.dart';
 import 'package:provider/provider.dart';
@@ -31,57 +32,12 @@ class SettingsProvider extends ChangeNotifier {
       {bool? isFromSettingsPage,
       bool? isFromFontSettinsPage,
       bool? isFromNoticeSettingsPage}) async {
-    final esLogin = CacheService.getEsLogin();
-    var settings = await initData();
+    final user = CacheService.getUser();
     if (isFromFontSettinsPage ?? false) {
       await checkUpdate();
     }
     return SettingsResult(true,
-        updateInfo: updateInfo, settings: settings, esLogin: esLogin);
-  }
-
-  Future<UserSettings> initData() async {
-    var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
-    // NoticeSettingsDataModel? noticeDataModel;
-    //! 현재 2중으로 저장하고 있음.
-    // 유저환경저장 + notice Api 저장. (유저환경저장 methodName getOfAppUserEnv )
-    // 수정 해야 할것!:
-    // - 글씨크기는 local에 저장하고
-    // - Notice 관련 정보는 신규개발될 noticeApi로 실시간 저장처리.
-
-    var settings = lp.userSettings!;
-
-    // var result = await lp.getAndSaveNotice();
-    // if (result.isSuccessful) {
-    //   noticeDataModel = result.data as NoticeSettingsDataModel;
-    //   noticeSwichValue = noticeDataModel.notiUseYn == 'y';
-    //   notdisturbSwichValue = noticeDataModel.stopNotiTimeUseYn == 'y';
-    //   notDisturbStartHour =
-    //       noticeDataModel.stopNotiTimeBeginTime?.substring(0, 2);
-    //   notDisturbStartMinute =
-    //       noticeDataModel.stopNotiTimeBeginTime?.substring(2);
-    //   notDisturbEndHour = noticeDataModel.stopNotiTimeEndTime?.substring(0, 2);
-    //   notDisturbEndMinute = noticeDataModel.stopNotiTimeEndTime?.substring(2);
-    //   textScale = lp.userSettings!.textScale;
-    // } else {
-    //   noticeSwichValue = settings.isShowNotice;
-    //   notdisturbSwichValue = settings.isSetNotDisturb;
-    //   notDisturbStartHour = settings.notDisturbStartHour;
-    //   notDisturbStartMinute = settings.notDisturbStartMine;
-    //   notDisturbEndHour = settings.notDisturbStopHour;
-    //   notDisturbEndMinute = settings.notDisturbStopMine;
-    //   textScale = settings.textScale;
-    // }
-
-    noticeSwichValue = settings.isShowNotice;
-    notdisturbSwichValue = settings.isSetNotDisturb;
-    notDisturbStartHour = settings.notDisturbStartHour;
-    notDisturbStartMinute = settings.notDisturbStartMine;
-    notDisturbEndHour = settings.notDisturbStopHour;
-    notDisturbEndMinute = settings.notDisturbStopMine;
-    textScale = settings.textScale;
-
-    return settings;
+        updateInfo: updateInfo, user: user);
   }
 
   Future<void> checkUpdate() async {
@@ -178,23 +134,6 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> saveUserEvn() async {
-    var lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
-    var settings = lp.userSettings!;
-    var result = await lp.saveUserEnvironment();
-    var sth = settings.notDisturbStartHour;
-    var stm = settings.notDisturbStartMine;
-    var eth = settings.notDisturbStopHour;
-    var etm = settings.notDisturbStopMine;
-    await lp.getAndSaveNotice(
-        isSave: true,
-        startTime:
-            '${sth != null && sth.isNotEmpty ? sth : '07'}${stm != null && stm.isNotEmpty ? stm : '00'}',
-        endTime:
-            '${eth != null && eth.isNotEmpty ? eth : '07'}${etm != null && etm.isNotEmpty ? etm : '00'}');
-    return result.data != null;
-  }
-
   Future<bool> sendSuggestion() async {
     final user = CacheService.getUser();
     final _body = {
@@ -230,8 +169,6 @@ class SettingsProvider extends ChangeNotifier {
 class SettingsResult {
   bool isSuccessful;
   CheckUpdateModel? updateInfo;
-  UserSettings? settings;
-  EsLoginModel? esLogin;
-  SettingsResult(this.isSuccessful,
-      {this.updateInfo, this.settings, this.esLogin});
+  User?          user;
+  SettingsResult(this.isSuccessful, {this.updateInfo, this.user});
 }

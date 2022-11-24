@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/service/connect_service.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/service/connect_service.dart
  * Created Date: 2022-10-26 05:30:46
  * Last Modified: 2022-10-28 17:07:20
  * Author: bakbeom

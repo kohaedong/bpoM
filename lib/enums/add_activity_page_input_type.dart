@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/enums/add_activity_page_input_type.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/enums/add_activity_page_input_type.dart
  * Created Date: 2022-08-17 22:49:58
  * Last Modified: 2022-10-06 07:37:08
  * Author: bakbeom

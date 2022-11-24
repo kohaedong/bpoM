@@ -53,7 +53,6 @@ class _FontSettingsPageState extends State<FontSettingsPage> {
               var temp = UserSettings.fromJson(lp.userSettings!.toJson());
               temp.textScale = type.textScale;
               lp.setUserSettings(temp);
-              lp.saveUserEnvironment();
             },
             value: type,
             activeColor: AppColors.primary,
@@ -72,7 +71,6 @@ class _FontSettingsPageState extends State<FontSettingsPage> {
         var temp = UserSettings.fromJson(lp.userSettings!.toJson());
         temp.textScale = type.textScale;
         lp.setUserSettings(temp);
-        lp.saveUserEnvironment();
         themeTypeNotiffier.value = provider.themeType;
       },
       child: Row(

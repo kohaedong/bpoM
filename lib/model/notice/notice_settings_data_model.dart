@@ -1,6 +1,6 @@
 /*
  * Project Name:  [koreaJob]
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/notice/notice_settings_data_model.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/model/notice/notice_settings_data_model.dart
  * Created Date: 2022-11-12 12:51:45
  * Last Modified: 2022-11-12 12:59:16
  * Author: bakbeom

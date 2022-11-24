@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/table_T_ZLTSP0710_model.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/model/rfc/table_T_ZLTSP0710_model.dart
  * Created Date: 2022-07-05 10:55:22
  * Last Modified: 2022-07-05 11:03:51
  * Author: bakbeom

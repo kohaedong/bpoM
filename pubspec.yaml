@@ -1,5 +1,5 @@
 name: bpom
-description: mkolon3.0 medsalesportal.
+description: BPOM
 publish_to: 'none' 
 version: 1.0.0+1
 environment:
@@ -32,7 +32,6 @@ dependencies:
   flutter_svg: ^1.1.4 # 유지보수 양호 
   fluttertoast: ^8.0.9 # 유지보수 양호
   logger: ^1.1.0 # 유지보수 양호
-  flutter_inappwebview: ^5.4.3+8 # 유지보수 양호
   internet_connection_checker: ^1.0.0+1  # 유지보수 양호
   flutter_local_notifications: ^12.0.3  # 유지보수 양호
   platform_device_id: ^1.0.1 # 유지보수 양호
@@ -41,6 +40,8 @@ dependencies:
   app_settings: ^4.1.8  ### 유지보수 보통 ###
   open_file: ^3.2.1 #### !!!!!폐기의심,현재 까지 사용가능.####  .apk 파일 open 용 #### !!!!!!!!
   flutter_screenutil: ^5.5.4 #### !!!!!폐기의심,현재 까지 사용가능. font size 설정  #### !!!!!!!!!
+  flutter_inappwebview:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

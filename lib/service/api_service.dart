@@ -94,6 +94,7 @@ class ApiService {
 
   onRequestWrapper(
       RequestOptions options, RequestInterceptorHandler handler) async {
+
     final deviceInfo = await DeviceInfoService.getDeviceInfo();
     final header = {
       'deviceSerialNo': deviceInfo.deviceId,
@@ -105,27 +106,7 @@ class ApiService {
     if (anotherHeader.isNotEmpty) {
       options.headers.addAll(anotherHeader);
     }
-    if (requestType!.isWithAccessToken) {
-      final user = CacheService.getUser();
-      if (user != null) {
-        options.headers.addAll({
-          'Authorization': 'Bearer ${user.tokenInfo!.accessToken}',
-        });
-        // var token = user.tokenInfo!.accessToken;
-        // var length = token.length ~/ 2;
-        // customLogger.d(token.substring(0, length));
-        // customLogger.d(token.substring(length));
-      }
-    } else {
-      if (requestType == RequestType.REFRESHE_TOKEN ||
-          requestType == RequestType.REQEUST_TOKEN) {
-        final tokenInfo =
-            EncodingUtils.encodeBase64(str: '$_clientID:$_clientSecret');
-        options.headers.addAll({
-          'Authorization': 'Basic $tokenInfo',
-        });
-      }
-    }
+
     return handler.next(options);
   }
 

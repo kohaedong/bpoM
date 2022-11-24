@@ -107,7 +107,6 @@ class SigninPageProvider extends ChangeNotifier {
 
   void setPassword(String? password) {
     this.password = (password == '' ? null : password);
-    // if (password == null || password.length == 1 || password == '') {}
     final lp = KeyService.baseAppKey.currentContext!.read<LoginProvider>();
     startErrorMessage(lp.isShowErrorMessage == null ? '' : errorMessage);
     notifyListeners();

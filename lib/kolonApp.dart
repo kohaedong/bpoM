@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/kolonApp.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/kolonApp.dart
  * Created Date: 2022-07-02 14:46:59
  * Last Modified: 2022-11-03 19:35:20
  * Author: bakbeom
@@ -55,6 +55,9 @@ class KolonAppState extends State<KolonApp> {
         ),
         ChangeNotifierProvider<NoticeIndexProvider>(
           create: (_) => NoticeIndexProvider(),
+        ),
+        ChangeNotifierProvider<TimerProvider>(
+          create: (_) => TimerProvider(),
         ),
         //ChangeNotifierProvider<SpecialNoticeProvider>(
         //  create: (_) => SpecialNoticeProvider(),

@@ -1,14 +1,10 @@
+import 'package:bpom/kolonApp.dart';
+import 'package:bpom/service/cache_service.dart';
+import 'package:bpom/service/screen_capture_service.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:bpom/kolonApp.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:bpom/service/cache_service.dart';
-import 'package:bpom/service/firebase_service.dart';
-import 'package:bpom/service/screen_capture_service.dart';
-import 'package:bpom/model/commonCode/t_code_model.dart';
-import 'package:bpom/model/commonCode/t_values_model.dart';
-import 'package:bpom/model/commonCode/et_dd07v_customer_category_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

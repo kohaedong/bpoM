@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/globalProvider/timer_provider.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/globalProvider/timer_provider.dart
  * Created Date: 2022-07-08 14:36:43
  * Last Modified: 2022-11-14 14:48:16
  * Author: bakbeom

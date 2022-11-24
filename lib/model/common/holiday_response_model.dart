@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/common/holiday_response_model.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/model/common/holiday_response_model.dart
  * Created Date: 2022-08-04 16:32:08
  * Last Modified: 2022-08-04 16:35:23
  * Author: bakbeom

@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_rotation_animation_components.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/view/common/widget_of_rotation_animation_components.dart
  * Created Date: 2022-07-14 23:02:16
  * Last Modified: 2022-10-18 04:20:09
  * Author: bakbeom

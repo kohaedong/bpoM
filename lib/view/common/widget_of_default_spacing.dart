@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/view/common/widget_of_default_spacing.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/view/common/widget_of_default_spacing.dart
  * Created Date: 2022-07-03 14:18:03
  * Last Modified: 2022-08-21 11:50:05
  * Author: bakbeom

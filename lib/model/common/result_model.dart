@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/common/result_model.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/model/common/result_model.dart
  * Created Date: 2022-07-06 10:31:40
  * Last Modified: 2022-10-23 14:45:34
  * Author: bakbeom

@@ -19,7 +19,6 @@ import 'package:bpom/styles/app_size.dart';
 typedef CommononeCellDataCallback = Future<List<String>?> Function();
 
 enum OneCellType {
-  // medSalesPortal
   MANAGER,
   SEARCH_CUSTOMER,
   SEARCH_PRODUCTS_CATEGORY,

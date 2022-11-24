@@ -1,6 +1,6 @@
 /*
  * Project Name:  [mKolon3.0] - MedicalSalesPortal
- * File: /Users/bakbeom/work/sm/si/medsalesportal/lib/model/rfc/add_activity_suggetion_response_model.dart
+ * File: /Users/bakbeom/work/sm/si/bpom/lib/model/rfc/add_activity_suggetion_response_model.dart
  * Created Date: 2022-08-17 20:21:35
  * Last Modified: 2022-11-15 11:16:11
  * Author: bakbeom

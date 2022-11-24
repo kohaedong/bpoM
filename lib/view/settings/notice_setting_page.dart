@@ -7,7 +7,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:bpom/styles/export_common.dart';
 import 'package:bpom/service/cache_service.dart';
 import 'package:bpom/view/common/base_layout.dart';
-import 'package:bpom/service/firebase_service.dart';
 import 'package:bpom/view/common/base_app_bar.dart';
 import 'package:bpom/view/common/base_app_dialog.dart';
 import 'package:bpom/view/common/dialog_contents.dart';
@@ -61,14 +60,6 @@ class _NoticeSettingPageState extends State<NoticeSettingPage> {
                 if (type == SwichType.SWICH_IS_USE_NOTICE) {
                   noticeSwichValue.value = value;
                   await provider.setNoticeSettings(type, value);
-                  if (value) {
-                    await FirebaseService.requstFcmPermission()
-                        .then((isSuccess) async {
-                      if (!isSuccess) {
-                        await AppSettings.openNotificationSettings();
-                      }
-                    });
-                  }
                 }
               },
               activeTrackColor: AppColors.primary,

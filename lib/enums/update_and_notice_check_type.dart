@@ -11,4 +11,4 @@
  * ---	---	---	---	---	---	---	---	---	---	---	---	---	---	---	---
  */
 // * 업데이트와 노티스 체크유형.
-enum CheckType { NOTICE_ONLY, UPDATE_ONLY, UPDATE_AND_NOTICE }
+enum CheckType { NOTICE_ONLY, UPDATE_ONLY, NOTICE_AND_UPDATE }

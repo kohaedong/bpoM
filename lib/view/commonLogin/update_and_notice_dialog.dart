@@ -1,28 +1,28 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:bpom/util/format_util.dart';
-import 'package:bpom/styles/app_size.dart';
-import 'package:bpom/styles/app_text.dart';
-import 'package:bpom/styles/app_style.dart';
-import 'package:bpom/styles/app_colors.dart';
-import 'package:bpom/enums/update_type.dart';
+
 import 'package:bpom/enums/notice_type.dart';
-import 'package:bpom/view/home/home_page.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:bpom/service/cache_service.dart';
-import 'package:bpom/styles/app_text_style.dart';
-import 'package:bpom/view/signin/signin_page.dart';
-import 'package:bpom/model/notice/notice_model.dart';
-import 'package:bpom/view/common/base_web_view.dart';
-import 'package:bpom/view/common/base_app_dialog.dart';
-import 'package:bpom/globalProvider/login_provider.dart';
-import 'package:bpom/buildConfig/kolon_build_config.dart';
 import 'package:bpom/enums/update_and_notice_check_type.dart';
-import 'package:bpom/view/commonLogin/common_login_page.dart';
+import 'package:bpom/enums/update_type.dart';
+import 'package:bpom/globalProvider/login_provider.dart';
+import 'package:bpom/model/notice/notice_model.dart';
+import 'package:bpom/service/cache_service.dart';
+import 'package:bpom/styles/app_colors.dart';
+import 'package:bpom/styles/app_size.dart';
+import 'package:bpom/styles/app_style.dart';
+import 'package:bpom/styles/app_text.dart';
+import 'package:bpom/styles/app_text_style.dart';
+import 'package:bpom/util/format_util.dart';
+import 'package:bpom/view/common/base_app_dialog.dart';
+import 'package:bpom/view/common/base_web_view.dart';
 import 'package:bpom/view/common/widget_of_default_spacing.dart';
+import 'package:bpom/view/commonLogin/common_login_page.dart';
 import 'package:bpom/view/commonLogin/provider/notice_index_provider.dart';
 import 'package:bpom/view/commonLogin/provider/update_and_notice_provider.dart';
+import 'package:bpom/view/home/home_page.dart';
+import 'package:bpom/view/signin/signin_page.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CheckUpdateAndNoticeService {
   factory CheckUpdateAndNoticeService() => _sharedInstance();
@@ -33,39 +33,6 @@ class CheckUpdateAndNoticeService {
       _instance = CheckUpdateAndNoticeService._();
     }
     return _instance!;
-  }
-
-  /// bakboem 2022.08.25
-  /// 공지. 추석 특별추가.
-  static Future<void> showSpecialNotice(BuildContext context) async {
-    final p = UpdateAndNoticeProvider();
-    final result = await p.checkSpecialNotice();
-    if (result.isSuccessful) {
-      var dataList = result.data as List;
-      var data = dataList.first as Map<String, dynamic>;
-      var specialNoticeUri = KolonBuildConfig.KOLON_APP_BUILD_TYPE == 'dev'
-          ? 'http://20.214.160.118/dev'
-          : 'http://20.214.160.118';
-      await AppDialog.showPopup(
-          context,
-          SafeArea(
-              child: Column(
-            children: [
-              Expanded(
-                  child: BaseWebView('$specialNoticeUri${data['noticeUri']}')),
-              AppStyles.buildButton(
-                  context,
-                  tr('close'),
-                  AppSize.realWidth,
-                  AppColors.primary,
-                  AppTextStyle.menu_18(AppColors.whiteText),
-                  0, () {
-                data['isAppCanUse'] ? Navigator.pop(context) : exit(0);
-              }, selfHeight: AppSize.buttonHeight)
-            ],
-          )),
-          isWithShapeBorder: false);
-    }
   }
 
   static Widget updateContents(BuildContext context, {UpdateData? updateData}) {
@@ -485,8 +452,8 @@ class CheckUpdateAndNoticeService {
   }
 
   static Future<void> showNotice(BuildContext context, bool isHome) async {
-    var updateAndNoticeProvider = context.read<UpdateAndNoticeProvider>();
-    final noticeResult = await updateAndNoticeProvider.checkNotice(isHome);
+    var noticeAndUpdateProvider = context.read<UpdateAndNoticeProvider>();
+    final noticeResult = await noticeAndUpdateProvider.checkNotice(isHome);
     if (noticeResult.isSuccessful) {
       print('data length:: ${noticeResult.noticeData!.noticeList!.length}');
       noticeResult.noticeData!.noticeList!.forEach((notice) {
@@ -500,11 +467,11 @@ class CheckUpdateAndNoticeService {
           print('first while index${p.categoryIndex}');
           while (p.noticeIndex <=
               noticeResult
-                      .noticeData!.noticeList![p.categoryIndex].values.length -
+                  .noticeData!.noticeList![p.categoryIndex].values.length -
                   1) {
             print('last while index${p.noticeIndex}');
             var isShowBorderRadio = noticeResult
-                    .noticeData!.noticeList![p.categoryIndex].keys.single ==
+                .noticeData!.noticeList![p.categoryIndex].keys.single ==
                 NoticeType.POP_UP_NOTICE;
             var result = await AppDialog.showPopup(
                 context,
@@ -517,21 +484,18 @@ class CheckUpdateAndNoticeService {
           }
           p.categoryIncrement();
         }
-      }).then((_) {
+      }).whenComplete(() {
         context.read<NoticeIndexProvider>().resetAll();
         CacheService.saveIsUpdateAndNoticeCheckDone(true);
-        routeTo(context);
       });
     } else {
       CacheService.saveIsUpdateAndNoticeCheckDone(true);
-      routeTo(context);
     }
   }
 
-  static void updateAndNotice(BuildContext context, bool isHome,
-      {required bool isUpdateOnly}) async {
+  static void noticeAndUpdate(BuildContext context, bool isHome) async {
     // Andy.KO 2022.03.16 공지, 업데이트 순서 변경
-    //await showNotice(context, isHome);
+    await showNotice(context, isHome);
     final up = context.read<UpdateAndNoticeProvider>();
     final updateResult = await up.checkUpdate();
     if (updateResult.isSuccessful &&
@@ -545,20 +509,17 @@ class CheckUpdateAndNoticeService {
               updateResult.updateData!.type != UpdateType.WEB_CHOOSE) {
             exit(0);
           } else {
-            print('shownotice!!');
-            if (isUpdateOnly) {
+            if (!isHome) {
               CacheService.saveIsUpdateAndNoticeCheckDone(true);
-            } else {
-              showNotice(context, isHome);
+              routeTo(context);
             }
           }
         }
       }
     } else {
-      if (isUpdateOnly) {
+      if (!isHome) {
         CacheService.saveIsUpdateAndNoticeCheckDone(true);
-      } else {
-        showNotice(context, isHome);
+        routeTo(context);
       }
     }
   }
@@ -570,11 +531,11 @@ class CheckUpdateAndNoticeService {
       BuildContext context, CheckType checkType, bool isHome) async {
     CacheService.saveIsUpdateAndNoticeCheckDone(false);
     switch (checkType) {
-      case CheckType.UPDATE_AND_NOTICE:
-        updateAndNotice(context, isHome, isUpdateOnly: false);
+      case CheckType.NOTICE_AND_UPDATE:
+        noticeAndUpdate(context, isHome);
         break;
       case CheckType.UPDATE_ONLY:
-        updateAndNotice(context, isHome, isUpdateOnly: true);
+        noticeAndUpdate(context, isHome);
         break;
       case CheckType.NOTICE_ONLY:
         noticeOnly(context, isHome);
