@@ -4,16 +4,13 @@ import 'package:bpom/service/screen_capture_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await Hive.initFlutter();
-  // await FirebaseService.init();
-  //Hive.registerAdapter(TCodeModelAdapter());
-  //Hive.registerAdapter(TValuesModelAdapter());
-  //Hive.registerAdapter(TCustomerCustomsModelAdapter());
   ScreenCaptrueService.startListener();
   CacheService.init();
   setSystemOverlay();
@@ -30,16 +27,37 @@ void setSystemOverlay() {
 }
 
 void start() async {
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]).then((_) {
-    runApp(
-      EasyLocalization(
-        supportedLocales: const [Locale("ko")],
-        path: "assets/location",
-        fallbackLocale: const Locale("ko"),
-        child: const KolonApp(),
-      ),
-    );
-  });
+
+  if(Device.get().isTablet){
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]).then((_) {
+      runApp(
+        EasyLocalization(
+          supportedLocales: const [Locale("ko")],
+          path: "assets/location",
+          fallbackLocale: const Locale("ko"),
+          child: const KolonApp(),
+        ),
+      );
+    });
+  } else {
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]).then((_) {
+      runApp(
+        EasyLocalization(
+          supportedLocales: const [Locale("ko")],
+          path: "assets/location",
+          fallbackLocale: const Locale("ko"),
+          child: const KolonApp(),
+        ),
+      );
+    });
+
+  }
+
 }

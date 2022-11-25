@@ -41,6 +41,7 @@ dependencies:
   open_file: ^3.2.1 #### !!!!!폐기의심,현재 까지 사용가능.####  .apk 파일 open 용 #### !!!!!!!!
   flutter_screenutil: ^5.5.4 #### !!!!!폐기의심,현재 까지 사용가능. font size 설정  #### !!!!!!!!!
   flutter_inappwebview:
+  flutter_device_type: ^0.4.0
 
 dev_dependencies:
   flutter_test:
