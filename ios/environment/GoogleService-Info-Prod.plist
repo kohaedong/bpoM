@@ -19,18 +19,18 @@
 	<key>STORAGE_BUCKET</key>
 	<string>medsalesportal.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:1013306379146:ios:e1f0465e9bdc0499b65673</string>
 	<key>DATABASE_URL</key>
-	<string>https://medsalesportal.firebaseio.com</string>
+	<string></string>
 </dict>
 </plist>

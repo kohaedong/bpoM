@@ -13,7 +13,7 @@
 
 class KolonBuildConfig {
   //  개발 환경
-  static const KOLON_APP_VERSION_NAME = "01.00.00";
+  static const KOLON_APP_VERSION_NAME = "01.00.02";
   static const KOLON_APP_BASE_URL = "https://appdev.kolon.com";
   static const KOLON_APP_BUILD_TYPE = "dev";
   static const ATTACH_BASE_URL = 'https://mkolonviewdev.kolon.com/SynapDocViewServer/job?fileType=URL&';

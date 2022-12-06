@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Timer? exitAppTimer;
   var showToast = true;
 
-  String _sUrl = 'https://test-kbow.kolon.com/web/main.do/mobileSSO?hash=';
+  String _sUrl = 'https://test-kbow.kolon.com/web/main.do?hash=';
   String? userId;
   bool isLoading = false;
   late DateTime backbuttonpressedTime;
@@ -64,17 +64,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     user = CacheService.getUser();
-    var userId = 'kolonmobile@''${user?.userAccount}';
-    var hashCode = crypto.md5.convert(utf8.encode(userId)).toString();
+    //var userId = 'kolonmobile@''${user?.userAccount}';
+    //var hashCode = crypto.md5.convert(utf8.encode(userId)).toString();
 
     var datetimeFormatter = new DateFormat('yyyyMMddHHmmss');
     var curDateTime = datetimeFormatter.format(DateTime.now());
 
-    var base64 = '$curDateTime' '@' '$hashCode';
+    var base64 = '$curDateTime' '@' '${user?.userAccount}';
     var encodingLoginInfor = EncodingUtils.encodeBase64(str: base64);
     initUrl = '$_sUrl''$encodingLoginInfor';
-
-    initUrl = 'https://test-kbow.kolon.com/web/main.do';
     print('URL: $initUrl');
 
   }
