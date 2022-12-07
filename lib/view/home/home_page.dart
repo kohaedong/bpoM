@@ -44,8 +44,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   User? user;
   Timer? exitAppTimer;
   var showToast = true;
-
-  String _sUrl = 'https://test-kbow.kolon.com/web/main.do?hash=';
   String? userId;
   bool isLoading = false;
   late DateTime backbuttonpressedTime;
@@ -72,7 +70,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     var base64 = '$curDateTime' '@' '${user?.userAccount}';
     var encodingLoginInfor = EncodingUtils.encodeBase64(str: base64);
-    initUrl = '$_sUrl''$encodingLoginInfor';
+    initUrl = '${KolonBuildConfig.BPO_URL}''$encodingLoginInfor';
     print('URL: $initUrl');
 
   }
@@ -274,20 +272,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        if (exitAppTimer == null) {
-          exitAppTimer = Timer(Duration(seconds: 3), () {});
-          AppToast().show(context, '${tr('ext_app_when_tap_again')}');
-        } else {
-          if (exitAppTimer!.isActive) {
-            exit(0);
-          } else {
-            exitAppTimer = Timer(Duration(seconds: 3), () {});
-            AppToast().show(context, '${tr('ext_app_when_tap_again')}');
-          }
-        }
-        return false;
-      },
+      onWillPop: () => _goBack(context),
       child: BaseLayout(
         hasForm: false,
         bgColog: AppColors.homeBgColor,

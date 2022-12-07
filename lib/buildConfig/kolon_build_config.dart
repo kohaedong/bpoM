@@ -13,15 +13,17 @@
 
 class KolonBuildConfig {
   //  개발 환경
-  static const KOLON_APP_VERSION_NAME = "01.00.02";
+  static const KOLON_APP_VERSION_NAME = "01.00.03";
   static const KOLON_APP_BASE_URL = "https://appdev.kolon.com";
   static const KOLON_APP_BUILD_TYPE = "dev";
   static const ATTACH_BASE_URL = 'https://mkolonviewdev.kolon.com/SynapDocViewServer/job?fileType=URL&';
   static const ATTACH_VIEW_URL = 'https://mkolonviewdev.kolon.com/SynapDocViewServer/viewer/doc.html?key=';
+  static const BPO_URL = 'https://test-kbow.kolon.com/web/main.do?hash=';
   // 운영 환경
   // static const KOLON_APP_VERSION_NAME = "01.00.00"; // ios
   // static const KOLON_APP_BASE_URL = "https://apps2.kolon.com";
   // static const KOLON_APP_BUILD_TYPE = "prod";
   // static const ATTACH_BASE_URL = 'https://mkolonview.kolon.com/SynapDocViewServer/job?fileType=URL&';
   // static const ATTACH_VIEW_URL = 'https://mkolonview.kolon.com/SynapDocViewServer/viewer/doc.html?key=';
+  // static const BPO_URL = 'https://kbow.kolon.com/web/main.do?hash=';
 }

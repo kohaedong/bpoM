@@ -462,7 +462,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/RunnerDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 01.00.00;
+				CURRENT_PROJECT_VERSION = 01.00.03;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner_dev copy-Info.plist";
@@ -472,7 +472,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 01.00.00;
+				MARKETING_VERSION = 01.00.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kolon.bpom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -496,7 +496,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/RunnerRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 01.00.00;
+				CURRENT_PROJECT_VERSION = 01.00.03;
 				DEVELOPMENT_TEAM = 5HTJST6WX6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner_dev copy-Info.plist";
@@ -506,7 +506,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 01.00.00;
+				MARKETING_VERSION = 01.00.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kolon.bpom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -529,7 +529,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 01.00.00;
+				CURRENT_PROJECT_VERSION = 01.00.03;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Runner_dev copy-Info.plist";
@@ -539,7 +539,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 01.00.00;
+				MARKETING_VERSION = 01.00.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kolon.bpom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -612,7 +612,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 01.00.00;
+				CURRENT_PROJECT_VERSION = 01.00.03;
 				DEVELOPMENT_TEAM = 5HTJST6WX6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -622,7 +622,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 01.00.00;
+				MARKETING_VERSION = 01.00.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kolon.bpomdev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -753,7 +753,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 01.00.00;
+				CURRENT_PROJECT_VERSION = 01.00.03;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5HTJST6WX6;
 				ENABLE_BITCODE = NO;
@@ -764,7 +764,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 01.00.00;
+				MARKETING_VERSION = 01.00.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kolon.bpomdev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -790,7 +790,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 01.00.00;
+				CURRENT_PROJECT_VERSION = 01.00.03;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 5HTJST6WX6;
 				ENABLE_BITCODE = NO;
@@ -801,7 +801,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 01.00.00;
+				MARKETING_VERSION = 01.00.03;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kolon.bpomdev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

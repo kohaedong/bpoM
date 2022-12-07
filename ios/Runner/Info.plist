@@ -49,6 +49,10 @@
 	<array>
 		<string></string>
 	</array>
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_dartobservatory</string>
+    </array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MiapsCompanyCode</key>
