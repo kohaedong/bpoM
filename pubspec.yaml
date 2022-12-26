@@ -10,8 +10,6 @@ dependencies:
   cupertino_icons: ^1.0.5 
   shared_preferences: ^2.0.15  # flutter 공식지원
   webview_flutter: ^3.0.4 # flutter 공식지원
-  firebase_messaging: ^14.0.2 # flutter 공식지원
-  firebase_core: ^2.1.0  # flutter 공식지원
   connectivity_plus: ^2.3.5 # flutterCommunity 공식지원
   device_info_plus: ^4.0.0 # flutterCommunity 공식지원
   package_info_plus: ^1.4.2 # flutterCommunity 공식지원

@@ -54,20 +54,28 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-
-        // 빌드옵션 개발 및 운영 환경
-        //applicationId "com.kolon.bpom"
-        applicationId "com.kolon.bpomdev"
         minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
         versionCode 90000000
-        versionName "01.00.03"
+        versionName "01.00.10"
         multiDexEnabled true
-        // 빌드옵션  개발 및 운영 환경
-        manifestPlaceholders["app_name"] = "(개발)BPO" // 개발
-        // manifestPlaceholders["app_name"] = "BPO" // 운영
     }
+
+    flavorDimensions "build-type"
+
+    productFlavors {
+        dev {
+            dimension "build-type"
+            applicationId "com.kolon.bpomdev"
+            resValue "string", "app_name", "(개발)BPO"
+        }
+        prod {
+            dimension "build-type"
+            applicationId "com.kolon.bpom"
+            resValue "string", "app_name", "BPO"
+        }
+    }
+
     signingConfigs {
             debug {
                 storeFile file(RELEASE_STORE_FILE)

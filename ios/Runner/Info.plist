@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>App-Flavor</key>
+	<string>$(APP_FLAVOR)</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.kolon.bpomdev.taskId</string>
@@ -11,7 +13,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>(개발)BPO</string>
+	<string>$(APP_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleGetInfoString</key>
@@ -49,10 +51,10 @@
 	<array>
 		<string></string>
 	</array>
-    <key>NSBonjourServices</key>
-    <array>
-        <string>_dartobservatory</string>
-    </array>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_dartobservatory</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MiapsCompanyCode</key>

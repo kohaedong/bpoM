@@ -21,8 +21,7 @@ typedef OnwillpopCallback = bool Function();
 
 class BaseLayout extends StatelessWidget {
   BaseLayout(
-      {required this.hasForm,
-      required this.appBar,
+      {required this.hasForm, this.appBar,
       this.isWithWillPopScope,
       this.isWithBottomSafeArea,
       this.isWithRightSafeArea,

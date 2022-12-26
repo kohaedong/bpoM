@@ -154,9 +154,6 @@ class SettingsPage extends StatelessWidget {
                       children: [
                         _buildNameRow(context, snapshot.data!),
                         _buildDividerLine(),
-                        Divider(
-                            color: AppColors.textGrey,
-                            height: AppSize.dividerHeight),
                         Padding(
                             padding: snapshot.data!.updateInfo!.result != 'NG'
                                 ? AppSize.versionRowPadding

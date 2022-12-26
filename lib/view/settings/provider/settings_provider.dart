@@ -14,6 +14,8 @@ import 'package:bpom/globalProvider/login_provider.dart';
 import 'package:bpom/model/update/check_update_model.dart';
 import 'package:bpom/view/commonLogin/provider/update_and_notice_provider.dart';
 
+import '../../../buildConfig/kolon_build_config.dart';
+
 class SettingsProvider extends ChangeNotifier {
   CheckUpdateModel? updateInfo;
   bool? notdisturbSwichValue;
@@ -139,7 +141,7 @@ class SettingsProvider extends ChangeNotifier {
     final _body = {
       "methodName": RequestType.SEND_SUGGETION.serverMethod,
       "methodParam": {
-        "appId": Platform.isIOS ? '16893' : '16892',
+        "appId": Platform.isIOS ? KolonBuildConfig.SERVICE_ID_IOS : KolonBuildConfig.SERVICE_ID_AOS,
         "appOpnnExpsrYn": "Y",
         "revicwDscr": "$suggetionText",
         "userId": "${user!.userAccount}"

@@ -276,9 +276,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       child: BaseLayout(
         hasForm: false,
         bgColog: AppColors.homeBgColor,
-        appBar: buildHomeAppBar(),
+        //appBar: buildHomeAppBar(),
         child: Scaffold(
         backgroundColor: Colors.white,
+        bottomNavigationBar: BottomAppBar(
+          child: NavigationControls(_controller.future),
+        ),
         body: SafeArea(
           child: Builder(builder: (BuildContext context) {
             return Stack(
@@ -325,5 +328,69 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       ),
     );
   }
+}
 
+class NavigationControls extends StatelessWidget {
+  const NavigationControls(this._webViewControllerFuture)
+      : assert(_webViewControllerFuture != null);
+
+  final Future<WebViewController> _webViewControllerFuture;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<WebViewController>(
+      future: _webViewControllerFuture,
+      builder:
+          (BuildContext context, AsyncSnapshot<WebViewController> snapshot) {
+        final bool webViewReady =
+            snapshot.connectionState == ConnectionState.done;
+        final WebViewController? controller = snapshot.data;
+        return ButtonBar(
+          alignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            ElevatedButton(
+              child: const Icon(Icons.arrow_back),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+              ),
+              onPressed: () {
+                controller?.goBack();
+              },
+            ),
+            ElevatedButton(
+              child: const Icon(Icons.arrow_forward),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+              ),
+              onPressed: () {
+                controller?.goForward();
+              },
+            ),
+            ElevatedButton(
+              child: const Icon(Icons.refresh),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+              ),
+              onPressed: () {
+                controller?.reload();
+              },
+            ),
+            ElevatedButton(
+              child: const Icon(Icons.settings),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, SettingsPage.routeName);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

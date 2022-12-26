@@ -25,6 +25,8 @@ import 'package:bpom/model/http/request_result.dart';
 import 'package:bpom/service/deviceInfo_service.dart';
 import 'package:bpom/service/local_file_servicer.dart';
 import 'package:bpom/globalProvider/connect_status_provider.dart';
+
+import '../buildConfig/kolon_build_config.dart';
 // * 서버 에러 statusCode -1 으로 리턴.
 // * 넷트워크 에러 statusCode  99 으로  리턴.
 //*  기타 에러 statusCode 0 으로 리턴.
@@ -99,7 +101,7 @@ class ApiService {
     final header = {
       'deviceSerialNo': deviceInfo.deviceId,
       'deviceModelNo': deviceInfo.deviceModel,
-      'appId': Platform.isIOS ? '16893' : '16892',
+      'appId': Platform.isIOS ? KolonBuildConfig.SERVICE_ID_IOS : KolonBuildConfig.SERVICE_ID_AOS,
     };
     final anotherHeader = await requestType!.anotherHeader;
     options.headers.addAll(header);

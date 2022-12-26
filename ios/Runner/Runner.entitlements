@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)kr.co.miaps.minkdata.KOLONDEV</string>
+		<string>$(AppIdentifierPrefix)kr.co.miaps.minkdata.KOLON</string>
 	</array>
 </dict>
 </plist>
